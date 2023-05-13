@@ -1,6 +1,8 @@
 # Lampa Desktop
 
-![Windows](https://img.shields.io/badge/platform-Windows-blue)
+<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+
+</a>
 
 Данный проект является **неофициальным** приложением для просмотра фильмов и сериалов. Он создан на базе **Electron** и использует API различных сервисов для получения данных о фильмах и сериалах.
 
