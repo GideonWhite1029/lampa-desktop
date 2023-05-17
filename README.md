@@ -1,9 +1,6 @@
 # Lampa Desktop
 
-<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/downloads/GideonWhite1029/lampa-desktop/release/total?style=flat-square">
-
-<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
-<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
+<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/downloads/GideonWhite1029/lampa-desktop/release/total?style=flat-square"> <img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" /> <img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
 
 
 Данный проект является **неофициальным** приложением для просмотра фильмов и сериалов. Он создан на базе **Electron** и использует API различных сервисов для получения данных о фильмах и сериалах.
