@@ -1,17 +1,19 @@
 {
   "name": "lampa",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Приложение для просмотров фильмов и сериалов",
   "main": "electron_build.js",
   "scripts": {
     "electron": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "build:win": "electron-builder build --win"
+    "build:win": "electron-builder build --win",
+    "build:linux": "electron-builder build --linux"
   },
   "author": {
     "name": "ymata, GideonWhite1029"
   },
+  "permissions": ["net", "net-connect", "browser-window", "fullscreen", "pictureInPicture"],
   "devDependencies": {
     "electron": "^24.2.0",
     "electron-builder": "^22.11.7"
@@ -46,6 +48,17 @@
         },
         {
           "target": "zip",
+          "arch": [
+            "x64", "ia32"
+          ]
+        }
+      ],
+      "icon": "og.png"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "tar.gz",
           "arch": [
             "x64", "ia32"
           ]

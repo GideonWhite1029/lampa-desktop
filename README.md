@@ -1,8 +1,10 @@
 # Lampa Desktop
 
-<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/downloads/GideonWhite1029/lampa-desktop/release/total?style=flat-square">
 
-</a>
+<img alt="Windows" src="https://img.shields.io/badge/-Windows-blue?style=flat-square&logo=windows&logoColor=white" />
+<img alt="Linux" src="https://img.shields.io/badge/-Linux-yellow?style=flat-square&logo=linux&logoColor=white" />
+
 
 Данный проект является **неофициальным** приложением для просмотра фильмов и сериалов. Он создан на базе **Electron** и использует API различных сервисов для получения данных о фильмах и сериалах.
 
@@ -11,7 +13,7 @@
 ## Задачи
 
 - [x] Поддержка x64 и x32
-- [ ] Поддержка Linux
+- [x] Поддержка Linux
 - [ ] Поддержка MacOS
 - [ ] Автоматическое обновление
 - [ ] Поддержка режима "Картинка в картинке"
@@ -23,6 +25,7 @@
 2. Установите необходимые библиотеки - `npm install`
 3. Для простого запуска и тестов - `electron .`
 4. Для сборки под Windows - `electron-builder build --win`
+5. Для сборки под Linux - `electron-builder build --linux`
 
 ## Лицензия
 

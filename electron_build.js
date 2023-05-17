@@ -5,19 +5,22 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
+            experimentalFeatures: true,
             nodeIntegration: true
         }
     })
 
     win.setMenu(null)
-    win.loadFile('index.html')
+    win.loadFile('index.html').catch(error => {
+        console.error(error)
+    })
 }
 
 app.whenReady().then(() => {
     createWindow()
 
     app.on('activate', function () {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+        if (!app.hasWindows()) createWindow()
     })
 })
 
