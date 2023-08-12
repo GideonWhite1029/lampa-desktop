@@ -135,20 +135,20 @@
               var json = Lampa.Arrays.decodeJson(math[1].replace(/&quot;/g, '"'), {});
               var text = document.createElement("textarea");
               var _loop = function _loop(i) {
-                var _movie$media, _movie$media$filter$;
+                var _movie$media;
                 if (0 === i - 0) {
                   return "continue";
                 }
                 text.innerHTML = json[i];
                 Lampa.Arrays.decodeJson(text.value, {});
-                var max_quality = (_movie$media = movie.media) === null || _movie$media === void 0 ? void 0 : (_movie$media$filter$ = _movie$media.filter(function (obj) {
+                var max_quality = (_movie$media = movie.media) === null || _movie$media === void 0 || (_movie$media = _movie$media.filter(function (obj) {
                   return obj.translation_id === i - 0;
-                })[0]) === null || _movie$media$filter$ === void 0 ? void 0 : _movie$media$filter$.max_quality;
+                })[0]) === null || _movie$media === void 0 ? void 0 : _movie$media.max_quality;
                 if (!max_quality) {
-                  var _movie$translations, _movie$translations$f;
-                  max_quality = (_movie$translations = movie.translations) === null || _movie$translations === void 0 ? void 0 : (_movie$translations$f = _movie$translations.filter(function (obj) {
+                  var _movie$translations;
+                  max_quality = (_movie$translations = movie.translations) === null || _movie$translations === void 0 || (_movie$translations = _movie$translations.filter(function (obj) {
                     return obj.id === i - 0;
-                  })[0]) === null || _movie$translations$f === void 0 ? void 0 : _movie$translations$f.max_quality;
+                  })[0]) === null || _movie$translations === void 0 ? void 0 : _movie$translations.max_quality;
                 }
                 extract[i] = {
                   json: Lampa.Arrays.decodeJson(text.value, {}),

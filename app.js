@@ -396,6 +396,772 @@
       };
     }
   })();
+  /*!
+  * Shim for MutationObserver interface
+  * Author: Graeme Yeates (github.com/megawac)
+  * Repository: https://github.com/megawac/MutationObserver.js
+  * License: WTFPL V2, 2004 (wtfpl.net).
+  * Though credit and staring the repo will make me feel pretty, you can modify and redistribute as you please.
+  * Attempts to follow spec (https://www.w3.org/TR/dom/#mutation-observers) as closely as possible for native javascript
+  * See https://github.com/WebKit/webkit/blob/master/Source/WebCore/dom/MutationObserver.cpp for current webkit source c++ implementation
+  */
+
+  /**
+   * prefix bugs:
+      - https://bugs.webkit.org/show_bug.cgi?id=85161
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=749920
+   * Don't use WebKitMutationObserver as Safari (6.0.5-6.1) use a buggy implementation
+  */
+  if (!window.MutationObserver) {
+    window.MutationObserver = function (undefined$1) {
+
+      /**
+       * @param {function(Array.<MutationRecord>, MutationObserver)} listener
+       * @constructor
+       */
+      function MutationObserver(listener) {
+        /**
+         * @type {Array.<Object>}
+         * @private
+         */
+        this._watched = [];
+        /** @private */
+        this._listener = listener;
+      }
+
+      /**
+       * Start a recursive timeout function to check all items being observed for mutations
+       * @type {MutationObserver} observer
+       * @private
+       */
+      function startMutationChecker(observer) {
+        (function check() {
+          var mutations = observer.takeRecords();
+          if (mutations.length) {
+            // fire away
+            // calling the listener with context is not spec but currently consistent with FF and WebKit
+            observer._listener(mutations, observer);
+          }
+          /** @private */
+          observer._timeout = setTimeout(check, MutationObserver._period);
+        })();
+      }
+
+      /**
+       * Period to check for mutations (~32 times/sec)
+       * @type {number}
+       * @expose
+       */
+      MutationObserver._period = 30 /*ms+runtime*/;
+
+      /**
+       * Exposed API
+       * @expose
+       * @final
+       */
+      MutationObserver.prototype = {
+        /**
+         * see https://dom.spec.whatwg.org/#dom-mutationobserver-observe
+         * not going to throw here but going to follow the current spec config sets
+         * @param {Node|null} $target
+         * @param {Object|null} config : MutationObserverInit configuration dictionary
+         * @expose
+         * @return undefined
+         */
+        observe: function observe($target, config) {
+          /**
+           * Using slightly different names so closure can go ham
+           * @type {!Object} : A custom mutation config
+           */
+          var settings = {
+            attr: !!(config.attributes || config.attributeFilter || config.attributeOldValue),
+            // some browsers enforce that subtree must be set with childList, attributes or characterData.
+            // We don't care as spec doesn't specify this rule.
+            kids: !!config.childList,
+            descendents: !!config.subtree,
+            charData: !!(config.characterData || config.characterDataOldValue)
+          };
+          var watched = this._watched;
+
+          // remove already observed target element from pool
+          for (var i = 0; i < watched.length; i++) {
+            if (watched[i].tar === $target) watched.splice(i, 1);
+          }
+          if (config.attributeFilter) {
+            /**
+             * converts to a {key: true} dict for faster lookup
+             * @type {Object.<String,Boolean>}
+             */
+            settings.afilter = reduce(config.attributeFilter, function (a, b) {
+              a[b] = true;
+              return a;
+            }, {});
+          }
+          watched.push({
+            tar: $target,
+            fn: createMutationSearcher($target, settings)
+          });
+
+          // reconnect if not connected
+          if (!this._timeout) {
+            startMutationChecker(this);
+          }
+        },
+        /**
+         * Finds mutations since last check and empties the "record queue" i.e. mutations will only be found once
+         * @expose
+         * @return {Array.<MutationRecord>}
+         */
+        takeRecords: function takeRecords() {
+          var mutations = [];
+          var watched = this._watched;
+          for (var i = 0; i < watched.length; i++) {
+            watched[i].fn(mutations);
+          }
+          return mutations;
+        },
+        /**
+         * @expose
+         * @return undefined
+         */
+        disconnect: function disconnect() {
+          this._watched = []; // clear the stuff being observed
+          clearTimeout(this._timeout); // ready for garbage collection
+          /** @private */
+          this._timeout = null;
+        }
+      };
+
+      /**
+       * Simple MutationRecord pseudoclass. No longer exposing as its not fully compliant
+       * @param {Object} data
+       * @return {Object} a MutationRecord
+       */
+      function MutationRecord(data) {
+        var settings = {
+          // technically these should be on proto so hasOwnProperty will return false for non explicitly props
+          type: null,
+          target: null,
+          addedNodes: [],
+          removedNodes: [],
+          previousSibling: null,
+          nextSibling: null,
+          attributeName: null,
+          attributeNamespace: null,
+          oldValue: null
+        };
+        for (var prop in data) {
+          if (has(settings, prop) && data[prop] !== undefined$1) settings[prop] = data[prop];
+        }
+        return settings;
+      }
+
+      /**
+       * Creates a func to find all the mutations
+       *
+       * @param {Node} $target
+       * @param {!Object} config : A custom mutation config
+       */
+      function createMutationSearcher($target, config) {
+        /** type {Elestuct} */
+        var $oldstate = clone($target, config); // create the cloned datastructure
+
+        /**
+         * consumes array of mutations we can push to
+         *
+         * @param {Array.<MutationRecord>} mutations
+         */
+        return function (mutations) {
+          var olen = mutations.length,
+            dirty;
+          if (config.charData && $target.nodeType === 3 && $target.nodeValue !== $oldstate.charData) {
+            mutations.push(new MutationRecord({
+              type: "characterData",
+              target: $target,
+              oldValue: $oldstate.charData
+            }));
+          }
+
+          // Alright we check base level changes in attributes... easy
+          if (config.attr && $oldstate.attr) {
+            findAttributeMutations(mutations, $target, $oldstate.attr, config.afilter);
+          }
+
+          // check childlist or subtree for mutations
+          if (config.kids || config.descendents) {
+            dirty = searchSubtree(mutations, $target, $oldstate, config);
+          }
+
+          // reclone data structure if theres changes
+          if (dirty || mutations.length !== olen) {
+            /** type {Elestuct} */
+            $oldstate = clone($target, config);
+          }
+        };
+      }
+
+      /* attributes + attributeFilter helpers */
+
+      // Check if the environment has the attribute bug (#4) which cause
+      // element.attributes.style to always be null.
+      var hasAttributeBug = document.createElement("i");
+      hasAttributeBug.style.top = 0;
+      hasAttributeBug = hasAttributeBug.attributes.style.value != "null";
+
+      /**
+       * Gets an attribute value in an environment without attribute bug
+       *
+       * @param {Node} el
+       * @param {Attr} attr
+       * @return {String} an attribute value
+       */
+      function getAttributeSimple(el, attr) {
+        // There is a potential for a warning to occur here if the attribute is a
+        // custom attribute in IE<9 with a custom .toString() method. This is
+        // just a warning and doesn't affect execution (see #21)
+        return attr.value;
+      }
+
+      /**
+       * Gets an attribute value with special hack for style attribute (see #4)
+       *
+       * @param {Node} el
+       * @param {Attr} attr
+       * @return {String} an attribute value
+       */
+      function getAttributeWithStyleHack(el, attr) {
+        // As with getAttributeSimple there is a potential warning for custom attribtues in IE7.
+        return attr.name !== "style" ? attr.value : el.style.cssText;
+      }
+      var getAttributeValue = hasAttributeBug ? getAttributeSimple : getAttributeWithStyleHack;
+
+      /**
+       * fast helper to check to see if attributes object of an element has changed
+       * doesnt handle the textnode case
+       *
+       * @param {Array.<MutationRecord>} mutations
+       * @param {Node} $target
+       * @param {Object.<string, string>} $oldstate : Custom attribute clone data structure from clone
+       * @param {Object} filter
+       */
+      function findAttributeMutations(mutations, $target, $oldstate, filter) {
+        var checked = {};
+        var attributes = $target.attributes;
+        var attr;
+        var name;
+        var i = attributes.length;
+        while (i--) {
+          attr = attributes[i];
+          name = attr.name;
+          if (!filter || has(filter, name)) {
+            if (getAttributeValue($target, attr) !== $oldstate[name]) {
+              // The pushing is redundant but gzips very nicely
+              mutations.push(MutationRecord({
+                type: "attributes",
+                target: $target,
+                attributeName: name,
+                oldValue: $oldstate[name],
+                attributeNamespace: attr.namespaceURI // in ie<8 it incorrectly will return undefined
+              }));
+            }
+
+            checked[name] = true;
+          }
+        }
+        for (name in $oldstate) {
+          if (!checked[name]) {
+            mutations.push(MutationRecord({
+              target: $target,
+              type: "attributes",
+              attributeName: name,
+              oldValue: $oldstate[name]
+            }));
+          }
+        }
+      }
+
+      /**
+       * searchSubtree: array of mutations so far, element, element clone, bool
+       * synchronous dfs comparision of two nodes
+       * This function is applied to any observed element with childList or subtree specified
+       * Sorry this is kind of confusing as shit, tried to comment it a bit...
+       * codereview.stackexchange.com/questions/38351 discussion of an earlier version of this func
+       *
+       * @param {Array} mutations
+       * @param {Node} $target
+       * @param {!Object} $oldstate : A custom cloned node from clone()
+       * @param {!Object} config : A custom mutation config
+       */
+      function searchSubtree(mutations, $target, $oldstate, config) {
+        // Track if the tree is dirty and has to be recomputed (#14).
+        var dirty;
+        /*
+         * Helper to identify node rearrangment and stuff...
+         * There is no gaurentee that the same node will be identified for both added and removed nodes
+         * if the positions have been shuffled.
+         * conflicts array will be emptied by end of operation
+         */
+        function resolveConflicts(conflicts, node, $kids, $oldkids, numAddedNodes) {
+          // the distance between the first conflicting node and the last
+          var distance = conflicts.length - 1;
+          // prevents same conflict being resolved twice consider when two nodes switch places.
+          // only one should be given a mutation event (note -~ is used as a math.ceil shorthand)
+          var counter = -~((distance - numAddedNodes) / 2);
+          var $cur;
+          var oldstruct;
+          var conflict;
+          while (conflict = conflicts.pop()) {
+            $cur = $kids[conflict.i];
+            oldstruct = $oldkids[conflict.j];
+
+            // attempt to determine if there was node rearrangement... won't gaurentee all matches
+            // also handles case where added/removed nodes cause nodes to be identified as conflicts
+            if (config.kids && counter && Math.abs(conflict.i - conflict.j) >= distance) {
+              mutations.push(MutationRecord({
+                type: "childList",
+                target: node,
+                addedNodes: [$cur],
+                removedNodes: [$cur],
+                // haha don't rely on this please
+                nextSibling: $cur.nextSibling,
+                previousSibling: $cur.previousSibling
+              }));
+              counter--; // found conflict
+            }
+
+            // Alright we found the resorted nodes now check for other types of mutations
+            if (config.attr && oldstruct.attr) findAttributeMutations(mutations, $cur, oldstruct.attr, config.afilter);
+            if (config.charData && $cur.nodeType === 3 && $cur.nodeValue !== oldstruct.charData) {
+              mutations.push(MutationRecord({
+                type: "characterData",
+                target: $cur,
+                oldValue: oldstruct.charData
+              }));
+            }
+            // now look @ subtree
+            if (config.descendents) findMutations($cur, oldstruct);
+          }
+        }
+
+        /**
+         * Main worker. Finds and adds mutations if there are any
+         * @param {Node} node
+         * @param {!Object} old : A cloned data structure using internal clone
+         */
+        function findMutations(node, old) {
+          var $kids = node.childNodes;
+          var $oldkids = old.kids;
+          var klen = $kids.length;
+          // $oldkids will be undefined for text and comment nodes
+          var olen = $oldkids ? $oldkids.length : 0;
+          // if (!olen && !klen) return; // both empty; clearly no changes
+
+          // we delay the intialization of these for marginal performance in the expected case (actually quite signficant on large subtrees when these would be otherwise unused)
+          // map of checked element of ids to prevent registering the same conflict twice
+          var map;
+          // array of potential conflicts (ie nodes that may have been re arranged)
+          var conflicts;
+          var id; // element id from getElementId helper
+          var idx; // index of a moved or inserted element
+
+          var oldstruct;
+          // current and old nodes
+          var $cur;
+          var $old;
+          // track the number of added nodes so we can resolve conflicts more accurately
+          var numAddedNodes = 0;
+
+          // iterate over both old and current child nodes at the same time
+          var i = 0,
+            j = 0;
+          // while there is still anything left in $kids or $oldkids (same as i < $kids.length || j < $oldkids.length;)
+          while (i < klen || j < olen) {
+            // current and old nodes at the indexs
+            $cur = $kids[i];
+            oldstruct = $oldkids[j];
+            $old = oldstruct && oldstruct.node;
+            if ($cur === $old) {
+              // expected case - optimized for this case
+              // check attributes as specified by config
+              if (config.attr && oldstruct.attr) /* oldstruct.attr instead of textnode check */findAttributeMutations(mutations, $cur, oldstruct.attr, config.afilter);
+              // check character data if node is a comment or textNode and it's being observed
+              if (config.charData && oldstruct.charData !== undefined$1 && $cur.nodeValue !== oldstruct.charData) {
+                mutations.push(MutationRecord({
+                  type: "characterData",
+                  target: $cur,
+                  oldValue: oldstruct.charData
+                }));
+              }
+
+              // resolve conflicts; it will be undefined if there are no conflicts - otherwise an array
+              if (conflicts) resolveConflicts(conflicts, node, $kids, $oldkids, numAddedNodes);
+
+              // recurse on next level of children. Avoids the recursive call when there are no children left to iterate
+              if (config.descendents && ($cur.childNodes.length || oldstruct.kids && oldstruct.kids.length)) findMutations($cur, oldstruct);
+              i++;
+              j++;
+            } else {
+              // (uncommon case) lookahead until they are the same again or the end of children
+              dirty = true;
+              if (!map) {
+                // delayed initalization (big perf benefit)
+                map = {};
+                conflicts = [];
+              }
+              if ($cur) {
+                // check id is in the location map otherwise do a indexOf search
+                if (!map[id = getElementId($cur)]) {
+                  // to prevent double checking
+                  // mark id as found
+                  map[id] = true;
+                  // custom indexOf using comparitor checking oldkids[i].node === $cur
+                  if ((idx = indexOfCustomNode($oldkids, $cur, j)) === -1) {
+                    if (config.kids) {
+                      mutations.push(MutationRecord({
+                        type: "childList",
+                        target: node,
+                        addedNodes: [$cur],
+                        // $cur is a new node
+                        nextSibling: $cur.nextSibling,
+                        previousSibling: $cur.previousSibling
+                      }));
+                      numAddedNodes++;
+                    }
+                  } else {
+                    conflicts.push({
+                      // add conflict
+                      i: i,
+                      j: idx
+                    });
+                  }
+                }
+                i++;
+              }
+              if ($old &&
+              // special case: the changes may have been resolved: i and j appear congurent so we can continue using the expected case
+              $old !== $kids[i]) {
+                if (!map[id = getElementId($old)]) {
+                  map[id] = true;
+                  if ((idx = indexOf($kids, $old, i)) === -1) {
+                    if (config.kids) {
+                      mutations.push(MutationRecord({
+                        type: "childList",
+                        target: old.node,
+                        removedNodes: [$old],
+                        nextSibling: $oldkids[j + 1],
+                        // praise no indexoutofbounds exception
+                        previousSibling: $oldkids[j - 1]
+                      }));
+                      numAddedNodes--;
+                    }
+                  } else {
+                    conflicts.push({
+                      i: idx,
+                      j: j
+                    });
+                  }
+                }
+                j++;
+              }
+            } // end uncommon case
+          } // end loop
+
+          // resolve any remaining conflicts
+          if (conflicts) resolveConflicts(conflicts, node, $kids, $oldkids, numAddedNodes);
+        }
+        findMutations($target, $oldstate);
+        return dirty;
+      }
+
+      /**
+       * Utility
+       * Cones a element into a custom data structure designed for comparision. https://gist.github.com/megawac/8201012
+       *
+       * @param {Node} $target
+       * @param {!Object} config : A custom mutation config
+       * @return {!Object} : Cloned data structure
+       */
+      function clone($target, config) {
+        var recurse = true; // set true so childList we'll always check the first level
+        return function copy($target) {
+          var elestruct = {
+            /** @type {Node} */
+            node: $target
+          };
+
+          // Store current character data of target text or comment node if the config requests
+          // those properties to be observed.
+          if (config.charData && ($target.nodeType === 3 || $target.nodeType === 8)) {
+            elestruct.charData = $target.nodeValue;
+          }
+          // its either a element, comment, doc frag or document node
+          else {
+            // Add attr only if subtree is specified or top level and avoid if
+            // attributes is a document object (#13).
+            if (config.attr && recurse && $target.nodeType === 1) {
+              /**
+               * clone live attribute list to an object structure {name: val}
+               * @type {Object.<string, string>}
+               */
+              elestruct.attr = reduce($target.attributes, function (memo, attr) {
+                if (!config.afilter || config.afilter[attr.name]) {
+                  memo[attr.name] = getAttributeValue($target, attr);
+                }
+                return memo;
+              }, {});
+            }
+
+            // whether we should iterate the children of $target node
+            if (recurse && (config.kids || config.charData || config.attr && config.descendents)) {
+              /** @type {Array.<!Object>} : Array of custom clone */
+              elestruct.kids = map($target.childNodes, copy);
+            }
+            recurse = config.descendents;
+          }
+          return elestruct;
+        }($target);
+      }
+
+      /**
+       * indexOf an element in a collection of custom nodes
+       *
+       * @param {NodeList} set
+       * @param {!Object} $node : A custom cloned node
+       * @param {number} idx : index to start the loop
+       * @return {number}
+       */
+      function indexOfCustomNode(set, $node, idx) {
+        return indexOf(set, $node, idx, JSCompiler_renameProperty("node"));
+      }
+
+      // using a non id (eg outerHTML or nodeValue) is extremely naive and will run into issues with nodes that may appear the same like <li></li>
+      var counter = 1; // don't use 0 as id (falsy)
+      /** @const */
+      var expando = "mo_id";
+
+      /**
+       * Attempt to uniquely id an element for hashing. We could optimize this for legacy browsers but it hopefully wont be called enough to be a concern
+       *
+       * @param {Node} $ele
+       * @return {(string|number)}
+       */
+      function getElementId($ele) {
+        try {
+          return $ele.id || ($ele[expando] = $ele[expando] || counter++);
+        } catch (o_O) {
+          // ie <8 will throw if you set an unknown property on a text node
+          try {
+            return $ele.nodeValue; // naive
+          } catch (shitie) {
+            // when text node is removed: https://gist.github.com/megawac/8355978 :(
+            return counter++;
+          }
+        }
+      }
+
+      /**
+       * **map** Apply a mapping function to each item of a set
+       * @param {Array|NodeList} set
+       * @param {Function} iterator
+       */
+      function map(set, iterator) {
+        var results = [];
+        for (var index = 0; index < set.length; index++) {
+          results[index] = iterator(set[index], index, set);
+        }
+        return results;
+      }
+
+      /**
+       * **Reduce** builds up a single result from a list of values
+       * @param {Array|NodeList|NamedNodeMap} set
+       * @param {Function} iterator
+       * @param {*} [memo] Initial value of the memo.
+       */
+      function reduce(set, iterator, memo) {
+        for (var index = 0; index < set.length; index++) {
+          memo = iterator(memo, set[index], index, set);
+        }
+        return memo;
+      }
+
+      /**
+       * **indexOf** find index of item in collection.
+       * @param {Array|NodeList} set
+       * @param {Object} item
+       * @param {number} idx
+       * @param {string} [prop] Property on set item to compare to item
+       */
+      function indexOf(set, item, idx, prop) {
+        for /*idx = ~~idx*/
+        (; idx < set.length; idx++) {
+          // start idx is always given as this is internal
+          if ((prop ? set[idx][prop] : set[idx]) === item) return idx;
+        }
+        return -1;
+      }
+
+      /**
+       * @param {Object} obj
+       * @param {(string|number)} prop
+       * @return {boolean}
+       */
+      function has(obj, prop) {
+        return obj[prop] !== undefined$1; // will be nicely inlined by gcc
+      }
+
+      // GCC hack see https://stackoverflow.com/a/23202438/1517919
+      function JSCompiler_renameProperty(a) {
+        return a;
+      }
+      return MutationObserver;
+    }(void 0);
+  }
+  /**
+   * map-polyfill - A Map polyfill written in TypeScript, unit tested using Jasmine and Karma.
+   *
+   * @author Brenden Palmer
+   * @version v0.0.1-alpha.2
+   * @license MIT
+   */
+  !function () {
+
+    var t;
+    !function (t) {
+      var e = function () {
+        function t(t, e) {
+          this.index = 0, this.map = null, this.done = !1, this.map = t, this.type = e;
+        }
+        return t.prototype.next = function () {
+          var t;
+          return this.map.keyArray.length > this.index ? ("entries" === this.type ? t = [this.map.keyArray[this.index], this.map.get(this.map.keyArray[this.index])] : "keys" === this.type ? t = this.map.keyArray[this.index] : "values" === this.type && (t = this.map.get(this.map.keyArray[this.index])), this.index++) : this.done = !0, {
+            value: t,
+            done: this.done
+          };
+        }, t;
+      }();
+      t.MapIterator = e;
+    }(t || (t = {}));
+    var t;
+    !function (t) {
+      var e = function () {
+        function t() {}
+        return Object.defineProperty(t, "MAP_KEY_IDENTIFIER", {
+          get: function get() {
+            return "MAP_KEY_IDENTIFIER_OZAbzyeCu3_spF91dwX14";
+          },
+          enumerable: !0,
+          configurable: !0
+        }), Object.defineProperty(t, "MAP_SET_THROWABLE_MESSAGE", {
+          get: function get() {
+            return "Invalid value used as map key";
+          },
+          enumerable: !0,
+          configurable: !0
+        }), t;
+      }();
+      t.MapConstants = e;
+    }(t || (t = {}));
+    var t;
+    !function (t) {
+      var e = function () {
+        function t() {
+          if (null !== t.instance) throw "Get the instance of the MapSequencer using the getInstance method.";
+          this.identifier = 0;
+        }
+        return t.getInstance = function () {
+          return null === t.instance && (t.instance = new t()), t.instance;
+        }, t.prototype.next = function () {
+          return "Map_CJPOYUrpwK_aHBtMHXsTM" + String(this.identifier++);
+        }, t.instance = null, t;
+      }();
+      t.MapSequencer = e;
+    }(t || (t = {}));
+    var t;
+    !function (t) {
+      var e = function () {
+        function e() {}
+        return e.defineProperty = function (n) {
+          var r;
+          if (e.isValidObject(n) === !1) throw new TypeError(t.MapConstants.MAP_SET_THROWABLE_MESSAGE);
+          if ("undefined" == typeof n[t.MapConstants.MAP_KEY_IDENTIFIER]) {
+            r = t.MapSequencer.getInstance().next();
+            try {
+              Object.defineProperty(n, t.MapConstants.MAP_KEY_IDENTIFIER, {
+                enumerable: !1,
+                configurable: !1,
+                get: function get() {
+                  return r;
+                }
+              });
+            } catch (i) {
+              throw new TypeError(t.MapConstants.MAP_SET_THROWABLE_MESSAGE);
+            }
+          } else r = n[t.MapConstants.MAP_KEY_IDENTIFIER];
+          return r;
+        }, e.getProperty = function (n) {
+          return e.isValidObject(n) === !0 ? n[t.MapConstants.MAP_KEY_IDENTIFIER] : void 0;
+        }, e.isValidObject = function (t) {
+          return t === Object(t);
+        }, e;
+      }();
+      t.MapUtils = e;
+    }(t || (t = {}));
+    var t;
+    !function (t) {
+      var e = function () {
+        function e(t) {
+          void 0 === t && (t = []), this.map = {}, this.keyArray = [];
+          for (var e = 0; e < t.length; e++) {
+            var n = t[e];
+            n && n.length >= 2 && this.set(n[0], n[1]);
+          }
+        }
+        return e.prototype.get = function (e) {
+          if (this.has(e) === !0) {
+            var n = t.MapUtils.getProperty(e);
+            return void 0 === n && (n = String(e)), this.map[n];
+          }
+        }, e.prototype.has = function (e) {
+          var n = t.MapUtils.getProperty(e);
+          return void 0 === n && (n = String(e)), void 0 !== n && "undefined" != typeof this.map[n];
+        }, e.prototype["delete"] = function (e) {
+          if (this.has(e) === !0) {
+            var n = t.MapUtils.getProperty(e);
+            return void 0 === n && (n = String(e)), this.keyArray.splice(this.keyArray.indexOf(e), 1), delete this.map[n], !0;
+          }
+          return !1;
+        }, e.prototype.set = function (e, n) {
+          this["delete"](e);
+          var r;
+          try {
+            r = String(t.MapUtils.defineProperty(e));
+          } catch (i) {
+            r = String(e);
+          }
+          this.keyArray.push(e), this.map[r] = n;
+        }, e.prototype.entries = function () {
+          return new t.MapIterator(this, "entries");
+        }, e.prototype.keys = function () {
+          return new t.MapIterator(this, "keys");
+        }, e.prototype.values = function () {
+          return new t.MapIterator(this, "values");
+        }, e.prototype.forEach = function (t, e) {
+          for (var n = 0, r = this.keyArray; n < r.length; n++) {
+            var i = r[n];
+            e ? t.call(e, this.get(i), i, this) : t(this.get(i), i, this);
+          }
+        }, e.prototype.clear = function () {
+          this.map = {}, this.keyArray = [];
+        }, e;
+      }();
+      t.Map = e;
+    }(t || (t = {}));
+    var t;
+    !function (t) {
+      window.Map || (window.Map = t.Map);
+    }(t || (t = {}));
+  }();
 
   function _iterableToArrayLimit(arr, i) {
     var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
@@ -962,8 +1728,8 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '2.3.5',
-    app_version: '1.8.8',
+    css_version: '2.5.1',
+    app_version: '1.9.5',
     cub_domain: 'cub.watch'
   };
   var plugins$1 = [];
@@ -1043,7 +1809,7 @@
     var inx = from.indexOf(need);
     if (inx >= 0) from.splice(inx, 1);
   }
-  function clone(a) {
+  function clone$1(a) {
     return JSON.parse(JSON.stringify(a));
   }
   function insert(where, index, item) {
@@ -1088,7 +1854,7 @@
     getKeys: getKeys,
     getValues: getValues,
     insert: insert,
-    clone: clone,
+    clone: clone$1,
     remove: remove$4,
     destroy: destroy$9,
     empty: empty$1,
@@ -1152,274 +1918,289 @@
     return new Subscribe();
   }
 
-  var html$1G = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1L = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1F = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
+  var html$1K = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
 
-  var html$1E = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_bookmark}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"like\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 477.534 477.534\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M438.482,58.61c-24.7-26.549-59.311-41.655-95.573-41.711c-36.291,0.042-70.938,15.14-95.676,41.694l-8.431,8.909\n                            l-8.431-8.909C181.284,5.762,98.662,2.728,45.832,51.815c-2.341,2.176-4.602,4.436-6.778,6.778\n                            c-52.072,56.166-52.072,142.968,0,199.134l187.358,197.581c6.482,6.843,17.284,7.136,24.127,0.654\n                            c0.224-0.212,0.442-0.43,0.654-0.654l187.29-197.581C490.551,201.567,490.551,114.77,438.482,58.61z M413.787,234.226h-0.017\n                            L238.802,418.768L63.818,234.226c-39.78-42.916-39.78-109.233,0-152.149c36.125-39.154,97.152-41.609,136.306-5.484\n                            c1.901,1.754,3.73,3.583,5.484,5.484l20.804,21.948c6.856,6.812,17.925,6.812,24.781,0l20.804-21.931\n                            c36.125-39.154,97.152-41.609,136.306-5.484c1.901,1.754,3.73,3.583,5.484,5.484C453.913,125.078,454.207,191.516,413.787,234.226\n                            z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_like}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"wath\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M347.216,301.211l-71.387-53.54V138.609c0-10.966-8.864-19.83-19.83-19.83c-10.966,0-19.83,8.864-19.83,19.83v118.978\n                       c0,6.246,2.935,12.136,7.932,15.864l79.318,59.489c3.569,2.677,7.734,3.966,11.878,3.966c6.048,0,11.997-2.717,15.884-7.952\n                       C357.766,320.208,355.981,307.775,347.216,301.211z\"/>\n                    <path fill=\"currentColor\" d=\"M256,0C114.833,0,0,114.833,0,256s114.833,256,256,256s256-114.833,256-256S397.167,0,256,0z M256,472.341\n                       c-119.275,0-216.341-97.066-216.341-216.341S136.725,39.659,256,39.659c119.295,0,216.341,97.066,216.341,216.341\n                       S375.275,472.341,256,472.341z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_time}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
+  var html$1J = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"feed\">\n                <div class=\"menu__ico\">\n                    <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_feed}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{settings_input_links}</div>\n            </li>\n\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
 
-  var html$1D = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
+  var html$1I = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
 
-  var html$1C = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
+  var html$1H = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
 
-  var html$1B = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
+  var html$1G = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
 
-  var html$1A = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$1F = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$1z = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
+  var html$1E = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
 
-  var html$1y = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_account}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
+  var html$1D = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_account}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
 
-  var html$1x = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
+  var html$1C = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_reactions\">\n        <div class=\"settings-param__name\">#{settings_interface_card_reactions}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
 
-  var html$1w = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector hide\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\" data-children-value=\"jackett\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div class=\"settings-param-title\" data-parent=\"type\"><span>Jackett</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
+  var html$1B = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector hide\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\" data-children-value=\"jackett\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div class=\"settings-param-title\" data-parent=\"type\"><span>Jackett</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1v = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n        <div class=\"settings-param__name\">#{settings_server_link}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n        <div class=\"settings-param__name\">#{settings_server_base}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n        <div class=\"settings-param__name\">#{settings_server_preload}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n        <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div data-parent=\"login\">\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_login}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_password}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n    </div>\n</div>";
+  var html$1A = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n        <div class=\"settings-param__name\">#{settings_server_link}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n        <div class=\"settings-param__name\">#{settings_server_base}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n        <div class=\"settings-param__name\">#{settings_server_preload}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n        <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div data-parent=\"login\">\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_login}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_password}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n    </div>\n</div>";
 
-  var html$1u = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
+  var html$1z = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
 
-  var html$1t = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__value\">#{settings_rest_cache_descr}</div>\n    </div>\n</div>";
+  var html$1y = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__value\">#{settings_rest_cache_descr}</div>\n    </div>\n</div>";
 
-  var html$1s = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
+  var html$1x = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
 
-  var html$1r = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
+  var html$1w = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
 
-  var html$1q = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
+  var html$1v = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
 
-  var html$1p = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
+  var html$1u = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
 
-  var html$1o = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
+  var html$1t = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
 
-  var html$1n = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
+  var html$1s = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
 
-  var html$1m = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
+  var html$1r = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$1l = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__title\">#{title_watched}</div>\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
+  var html$1q = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__title\">#{title_watched}</div>\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
 
-  var html$1k = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
+  var html$1p = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1j = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n            </div>\n    </div>\n</div>";
+  var html$1o = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <!--\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n            -->\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n            </div>\n    </div>\n</div>";
 
-  var html$1i = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_book}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
+  var html$1n = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{settings_input_links}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                    <span>#{title_reactions}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
 
-  var html$1h = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
+  var html$1m = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1g = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
+  var html$1l = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
 
-  var html$1f = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
+  var html$1k = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
 
-  var html$1e = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
+  var html$1j = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
 
-  var html$1d = "<div class=\"player\">\n    \n</div>";
+  var html$1i = "<div class=\"player\">\n    \n</div>";
 
-  var html$1c = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1h = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1b = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
+  var html$1g = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
 
-  var html$1a = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
+  var html$1f = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
 
-  var html$19 = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
+  var html$1e = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
 
-  var html$18 = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
+  var html$1d = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
 
-  var html$17 = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
+  var html$1c = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
 
-  var html$16 = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
+  var html$1b = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
 
-  var html$15 = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <span>#{filter_clarify}</span>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
+  var html$1a = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
 
-  var html$14 = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
+  var html$19 = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
 
-  var html$13 = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
+  var html$18 = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
 
-  var html$12 = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
+  var html$17 = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
 
-  var html$11 = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$16 = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$10 = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
+  var html$15 = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
 
-  var html$$ = "<div class=\"modal-loading\">\n    \n</div>";
+  var html$14 = "<div class=\"modal-loading\">\n    \n</div>";
 
-  var html$_ = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
+  var html$13 = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
 
-  var html$Z = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__descr\">{descr}</div>\n        </div>\n    </div>\n\n    <div class=\"person-start__descr-mobile\">{descr}</div>\n</div>";
+  var html$12 = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__descr\">{descr}</div>\n        </div>\n    </div>\n\n    <div class=\"person-start__descr-mobile\">{descr}</div>\n</div>";
 
-  var html$Y = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
+  var html$11 = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
 
-  var html$X = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
+  var html$10 = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
 
-  var html$W = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
+  var html$$ = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
 
-  var html$V = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
+  var html$_ = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__ffprobe hide\"></div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$U = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}</div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
+  var html$Z = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}<span class=\"exe\">.{exe}</span></div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
 
-  var html$T = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
+  var html$Y = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$S = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"about__contacts\">\n        <div>\n            <small>#{about_channel}</small><br>\n            @lampa_channel\n        </div>\n\n        <div>\n            <small>#{about_group}</small><br>\n            @lampa_group\n        </div>\n\n        <div>\n            <small>#{about_version}</small><br>\n            <span class=\"version_app\"></span>\n        </div>\n\n        <div class=\"hide platform_android\">\n            <small>#{about_version} Android</small><br>\n            <span class=\"version_android\"></span>\n        </div>\n    </div>\n\n    <div class=\"about__contacts\">\n        <div>\n            <small>#{about_donate}</small><br>\n            www.boosty.to/lampatv\n        </div>\n    </div>\n</div>";
+  var html$X = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
-  var html$R = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
+  var html$W = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
-  var html$Q = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$V = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$P = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$U = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$O = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
+  var html$T = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
 
-  var html$N = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$S = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$M = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
+  var html$R = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
 
-  var html$L = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_episode} - <b>{episode}</b></span><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
+  var html$Q = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
 
-  var html$K = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
+  var html$P = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
 
-  var html$J = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
+  var html$O = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
 
-  var html$I = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$N = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$H = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$M = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$G = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
+  var html$L = "\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path></svg>\n";
 
-  var html$F = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
+  var html$K = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
 
-  var html$E = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
+  var html$J = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
 
-  var html$D = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
+  var html$I = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
 
-  var html$C = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
+  var html$H = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
 
-  var html$B = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
+  var html$G = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$A = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
+  var html$F = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
 
-  var html$z = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
+  var html$E = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
 
-  var html$y = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
+  var html$D = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
 
-  var html$x = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
+  var html$C = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
 
-  var html$w = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
+  var html$B = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
 
-  var html$v = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
+  var html$A = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$u = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
+  var html$z = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
 
-  var html$t = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
+  var html$y = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
 
-  var html$s = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
+  var html$x = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
 
-  var html$r = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
+  var html$w = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
 
-  var html$q = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
+  var html$v = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
 
-  var html$p = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.watch/premium</div>\n</div>";
+  var html$u = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
 
-  var html$o = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.watch/premium</div>\n</div>";
+  var html$t = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.watch/premium</div>\n</div>";
 
-  var html$n = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
+  var html$s = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.watch/premium</div>\n</div>";
 
-  var html$m = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
+  var html$r = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
 
-  var html$l = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
+  var html$q = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
 
-  var html$k = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
+  var html$p = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
 
-  var html$j = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
+  var html$o = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$i = "<div class=\"account-add-device\">\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
+  var html$n = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
+
+  var html$m = "<div class=\"account-add-device\">\n    <img src=\"http://cub.watch/img/qr/qr_device.svg\" class=\"account-add-device__qr\" />\n\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
+
+  var html$l = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+
+  var html$k = "<div class=\"feed-head selector layer--visible\">\n    <div class=\"feed-head__icon\">\n        <img src=\"http://cub.watch/img/other/lampa_movie.jpg\" class=\"feed-head__img\" />\n    </div>\n\n    <div class=\"feed-head__body\">\n        <div class=\"feed-head__title\"></div>\n        <div class=\"feed-head__info\"></div>\n    </div>\n</div>";
+
+  var html$j = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__image-box\">\n            <img class=\"feed-item__image-img\" />\n        </div>\n        <div class=\"feed-item__minicard\">\n            <div>\n                <div class=\"feed-item__title\"></div>\n                <div class=\"feed-item__info\"></div>\n            </div>\n            <div class=\"feed-item__minicard-poster\">\n                <div class=\"feed-item__poster-box\">\n                    <img class=\"feed-item__poster-img\" />\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+
+  var html$i = "<div class=\"register\">\n    <div class=\"register__name\"></div>\n    <div class=\"register__counter\"></div>\n</div>";
 
   var templates = {
-    head: html$1G,
-    wrap: html$1F,
-    menu: html$1E,
-    activitys: html$1D,
-    activity: html$1C,
-    activity_wait_refresh: html$1B,
-    settings: html$1z,
-    settings_main: html$1y,
-    settings_interface: html$1x,
-    settings_parser: html$1w,
-    settings_server: html$1v,
-    settings_player: html$1u,
-    settings_more: html$1t,
-    settings_tmdb: html$1s,
-    settings_plugins: html$1r,
-    settings_cloud: html$1q,
-    settings_account: html$1p,
-    scroll: html$1A,
-    items_line: html$1o,
-    card: html$1n,
-    card_parser: html$1m,
-    card_watched: html$1l,
-    card_episode: html$1k,
-    full_start: html$1j,
-    full_start_new: html$1i,
-    full_descr: html$1h,
-    full_person: html$1g,
-    full_review: html$1f,
-    full_episode: html$1e,
-    player: html$1d,
-    player_panel: html$1c,
-    player_video: html$1b,
-    player_info: html$1a,
-    selectbox: html$19,
-    selectbox_item: html$18,
-    info: html$16,
-    more: html$14,
-    search: html$13,
-    settings_input: html$12,
-    modal: html$11,
-    company: html$10,
-    modal_loading: html$$,
-    modal_pending: html$_,
-    person_start: html$Z,
-    empty: html$Y,
-    notice: html$X,
-    notice_card: html$W,
-    torrent: html$V,
-    torrent_file: html$U,
-    files: html$T,
-    about: html$S,
-    error: html$R,
-    torrent_noconnect: html$Q,
-    torrent_file_serial: html$L,
-    torrent_nocheck: html$P,
-    torrent_nohash: html$O,
-    torrent_install: html$N,
-    torrent_error: html$M,
-    filter: html$15,
-    search_box: html$K,
-    console: html$J,
-    icon_star: html$I,
-    icon_viewed: html$H,
-    timeline: html$G,
-    timeline_details: html$F,
-    list_empty: html$E,
-    screensaver: html$D,
-    plugins_catalog: html$C,
-    broadcast: html$B,
-    lang_choice: html$A,
-    extensions: html$z,
-    extensions_block: html$y,
-    extensions_item: html$x,
-    extensions_recomend: html$w,
-    extensions_info: html$v,
-    extensions_theme: html$u,
-    extensions_screensaver: html$t,
-    iframe: html$s,
-    account: html$r,
-    account_limited: html$q,
-    cub_premium: html$p,
-    cub_premium_modal: html$o,
-    selectbox_icon: html$17,
-    explorer: html$n,
-    explorer_button_back: html$m,
-    https: html$l,
-    navigation_bar: html$k,
-    head_backward: html$j,
-    account_add_device: html$i
+    head: html$1L,
+    wrap: html$1K,
+    menu: html$1J,
+    activitys: html$1I,
+    activity: html$1H,
+    activity_wait_refresh: html$1G,
+    settings: html$1E,
+    settings_main: html$1D,
+    settings_interface: html$1C,
+    settings_parser: html$1B,
+    settings_server: html$1A,
+    settings_player: html$1z,
+    settings_more: html$1y,
+    settings_tmdb: html$1x,
+    settings_plugins: html$1w,
+    settings_cloud: html$1v,
+    settings_account: html$1u,
+    scroll: html$1F,
+    items_line: html$1t,
+    card: html$1s,
+    card_parser: html$1r,
+    card_watched: html$1q,
+    card_episode: html$1p,
+    full_start: html$1o,
+    full_start_new: html$1n,
+    full_descr: html$1m,
+    full_person: html$1l,
+    full_review: html$1k,
+    full_episode: html$1j,
+    player: html$1i,
+    player_panel: html$1h,
+    player_video: html$1g,
+    player_info: html$1f,
+    selectbox: html$1e,
+    selectbox_item: html$1d,
+    info: html$1b,
+    more: html$19,
+    search: html$18,
+    settings_input: html$17,
+    modal: html$16,
+    company: html$15,
+    modal_loading: html$14,
+    modal_pending: html$13,
+    person_start: html$12,
+    empty: html$11,
+    notice: html$10,
+    notice_card: html$$,
+    torrent: html$_,
+    torrent_file: html$Z,
+    files: html$Y,
+    about: html$X,
+    error: html$W,
+    torrent_noconnect: html$V,
+    torrent_file_serial: html$Q,
+    torrent_nocheck: html$U,
+    torrent_nohash: html$T,
+    torrent_install: html$S,
+    torrent_error: html$R,
+    filter: html$1a,
+    search_box: html$P,
+    console: html$O,
+    icon_star: html$N,
+    icon_viewed: html$M,
+    icon_lock: html$L,
+    timeline: html$K,
+    timeline_details: html$J,
+    list_empty: html$I,
+    screensaver: html$H,
+    plugins_catalog: html$G,
+    broadcast: html$F,
+    lang_choice: html$E,
+    extensions: html$D,
+    extensions_block: html$C,
+    extensions_item: html$B,
+    extensions_recomend: html$A,
+    extensions_info: html$z,
+    extensions_theme: html$y,
+    extensions_screensaver: html$x,
+    iframe: html$w,
+    account: html$v,
+    account_limited: html$u,
+    cub_premium: html$t,
+    cub_premium_modal: html$s,
+    selectbox_icon: html$1c,
+    explorer: html$r,
+    explorer_button_back: html$q,
+    https: html$p,
+    navigation_bar: html$o,
+    head_backward: html$n,
+    account_add_device: html$m,
+    feed_item: html$l,
+    feed_head: html$k,
+    feed_episode: html$j,
+    register: html$i
   };
   var created = {};
   function get$e(name) {
@@ -1436,7 +2217,7 @@
     });
     return like_static ? tpl : $(tpl);
   }
-  function build$1(tree) {
+  function build$a(tree) {
     function create(item) {
       var elem = item.elem.cloneNode(); //document.createElement(item.tag)
 
@@ -1475,19 +2256,19 @@
       var tree = extract(tpl[0]);
       created[name] = tree;
     }
-    return build$1(created[name]);
+    return build$a(created[name]);
   }
-  function add$d(name, html) {
+  function add$c(name, html) {
     templates[name] = html;
   }
-  function all$3() {
+  function all$4() {
     return templates;
   }
   var Template$1 = {
     get: get$e,
     js: js,
-    add: add$d,
-    all: all$3
+    add: add$c,
+    all: all$4
   };
 
   var Base64 = {
@@ -1649,6 +2430,13 @@
   function openPlayer(link, data) {
     if (checkVersion(98, true)) {
       if (data.timeline) {
+        data.timeline.time = Math.round(data.timeline.time);
+        data.timeline.duration = Math.round(data.timeline.duration);
+
+        // Lampa.Noty.show('time: ' + data.timeline.time)
+
+        // console.log('Timecode', data.timeline)
+
         timeCallback[data.timeline.hash] = data;
       }
     }
@@ -1937,7 +2725,7 @@
     var l = typeof show_logs !== 'undefined' ? show_logs : true;
     function check() {
       p++;
-      if (p == items.length) complite();
+      if (p == items.length && complite) complite();
     }
     function put(u) {
       if (l) console.log('Script', 'create:', u);
@@ -2013,7 +2801,7 @@
   function pathToNormalTitle(path) {
     var add_exe = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     var name = path.split('.');
-    var exe = name.pop();
+    var exe = name[name.length - 1];
     name = name.join('.');
     return (name + '').replace(/_|\./g, ' ') + (add_exe ? ' <span class="exe">.' + exe + '</span>' : '');
   }
@@ -2136,6 +2924,21 @@
     } catch (e) {}
     return pwa;
   }
+  function bigNumberToShort(number) {
+    var suffixes = ['', 'K', 'M', 'M']; // Суффиксы для различных форматов
+    var absoluteNumber = Math.abs(number); // Получаем абсолютное значение числа
+    var suffixIndex = Math.floor((absoluteNumber.toFixed(0).length - 1) / 3); // Определение индекса суффикса
+
+    // Проверяем, если число меньше 1000, возвращаем его без изменений
+    if (absoluteNumber < 1000) {
+      return number.toString();
+    }
+
+    // Округление числа и преобразование в строку
+    var roundedNumber = (number / Math.pow(1000, suffixIndex)).toFixed(1).replace('.0', '');
+    return roundedNumber + suffixes[suffixIndex]; // Возвращаем округленное число с суффиксом
+  }
+
   var Utils$2 = {
     secondsToTime: secondsToTime,
     secondsToTimeHuman: secondsToTimeHuman,
@@ -2172,7 +2975,105 @@
     countDays: countDays,
     decodePG: decodePG,
     trigger: trigger$2,
-    isPWA: isPWA
+    isPWA: isPWA,
+    bigNumberToShort: bigNumberToShort
+  };
+
+  var widgetAPI,
+    tvKey,
+    pluginAPI,
+    loader$2,
+    orsay_loaded,
+    orsay_call = Date.now();
+  function init$y() {
+    $('body').append($("<div style=\"position: absolute; left: -1000px; top: -1000px;\">  \n    <object id=\"pluginObjectNNavi\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-NNAVI\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectTVMW\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-TVMW\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectScreen\" border=0 classid=\"clsid:SAMSUNG-INFOLINK-SCREEN\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n</div>"));
+    Utils$2.putScript(['$MANAGER_WIDGET/Common/API/Widget.js', '$MANAGER_WIDGET/Common/API/TVKeyValue.js', '$MANAGER_WIDGET/Common/API/Plugin.js', '$MANAGER_WIDGET/Common/webapi/1.0/webapis.js', '$MANAGER_WIDGET/Common/IME_XT9/ime.js', '$MANAGER_WIDGET/Common/IME_XT9/inputCommon/ime_input.js'], function () {
+      try {
+        if (typeof Common !== 'undefined' && Common.API && Common.API.TVKeyValue && Common.API.Plugin && Common.API.Widget) {
+          widgetAPI = new Common.API.Widget();
+          tvKey = new Common.API.TVKeyValue();
+          pluginAPI = new Common.API.Plugin();
+          window.onShow = orsayOnshow;
+          setTimeout(function () {
+            orsayOnshow();
+          }, 2000);
+          widgetAPI.sendReadyEvent();
+        } else {
+          if (orsay_call + 5 * 1000 > Date.now()) setTimeout(orsayOnLoad, 50);
+        }
+      } catch (e) {}
+    });
+
+    /**
+    * Скрывает ненужные параметры для плеера
+    */
+
+    if (Platform.is('orsay')) {
+      var hidePlayerParams = function hidePlayerParams() {
+        $('[data-name="player_normalization"],[data-name="player_scale_method"],[data-name="player_hls_method"]').toggleClass('hide', Lampa.Storage.field('player') == 'orsay');
+      };
+      /* Подписываемся на открытие настроек плера*/
+      Lampa.Settings.listener.follow('open', function (e) {
+        if (e.name == 'player') hidePlayerParams();
+      });
+
+      /* Подписываемся на изменение плера*/
+      Lampa.Storage.listener.follow('change', function (e) {
+        if (e.name == 'player') hidePlayerParams();
+      });
+    }
+  }
+  function orsayOnshow() {
+    if (orsay_loaded) return;
+    orsay_loaded = true;
+    try {
+      //Включает анимацию изменения громкости на ТВ и т.д.
+      pluginAPI.SetBannerState(1);
+      //Отключает перехват кнопок, этими кнопками управляет система ТВ
+      pluginAPI.unregistKey(tvKey.KEY_INFO);
+      pluginAPI.unregistKey(tvKey.KEY_TOOLS);
+      pluginAPI.unregistKey(tvKey.KEY_MENU);
+      pluginAPI.unregistKey(tvKey.KEY_VOL_UP);
+      pluginAPI.unregistKey(tvKey.KEY_VOL_DOWN);
+      pluginAPI.unregistKey(tvKey.KEY_MUTE);
+      // Отключаем заставку ТВ
+      pluginAPI.setOffScreenSaver();
+      console.log('App', 'Version widget ', Platform.version('orsay'));
+    } catch (e) {}
+  }
+  function isNewWidget() {
+    if (typeof window.top.WidgetLoader != 'undefined') {
+      loader$2 = window.top.WidgetLoader;
+      return true;
+    } else {
+      return false;
+    }
+  }
+  function getLoaderUrl() {
+    if (isNewWidget()) {
+      return loader$2.getUrl();
+    }
+  }
+  function setLoaderUrl(_url) {
+    if (isNewWidget()) {
+      return loader$2.setUrl(_url);
+    }
+  }
+  function changeLoaderUrl() {
+    if (isNewWidget()) {
+      return loader$2.changeUrl();
+    }
+  }
+  function exit() {
+    if (widgetAPI) widgetAPI.sendReturnEvent();
+  }
+  var Orsay = {
+    init: init$y,
+    isNewWidget: isNewWidget,
+    getLoaderUrl: getLoaderUrl,
+    setLoaderUrl: setLoaderUrl,
+    changeLoaderUrl: changeLoaderUrl,
+    exit: exit
   };
 
   function init$x() {
@@ -2190,11 +3091,13 @@
       tizen.tvinputdevice.registerKey("MediaPause");
       tizen.tvinputdevice.registerKey("MediaRewind");
       tizen.tvinputdevice.registerKey("MediaFastForward");
+      tizen.tvinputdevice.registerKey("ChannelUp");
+      tizen.tvinputdevice.registerKey("ChannelDown");
     } else if (agent.indexOf("lampa_client") > -1) {
       Storage.set('platform', 'android');
     } else if (agent.indexOf("whaletv") > -1 || agent.indexOf("philips") > -1 || agent.indexOf("nettv") > -1) {
       Storage.set('platform', 'philips');
-    } else if (agent.indexOf("iphone") > -1 || agent.indexOf("mac os") > -1 && Utils$2.isTouchDevice()) {
+    } else if (agent.indexOf("iphone") > -1 || agent.indexOf("mac os") > -1 && Utils$2.isTouchDevice() || agent.indexOf("macintosh") > -1 && Utils$2.isTouchDevice()) {
       Storage.set('platform', 'apple');
     } else if (typeof nw !== 'undefined') {
       Storage.set('platform', 'nw');
@@ -2208,6 +3111,7 @@
       Storage.set('platform', 'browser');
     } else if (agent.indexOf("maple") > -1) {
       Storage.set('platform', 'orsay');
+      Orsay.init();
     } else {
       Storage.set('platform', '');
     }
@@ -2671,7 +3575,7 @@
     toggleMobile();
     toggleOrientation();
     size$1();
-    blick();
+    setTimeout(blick, 5000);
     if (Platform.tv() || Platform.desktop()) mouseEvents();
   }
   function toggleMobile() {
@@ -2902,9 +3806,12 @@
         }
       }
     });
+    html.Scroll = _self;
     body.addEventListener('webkitTransitionEnd', function () {
       if (Date.now() - call_transition_time > 400) return;
-      if (Date.now() - call_update_time > 200) scrollEnded();
+
+      //чет на моей карте выходит 180-190, странно, ну да ладно, поставил 150
+      if (Date.now() - call_update_time > 150) scrollEnded();
     });
     if (Platform.screen('tv')) {
       html.addEventListener('scroll', function (e) {
@@ -3312,147 +4219,6 @@
     };
   }
 
-  var widgetAPI,
-    tvKey,
-    pluginAPI,
-    orsay_loaded,
-    orsay_call = Date.now();
-  function init$v() {
-    $('body').append($("<div style=\"position: absolute; left: -1000px; top: -1000px;\">\n    <object id=\"pluginObjectNNavi\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-NNAVI\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectTVMW\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-TVMW\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n</div>"));
-    Utils$2.putScript(['$MANAGER_WIDGET/Common/API/Widget.js', '$MANAGER_WIDGET/Common/API/TVKeyValue.js', '$MANAGER_WIDGET/Common/API/Plugin.js', '$MANAGER_WIDGET/Common/webapi/1.0/webapis.js'], function () {
-      try {
-        if (typeof Common !== 'undefined' && Common.API && Common.API.TVKeyValue && Common.API.Plugin && Common.API.Widget) {
-          widgetAPI = new Common.API.Widget();
-          tvKey = new Common.API.TVKeyValue();
-          pluginAPI = new Common.API.Plugin();
-          window.onShow = orsayOnshow;
-          setTimeout(function () {
-            orsayOnshow();
-          }, 2000);
-          widgetAPI.sendReadyEvent();
-        } else {
-          if (orsay_call + 5 * 1000 > Date.now()) setTimeout(orsayOnLoad, 50);
-        }
-      } catch (e) {}
-    });
-
-    /**
-    * Скрывает ненужные параметры для плеера
-    */
-
-    if (Platform.is('orsay')) {
-      var hidePlayerParams = function hidePlayerParams() {
-        $('[data-name="player_normalization"],[data-name="player_scale_method"],[data-name="player_hls_method"]').toggleClass('hide', Lampa.Storage.field('player') == 'orsay');
-      };
-      /* Подписываемся на открытие настроек плера*/
-      Lampa.Settings.listener.follow('open', function (e) {
-        if (e.name == 'player') hidePlayerParams();
-      });
-
-      /* Подписываемся на изменение плера*/
-      Lampa.Storage.listener.follow('change', function (e) {
-        if (e.name == 'player') hidePlayerParams();
-      });
-    }
-  }
-  function orsayOnshow() {
-    if (orsay_loaded) return;
-    orsay_loaded = true;
-    try {
-      //Включает анимацию изменения громкости на ТВ и т.д.
-      pluginAPI.SetBannerState(1);
-      //Отключает перехват кнопок, этими кнопками управляет система ТВ
-      pluginAPI.unregistKey(tvKey.KEY_INFO);
-      pluginAPI.unregistKey(tvKey.KEY_TOOLS);
-      pluginAPI.unregistKey(tvKey.KEY_MENU);
-      pluginAPI.unregistKey(tvKey.KEY_VOL_UP);
-      pluginAPI.unregistKey(tvKey.KEY_VOL_DOWN);
-      pluginAPI.unregistKey(tvKey.KEY_MUTE);
-      // Отключаем заставку ТВ
-      pluginAPI.setOffScreenSaver();
-      console.log('App', 'Version widget ', Platform.version('orsay'));
-    } catch (e) {}
-  }
-
-  /**
-   * Проверяет совместимость виджета с новыми функциями
-   * @param {string} option 
-   * p - поддержка нативного плеера;
-   * k - поддержка нативной клавиатуры;
-   * l- поддержка нового загрузчика;
-   * @returns 
-   */
-  function isCompatibleOption(option) {
-    var wgtVer = Platform.version('orsay');
-    switch (option) {
-      case 'p':
-        var minPVer = '1.7.8';
-        if (versionCompare(wgtVer, minPVer) >= 0) {
-          console.log('testver');
-          return true;
-        } else {
-          Noty.show("Обновите приложение.<br>Требуется версия: " + minPVer + "<br>Текущая версия: " + wgtVer);
-          return false;
-        }
-      case 'k':
-        if (Platform.version('orsay') > 1) {
-          return true;
-        } else {
-          return false;
-        }
-      case 'l':
-        if (Platform.version('orsay') > 1) {
-          return true;
-        } else {
-          return false;
-        }
-    }
-  }
-  function versionCompare(v1, v2, options) {
-    var lexicographical = options && options.lexicographical,
-      zeroExtend = options && options.zeroExtend,
-      v1parts = v1.split('.'),
-      v2parts = v2.split('.');
-    function isValidPart(x) {
-      return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
-    }
-    if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
-      return NaN;
-    }
-    if (zeroExtend) {
-      while (v1parts.length < v2parts.length) v1parts.push("0");
-      while (v2parts.length < v1parts.length) v2parts.push("0");
-    }
-    if (!lexicographical) {
-      v1parts = v1parts.map(Number);
-      v2parts = v2parts.map(Number);
-    }
-    for (var i = 0; i < v1parts.length; ++i) {
-      if (v2parts.length == i) {
-        return 1;
-      }
-      if (v1parts[i] == v2parts[i]) {
-        continue;
-      } else if (v1parts[i] > v2parts[i]) {
-        return 1;
-      } else {
-        return -1;
-      }
-    }
-    if (v1parts.length != v2parts.length) {
-      return -1;
-    }
-    return 0;
-  }
-  function exit() {
-    if (widgetAPI) widgetAPI.sendReturnEvent();
-  }
-  var Orsay = {
-    init: init$v,
-    isCompatibleOption: isCompatibleOption,
-    exit: exit
-  };
-
   var philipse = {
     play: typeof VK_PLAY !== 'undefined' ? VK_PLAY : typeof KEYCODE_MEDIA_PLAY !== 'undefined' ? KEYCODE_MEDIA_PLAY : -1,
     stop: typeof VK_STOP !== 'undefined' ? VK_STOP : typeof KEYCODE_MEDIA_STOP !== 'undefined' ? KEYCODE_MEDIA_STOP : -1,
@@ -3549,7 +4315,8 @@
     }
 
     //Samsung stop
-    if (keycode == 413 || keycode == philipse.stop) {
+    //70 - Samsung orsay
+    if (keycode == 413 || keycode == philipse.stop || keycode == 70) {
       Controller.trigger('stop');
     }
 
@@ -3594,9 +4361,16 @@
     if (keycode == 45) {
       Orsay.exit();
     }
+    //Кнопка pre-ch вызывает окно смены адреса в Loader
+    //259 - Samsung orsay
+    if (keycode == 259) {
+      if (Orsay.isNewWidget()) {
+        Orsay.changeLoaderUrl();
+      }
+    }
     e.preventDefault();
   }
-  function init$u() {
+  function init$v() {
     window.addEventListener("keydown", function (e) {
       lastdown = keyCode(e);
       if (!timer$7) {
@@ -3637,7 +4411,7 @@
   }
   var Keypad = {
     listener: listener$i,
-    init: init$u,
+    init: init$v,
     enable: enable$1,
     disable: disable
   };
@@ -3698,7 +4472,11 @@
     _scroll.append(params.html);
     if (params.buttons) buttons();
     $('body').append(html$g);
+    max();
     toggle$9(params.select);
+  }
+  function max() {
+    _scroll.render().find('.scroll__content').css('max-height', Math.round(window.innerHeight - _scroll.render().offset().top - window.innerHeight * 0.1) + 'px');
   }
   function buttons() {
     var footer = $('<div class="modal__footer"></div>');
@@ -3770,6 +4548,7 @@
     _scroll.clear();
     _scroll.append(new_html);
     bind$3(new_html);
+    max();
     toggle$9(active$4.select);
   }
   function title$1(tit) {
@@ -3802,7 +4581,7 @@
   var keydown_time = 0;
   var move_time = 0;
   var touch = false;
-  function init$t() {
+  function init$u() {
     Keypad.listener.follow('keydown', function () {
       keydown_time = Date.now();
       move_time = 0;
@@ -3812,7 +4591,7 @@
     }).on('touchstart', function () {
       touch = true;
     });
-    detect();
+    detect$9();
   }
   function showModal$1(text, onselect) {
     var controller = Controller.enabled().name;
@@ -3833,7 +4612,7 @@
       }]
     });
   }
-  function detect() {
+  function detect$9() {
     var show_touch, show_mouse, show_remote;
     $(document).on('touchstart', function (e) {
       if ($('.modal').length || show_touch) return;
@@ -3872,7 +4651,7 @@
     return Date.now() - keydown_time < 500 ? false : touch || Platform.is('browser') || Platform.tv() || Platform.desktop() || Date.now() - move_time < 500;
   }
   var DeviceInput = {
-    init: init$t,
+    init: init$u,
     canClick: canClick
   };
 
@@ -3885,7 +4664,7 @@
   /**
    * Запуск
    */
-  function init$s() {
+  function init$t() {
     html$f = Template$1.get('settings');
     body$3 = html$f.find('.settings__body');
     html$f.find('.settings__layer').on('click', function (e) {
@@ -3964,7 +4743,7 @@
   }
   var Settings = {
     listener: listener$h,
-    init: init$s,
+    init: init$t,
     render: render$d,
     update: update$8,
     create: create$o,
@@ -3976,7 +4755,7 @@
   var html$e;
   var scroll$2;
   var active$3;
-  function init$r() {
+  function init$s() {
     html$e = Template$1.get('selectbox');
     scroll$2 = new create$p({
       mask: true,
@@ -4009,17 +4788,17 @@
       if (element.ghost) item.css('opacity', 0.5);
       if (!element.noenter) {
         var goclose = function goclose() {
-          if (!active$3.nohide) hide$1();else {
+          if (!active$3.nohide) hide$2();else {
             scroll$2.render().find('.selected').removeClass('selected');
             item.addClass('selected');
           }
-          if (element.onSelect) element.onSelect(element);else if (active$3.onSelect) active$3.onSelect(element);
+          if (element.onSelect) element.onSelect(element, item);else if (active$3.onSelect) active$3.onSelect(element, item);
         };
         item.on('hover:enter', function () {
           if (element.checkbox) {
             element.checked = !element.checked;
             item.toggleClass('selectbox-item--checked', element.checked);
-            if (element.onCheck) element.onCheck(element);else if (active$3.onCheck) active$3.onCheck(element);
+            if (element.onCheck) element.onCheck(element, item);else if (active$3.onCheck) active$3.onCheck(element, item);
           } else if (active$3.onBeforeClose) {
             if (active$3.onBeforeClose()) goclose();
           } else goclose();
@@ -4031,6 +4810,9 @@
         });
       }
       if (element.selected) item.addClass('selected');
+      if (element.picked) item.addClass('picked');
+      if (active$3.nomark) item.addClass('nomark');
+      if (active$3.onDraw) active$3.onDraw(item, element);
       scroll$2.append(item);
     });
   }
@@ -4059,20 +4841,20 @@
     });
     Controller.toggle('select');
   }
-  function hide$1() {
+  function hide$2() {
     $('body').toggleClass('selectbox--open', false);
   }
   function close$4() {
-    hide$1();
+    hide$2();
     if (active$3.onBack) active$3.onBack();
   }
   function render$c() {
     return html$e;
   }
   var Select = {
-    init: init$r,
+    init: init$s,
     show: show$8,
-    hide: hide$1,
+    hide: hide$2,
     close: close$4,
     render: render$c
   };
@@ -4453,7 +5235,7 @@
     select: false,
     program: false
   };
-  function init$q() {
+  function init$r() {
     Keypad.listener.follow('keydown', function (e) {
       if (!playning()) return;
       PlayerPanel.rewind();
@@ -4494,7 +5276,7 @@
     status$2.select = status$2.active.onGetChannel(position || status$2.position_view);
     return status$2.select;
   }
-  function play$4() {
+  function play$3() {
     if (status$2.select !== status$2.channel) {
       status$2.channel = status$2.select;
       status$2.position_channel = status$2.position_view;
@@ -4507,7 +5289,7 @@
   }
   function playDelay() {
     clearTimeout(status$2.timer);
-    status$2.timer = setTimeout(play$4, 2000);
+    status$2.timer = setTimeout(play$3, 2000);
   }
   function reset$1() {
     status$2.position_view = status$2.position_channel;
@@ -4565,6 +5347,9 @@
   function drawProgram(container) {
     status$2.active.onGetProgram(status$2.select, status$2.position_program, container);
   }
+  function playlistProgram() {
+    if (status$2.active.onPlaylistProgram) status$2.active.onPlaylistProgram(status$2.select, status$2.position_program);
+  }
   function destroy$7() {
     clearTimeout(status$2.timer);
     status$2 = {
@@ -4576,19 +5361,20 @@
   }
   var TV = {
     listener: listener$g,
-    init: init$q,
+    init: init$r,
     start: start$4,
     playning: playning,
     channel: channel$1,
     programReady: programReady,
     reset: reset$1,
-    play: play$4,
+    play: play$3,
     select: select$2,
     nextChannel: nextChannel,
     prevChannel: prevChannel,
     prevProgram: prevProgram,
     nextProgram: nextProgram,
     drawProgram: drawProgram,
+    playlistProgram: playlistProgram,
     destroy: destroy$7
   };
 
@@ -4609,7 +5395,7 @@
   var translates$1 = {};
   var last_settings_action;
   var last_panel_focus;
-  function init$p() {
+  function init$q() {
     html$d = Template$1.get('player_panel');
     elems$1 = {
       peding: $('.player-panel__peding', html$d),
@@ -4670,8 +5456,11 @@
         hide: function hide() {
           clearTimeout(timer$6.hide);
           timer$6.hide = setTimeout(function () {
-            if (TV.playning()) Controller.toggle('player');else if (!PlayerVideo.video().paused) _visible(false);
-          }, TV.playning() ? 8000 : 3000);
+            if (TV.playning()) {
+              TV.reset();
+              Controller.toggle('player');
+            } else if (!PlayerVideo.video().paused) _visible(false);
+          }, TV.playning() ? 5000 : 3000);
         }
       }
     });
@@ -4889,6 +5678,43 @@
     TV.listener.follow('channel', channel);
     TV.listener.follow('draw-program', program);
   }
+  function showParams() {
+    var enabled = Controller.enabled().name;
+    var items = [];
+    items.push({
+      title: Lang.translate('player_tracks'),
+      trigger: elems$1.tracks,
+      ghost: elems$1.tracks.hasClass('hide'),
+      noenter: elems$1.tracks.hasClass('hide')
+    });
+    items.push({
+      title: Lang.translate('player_subs'),
+      trigger: elems$1.subs,
+      ghost: elems$1.subs.hasClass('hide'),
+      noenter: elems$1.subs.hasClass('hide')
+    });
+    items.push({
+      title: Lang.translate('player_quality'),
+      trigger: elems$1.quality,
+      ghost: !qualitys,
+      noenter: !qualitys
+    });
+    items.push({
+      title: Lang.translate('settings_main_rest'),
+      trigger: html$d.find('.player-panel__settings')
+    });
+    Select.show({
+      title: Lang.translate('title_settings'),
+      items: items,
+      onSelect: function onSelect(a) {
+        Controller.toggle(enabled);
+        a.trigger.trigger('hover:enter');
+      },
+      onBack: function onBack() {
+        Controller.toggle(enabled);
+      }
+    });
+  }
   function program(data) {
     if (elems$1.iptv_channel_active) {
       var prog = elems$1.iptv_channel_active.find('.player-panel-iptv-item__prog');
@@ -4975,6 +5801,7 @@
     Select.show({
       title: Lang.translate('title_settings'),
       items: items,
+      nomark: true,
       onSelect: function onSelect(a) {
         last_settings_action = a.method;
         if (a.method == 'size') selectSize();
@@ -5171,23 +5998,23 @@
         state.start();
       },
       right: function right() {
-        TV.nextProgram();
+        condition.visible = true;
+        TV.playlistProgram();
         state.start();
       },
       left: function left() {
-        TV.prevProgram();
+        condition.visible = true;
+        showParams();
         state.start();
       },
       enter: function enter() {
         TV.play();
         state.start();
       },
-      gone: function gone() {
-        TV.reset();
-      },
       back: function back() {
+        TV.reset();
         Controller.toggle('player');
-        hide();
+        hide$1();
       }
     });
     Controller.add('player_rewind', {
@@ -5212,13 +6039,15 @@
       },
       back: function back() {
         Controller.toggle('player');
-        hide();
+        hide$1();
       }
     });
     Controller.add('player_panel', {
       toggle: function toggle() {
-        Controller.collectionSet(render$b());
-        Controller.collectionFocus(last_panel_focus ? last_panel_focus : $(isTV() ? '.player-panel__next' : '.player-panel__playpause', html$d)[0], render$b());
+        if (TV.playning()) Controller.toggle('player_tv');else {
+          Controller.collectionSet(render$b());
+          Controller.collectionFocus(last_panel_focus ? last_panel_focus : $(isTV() ? '.player-panel__next' : '.player-panel__playpause', html$d)[0], render$b());
+        }
       },
       up: function up() {
         isTV() ? Controller.toggle('player') : toggleRewind();
@@ -5237,7 +6066,7 @@
       },
       back: function back() {
         Controller.toggle('player');
-        hide();
+        hide$1();
       }
     });
   }
@@ -5362,7 +6191,7 @@
   /**
    * Скрыть панель
    */
-  function hide() {
+  function hide$1() {
     condition.visible = false;
     _visible(false);
   }
@@ -5475,13 +6304,13 @@
     return html$d;
   }
   var PlayerPanel = {
-    init: init$p,
+    init: init$q,
     listener: listener$f,
     render: render$b,
     toggle: toggle$7,
     show: show$7,
     destroy: destroy$6,
-    hide: hide,
+    hide: hide$1,
     canplay: canplay,
     update: update$7,
     rewind: rewind$1,
@@ -5494,7 +6323,8 @@
     setTranslate: setTranslate,
     updateTranslate: updateTranslate,
     visible: _visible,
-    visibleStatus: visibleStatus
+    visibleStatus: visibleStatus,
+    showParams: showParams
   };
 
   var subparams;
@@ -5904,6 +6734,1127 @@
     };
   }
 
+  var FORMAT_NAME$7 = "vtt";
+  var helper$5 = {
+    toMilliseconds: function toMilliseconds(s) {
+      var match = /^\s*(\d{1,2}:)?(\d{1,2}):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+      var hh = match[1] ? parseInt(match[1].replace(":", "")) : 0;
+      var mm = parseInt(match[2]);
+      var ss = parseInt(match[3]);
+      var ff = match[5] ? parseInt(match[5]) : 0;
+      var ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff;
+      return ms;
+    },
+    toTimeString: function toTimeString(ms) {
+      var hh = Math.floor(ms / 1000 / 3600);
+      var mm = Math.floor(ms / 1000 / 60 % 60);
+      var ss = Math.floor(ms / 1000 % 60);
+      var ff = Math.floor(ms % 1000);
+      var time = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss + "." + (ff < 100 ? "0" : "") + (ff < 10 ? "0" : "") + ff;
+      return time;
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in WebVTT format (Web Video Text Tracks Format)
+   ******************************************************************************************/
+  function parse$c(content, options) {
+    var index = 1;
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var parts = content.split(/\r?\n\s+\r?\n/);
+    for (var i = 0; i < parts.length; i++) {
+      //WebVTT data
+      var regex = /^([^\r\n]+\r?\n)?((\d{1,2}:)?\d{1,2}:\d{1,2}([.,]\d{1,3})?)\s*\-\-\>\s*((\d{1,2}:)?\d{1,2}:\d{1,2}([.,]\d{1,3})?)\r?\n([\s\S]*)(\r?\n)*$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.index = index++;
+        if (match[1]) {
+          caption.cue = match[1].replace(/[\r\n]*/gi, "");
+        }
+        caption.start = helper$5.toMilliseconds(match[2]);
+        caption.end = helper$5.toMilliseconds(match[5]);
+        caption.duration = caption.end - caption.start;
+        var lines = match[8].split(/\r?\n/);
+        caption.content = lines.join(eol);
+        caption.text = caption.content.replace(/\<[^\>]+\>/g, "") //<b>bold</b> or <i>italic</i>
+        .replace(/\{[^\}]+\}/g, ""); //{b}bold{/b} or {i}italic{/i}
+        captions.push(caption);
+        continue;
+      }
+
+      //WebVTT meta
+      var meta = /^([A-Z]+)(\r?\n([\s\S]*))?$/.exec(parts[i]);
+      if (!meta) {
+        //Try inline meta
+        meta = /^([A-Z]+)\s+([^\r\n]*)?$/.exec(parts[i]);
+      }
+      if (meta) {
+        var caption = {};
+        caption.type = "meta";
+        caption.name = meta[1];
+        if (meta[3]) {
+          caption.data = meta[3];
+        }
+        captions.push(caption);
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in WebVTT format (Web Video Text Tracks Format)
+   ******************************************************************************************/
+  function build$9(captions, options) {
+    var eol = options.eol || "\r\n";
+    var content = "WEBVTT" + eol + eol;
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (caption.type == "meta") {
+        if (caption.name == "WEBVTT") continue;
+        content += caption.name + eol;
+        content += caption.data ? caption.data + eol : "";
+        content += eol;
+        continue;
+      }
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        content += (i + 1).toString() + eol;
+        content += helper$5.toTimeString(caption.start) + " --> " + helper$5.toTimeString(caption.end) + eol;
+        content += caption.text + eol;
+        content += eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return content;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$8(content) {
+    if (typeof content !== "string") {
+      throw new Error("Expected string content!");
+    }
+    if (/^[\s\r\n]*WEBVTT\r?\n/g.test(content)) {
+      /*
+      WEBVTT
+      ...
+      */
+      return "vtt";
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var vttFormatter = {
+    name: FORMAT_NAME$7,
+    helper: helper$5,
+    detect: detect$8,
+    parse: parse$c,
+    build: build$9
+  };
+
+  var FORMAT_NAME$6 = "lrc";
+  var helper$4 = {
+    toMilliseconds: function toMilliseconds(s) {
+      var match = /^\s*(\d+):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+      var mm = parseInt(match[1]);
+      var ss = parseInt(match[2]);
+      var ff = match[4] ? parseInt(match[4]) : 0;
+      var ms = mm * 60 * 1000 + ss * 1000 + ff * 10;
+      return ms;
+    },
+    toTimeString: function toTimeString(ms) {
+      var mm = Math.floor(ms / 1000 / 60);
+      var ss = Math.floor(ms / 1000 % 60);
+      var ff = Math.floor(ms % 1000);
+      var time = (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss + "." + (ff < 100 ? "0" : "") + (ff < 10 ? "0" : Math.floor(ff / 10));
+      return time;
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in LRC format: https://en.wikipedia.org/wiki/LRC_%28file_format%29
+   ******************************************************************************************/
+  function parse$b(content, options) {
+    var prev = null;
+    var captions = [];
+    options.eol || "\r\n";
+    var parts = content.split(/\r?\n/);
+    for (var i = 0; i < parts.length; i++) {
+      if (!parts[i] || parts[i].trim().length == 0) {
+        continue;
+      }
+
+      //LRC content
+      var regex = /^\[(\d{1,2}:\d{1,2}([.,]\d{1,3})?)\](.*)(\r?\n)*$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.start = helper$4.toMilliseconds(match[1]);
+        caption.end = caption.start + 2000;
+        caption.duration = caption.end - caption.start;
+        caption.content = match[3];
+        caption.text = caption.content;
+        captions.push(caption);
+
+        //Update previous
+        if (prev) {
+          prev.end = caption.start;
+          prev.duration = prev.end - prev.start;
+        }
+        prev = caption;
+        continue;
+      }
+
+      //LRC meta
+      var meta = /^\[([\w\d]+):([^\]]*)\](\r?\n)*$/gi.exec(parts[i]);
+      if (meta) {
+        var caption = {};
+        caption.type = "meta";
+        caption.tag = meta[1];
+        if (meta[2]) {
+          caption.data = meta[2];
+        }
+        captions.push(caption);
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in LRC format: https://en.wikipedia.org/wiki/LRC_%28file_format%29
+   ******************************************************************************************/
+  function build$8(captions, options) {
+    var content = "";
+    var lyrics = false;
+    var eol = options.eol || "\r\n";
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (caption.type == "meta") {
+        if (caption.tag && caption.data) {
+          content += "[" + caption.tag + ":" + caption.data.replace(/[\r\n]+/g, " ") + "]" + eol;
+        }
+        continue;
+      }
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        if (!lyrics) {
+          content += eol; //New line when lyrics start
+          lyrics = true;
+        }
+        content += "[" + helper$4.toTimeString(caption.start) + "]" + caption.text + eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return content;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$7(content) {
+    if (typeof content === "string") {
+      if (/\r?\n\[(\d+:\d{1,2}([.,]\d{1,3})?)\](.*)\r?\n/.test(content)) {
+        /*
+        [04:48.28]Sister, perfume?
+        */
+        //return "lrc";
+        return true;
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var lrcFormatter = {
+    name: FORMAT_NAME$6,
+    helper: helper$4,
+    detect: detect$7,
+    parse: parse$b,
+    build: build$8
+  };
+
+  var FORMAT_NAME$5 = "smi";
+  var helper$3 = {
+    htmlEncode: function htmlEncode(text) {
+      return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\</g, '&lt;').replace(/\>/g, '&gt;')
+      //.replace(/\s/g, '&nbsp;')
+      .replace(/\r?\n/g, '<BR>');
+    },
+    htmlDecode: function htmlDecode(html, eol) {
+      return html.replace(/\<BR\s*\/?\>/gi, eol || '\r\n').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in SAMI format (.smi)
+   ******************************************************************************************/
+  function parse$a(content, options) {
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var title = /\<TITLE[^\>]*\>([\s\S]*)\<\/TITLE\>/gi.exec(content);
+    if (title) {
+      var caption = {};
+      caption.type = "meta";
+      caption.name = "title";
+      caption.data = title[1].replace(/^[\s\r\n]*/g, "").replace(/[\s\r\n]*$/g, "");
+      captions.push(caption);
+    }
+    var style = /\<STYLE[^\>]*\>([\s\S]*)\<\/STYLE\>/gi.exec(content);
+    if (style) {
+      var caption = {};
+      caption.type = "meta";
+      caption.name = "style";
+      caption.data = style[1];
+      captions.push(caption);
+    }
+    var sami = content.replace(/^[\s\S]*\<BODY[^\>]*\>/gi, "") //Remove content before body
+    .replace(/\<\/BODY[^\>]*\>[\s\S]*$/gi, ""); //Remove content after body
+
+    var prev = null;
+    var parts = sami.split(/\<SYNC/gi);
+    for (var i = 0; i < parts.length; i++) {
+      if (!parts[i] || parts[i].trim().length == 0) {
+        continue;
+      }
+      var part = '<SYNC' + parts[i];
+
+      //<SYNC Start = 1000>
+      var match = /^\<SYNC[^\>]+Start\s*=\s*["']?(\d+)["']?[^\>]*\>([\s\S]*)/gi.exec(part);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.start = parseInt(match[1]);
+        caption.end = caption.start + 2000;
+        caption.duration = caption.end - caption.start;
+        caption.content = match[2].replace(/^\<\/SYNC[^\>]*>/gi, "");
+        var blank = true;
+        var p = /^\<P[^\>]+Class\s*=\s*["']?([\w\d\-_]+)["']?[^\>]*\>([\s\S]*)/gi.exec(caption.content);
+        if (!p) {
+          p = /^\<P([^\>]*)\>([\s\S]*)/gi.exec(caption.content);
+        }
+        if (p) {
+          var html = p[2].replace(/\<P[\s\S]+$/gi, ""); //Remove string after another <P> tag
+          html = html.replace(/\<BR\s*\/?\>[\s\r\n]+/gi, eol).replace(/\<BR\s*\/?\>/gi, eol).replace(/\<[^\>]+\>/g, ""); //Remove all tags
+          html = html.replace(/^[\s\r\n]+/g, "").replace(/[\s\r\n]+$/g, ""); //Trim new lines and spaces
+          blank = html.replace(/&nbsp;/gi, " ").replace(/[\s\r\n]+/g, "").length == 0;
+          caption.text = helper$3.htmlDecode(html, eol);
+        }
+        if (!options.preserveSpaces && blank) {
+          if (options.verbose) {
+            console.log("INFO: Skipping white space caption at " + caption.start);
+          }
+        } else {
+          captions.push(caption);
+        }
+
+        //Update previous
+        if (prev) {
+          prev.end = caption.start;
+          prev.duration = prev.end - prev.start;
+        }
+        prev = caption;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in SAMI format (.smi)
+   ******************************************************************************************/
+  function build$7(captions, options) {
+    var eol = options.eol || "\r\n";
+    var content = "";
+    content += '<SAMI>' + eol;
+    content += '<HEAD>' + eol;
+    content += '<TITLE>' + (options.title || "") + '</TITLE>' + eol;
+    content += '<STYLE TYPE="text/css">' + eol;
+    content += '<!--' + eol;
+    content += 'P { font-family: Arial; font-weight: normal; color: white; background-color: black; text-align: center; }' + eol;
+    content += '.LANG { Name: ' + (options.langName || "English") + '; lang: ' + (options.langCode || "en-US") + '; SAMIType: CC; }' + eol;
+    content += '-->' + eol;
+    content += '</STYLE>' + eol;
+    content += '</HEAD>' + eol;
+    content += '<BODY>' + eol;
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (caption.type == "meta") {
+        continue;
+      }
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        //Start of caption
+        content += '<SYNC Start=' + caption.start + '>' + eol;
+        content += '  <P Class=LANG>' + helper$3.htmlEncode(caption.text || "") + (options.closeTags ? '</P>' : "") + eol;
+        if (options.closeTags) {
+          content += '</SYNC>' + eol;
+        }
+
+        //Blank line indicates the end of caption
+        content += '<SYNC Start=' + caption.end + '>' + eol;
+        content += '  <P Class=LANG>' + '&nbsp;' + (options.closeTags ? '</P>' : "") + eol;
+        if (options.closeTags) {
+          content += '</SYNC>' + eol;
+        }
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    content += '</BODY>' + eol;
+    content += '</SAMI>' + eol;
+    return content;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$6(content) {
+    if (typeof content === "string") {
+      if (/\<SAMI[^\>]*\>[\s\S]*\<BODY[^\>]*\>/g.test(content)) {
+        /*
+        <SAMI>
+        <BODY>
+        <SYNC Start=...
+        ...
+        </BODY>
+        </SAMI>
+        */
+        return "smi";
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var smiFormatter = {
+    name: FORMAT_NAME$5,
+    helper: helper$3,
+    detect: detect$6,
+    parse: parse$a,
+    build: build$7
+  };
+
+  var FORMAT_NAME$4 = "ssa";
+  var helper$2 = {
+    toMilliseconds: function toMilliseconds(s) {
+      var match = /^\s*(\d+:)?(\d{1,2}):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+      var hh = match[1] ? parseInt(match[1].replace(":", "")) : 0;
+      var mm = parseInt(match[2]);
+      var ss = parseInt(match[3]);
+      var ff = match[5] ? parseInt(match[5]) : 0;
+      var ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff * 10;
+      return ms;
+    },
+    toTimeString: function toTimeString(ms) {
+      var hh = Math.floor(ms / 1000 / 3600);
+      var mm = Math.floor(ms / 1000 / 60 % 60);
+      var ss = Math.floor(ms / 1000 % 60);
+      var ff = Math.floor(ms % 1000 / 10); //2 digits
+      var time = hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss + "." + (ff < 10 ? "0" : "") + ff;
+      return time;
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in SubStation Alpha format (.ssa)
+   ******************************************************************************************/
+  function parse$9(content, options) {
+    var meta;
+    var columns = null;
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var parts = content.split(/\r?\n\s*\r?\n/);
+    for (var i = 0; i < parts.length; i++) {
+      var regex = /^\s*\[([^\]]+)\]\r?\n([\s\S]*)(\r?\n)*$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var tag = match[1];
+        var lines = match[2].split(/\r?\n/);
+        var _loop = function _loop() {
+          line = lines[l];
+          if (/^\s*;/.test(line)) {
+            return "continue"; //Skip comment
+          }
+          m = /^\s*([^:]+):\s*(.*)(\r?\n)?$/.exec(line);
+          if (m) {
+            if (tag == "Script Info") {
+              if (!meta) {
+                meta = {};
+                meta.type = "meta";
+                meta.data = {};
+                captions.push(meta);
+              }
+              name = m[1].trim();
+              value = m[2].trim();
+              meta.data[name] = value;
+              return "continue";
+            }
+            if (tag == "V4 Styles" || tag == "V4+ Styles") {
+              name = m[1].trim();
+              value = m[2].trim();
+              if (name == "Format") {
+                columns = value.split(/\s*,\s*/g);
+                return "continue";
+              }
+              if (name == "Style") {
+                values = value.split(/\s*,\s*/g);
+                caption = {};
+                caption.type = "style";
+                caption.data = {};
+                for (c = 0; c < columns.length && c < values.length; c++) {
+                  caption.data[columns[c]] = values[c];
+                }
+                captions.push(caption);
+                return "continue";
+              }
+            }
+            if (tag == "Events") {
+              name = m[1].trim();
+              value = m[2].trim();
+              if (name == "Format") {
+                columns = value.split(/\s*,\s*/g);
+                return "continue";
+              }
+              if (name == "Dialogue") {
+                //Work-around for missing text (when the text contains ',' char)
+                var getPosition = function getPosition(s, search, index) {
+                  return s.split(search, index).join(search).length;
+                };
+                values = value.split(/\s*,\s*/g);
+                caption = {};
+                caption.type = "caption";
+                caption.data = {};
+                for (c = 0; c < columns.length && c < values.length; c++) {
+                  caption.data[columns[c]] = values[c];
+                }
+                caption.start = helper$2.toMilliseconds(caption.data["Start"]);
+                caption.end = helper$2.toMilliseconds(caption.data["End"]);
+                caption.duration = caption.end - caption.start;
+                caption.content = caption.data["Text"];
+                indexOfText = getPosition(value, ',', columns.length - 1) + 1;
+                caption.content = value.substr(indexOfText);
+                caption.data["Text"] = caption.content;
+                caption.text = caption.content.replace(/\\N/g, eol) //"\N" for new line
+                .replace(/\{[^\}]+\}/g, ""); //{\pos(400,570)}
+                captions.push(caption);
+                return "continue";
+              }
+            }
+          }
+        };
+        for (var l = 0; l < lines.length; l++) {
+          var line, m, name, value, name, value, values, caption, c, name, value, values, caption, c, indexOfText;
+          var _ret = _loop();
+          if (_ret === "continue") continue;
+        }
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in SubStation Alpha format (.ssa)
+   ******************************************************************************************/
+  function build$6(captions, options) {
+    var eol = options.eol || "\r\n";
+    var ass = options.format == "ass";
+    var content = "";
+    content += "[Script Info]" + eol;
+    content += "; Script generated by subsrt " + eol;
+    content += "ScriptType: v4.00" + (ass ? "+" : "") + eol;
+    content += "Collisions: Normal" + eol;
+    content += eol;
+    if (ass) {
+      content += "[V4+ Styles]" + eol;
+      content += "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding" + eol;
+      content += "Style: DefaultVCD, Arial,28,&H00B4FCFC,&H00B4FCFC,&H00000008,&H80000008,-1,0,0,0,100,100,0.00,0.00,1,1.00,2.00,2,30,30,30,0" + eol;
+    } else {
+      content += "[V4 Styles]" + eol;
+      content += "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding" + eol;
+      content += "Style: DefaultVCD, Arial,28,11861244,11861244,11861244,-2147483640,-1,0,1,1,2,2,30,30,30,0,0" + eol;
+    }
+    content += eol;
+    content += "[Events]" + eol;
+    content += "Format: " + (ass ? "Layer" : "Marked") + ", Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + eol;
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (caption.type == "meta") {
+        continue;
+      }
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        content += "Dialogue: " + (ass ? "0" : "Marked=0") + "," + helper$2.toTimeString(caption.start) + "," + helper$2.toTimeString(caption.end) + ",DefaultVCD, NTP,0000,0000,0000,," + caption.text.replace(/\r?\n/g, "\\N") + eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return content;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$5(content) {
+    if (typeof content !== "string") {
+      throw new Error("Expected string content!");
+    }
+    if (/^[\s\r\n]*\[Script Info\]\r?\n/g.test(content) && /[\s\r\n]*\[Events\]\r?\n/g.test(content)) {
+      /*
+      [Script Info]
+      ...
+      [Events]
+      */
+
+      //Advanced (V4+) styles for ASS format
+      return content.indexOf("[V4+ Styles]") > 0 ? "ass" : "ssa";
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var ssaFormatter = {
+    name: FORMAT_NAME$4,
+    helper: helper$2,
+    detect: detect$5,
+    parse: parse$9,
+    build: build$6
+  };
+
+  //Compatible format
+  var assFormatter = {
+    name: "ass",
+    helper: ssaFormatter.helper,
+    detect: ssaFormatter.detect,
+    parse: ssaFormatter.parse,
+    build: ssaFormatter.build
+  };
+
+  var FORMAT_NAME$3 = "sub";
+  var DEFAULT_FPS = 25;
+
+  /******************************************************************************************
+   * Parses captions in MicroDVD format: https://en.wikipedia.org/wiki/MicroDVD
+   ******************************************************************************************/
+  function parse$8(content, options) {
+    var fps = options.fps > 0 ? options.fps : DEFAULT_FPS;
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var parts = content.split(/\r?\n/g);
+    for (var i = 0; i < parts.length; i++) {
+      var regex = /^\{(\d+)\}\{(\d+)\}(.*)$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.index = i + 1;
+        caption.frame = {
+          start: parseInt(match[1]),
+          end: parseInt(match[2])
+        };
+        caption.frame.count = caption.frame.end - caption.frame.start;
+        caption.start = Math.round(caption.frame.start / fps);
+        caption.end = Math.round(caption.frame.end / fps);
+        caption.duration = caption.end - caption.start;
+        var lines = match[3].split(/\|/g);
+        caption.content = lines.join(eol);
+        caption.text = caption.content.replace(/\{[^\}]+\}/g, ""); //{0}{25}{c:$0000ff}{y:b,u}{f:DeJaVuSans}{s:12}Hello!
+        captions.push(caption);
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in MicroDVD format: https://en.wikipedia.org/wiki/MicroDVD
+   ******************************************************************************************/
+  function build$5(captions, options) {
+    var fps = options.fps > 0 ? options.fps : DEFAULT_FPS;
+    var sub = "";
+    var eol = options.eol || "\r\n";
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        var startFrame = _typeof(caption.frame) == "object" && caption.frame.start >= 0 ? caption.frame.start : caption.start * fps;
+        var endFrame = _typeof(caption.frame) == "object" && caption.frame.end >= 0 ? caption.frame.end : caption.end * fps;
+        var text = caption.text.replace(/\r?\n/, "|");
+        sub += "{" + startFrame + "}" + "{" + endFrame + "}" + text + eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return sub;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$4(content) {
+    if (typeof content === "string") {
+      if (/^\{\d+\}\{\d+\}(.*)/.test(content)) {
+        /*
+        {7207}{7262}Sister, perfume?
+        */
+        return FORMAT_NAME$3;
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var subFormatter = {
+    name: FORMAT_NAME$3,
+    detect: detect$4,
+    parse: parse$8,
+    build: build$5
+  };
+
+  var FORMAT_NAME$2 = "srt";
+  var helper$1 = {
+    toMilliseconds: function toMilliseconds(s) {
+      var match = /^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+      var hh = parseInt(match[1]);
+      var mm = parseInt(match[2]);
+      var ss = parseInt(match[3]);
+      var ff = match[5] ? parseInt(match[5]) : 0;
+      var ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff;
+      return ms;
+    },
+    toTimeString: function toTimeString(ms) {
+      var hh = Math.floor(ms / 1000 / 3600);
+      var mm = Math.floor(ms / 1000 / 60 % 60);
+      var ss = Math.floor(ms / 1000 % 60);
+      var ff = Math.floor(ms % 1000);
+      var time = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss + "," + (ff < 100 ? "0" : "") + (ff < 10 ? "0" : "") + ff;
+      return time;
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in SubRip format (.srt)
+   ******************************************************************************************/
+  function parse$7(content, options) {
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var parts = content.split(/\r?\n\s+\r?\n/g);
+    for (var i = 0; i < parts.length; i++) {
+      var regex = /^(\d+)\r?\n(\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?)\s*\-\-\>\s*(\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?)\r?\n([\s\S]*)(\r?\n)*$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.index = parseInt(match[1]);
+        caption.start = helper$1.toMilliseconds(match[2]);
+        caption.end = helper$1.toMilliseconds(match[4]);
+        caption.duration = caption.end - caption.start;
+        var lines = match[6].split(/\r?\n/);
+        caption.content = lines.join(eol);
+        caption.text = caption.content.replace(/\<[^\>]+\>/g, "") //<b>bold</b> or <i>italic</i>
+        .replace(/\{[^\}]+\}/g, "") //{b}bold{/b} or {i}italic{/i}
+        .replace(/\>\>\s*[^:]*:\s*/g, ""); //>> SPEAKER NAME: 
+        captions.push(caption);
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in SubRip format (.srt)
+   ******************************************************************************************/
+  function build$4(captions, options) {
+    var srt = "";
+    var eol = options.eol || "\r\n";
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        srt += (i + 1).toString() + eol;
+        srt += helper$1.toTimeString(caption.start) + " --> " + helper$1.toTimeString(caption.end) + eol;
+        srt += caption.text + eol;
+        srt += eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return srt;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$3(content) {
+    if (typeof content === "string") {
+      if (/\d+\r?\n\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?\s*\-\-\>\s*\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?/g.test(content)) {
+        /*
+        3
+        00:04:48,280 --> 00:04:50,510
+        Sister, perfume?
+        */
+        return FORMAT_NAME$2;
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var srtFormatter = {
+    name: FORMAT_NAME$2,
+    helper: helper$1,
+    detect: detect$3,
+    parse: parse$7,
+    build: build$4
+  };
+
+  var FORMAT_NAME$1 = "sbv";
+  var helper = {
+    toMilliseconds: function toMilliseconds(s) {
+      var match = /^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})([.,](\d{1,3}))?\s*$/.exec(s);
+      var hh = parseInt(match[1]);
+      var mm = parseInt(match[2]);
+      var ss = parseInt(match[3]);
+      var ff = match[5] ? parseInt(match[5]) : 0;
+      var ms = hh * 3600 * 1000 + mm * 60 * 1000 + ss * 1000 + ff;
+      return ms;
+    },
+    toTimeString: function toTimeString(ms) {
+      var hh = Math.floor(ms / 1000 / 3600);
+      var mm = Math.floor(ms / 1000 / 60 % 60);
+      var ss = Math.floor(ms / 1000 % 60);
+      var ff = Math.floor(ms % 1000);
+      var time = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss + "." + (ff < 100 ? "0" : "") + (ff < 10 ? "0" : "") + ff;
+      return time;
+    }
+  };
+
+  /******************************************************************************************
+   * Parses captions in SubViewer format (.sbv)
+   ******************************************************************************************/
+  function parse$6(content, options) {
+    var captions = [];
+    var eol = options.eol || "\r\n";
+    var parts = content.split(/\r?\n\s+\r?\n/);
+    for (var i = 0; i < parts.length; i++) {
+      var regex = /^(\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?)\s*[,;]\s*(\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?)\r?\n([\s\S]*)(\r?\n)*$/gi;
+      var match = regex.exec(parts[i]);
+      if (match) {
+        var caption = {};
+        caption.type = "caption";
+        caption.start = helper.toMilliseconds(match[1]);
+        caption.end = helper.toMilliseconds(match[3]);
+        caption.duration = caption.end - caption.start;
+        var lines = match[5].split(/\[br\]|\r?\n/gi);
+        caption.content = lines.join(eol);
+        caption.text = caption.content.replace(/\>\>\s*[^:]+:\s*/g, ""); //>> SPEAKER NAME: 
+        captions.push(caption);
+        continue;
+      }
+      if (options.verbose) {
+        console.log("WARN: Unknown part", parts[i]);
+      }
+    }
+    return captions;
+  }
+
+  /******************************************************************************************
+   * Builds captions in SubViewer format (.sbv)
+   ******************************************************************************************/
+  function build$3(captions, options) {
+    var content = "";
+    var eol = options.eol || "\r\n";
+    for (var i = 0; i < captions.length; i++) {
+      var caption = captions[i];
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        content += helper.toTimeString(caption.start) + "," + helper.toTimeString(caption.end) + eol;
+        content += caption.text + eol;
+        content += eol;
+        continue;
+      }
+      if (options.verbose) {
+        console.log("SKIP:", caption);
+      }
+    }
+    return content;
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$2(content) {
+    if (typeof content !== "string") {
+      throw new Error("Expected string content!");
+    }
+    if (/\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?\s*[,;]\s*\d{1,2}:\d{1,2}:\d{1,2}([.,]\d{1,3})?/g.test(content)) {
+      /*
+      00:04:48.280,00:04:50.510
+      Sister, perfume?
+      */
+      return "sbv";
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var sbvFormatter = {
+    name: FORMAT_NAME$1,
+    helper: helper,
+    detect: detect$2,
+    parse: parse$6,
+    build: build$3
+  };
+
+  var FORMAT_NAME = "json";
+
+  /******************************************************************************************
+   * Parses captions in JSON format
+   ******************************************************************************************/
+  function parse$5(content, options) {
+    return JSON.parse(content);
+  }
+
+  /******************************************************************************************
+   * Builds captions in JSON format
+   ******************************************************************************************/
+  function build$2(captions, options) {
+    return JSON.stringify(captions, " ", 2);
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle format from the content.
+   ******************************************************************************************/
+  function detect$1(content) {
+    if (typeof content === "string") {
+      if (/^\[[\s\r\n]*\{[\s\S]*\}[\s\r\n]*\]$/g.test(content)) {
+        /*
+        [
+          { ... }
+        ]
+        */
+        return "json";
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Export
+   ******************************************************************************************/
+  var jsonFormatter = {
+    name: FORMAT_NAME,
+    detect: detect$1,
+    parse: parse$5,
+    build: build$2
+  };
+
+  var supportedFormats = {
+    vtt: vttFormatter,
+    lrc: lrcFormatter,
+    smi: smiFormatter,
+    ssa: ssaFormatter,
+    ass: assFormatter,
+    sub: subFormatter,
+    srt: srtFormatter,
+    sbv: sbvFormatter,
+    json: jsonFormatter
+  };
+  function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  /******************************************************************************************
+   * Gets a list of supported subtitle supportedFormats.
+   ******************************************************************************************/
+  function list$4() {
+    return Object.keys(supportedFormats);
+  }
+
+  /******************************************************************************************
+   * Detects a subtitle supportedFormats from the content.
+   ******************************************************************************************/
+  function detect(content) {
+    var formats = Object.keys(supportedFormats);
+    for (var i = 0; i < formats.length; i++) {
+      var formatName = formats[i];
+      var handler = supportedFormats[formatName];
+      if (handler === undefined) {
+        continue;
+      }
+      if (typeof handler.detect != "function") {
+        continue;
+      }
+      //Function 'detect' can return true or supportedFormats name
+      var d = handler.detect(content);
+      if (d === true) {
+        //Logical true
+        return formatName;
+      }
+      if (formatName === d) {
+        //Format name
+        return d;
+      }
+    }
+  }
+
+  /******************************************************************************************
+   * Parses a subtitle content.
+   ******************************************************************************************/
+  function parse$4(content, options) {
+    options = options || {};
+    var format = options.format || detect(content);
+    if (!format || format.trim().length == 0) {
+      throw new Error("Cannot determine subtitle supportedFormats!");
+    }
+    var handler = supportedFormats[format];
+    if (handler === undefined) {
+      throw new Error("Unsupported subtitle supportedFormats: " + format);
+    }
+    var func = handler.parse;
+    if (typeof func != "function") {
+      throw new Error("Subtitle supportedFormats does not support 'parse' op: " + format);
+    }
+    return func(content, options);
+  }
+
+  /******************************************************************************************
+   * Builds a subtitle content
+   ******************************************************************************************/
+  function build$1(captions, options) {
+    options = options || {};
+    var format = options.format || "srt";
+    if (!format || format.trim().length == 0) {
+      throw new Error("Cannot determine subtitle supportedFormats!");
+    }
+    var handler = supportedFormats[format];
+    if (typeof handler == "undefined") {
+      throw new Error("Unsupported subtitle supportedFormats: " + format);
+    }
+    var func = handler.build;
+    if (typeof func != "function") {
+      throw new Error("Subtitle supportedFormats does not support 'build' op: " + format);
+    }
+    return func(captions, options);
+  }
+
+  /******************************************************************************************
+   * Converts subtitle supportedFormats
+   ******************************************************************************************/
+  function convert(content, options) {
+    if (typeof options == "string") {
+      options = {
+        to: options
+      };
+    }
+    options = options || {};
+    var opt = clone(options);
+    delete opt.format;
+    if (opt.from) {
+      opt.format = opt.from;
+    }
+    var captions = parse$4(content, opt);
+    if (opt.resync) {
+      captions = resync(captions, opt.resync);
+    }
+    opt.format = opt.to || options.format;
+    return build$1(captions, opt);
+  }
+
+  /******************************************************************************************
+   * Shifts the time of the captions.
+   ******************************************************************************************/
+  function resync(captions, options) {
+    options = options || {};
+    var func, ratio, frame, offset;
+    if (typeof options == "function") {
+      func = options; //User's function to handle time shift
+    } else if (typeof options == "number") {
+      offset = options; //Time shift (+/- offset)
+      func = function func(a) {
+        return [a[0] + offset, a[1] + offset];
+      };
+    } else if (_typeof(options) == "object") {
+      offset = (options.offset || 0) * (options.frame ? options.fps || 25 : 1);
+      ratio = options.ratio || 1.0;
+      frame = options.frame;
+      func = function func(a) {
+        return [Math.round(a[0] * ratio + offset), Math.round(a[1] * ratio + offset)];
+      };
+    } else {
+      throw new Error("Argument 'options' not defined!");
+    }
+    var resynced = [];
+    for (var i = 0; i < captions.length; i++) {
+      var caption = clone(captions[i]);
+      if (typeof caption.type === "undefined" || caption.type == "caption") {
+        if (frame) {
+          var shift = func([caption.frame.start, caption.frame.end]);
+          if (shift && shift.length == 2) {
+            caption.frame.start = shift[0];
+            caption.frame.end = shift[1];
+            caption.frame.count = caption.frame.end - caption.frame.start;
+          }
+        } else {
+          var shift = func([caption.start, caption.end]);
+          if (shift && shift.length == 2) {
+            caption.start = shift[0];
+            caption.end = shift[1];
+            caption.duration = caption.end - caption.start;
+          }
+        }
+      }
+      resynced.push(caption);
+    }
+    return resynced;
+  }
+  var subsrt = {
+    list: list$4,
+    detect: detect,
+    parse: parse$4,
+    build: build$1,
+    convert: convert,
+    resync: resync
+  };
+
   /**
    * Поучить время
    * @param {string} val 
@@ -5928,8 +7879,10 @@
    * @param {boolean} ms 
    * @returns 
    */
-  function parse$2(data, ms) {
-    if (/WEBVTT/gi.test(data)) return parseVTT(data, ms);else return parseSRT(data, ms);
+  function parse$3(data, ms) {
+    var type = subsrt.detect(data);
+    if (type === 'vtt') return parseVTT(data, ms);
+    if (type !== undefined && type !== 'srt') return parseVTT(convertToVTT(data), ms);else return parseSRT(data, ms);
   }
 
   /**
@@ -5955,6 +7908,12 @@
       });
     }
     return items;
+  }
+  function convertToVTT(data) {
+    return subsrt.convert(data, {
+      format: 'vtt',
+      fps: 25
+    });
   }
 
   /**
@@ -5998,7 +7957,7 @@
     this.load = function (url) {
       network.silent(url, function (data) {
         if (data) {
-          parsed = parse$2(data, true);
+          parsed = parse$3(data, true);
         }
       }, false, false, {
         dataType: 'text'
@@ -6036,7 +7995,7 @@
     };
   }
 
-  var context$1;
+  var context;
   function smooth(a, b, s, c) {
     return a + (b - a) * (s * 0.02);
   }
@@ -6046,9 +8005,9 @@
     return db;
   }
   function Source(video) {
-    var source = context$1.createMediaElementSource(video);
-    var analyser = context$1.createAnalyser();
-    var volume = context$1.createGain();
+    var source = context.createMediaElementSource(video);
+    var analyser = context.createAnalyser();
+    var volume = context.createGain();
     var destroy = false;
     var display = true;
     var draw_html = $('<div class="normalization normalization--visible"><canvas></canvas></div>');
@@ -6081,7 +8040,7 @@
     analyser.connect(volume);
 
     //подключаем к выходу
-    volume.connect(context$1.destination);
+    volume.connect(context.destination);
     $('body').append(draw_html);
     function update() {
       if (!destroy) requestAnimationFrame(update);
@@ -6132,9 +8091,9 @@
     };
   }
   function Normalization() {
-    if (!context$1) {
+    if (!context) {
       var classContext = window.AudioContext || window.webkitAudioContext;
-      context$1 = new classContext();
+      context = new classContext();
     }
     var source;
     this.attach = function (video) {
@@ -6166,8 +8125,11 @@
         if (url) {
           if (url.toLowerCase().indexOf(".m3u8") != -1 && url.toUpperCase().indexOf("|COMPONENT=HLS") == -1) {
             url += "|COMPONENT=HLS";
+          } else if (url.toLowerCase().indexOf(".mpd") != -1 && url.toUpperCase().indexOf("|COMPONENT=HAS") == -1) {
+            url += "|COMPONENT=HAS";
           }
           stream_url = url;
+          console.log(stream_url);
           avplay.init();
           plugin = avplay.setPlayerPluginObject();
           avplay.onEvent = eventHandler;
@@ -6408,6 +8370,9 @@
           pW = 100,
           cW = video.videoWidth,
           cH = video.videoHeight;
+        if (cH == 0 || cW == 0) {
+          throw false;
+        }
         switch (scale) {
           //original
           case 'default':
@@ -6639,12 +8604,12 @@
           current_time = data;
           listener.send('timeupdate');
           if (change_scale_later) {
-            change_scale_later = false;
             changeScale(change_scale_later);
+            change_scale_later = false;
           }
           if (change_speed_later) {
-            change_speed_later = false;
             changeSpeed(change_speed_later);
+            change_speed_later = false;
           }
           break;
         // 15 AD_START
@@ -6749,12 +8714,14 @@
 
   function YouTube$1(call_video) {
     var stream_url, loaded;
-    var needclick = Platform.screen('mobile') || navigator.userAgent.toLowerCase().indexOf("android") >= 0;
+    var needclick = true; //Platform.screen('mobile') || navigator.userAgent.toLowerCase().indexOf("android") >= 0
+
     var object = $('<div class="player-video__youtube"><div class="player-video__youtube-player" id="youtube-player"></div><div class="player-video__youtube-line-top"></div><div class="player-video__youtube-line-bottom"></div><div class="player-video__youtube-noplayed hide">' + Lang.translate('player_youtube_no_played') + '</div></div>');
     var video = object[0];
     var listener = start$5();
     var youtube;
     var timeupdate;
+    var timetapplay;
     function videoSize() {
       var size = {
         width: 0,
@@ -6905,7 +8872,11 @@
         video.resize();
         var id = stream_url.split('?v=').pop();
         if (needclick) {
-          object.append('<div class="player-video__youtube-needclick"><img src="https://img.youtube.com/vi/' + id + '/sddefault.jpg" /><div>' + Lang.translate('player_youtube_start_play') + '</div></div>');
+          object.append('<div class="player-video__youtube-needclick"><img src="https://img.youtube.com/vi/' + id + '/sddefault.jpg" /><div>' + Lang.translate('loading') + '...' + '</div></div>');
+          timetapplay = setTimeout(function () {
+            object.find('.player-video__youtube-needclick div').text(Lang.translate('player_youtube_start_play'));
+            PlayerPanel.update('pause');
+          }, 10000);
         }
         youtube = new YT.Player('youtube-player', {
           height: window.innerHeight,
@@ -6943,6 +8914,7 @@
               if (needclick) object.find('.player-video__youtube-needclick div').text(Lang.translate('loading') + '...');
               if (state.data == YT.PlayerState.PLAYING) {
                 listener.send('playing');
+                clearTimeout(timetapplay);
                 if (needclick) {
                   needclick = false;
                   setTimeout(function () {
@@ -6964,6 +8936,8 @@
             onError: function onError(e) {
               object.find('.player-video__youtube-noplayed').removeClass('hide');
               object.addClass('ended');
+              if (needclick) object.find('.player-video__youtube-needclick').remove();
+              clearTimeout(timetapplay);
             }
           }
         });
@@ -7009,6 +8983,7 @@
         } catch (e) {}
       }
       object.remove();
+      clearTimeout(timetapplay);
       listener.destroy();
     };
     call_video(video);
@@ -7041,7 +9016,7 @@
   var hls_parser;
   var click_nums = 0;
   var click_timer;
-  function init$o() {
+  function init$p() {
     html$c = Template$1.get('player_video');
     display = html$c.find('.player-video__display');
     paused = html$c.find('.player-video__paused');
@@ -7202,16 +9177,18 @@
         var duration = _video.duration;
         var seconds = 0;
         if (duration > 0) {
-          for (var i = 0; i < _video.buffered.length; i++) {
-            if (_video.buffered.start && _video.buffered.start(_video.buffered.length - 1 - i) < _video.currentTime) {
-              var down = Math.max(0, Math.min(100, _video.buffered.end(_video.buffered.length - 1 - i) / duration * 100)) + "%";
-              seconds = Math.max(0, _video.buffered.end(_video.buffered.length - 1 - i) - _video.currentTime);
-              listener$d.send('progress', {
-                down: down
-              });
-              break;
+          try {
+            for (var i = 0; i < _video.buffered.length; i++) {
+              if (_video.buffered.start && _video.buffered.start(_video.buffered.length - 1 - i) < _video.currentTime) {
+                var down = Math.max(0, Math.min(100, _video.buffered.end(_video.buffered.length - 1 - i) / duration * 100)) + "%";
+                seconds = Math.max(0, _video.buffered.end(_video.buffered.length - 1 - i) - _video.currentTime);
+                listener$d.send('progress', {
+                  down: down
+                });
+                break;
+              }
             }
-          }
+          } catch (e) {}
           hlsBitrate(seconds);
         }
       }
@@ -7279,8 +9256,8 @@
   }
   function hlsBitrate(seconds) {
     if (hls && hls.streamController && hls.streamController.fragPlaying && hls.streamController.fragPlaying.baseurl) {
-      var ch = Lang.translate('title_channel') + ' ' + parseFloat(hls.streamController.fragLastKbps / 1024).toFixed(2) + ' Mbs';
-      var bt = ' / ' + Lang.translate('torrent_item_bitrate') + ' ~' + parseFloat(hls.streamController.fragPlaying.stats.total / 1000000 / 10 * 8).toFixed(2) + ' Mbs';
+      var ch = Lang.translate('title_channel') + ' ' + parseFloat(hls.streamController.fragLastKbps / 1000).toFixed(2) + ' ' + Lang.translate('speed_mb');
+      var bt = ' / ' + Lang.translate('torrent_item_bitrate') + ' ~' + parseFloat(hls.streamController.fragPlaying.stats.total / 1000000 / 10 * 8).toFixed(2) + ' ' + Lang.translate('speed_mb');
       var bf = ' / ' + Lang.translate('title_buffer') + ' ' + Utils$2.secondsToTimeHuman(seconds);
       Lampa.PlayerInfo.set('bitrate', ch + bt + bf);
     }
@@ -7733,9 +9710,13 @@
     create$l();
     if (/\.mpd/.test(src) && typeof dashjs !== 'undefined') {
       try {
-        dash = dashjs.MediaPlayer().create();
-        dash.getSettings().streaming.abr.autoSwitchBitrate = false;
-        dash.initialize(_video, src, true);
+        if (Platform.is('orsay') && Storage.field('player') == 'orsay') {
+          load$2(src);
+        } else {
+          dash = dashjs.MediaPlayer().create();
+          dash.getSettings().streaming.abr.autoSwitchBitrate = false;
+          dash.initialize(_video, src, true);
+        }
       } catch (e) {
         console.log('Player', 'Dash error:', e.stack);
         load$2(src);
@@ -7747,6 +9728,8 @@
 
         //если это плеер тайзен, то используем только системный
         if (Platform.is('tizen') && Storage.field('player') == 'tizen') use_program = false;
+        //если это плеер orsay, то используем только системный
+        else if (Platform.is('orsay') && Storage.field('player') == 'orsay') use_program = false;
         //а если системный и m3u8 не поддерживается, то переключаем на программный
         else if (!use_program && !_video.canPlayType('application/vnd.apple.mpegurl')) use_program = true;
 
@@ -7776,7 +9759,7 @@
             }
           });
           hls.on(Hls.Events.MANIFEST_LOADED, function () {
-            play$3();
+            play$2();
           });
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
             hls.currentLevel = hlsLevelDefault(hls);
@@ -7850,13 +9833,13 @@
     }
     _video.src = src;
     _video.load();
-    play$3();
+    play$2();
   }
 
   /**
    * Играем
    */
-  function play$3() {
+  function play$2() {
     var playPromise;
     try {
       playPromise = _video.play();
@@ -7897,7 +9880,7 @@
   function playpause() {
     if (wait || rewind_position) return;
     if (_video.paused) {
-      play$3();
+      play$2();
       listener$d.send('play', {});
     } else {
       pause();
@@ -7915,7 +9898,7 @@
       _video.currentTime = rewind_position;
       rewind_position = 0;
       rewind_force = 0;
-      play$3();
+      play$2();
       if (webos) webos.rewinded();
     }, immediately ? 0 : 1000);
   }
@@ -7984,7 +9967,7 @@
   function to(seconds) {
     pause();
     if (seconds == -1) _video.currentTime = _video.duration - 3;else _video.currentTime = seconds;
-    play$3();
+    play$2();
   }
   function enterToPIP() {
     if (!document.pictureInPictureElement && document.pictureInPictureEnabled && _video.requestPictureInPicture) {
@@ -8053,14 +10036,14 @@
     return html$c;
   }
   var PlayerVideo = {
-    init: init$o,
+    init: init$p,
     listener: listener$d,
     url: url$5,
     render: render$a,
     destroy: destroy$5,
     playpause: playpause,
     rewind: rewind,
-    play: play$3,
+    play: play$2,
     pause: pause,
     size: size,
     speed: speed,
@@ -8077,7 +10060,46 @@
     togglePictureInPicture: togglePictureInPicture
   };
 
-  var network$a = new create$q();
+  function parse$2(data) {
+    var result = {
+      hash_string: '',
+      season: data.movie.number_of_seasons ? 1 : 0,
+      episode: 0,
+      serial: !!data.movie.number_of_seasons
+    };
+    var regexps = [[/s([0-9]+)\.?ep?([0-9]+)/i, 'season', 'episode'], [/s([0-9]{2})([0-9]+)/i, 'season', 'episode'], [/s([0-9]+)/i, 'season'], [/[ |\[(]([0-9]{1,2})x([0-9]+)/i, 'season', 'episode'], [/[ |\[(]([0-9]{1,3}) of ([0-9]+)/i, 'season', 'episode'], [/ep([0-9]+)/i, 'episode'], [/ep\.([0-9]+)/i, 'episode'], [/ - ([0-9]+)/i, 'episode'], [/\[([0-9]+)]/i, 'episode']];
+    regexps.forEach(function (regexp) {
+      var match = data.path.split('/').pop().match(regexp[0]);
+      if (match) {
+        var arr = regexp.slice(1);
+        arr.forEach(function (a, i) {
+          var v = match[i + 1];
+          if (v) result[a] = parseInt(v);
+        });
+      }
+    });
+    if (result.episode == 0) {
+      var ep = parseInt(data.filename.trim().slice(0, 3).replace(/[a-z]/gi, ''));
+      if (!isNaN(ep)) result.episode = ep;
+    }
+    if (!data.is_file) {
+      if (data.movie.number_of_seasons) {
+        result.hash_string = [result.season, result.episode, data.movie.original_title].join('');
+      } else if (data.movie.original_title && !result.serial) {
+        result.hash_string = data.movie.original_title;
+      } else {
+        result.hash_string = data.path;
+      }
+    } else {
+      result.hash_string = data.path;
+    }
+    return result;
+  }
+  var EpisodeParser = {
+    parse: parse$2
+  };
+
+  var network$9 = new create$q();
   function url$4() {
     var u = ip();
     return u ? Utils$2.checkHttp(u) : u;
@@ -8090,7 +10112,7 @@
       action: 'list'
     });
     clear$8();
-    network$a.silent(url$4() + '/torrents', function (result) {
+    network$9.silent(url$4() + '/torrents', function (result) {
       if (result.length) success(result);else fail();
     }, fail, data);
   }
@@ -8099,9 +10121,9 @@
       action: 'get',
       hash: hash
     });
-    network$a.silent(url$4() + '/cache', success, fail, data);
+    network$9.silent(url$4() + '/cache', success, fail, data);
   }
-  function add$c(object, success, fail) {
+  function add$b(object, success, fail) {
     var data = JSON.stringify({
       action: 'add',
       link: object.link,
@@ -8111,7 +10133,7 @@
       save_to_db: true
     });
     clear$8();
-    network$a.silent(url$4() + '/torrents', success, fail, data);
+    network$9.silent(url$4() + '/torrents', success, fail, data);
   }
   function hash$1(object, success, fail) {
     var data = JSON.stringify({
@@ -8123,8 +10145,8 @@
       save_to_db: Storage.get('torrserver_savedb', 'false')
     });
     clear$8();
-    network$a.silent(url$4() + '/torrents', success, function (a, c) {
-      fail(network$a.errorDecode(a, c));
+    network$9.silent(url$4() + '/torrents', success, function (a, c) {
+      fail(network$9.errorDecode(a, c));
     }, data);
   }
   function files$1(hash, success, fail) {
@@ -8133,8 +10155,8 @@
       hash: hash
     });
     clear$8();
-    network$a.timeout(2000);
-    network$a.silent(url$4() + '/torrents', function (json) {
+    network$9.timeout(2000);
+    network$9.silent(url$4() + '/torrents', function (json) {
       if (json.file_stats) {
         success(json);
       }
@@ -8142,15 +10164,15 @@
   }
   function connected(success, fail) {
     clear$8();
-    network$a.timeout(5000);
-    network$a.silent(url$4() + '/settings', function (json) {
+    network$9.timeout(5000);
+    network$9.silent(url$4() + '/settings', function (json) {
       if (typeof json.CacheSize == 'undefined') {
         fail(Lang.translate('torrent_error_nomatrix'));
       } else {
         success(json);
       }
     }, function (a, c) {
-      fail(network$a.errorDecode(a, c));
+      fail(network$9.errorDecode(a, c));
     }, JSON.stringify({
       action: 'get'
     }));
@@ -8164,7 +10186,7 @@
       hash: hash
     });
     clear$8();
-    network$a.silent(url$4() + '/torrents', success, fail, data, {
+    network$9.silent(url$4() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
   }
@@ -8174,61 +10196,65 @@
       hash: hash
     });
     clear$8();
-    network$a.silent(url$4() + '/torrents', success, fail, data, {
+    network$9.silent(url$4() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
   }
-  function parse$1(file_path, movie, is_file) {
-    var path = file_path.toLowerCase();
-    var data = {
-      hash: '',
-      season: 0,
-      episode: 0,
-      serial: movie.number_of_seasons ? true : false
-    };
-    var math = path.match(/s([0-9]+)\.?ep?([0-9]+)/);
-    if (!math) math = path.match(/s([0-9]{2})([0-9]+)/);
-    if (!math) math = path.match(/[ |\[|(]([0-9]{1,2})x([0-9]+)/);
-    if (!math) {
-      math = path.match(/[ |\[|(]([0-9]{1,3}) of ([0-9]+)/);
-      if (math) math = [0, 1, math[1]];
-    }
-    if (!math) {
-      math = path.match(/ep?([0-9]+)/);
-      if (math) math = [0, 0, math[1]];
-    }
-    if (is_file) {
-      data.hash = Utils$2.hash(file_path);
-    } else if (math && movie.number_of_seasons) {
-      data.season = parseInt(math[1]);
-      data.episode = parseInt(math[2]);
-      if (data.season === 0) {
-        math = path.match(/s([0-9]+)/);
-        if (math) data.season = parseInt(math[1]);
+  function parse$1(data) {
+    var result = EpisodeParser.parse(data);
+    result.hash = Utils$2.hash(result.hash_string);
+    return result;
+  }
+  function clearFileName(files) {
+    var combo = [];
+    files.forEach(function (element) {
+      var spl = element.path.split('/');
+      var nam = spl[spl.length - 1].split('.');
+      if (nam.length > 1) nam.pop();
+      nam = nam.join('.');
+      element.path_human = Utils$2.pathToNormalTitle(nam, false).trim();
+      if (spl.length > 1) {
+        spl.pop();
+        element.folder_name = Utils$2.pathToNormalTitle(spl.pop(), false).trim();
       }
-      if (data.episode === 0) {
-        math = path.match(/ep?([0-9]+)/);
-        if (math) data.episode = parseInt(math[1]);
+    });
+    if (files.length > 1) {
+      files.forEach(function (element) {
+        var spl = element.path_human.split(' ');
+        for (var i = spl.length - 1; i >= 0; i--) {
+          var com = spl.join(' ');
+          if (combo.indexOf(com) == -1) combo.push(com);
+          spl.pop();
+        }
+      });
+      combo.sort(function (a, b) {
+        return a.length > b.length ? -1 : a.length < b.length ? 1 : 0;
+      });
+      var _loop = function _loop() {
+        var com = combo[i];
+        var len = files.filter(function (f) {
+          return f.path_human.slice(0, com.length) == com;
+        }).length;
+        if (len < files.length) Arrays.remove(combo, com);
+      };
+      for (var i = combo.length - 1; i >= 0; i--) {
+        _loop();
       }
-      if (isNaN(data.season)) data.season = 0;
-      if (isNaN(data.episode)) data.episode = 0;
-      if (data.season && data.episode) {
-        data.hash = Utils$2.hash([data.season, data.episode, movie.original_title].join(''));
-      } else if (data.episode) {
-        data.season = 1;
-        data.hash = Utils$2.hash([data.season, data.episode, movie.original_title].join(''));
-      } else {
-        hash$1 = Utils$2.hash(file_path);
-      }
-    } else if (movie.original_title && !data.serial) {
-      data.hash = Utils$2.hash(movie.original_title);
-    } else {
-      data.hash = Utils$2.hash(file_path);
+      files.forEach(function (element) {
+        for (var _i = 0; _i < combo.length; _i++) {
+          var com = combo[_i];
+          var inx = element.path_human.indexOf(com);
+          if (inx >= 0 && com !== element.path_human) {
+            element.path_human = element.path_human.slice(com.length).trim();
+            break;
+          }
+        }
+      });
     }
-    return data;
+    return files;
   }
   function clear$8() {
-    network$a.clear();
+    network$9.clear();
   }
   function error$1() {
     var temp = Template$1.get('torrent_error', {
@@ -8281,7 +10307,7 @@
   var Torserver = {
     ip: ip,
     my: my,
-    add: add$c,
+    add: add$b,
     url: url$4,
     hash: hash$1,
     files: files$1,
@@ -8292,15 +10318,16 @@
     connected: connected,
     parse: parse$1,
     error: error$1,
-    cache: cache$1
+    cache: cache$1,
+    clearFileName: clearFileName
   };
 
   var html$b;
   var listener$c = start$5();
-  var network$9 = new create$q();
+  var network$8 = new create$q();
   var elems;
   var error, stat_timer;
-  function init$n() {
+  function init$o() {
     html$b = Template$1.get('player_info');
     html$b.find('.player-info__body').prepend(HeadBackward('Плеер'));
     elems = {
@@ -8368,10 +10395,10 @@
         wait++;
         if (wait <= 5) return;else wait = 0;
       }
-      network$9.timeout(2000);
-      network$9.silent(url.replace('preload', 'stat').replace('play', 'stat'), function (data) {
+      network$8.timeout(2000);
+      network$8.silent(url.replace('preload', 'stat').replace('play', 'stat'), function (data) {
         elems.stat.text((data.active_peers || 0) + ' / ' + (data.total_peers || 0) + ' • ' + (data.connected_seeders || 0) + ' seeds');
-        elems.speed.text(data.download_speed ? Utils$2.bytesToSize(data.download_speed * 8, true) + (Storage.get('language') == 'en' ? '' : '/c') : '0.0');
+        elems.speed.text(data.download_speed ? Utils$2.bytesToSize(data.download_speed * 8, true) : '0.0');
         var hash = url.match(/link=(.*?)\&/);
         if (hash) {
           Torserver.cache(hash[1], function (cache) {
@@ -8403,7 +10430,7 @@
   function toggle$6(status) {
     html$b.toggleClass('info--visible', status);
   }
-  function loading$2() {
+  function loading$1() {
     elems.size.text(Lang.translate('loading') + '...');
   }
 
@@ -8418,18 +10445,18 @@
     elems.pieces.empty();
     clearTimeout(error);
     clearInterval(stat_timer);
-    network$9.clear();
+    network$8.clear();
   }
   function render$9() {
     return html$b;
   }
   var PlayerInfo = {
-    init: init$n,
+    init: init$o,
     listener: listener$c,
     render: render$9,
     set: set$2,
     toggle: toggle$6,
-    loading: loading$2,
+    loading: loading$1,
     destroy: destroy$4
   };
 
@@ -8786,7 +10813,7 @@
     return IndexedDB;
   }();
 
-  var Cache = new IndexedDB('cache', ['screensavers', 'plugins', 'backgrounds', 'images', 'themes']);
+  var Cache = new IndexedDB('cache', ['screensavers', 'plugins', 'backgrounds', 'images', 'themes', 'other'], 4);
   Cache.openDatabase();
 
   var Cub = /*#__PURE__*/function () {
@@ -10235,11 +12262,14 @@
   /**
    * Запуск
    */
-  function init$m() {
+  function init$n() {
     Storage.listener.follow('change', function (event) {
       if (event.name == 'background' || event.name == 'background_type') resize();
     });
     var u = Platform.any() ? 'https://yumata.github.io/lampa/' : './';
+    if (Platform.is('orsay')) {
+      u = './';
+    }
     for (var i = 1; i <= 6; i++) {
       var im = new Image();
       im.src = u + 'img/bokeh-h/' + i + '.png';
@@ -10444,14 +12474,14 @@
     render: render$8,
     change: change,
     update: resize,
-    init: init$m,
+    init: init$n,
     immediately: immediately,
     theme: theme
   };
 
   var html$9;
   var listener$9 = start$5();
-  var network$8 = new create$q();
+  new create$q();
   var callback$2;
   var work = false;
   var launch_player;
@@ -10471,7 +12501,7 @@
    * Подписываемся на события
    */
 
-  function init$l() {
+  function init$m() {
     PlayerPanel.init();
     PlayerVideo.init();
     PlayerInfo.init();
@@ -10528,8 +12558,6 @@
 
     /** Пауза видео */
     PlayerVideo.listener.follow('pause', function (e) {
-      //Screensaver.enable()
-
       PlayerPanel.update('pause');
     });
 
@@ -10639,6 +12667,7 @@
     PlayerPanel.listener.follow('visible', function (e) {
       PlayerInfo.toggle(e.status);
       PlayerVideo.normalizationVisible(e.status);
+      html$9.toggleClass('player--panel-visible', e.status);
     });
 
     /** К началу видео */
@@ -10688,7 +12717,7 @@
       var call = function call() {
         var params = PlayerVideo.saveParams();
         destroy$3();
-        play$2(e.item);
+        play$1(e.item);
         PlayerVideo.setParams(params);
         if (e.item.callback) e.item.callback();
         if (Torserver.ip() && e.item.url.indexOf(Torserver.ip()) > -1) PlayerInfo.set('stat', e.item.url);
@@ -10739,7 +12768,7 @@
     Controller.add('player', {
       invisible: true,
       toggle: function toggle() {
-        if (!Platform.screen('mobile')) PlayerPanel.hide();
+        PlayerPanel.hide();
       },
       up: function up() {
         PlayerPanel.toggle();
@@ -10778,23 +12807,6 @@
   }
 
   /**
-   * Контроллер предзагрузки
-   */
-  function togglePreload() {
-    Controller.add('player_preload', {
-      invisible: true,
-      toggle: function toggle() {},
-      enter: function enter() {
-        PlayerPanel.update('peding', '0%');
-        preloader.wait = false;
-        preloader.call();
-      },
-      back: backward$1
-    });
-    Controller.toggle('player_preload');
-  }
-
-  /**
    * Вызвать событие назад
    */
   function backward$1() {
@@ -10820,6 +12832,7 @@
     viewing.current = 0;
     html$9.removeClass('player--ios');
     html$9.removeClass('iptv');
+    html$9.removeClass('player--panel-visible');
     TV.destroy();
     PlayerVideo.destroy();
     PlayerVideo.clearParamas();
@@ -10882,20 +12895,9 @@
    * @param {Object} data 
    * @param {Function} call 
    */
-  function preload(data, call) {
-    if (Torserver.ip() && data.url.indexOf(Torserver.ip()) > -1 && data.url.indexOf('&preload') > -1) {
-      preloader.wait = true;
-      PlayerInfo.set('name', data.title);
-      $('body').append(html$9);
-      PlayerPanel.show(true);
-      togglePreload();
-      network$8.timeout(2000);
-      network$8.silent(data.url);
-      preloader.call = function () {
-        data.url = data.url.replace('&preload', '&play');
-        call();
-      };
-    } else call();
+  function preload$1(data, call) {
+    data.url = data.url.replace('&preload', '&play');
+    return call();
   }
 
   /**
@@ -10961,7 +12963,7 @@
    * Запустить плеер
    * @param {Object} data 
    */
-  function play$2(data) {
+  function play$1(data) {
     console.log('Player', 'url:', data.url);
     if (data.quality) {
       if (Arrays.getKeys(data.quality).length == 1) delete data.quality;else {
@@ -10975,7 +12977,7 @@
     }
     var lauch = function lauch() {
       Background.theme('black');
-      preload(data, function () {
+      preload$1(data, function () {
         html$9.toggleClass('tv', data.tv ? true : false);
         html$9.toggleClass('youtube', Boolean(data.url.indexOf('youtube.com') >= 0));
         listener$9.send('start', data);
@@ -11138,9 +13140,9 @@
     return $('body').find('.player').length ? true : false;
   }
   var Player = {
-    init: init$l,
+    init: init$m,
     listener: listener$9,
-    play: play$2,
+    play: play$1,
     playlist: playlist,
     render: render$7,
     stat: stat,
@@ -11149,7 +13151,8 @@
     callback: onBack,
     opened: opened$1,
     iptv: iptv,
-    programReady: TV.programReady
+    programReady: TV.programReady,
+    close: backward$1
   };
 
   var listener$8 = start$5();
@@ -11596,7 +13599,7 @@
             }
             return {
               time: item.time || Utils.parseToDate(item.date).getTime(),
-              title: data.card.title || data.card.name,
+              title: !Lang.selected(['ru', 'uk', 'be']) ? data.card.original_title || data.card.original_name : data.card.title || data.card.name,
               text: text,
               poster: data.card.poster ? data.card.poster : data.card.img ? data.card.img : data.card.poster_path,
               card: data.card,
@@ -11717,7 +13720,7 @@
                 id: element.card.id,
                 method: element.card.number_of_seasons || element.card.seasons ? 'tv' : 'movie',
                 card: element.card,
-                source: 'cub'
+                source: Lang.selected(['ru', 'uk', 'be']) ? 'cub' : ''
               });
             } else _this.listener.send('select', {
               display: element.display || _this.display,
@@ -11828,25 +13831,32 @@
   /**
    * Запуск
    */
-  function init$k() {
+  function init$l() {
     data$3 = Storage.cache('recomends_scan', 300, []);
-    Favorite.get({
-      type: 'history'
-    }).forEach(function (elem) {
-      if (['cub', 'tmdb'].indexOf(elem.source) >= 0) {
-        var id = data$3.filter(function (a) {
-          return a.id == elem.id;
-        });
-        if (!id.length) {
-          data$3.push({
-            id: elem.id,
-            tv: elem.number_of_seasons || elem.seasons
+    setInterval(function () {
+      var history = Favorite.get({
+        type: 'history'
+      });
+      var added = 0;
+      console.log('Recomendations', 'find history:', history.length);
+      history.forEach(function (elem) {
+        if (['cub', 'tmdb'].indexOf(elem.source) >= 0) {
+          var id = data$3.filter(function (a) {
+            return a.id == elem.id;
           });
+          if (!id.length) {
+            data$3.push({
+              id: elem.id,
+              tv: elem.number_of_seasons || elem.seasons
+            });
+            added++;
+          }
         }
-      }
-    });
-    Storage.set('recomends_scan', data$3);
-    setInterval(search$6, 120 * 1000);
+      });
+      console.log('Recomendations', 'added to scan:', added, 'ready:', data$3.length);
+      Storage.set('recomends_scan', data$3);
+      search$6();
+    }, 120 * 1000);
   }
   function search$6() {
     var ids = data$3.filter(function (e) {
@@ -11855,7 +13865,9 @@
     if (ids.length) {
       var elem = ids[0];
       elem.scan = 1;
+      console.log('Recomendations', 'scan:', elem.id, elem.title || elem.name);
       TMDB.get((elem.tv ? 'tv' : 'movie') + '/' + elem.id + '/recommendations', {}, function (json) {
+        console.log('Recomendations', 'result:', json.results && json.results.length ? json.results.length : 0);
         if (json.results && json.results.length) {
           var recomend = Storage.cache('recomends_list', 100, []);
           var favorite = Favorite.get({
@@ -11891,7 +13903,7 @@
     return items;
   }
   var Recomends = {
-    init: init$k,
+    init: init$l,
     get: get$a
   };
 
@@ -11930,9 +13942,13 @@
     clearTimeout(timer$2);
     if (controller_enabled) Controller.toggle(controller_enabled);
   }
+  function setText(text) {
+    if (loader) loader.find('.loading-layer__text').text(text);
+  }
   var Loading = {
     start: start$3,
-    stop: stop
+    stop: stop,
+    setText: setText
   };
 
   /**
@@ -12160,19 +14176,19 @@
     if (params.langs) ln = ln.concat(params.langs.filter(function (n) {
       return n !== ln[0];
     }));
-    u = add$b(u, 'api_key=' + TMDB$1.key());
-    u = add$b(u, 'language=' + ln.join(','));
-    if (params.genres) u = add$b(u, 'with_genres=' + params.genres);
-    if (params.page) u = add$b(u, 'page=' + params.page);
-    if (params.query) u = add$b(u, 'query=' + params.query);
+    u = add$a(u, 'api_key=' + TMDB$1.key());
+    u = add$a(u, 'language=' + ln.join(','));
+    if (params.genres) u = add$a(u, 'with_genres=' + params.genres);
+    if (params.page) u = add$a(u, 'page=' + params.page);
+    if (params.query) u = add$a(u, 'query=' + params.query);
     if (params.filter) {
       for (var i in params.filter) {
-        u = add$b(u, i + '=' + params.filter[i]);
+        u = add$a(u, i + '=' + params.filter[i]);
       }
     }
     return TMDB$1.api(u);
   }
-  function add$b(u, params) {
+  function add$a(u, params) {
     return u + (/\?/.test(u) ? '&' : '?') + params;
   }
   function img(src, size) {
@@ -12260,7 +14276,7 @@
     loadPart(oncomplite, onerror);
     return loadPart;
   }
-  function category$2() {
+  function category$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
@@ -12352,7 +14368,7 @@
   function full$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-    var status = new status$1(7);
+    var status = new status$1(8);
     status.onComplite = oncomplite;
     get$9(params.method + '/' + params.id + '?append_to_response=content_ratings,release_dates,external_ids', params, function (json) {
       json.source = 'tmdb';
@@ -12390,6 +14406,9 @@
     get$9(params.method + '/' + params.id + '/videos', video_params, function (json) {
       status.append('videos', json);
     }, status.error.bind(status));
+    Api.sources.cub.reactionsGet(params, function (json) {
+      status.append('reactions', json);
+    });
   }
   function list$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -12964,6 +14983,17 @@
       }
     }) : '';
   }
+  function getGenresNameFromIds(card_type, ids) {
+    var finded = [];
+    var where = genres$1[card_type];
+    ids.forEach(function (a) {
+      var find = where.find(function (i) {
+        return i.id == a;
+      });
+      if (find) finded.push(Utils$2.capitalizeFirstLetter(Lang.translate(find.title)));
+    });
+    return finded;
+  }
   function clear$7() {
     network$7.clear();
   }
@@ -12973,7 +15003,7 @@
     img: img,
     full: full$3,
     list: list$3,
-    category: category$2,
+    category: category$3,
     search: search$5,
     clear: clear$7,
     company: company$1,
@@ -12987,7 +15017,8 @@
     parsePG: parsePG,
     parseCountries: parseCountries,
     genres: genres$1,
-    external_imdb_id: external_imdb_id
+    external_imdb_id: external_imdb_id,
+    getGenresNameFromIds: getGenresNameFromIds
   };
 
   var data$2 = [];
@@ -12998,7 +15029,7 @@
   /**
    * Запуск
    */
-  function init$j() {
+  function init$k() {
     data$2 = Storage.cache('timetable', limit$1, []);
     setInterval(extract, 1000 * 60 * (2));
     setInterval(favorites, 1000 * 60 * 10);
@@ -13028,11 +15059,13 @@
    * Добавить карточки к парсингу
    * @param {[{id:integer,number_of_seasons:integer}]} elems - карточки
    */
-  function add$a(elems) {
+  function add$9(elems) {
     if (started + 1000 * 60 * 2 > Date.now()) return;
-    elems.filter(function (elem) {
+    var filtred = elems.filter(function (elem) {
       return elem.number_of_seasons && typeof elem.id == 'number';
-    }).forEach(function (elem) {
+    });
+    console.log('Timetable', 'add:', elems.length, 'filtred:', filtred.length);
+    filtred.forEach(function (elem) {
       var find = data$2.find(function (a) {
         return a.id == elem.id;
       });
@@ -13051,15 +15084,12 @@
    * Добавить из закладок
    */
   function favorites() {
-    add$a(Favorite.get({
-      type: 'book'
-    }));
-    add$a(Favorite.get({
-      type: 'like'
-    }));
-    add$a(Favorite.get({
-      type: 'wath'
-    }));
+    var category = ['like', 'wath', 'book', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
+    category.forEach(function (a) {
+      add$9(Favorite.get({
+        type: a
+      }));
+    });
   }
   function filter(episodes) {
     var filtred = [];
@@ -13079,7 +15109,9 @@
    */
   function parse() {
     var check = Favorite.check(object$1);
-    if (check.like || check.book || check.wath) {
+    var any = Favorite.checkAnyNotHistory(check);
+    console.log('Timetable', 'parse:', object$1.id, 'any:', any);
+    if (any) {
       TMDB.get('tv/' + object$1.id + '/season/' + object$1.season, {}, function (ep) {
         object$1.episodes = filter(ep.episodes);
         save$5();
@@ -13098,6 +15130,7 @@
     var ids = data$2.filter(function (e) {
       return !e.scaned && (e.scaned_time || 0) + 60 * 60 * 12 * 1000 < Date.now();
     });
+    console.log('Timetable', 'extract:', ids.length);
     if (ids.length) {
       object$1 = ids[0];
       parse();
@@ -13138,7 +15171,9 @@
    */
   function update$5(elem) {
     var check = Favorite.check(elem);
-    if (elem.number_of_seasons && (check.like || check.book || check.wath) && typeof elem.id == 'number') {
+    var any = Favorite.checkAnyNotHistory(check);
+    console.log('Timetable', 'push:', elem.id);
+    if (elem.number_of_seasons && any && typeof elem.id == 'number') {
       var id = data$2.filter(function (a) {
         return a.id == elem.id;
       });
@@ -13161,7 +15196,7 @@
    * Получить все данные
    * @returns {[{id:integer,season:integer,episodes:[]}]}
    */
-  function all$2() {
+  function all$3() {
     return data$2;
   }
   function lately() {
@@ -13199,10 +15234,10 @@
     return cards;
   }
   var TimeTable = {
-    init: init$j,
+    init: init$k,
     get: get$8,
-    add: add$a,
-    all: all$2,
+    add: add$9,
+    all: all$3,
     update: update$5,
     lately: lately
   };
@@ -13372,6 +15407,8 @@
         });
         if (viewed) {
           var next = episodes.slice(episodes.indexOf(viewed.ep)).filter(function (ep) {
+            return ep.air_date;
+          }).filter(function (ep) {
             var date = Utils$2.parseToDate(ep.air_date).getTime();
             return date < Date.now();
           }).slice(0, 5);
@@ -13400,11 +15437,28 @@
      */
     this.favorite = function () {
       var status = Favorite.check(data);
+      var marker = this.card.querySelector('.card__marker');
+      var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
       this.card.querySelector('.card__icons-inner').innerHTML = '';
       if (status.book) this.addicon('book');
       if (status.like) this.addicon('like');
       if (status.wath) this.addicon('wath');
       if (status.history) this.addicon('history');
+      var any_marker = marks.find(function (m) {
+        return status[m];
+      });
+      if (any_marker) {
+        if (!marker) {
+          marker = document.createElement('div');
+          marker.addClass('card__marker');
+          marker.append(document.createElement('span'));
+          this.card.querySelector('.card__view').append(marker);
+        }
+        marker.find('span').text(Lang.translate('title_' + any_marker));
+        marker.removeClass(marks.map(function (m) {
+          return 'card__marker--' + m;
+        }).join(' ')).addClass('card__marker--' + any_marker);
+      } else if (marker) marker.remove();
     };
 
     /**
@@ -13418,22 +15472,39 @@
       var status = Favorite.check(data);
       var menu_plugins = [];
       var menu_favorite = [{
-        title: status.book ? Lang.translate('card_book_remove') : Lang.translate('card_book_add'),
-        subtitle: Lang.translate('card_book_descr'),
-        where: 'book'
+        title: Lang.translate('title_book'),
+        where: 'book',
+        checkbox: true,
+        checked: status.book
       }, {
-        title: status.like ? Lang.translate('card_like_remove') : Lang.translate('card_like_add'),
-        subtitle: Lang.translate('card_like_descr'),
-        where: 'like'
+        title: Lang.translate('title_like'),
+        where: 'like',
+        checkbox: true,
+        checked: status.like
       }, {
-        title: status.wath ? Lang.translate('card_wath_remove') : Lang.translate('card_wath_add'),
-        subtitle: Lang.translate('card_wath_descr'),
-        where: 'wath'
+        title: Lang.translate('title_wath'),
+        where: 'wath',
+        checkbox: true,
+        checked: status.wath
       }, {
-        title: status.history ? Lang.translate('card_history_remove') : Lang.translate('card_history_add'),
-        subtitle: Lang.translate('card_history_descr'),
-        where: 'history'
+        title: Lang.translate('menu_history'),
+        where: 'history',
+        checkbox: true,
+        checked: status.history
+      }, {
+        title: Lang.translate('settings_cub_status'),
+        separator: true
       }];
+      var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
+      marks.forEach(function (m) {
+        menu_favorite.push({
+          title: Lang.translate('title_' + m),
+          where: m,
+          picked: status[m],
+          collect: true,
+          noenter: !Account.hasPremium()
+        });
+      });
       object$2.plugins.forEach(function (plugin) {
         if (plugin.type == 'video' && plugin.onContextMenu && plugin.onContextLauch) {
           menu_plugins.push({
@@ -13471,14 +15542,35 @@
         onBack: function onBack() {
           Controller.toggle(enabled);
         },
-        onSelect: function onSelect(a) {
+        onCheck: function onCheck(a) {
           if (params.object) data.source = params.object.source;
           if (a.where) {
             Favorite.toggle(a.where, data);
             _this2.favorite();
           }
+        },
+        onSelect: function onSelect(a) {
+          if (params.object) data.source = params.object.source;
+          if (a.collect) {
+            Favorite.toggle(a.where, data);
+            _this2.favorite();
+          }
           if (_this2.onMenuSelect) _this2.onMenuSelect(a, _this2.card, data);
           Controller.toggle(enabled);
+        },
+        onDraw: function onDraw(item, elem) {
+          if (elem.collect) {
+            if (!Account.hasPremium()) {
+              var wrap = $('<div class="selectbox-item__lock"></div>');
+              wrap.append(Template$1.js('icon_lock'));
+              item.find('.selectbox-item__checkbox').remove();
+              item.append(wrap);
+              item.on('hover:enter', function () {
+                Select.close();
+                Account.showCubPremium();
+              });
+            }
+          }
         }
       });
     };
@@ -13492,6 +15584,10 @@
       this.card.addEventListener('hover:focus', function () {
         _this3.watched();
         if (_this3.onFocus) _this3.onFocus(_this3.card, data);
+      });
+      this.card.addEventListener('hover:touch', function () {
+        _this3.watched();
+        if (_this3.onTouch) _this3.onTouch(_this3.card, data);
       });
       this.card.addEventListener('hover:hover', function () {
         _this3.watched();
@@ -13921,13 +16017,7 @@
     };
   }
 
-  function sortByActive(sources) {
-    var active = Storage.get('source', 'tmdb');
-    sources.sort(function (a, b) {
-      if (a.title.toLowerCase() == active) return -1;
-      return 0;
-    });
-  }
+  var stop_keys = ['пор', 'порн', 'порно', 'секс', 'член', 'por', 'porn', 'porno', 'sex', 'hot', 'xxx'];
   function create$h() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var scroll, last, active;
@@ -13941,7 +16031,6 @@
         horizontal: true
       });
       var sources = params.sources || Api.availableDiscovery();
-      sortByActive(sources);
       sources.forEach(this.build.bind(this));
       if (!params.sources) {
         params.additional.forEach(this.build.bind(this));
@@ -14025,9 +16114,13 @@
       results.forEach(function (result) {
         return result.cancel();
       });
-      results.forEach(function (result) {
-        result.search(query, immediately);
-      });
+      if (!stop_keys.find(function (k) {
+        return k == query.toLowerCase();
+      })) {
+        results.forEach(function (result) {
+          result.search(query, immediately);
+        });
+      }
     };
     this.tabs = function () {
       return scroll.render();
@@ -14289,7 +16382,7 @@
   var html$7;
   var last$2;
   var activi = false;
-  function init$i() {
+  function init$j() {
     html$7 = Template$1.get('head');
     Utils$2.time(html$7);
     html$7.find('.selector').data('controller', 'head').on('hover:focus', function (event) {
@@ -14314,6 +16407,18 @@
     html$7.find('.full-screen').on('hover:enter', function () {
       Utils$2.toggleFullscreen();
     }).toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$2.canFullScreen());
+    if (!Lang.selected(['ru', 'uk', 'be'])) {
+      html$7.find('.open--feed').remove();
+    } else {
+      html$7.find('.open--feed').on('hover:enter', function () {
+        Activity$1.push({
+          url: '',
+          title: Lang.translate('menu_feed'),
+          component: 'feed',
+          page: 1
+        });
+      });
+    }
     html$7.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru', 'uk', 'be'])).on('hover:enter', function () {
       Modal.open({
         title: '',
@@ -14378,7 +16483,7 @@
   var Head = {
     render: render$4,
     title: title,
-    init: init$i
+    init: init$j
   };
 
   var body$2;
@@ -14395,7 +16500,7 @@
   /**
    * Запуск
    */
-  function init$h() {
+  function init$i() {
     if (!window.lampa_settings.account_use) return;
     Settings.listener.follow('open', function (e) {
       body$2 = null;
@@ -14690,7 +16795,8 @@
           free: true,
           title: Lang.translate('account_code_enter'),
           nosave: true,
-          value: ''
+          value: '',
+          layout: 'nums'
         }, function (new_value) {
           var code = parseInt(new_value);
           if (new_value && new_value.length == 6 && !isNaN(code)) {
@@ -14765,38 +16871,53 @@
             }],
             onSelect: function onSelect(a) {
               if (a.confirm) {
-                var file = new File([localStorage.getItem('favorite') || '{}'], "bookmarks.json", {
-                  type: "text/plain"
-                });
-                var formData = new FormData($('<form></form>')[0]);
-                formData.append("file", file, "bookmarks.json");
-                var loader = $('<div class="broadcast__scan" style="margin: 1em 0 0 0"><div></div></div>');
-                body$2.find('.settings--account-user-sync').append(loader);
-                $.ajax({
-                  url: api$1 + 'bookmarks/sync',
-                  type: 'POST',
-                  data: formData,
-                  async: true,
-                  cache: false,
-                  contentType: false,
-                  enctype: 'multipart/form-data',
-                  processData: false,
-                  headers: {
-                    token: account.token,
-                    profile: account.profile.id
-                  },
-                  success: function success(j) {
-                    if (j.secuses) {
-                      Noty.show(Lang.translate('account_sync_secuses'));
-                      update$4();
+                var file;
+                try {
+                  file = new File([localStorage.getItem('favorite') || '{}'], "bookmarks.json", {
+                    type: "text/plain"
+                  });
+                } catch (e) {}
+                if (!file) {
+                  try {
+                    file = new Blob([localStorage.getItem('favorite') || '{}'], {
+                      type: 'text/plain'
+                    });
+                    file.lastModifiedDate = new Date();
+                  } catch (e) {
+                    Noty.show(Lang.translate('account_export_fail'));
+                  }
+                }
+                if (file) {
+                  var formData = new FormData($('<form></form>')[0]);
+                  formData.append("file", file, "bookmarks.json");
+                  var loader = $('<div class="broadcast__scan" style="margin: 1em 0 0 0"><div></div></div>');
+                  body$2.find('.settings--account-user-sync').append(loader);
+                  $.ajax({
+                    url: api$1 + 'bookmarks/sync',
+                    type: 'POST',
+                    data: formData,
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    headers: {
+                      token: account.token,
+                      profile: account.profile.id
+                    },
+                    success: function success(j) {
+                      if (j.secuses) {
+                        Noty.show(Lang.translate('account_sync_secuses'));
+                        update$4();
+                        loader.remove();
+                      }
+                    },
+                    error: function error() {
+                      Noty.show(Lang.translate('account_export_fail'));
                       loader.remove();
                     }
-                  },
-                  error: function error() {
-                    Noty.show(Lang.translate('account_export_fail'));
-                    loader.remove();
-                  }
-                });
+                  });
+                }
               }
               Controller.toggle('settings_component');
             },
@@ -14886,7 +17007,7 @@
       return elem.data;
     });
   }
-  function all$1() {
+  function all$2() {
     return bookmarks.map(function (elem) {
       return elem.data;
     });
@@ -14966,36 +17087,51 @@
               }],
               onSelect: function onSelect(a) {
                 if (a["export"]) {
-                  var file = new File([JSON.stringify(localStorage)], "backup.json", {
-                    type: "text/plain"
-                  });
-                  var formData = new FormData($('<form></form>')[0]);
-                  formData.append("file", file, "backup.json");
-                  var loader = $('<div class="broadcast__scan" style="margin: 1em 0 0 0"><div></div></div>');
-                  body$2.find('.settings--account-user-backup').append(loader);
-                  $.ajax({
-                    url: api$1 + 'users/backup/export',
-                    type: 'POST',
-                    data: formData,
-                    async: true,
-                    cache: false,
-                    contentType: false,
-                    enctype: 'multipart/form-data',
-                    processData: false,
-                    headers: {
-                      token: account.token
-                    },
-                    success: function success(j) {
-                      if (j.secuses) {
-                        if (j.limited) showLimitedAccount();else Noty.show(Lang.translate('account_export_secuses'));
-                      } else Noty.show(Lang.translate('account_export_fail'));
-                      loader.remove();
-                    },
-                    error: function error() {
+                  var file;
+                  try {
+                    file = new File([JSON.stringify(localStorage)], "backup.json", {
+                      type: "text/plain"
+                    });
+                  } catch (e) {}
+                  if (!file) {
+                    try {
+                      file = new Blob([JSON.stringify(localStorage)], {
+                        type: 'text/plain'
+                      });
+                      file.lastModifiedDate = new Date();
+                    } catch (e) {
                       Noty.show(Lang.translate('account_export_fail'));
-                      loader.remove();
                     }
-                  });
+                  }
+                  if (file) {
+                    var formData = new FormData($('<form></form>')[0]);
+                    formData.append("file", file, "backup.json");
+                    var loader = $('<div class="broadcast__scan" style="margin: 1em 0 0 0"><div></div></div>');
+                    body$2.find('.settings--account-user-backup').append(loader);
+                    $.ajax({
+                      url: api$1 + 'users/backup/export',
+                      type: 'POST',
+                      data: formData,
+                      async: true,
+                      cache: false,
+                      contentType: false,
+                      enctype: 'multipart/form-data',
+                      processData: false,
+                      headers: {
+                        token: account.token
+                      },
+                      success: function success(j) {
+                        if (j.secuses) {
+                          if (j.limited) showLimitedAccount();else Noty.show(Lang.translate('account_export_secuses'));
+                        } else Noty.show(Lang.translate('account_export_fail'));
+                        loader.remove();
+                      },
+                      error: function error() {
+                        Noty.show(Lang.translate('account_export_fail'));
+                        loader.remove();
+                      }
+                    });
+                  }
                 }
                 Controller.toggle('settings_component');
               },
@@ -15117,11 +17253,11 @@
   }
   var Account = {
     listener: listener$6,
-    init: init$h,
+    init: init$i,
     working: working,
     canSync: canSync,
     get: get$7,
-    all: all$1,
+    all: all$2,
     plugins: plugins,
     notice: notice,
     pluginsStatus: pluginsStatus,
@@ -15147,6 +17283,8 @@
 
   var data$1 = {};
   var listener$5 = start$5();
+  var category$2 = ['like', 'wath', 'book', 'history', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
+  var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
   function save$3() {
     Storage.set('favorite', data$1);
   }
@@ -15156,7 +17294,7 @@
    * @param {String} where 
    * @param {Object} card 
    */
-  function add$9(where, card, limit) {
+  function add$8(where, card, limit) {
     read$1();
     if (data$1[where].indexOf(card.id) < 0) {
       Arrays.insert(data$1[where], 0, card.id);
@@ -15237,7 +17375,13 @@
   function toggle$2(where, card) {
     read$1();
     var find = cloud(card);
-    if (find[where]) remove$2(where, card);else add$9(where, card);
+    if (marks.indexOf(where) >= 0) {
+      var added = marks.find(function (a) {
+        return find[a];
+      });
+      if (added && added !== where) remove$2(added, card);
+    }
+    if (find[where]) remove$2(where, card);else add$8(where, card);
     return find[where] ? false : true;
   }
 
@@ -15248,47 +17392,48 @@
    */
   function check(card) {
     var result = {
-      like: data$1.like.indexOf(card.id) > -1,
-      wath: data$1.wath.indexOf(card.id) > -1,
-      book: data$1.book.indexOf(card.id) > -1,
-      history: data$1.history.indexOf(card.id) > -1,
-      any: true
+      any: false
     };
-    if (!result.like && !result.wath && !result.book && !result.history) result.any = false;
+    category$2.forEach(function (a) {
+      result[a] = data$1[a].indexOf(card.id) > -1;
+      if (result[a]) result.any = true;
+    });
     return result;
   }
+
+  /**
+   * Проверить есть ли карточка где либо кроме истории
+   * @param {Object} status 
+   * @returns {Boolean}
+   */
+  function checkAnyNotHistory(status) {
+    var any = false;
+    category$2.filter(function (a) {
+      return a !== 'history';
+    }).forEach(function (a) {
+      if (status[a]) any = true;
+    });
+    return any;
+  }
+
+  /**
+   * Облако, закладки из cub
+   * @param {Object} card 
+   * @returns {Object}
+   */
   function cloud(card) {
     if (Account.working()) {
-      var list = {
-        like: Account.get({
-          type: 'like'
-        }),
-        wath: Account.get({
-          type: 'wath'
-        }),
-        book: Account.get({
-          type: 'book'
-        }),
-        history: Account.get({
-          type: 'history'
-        })
-      };
       var result = {
-        like: list.like.find(function (elem) {
-          return elem.id == card.id;
-        }) ? true : false,
-        wath: list.wath.find(function (elem) {
-          return elem.id == card.id;
-        }) ? true : false,
-        book: list.book.find(function (elem) {
-          return elem.id == card.id;
-        }) ? true : false,
-        history: list.history.find(function (elem) {
-          return elem.id == card.id;
-        }) ? true : false,
         any: true
       };
-      if (!result.like && !result.wath && !result.book && !result.history) result.any = false;
+      category$2.forEach(function (a) {
+        result[a] = Boolean(Account.get({
+          type: a
+        }).find(function (elem) {
+          return elem.id == card.id;
+        }));
+        if (result[a]) result.any = true;
+      });
       return result;
     } else return check(card);
   }
@@ -15339,27 +17484,36 @@
    */
   function read$1() {
     data$1 = Storage.get('favorite', '{}');
-    Arrays.extend(data$1, {
-      like: [],
-      wath: [],
-      book: [],
-      card: [],
-      history: []
+    var empty = {
+      card: []
+    };
+    category$2.forEach(function (a) {
+      empty[a] = [];
     });
+    Arrays.extend(data$1, empty);
   }
 
   /**
    * Получить весь список что есть
    */
   function full$2() {
-    Arrays.extend(data$1, {
-      like: [],
-      wath: [],
-      book: [],
-      card: [],
-      history: []
+    var empty = {
+      card: []
+    };
+    category$2.forEach(function (a) {
+      empty[a] = [];
     });
+    Arrays.extend(data$1, empty);
     return data$1;
+  }
+  function all$1() {
+    var result = {};
+    category$2.forEach(function (a) {
+      result[a] = get$6({
+        type: a
+      });
+    });
+    return result;
   }
   function continues(type) {
     return Arrays.clone(get$6({
@@ -15375,20 +17529,22 @@
   /**
    * Запуск
    */
-  function init$g() {
+  function init$h() {
     read$1();
   }
   var Favorite = {
     listener: listener$5,
     check: cloud,
-    add: add$9,
+    add: add$8,
     remove: remove$2,
     toggle: toggle$2,
     get: get$6,
-    init: init$g,
+    init: init$h,
     clear: clear$5,
     continues: continues,
-    full: full$2
+    full: full$2,
+    checkAnyNotHistory: checkAnyNotHistory,
+    all: all$1
   };
 
   function Progress(need) {
@@ -15489,17 +17645,17 @@
   };
   function url$1(u) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    if (params.genres) u = add$8(u, 'genre=' + params.genres);
-    if (params.page) u = add$8(u, 'page=' + params.page);
-    if (params.query) u = add$8(u, 'query=' + params.query);
+    if (params.genres) u = add$7(u, 'genre=' + params.genres);
+    if (params.page) u = add$7(u, 'page=' + params.page);
+    if (params.query) u = add$7(u, 'query=' + params.query);
     if (params.filter) {
       for (var i in params.filter) {
-        u = add$8(u, i + '=' + params.filter[i]);
+        u = add$7(u, i + '=' + params.filter[i]);
       }
     }
     return baseurl + u;
   }
-  function add$8(u, params) {
+  function add$7(u, params) {
     return u + (/\?/.test(u) ? '&' : '?') + params;
   }
   function get$5(method) {
@@ -15535,10 +17691,23 @@
         call(json);
       }, call);
     }, function (call) {
+      get$5('?cat=' + params.url + '&sort=latest&uhd=true', params, function (json) {
+        json.title = Lang.translate('title_in_high_quality');
+        json.small = true;
+        json.wide = true;
+        json.results.forEach(function (card) {
+          card.promo = card.overview;
+          card.promo_title = card.title || card.name;
+        });
+        call(json);
+      }, call);
+    }, function (call) {
       get$5('movie/now', params, function (json) {
         json.title = Lang.translate('menu_movies');
         call(json);
       }, call);
+    }, function (call) {
+      trailers('added', call);
     }, function (call) {
       get$5('tv/now', params, function (json) {
         json.title = Lang.translate('menu_tv');
@@ -15636,6 +17805,8 @@
         call(json);
       }, call);
     }, function (call) {
+      if (params.url == 'movie') trailers('added', call);else call();
+    }, function (call) {
       get$5('?cat=' + params.url + '&sort=latest&vote=7', params, function (json) {
         json.title = Lang.translate('title_hight_voite');
         call(json);
@@ -15676,7 +17847,7 @@
     return loadPart;
   }
   function full$1(params, oncomplite, onerror) {
-    var status = new status$1(7);
+    var status = new status$1(8);
     status.onComplite = oncomplite;
     get$5('3/' + params.method + '/' + params.id + '?api_key=' + TMDB$1.key() + '&append_to_response=content_ratings,release_dates&language=' + Storage.field('tmdb_lang'), params, function (json) {
       json.source = 'tmdb';
@@ -15711,6 +17882,35 @@
     TMDB.get(params.method + '/' + params.id + '/videos', video_params, function (json) {
       status.append('videos', json);
     }, status.error.bind(status));
+    reactionsGet(params, function (json) {
+      status.append('reactions', json);
+    });
+  }
+  function trailers(type, oncomplite) {
+    network$5.silent(Utils$2.protocol() + object$2.cub_domain + '/api/trailers/short/trailers/' + type, function (result) {
+      result.wide = true;
+      result.small = true;
+      result.results.forEach(function (card) {
+        card.promo = card.overview;
+        card.promo_title = card.title || card.name;
+      });
+      result.title = Lang.translate('title_trailers') + ' - ' + Lang.translate('title_new');
+      oncomplite(result);
+    }, function () {
+      oncomplite({
+        results: []
+      });
+    });
+  }
+  function reactionsGet(params, oncomplite) {
+    network$5.silent(Utils$2.protocol() + object$2.cub_domain + '/api/reactions/get/' + params.method + '_' + params.id, oncomplite, function () {
+      oncomplite({
+        result: []
+      });
+    });
+  }
+  function reactionsAdd(params, oncomplite, onerror) {
+    network$5.silent(Utils$2.protocol() + object$2.cub_domain + '/api/reactions/add/' + params.method + '_' + params.id + '/' + params.type, oncomplite, onerror);
   }
   function menuCategory$1(params, oncomplite) {
     var menu = [];
@@ -15814,7 +18014,9 @@
     person: person$1,
     seasons: seasons$1,
     menuCategory: menuCategory$1,
-    discovery: discovery
+    discovery: discovery,
+    reactionsGet: reactionsGet,
+    reactionsAdd: reactionsAdd
   };
 
   /**
@@ -15850,9 +18052,12 @@
   }
   function availableDiscovery() {
     var list = [];
+    var active = Storage.get('source', 'tmdb');
     for (var key in sources) {
       console.log('Api', 'discovery check:', key, sources[key].discovery ? true : false, _typeof(sources[key].discovery));
-      if (sources[key].discovery) list.push(sources[key].discovery());
+      if (sources[key].discovery) {
+        if (key === active) list.splice(0, 0, sources[key].discovery());else list.push(sources[key].discovery());
+      }
     }
     return list;
   }
@@ -16100,7 +18305,9 @@
             partNext(parts, parts_limit, function (more_data) {
               data = data.concat(more_data);
               partLoaded(data);
-            }, partEmpty);
+            }, function () {
+              partLoaded(data);
+            });
           } else partLoaded(data);
         } else partNext(parts, parts_limit, partLoaded, partEmpty);
       });
@@ -16138,7 +18345,7 @@
     partNext: partNext
   };
 
-  function component$h(object) {
+  function component$i(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       this.activity.loader(true);
@@ -16196,7 +18403,7 @@
       update$3();
     }, 400);
   }
-  function play$1(id) {
+  function play(id) {
     if (typeof YT == 'undefined') return;
     create$e(id);
     Controller.add('youtube', {
@@ -16225,7 +18432,7 @@
     html$6 = null;
   }
   var YouTube = {
-    play: play$1
+    play: play
   };
 
   function Event() {
@@ -16423,14 +18630,16 @@
       this.loadPoster();
       this.translations();
       this.bookmarks();
+      this.reactions();
       var pg = Api.sources.tmdb.parsePG(data.movie);
       if (pg) html.find('.full-start__pg').removeClass('hide').text(pg);
+      if (window.lampa_settings.read_only) html.find('.button--play').remove();
     };
     this.setBtnInPriority = function (btn) {
-      var cont = $('.full-start-new__buttons');
+      var cont = html.find('.full-start-new__buttons');
       var clon = btn.clone();
       cont.find('.button--priority').remove();
-      clon.addClass('button--priority').on('hover:enter', function () {
+      clon.addClass('button--priority').removeClass('view--torrent').on('hover:enter', function () {
         btn.trigger('hover:enter');
       }).on('hover:long', function () {
         clon.remove();
@@ -16440,43 +18649,170 @@
       });
       cont.prepend(clon);
     };
-    this.bookmarks = function () {
+    this.vote = function (type, add) {
+      var mine = Storage.get('mine_reactions', {});
+      var id = (data.movie.name ? 'tv' : 'movie') + '_' + data.movie.id;
+      if (!mine[id]) mine[id] = [];
+      var ready = mine[id].indexOf(type) >= 0;
+      if (add) {
+        if (!ready) mine[id].push(type);
+        Storage.set('mine_reactions', mine);
+      }
+      return ready;
+    };
+    this.reactions = function () {
       var _this2 = this;
-      html.find('.button--book').on('hover:enter', function () {
-        var status = Favorite.check(params.object.card);
-        var items = [{
-          title: Lang.translate('card_book_add'),
-          type: 'book',
-          checkbox: true,
-          checked: status.book
-        }, {
-          title: Lang.translate('card_like_add'),
-          type: 'like',
-          checkbox: true,
-          checked: status.like
-        }, {
-          title: Lang.translate('card_wath_add'),
-          type: 'wath',
-          checkbox: true,
-          checked: status.wath
-        }];
+      if (!Storage.field('card_interfice_reactions')) return html.find('.full-start-new__reactions, .button--reaction').remove();
+      var drawReactions = function drawReactions() {
+        if (data.reactions && data.reactions.result && data.reactions.result.length) {
+          var reactions = data.reactions.result;
+          var reactions_body = html.find('.full-start-new__reactions')[0];
+          reactions.sort(function (a, b) {
+            return a.counter > b.counter ? -1 : a.counter < b.counter ? 1 : 0;
+          });
+          reactions_body.empty();
+          reactions.forEach(function (r) {
+            var reaction = document.createElement('div'),
+              icon = document.createElement('img'),
+              count = document.createElement('div'),
+              wrap = document.createElement('div');
+            reaction.addClass('reaction');
+            icon.addClass('reaction__icon');
+            count.addClass('reaction__count');
+            reaction.addClass('reaction--' + r.type);
+            count.text(Utils$2.bigNumberToShort(r.counter));
+            icon.src = Utils$2.protocol() + object$2.cub_domain + '/img/reactions/' + r.type + '.svg';
+            reaction.append(icon);
+            reaction.append(count);
+            wrap.append(reaction);
+            if (_this2.vote(r.type)) reaction.addClass('reaction--voted');
+            reactions_body.append(wrap);
+          });
+        }
+      };
+      var items = [{
+        type: 'fire'
+      }, {
+        type: 'nice'
+      }, {
+        type: 'think'
+      }, {
+        type: 'bore'
+      }, {
+        type: 'shit'
+      }];
+      items.forEach(function (a) {
+        a.template = 'selectbox_icon', a.icon = '<img src="' + Utils$2.protocol() + object$2.cub_domain + '/img/reactions/' + a.type + '.svg' + '" />';
+        a.ghost = _this2.vote(a.type);
+        a.noenter = a.ghost;
+        a.title = Lang.translate('reactions_' + a.type);
+      });
+      html.find('.button--reaction').on('hover:enter', function () {
         Select.show({
-          title: Lang.translate('title_book'),
+          title: Lang.translate('title_reactions'),
           items: items,
-          onCheck: function onCheck(a) {
-            params.object.card = data.movie;
-            params.object.card.source = params.object.source;
-            Favorite.toggle(a.type, params.object.card);
-            _this2.favorite();
+          onSelect: function onSelect(a) {
+            Controller.toggle('full_start');
+            Api.sources.cub.reactionsAdd({
+              method: data.movie.name ? 'tv' : 'movie',
+              id: data.movie.id,
+              type: a.type
+            }, function () {
+              _this2.vote(a.type, true);
+              var find = data.reactions.result.find(function (r) {
+                return r.type == a.type;
+              });
+              if (find) find.counter++;else {
+                data.reactions.result.push({
+                  type: a.type,
+                  counter: 1
+                });
+              }
+              a.ghost = true;
+              a.noenter = true;
+              drawReactions();
+            }, function (e) {
+              Lampa.Noty.show(Lang.translate('reactions_ready'));
+            });
           },
           onBack: function onBack() {
             Controller.toggle('full_start');
           }
         });
       });
+      drawReactions();
+    };
+    this.bookmarks = function () {
+      var _this3 = this;
+      html.find('.button--book').on('hover:enter', function () {
+        var status = Favorite.check(params.object.card);
+        var items = [{
+          title: Lang.translate('title_book'),
+          type: 'book',
+          checkbox: true,
+          checked: status.book
+        }, {
+          title: Lang.translate('title_like'),
+          type: 'like',
+          checkbox: true,
+          checked: status.like
+        }, {
+          title: Lang.translate('title_wath'),
+          type: 'wath',
+          checkbox: true,
+          checked: status.wath
+        }, {
+          title: Lang.translate('menu_history'),
+          type: 'history',
+          checkbox: true,
+          checked: status.history
+        }, {
+          title: Lang.translate('settings_cub_status'),
+          separator: true
+        }];
+        var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
+        var label = function label(a) {
+          params.object.card = data.movie;
+          params.object.card.source = params.object.source;
+          Favorite.toggle(a.type, params.object.card);
+          if (a.collect) Controller.toggle('full_start');
+          _this3.favorite();
+        };
+        marks.forEach(function (m) {
+          items.push({
+            title: Lang.translate('title_' + m),
+            type: m,
+            picked: status[m],
+            collect: true,
+            noenter: !Account.hasPremium()
+          });
+        });
+        Select.show({
+          title: Lang.translate('settings_input_links'),
+          items: items,
+          onCheck: label,
+          onSelect: label,
+          onBack: function onBack() {
+            Controller.toggle('full_start');
+          },
+          onDraw: function onDraw(item, elem) {
+            if (elem.collect) {
+              if (!Account.hasPremium()) {
+                var wrap = $('<div class="selectbox-item__lock"></div>');
+                wrap.append(Template$1.js('icon_lock'));
+                item.append(wrap);
+                item.on('hover:enter', function () {
+                  Select.close();
+                  Account.showCubPremium();
+                });
+              }
+            }
+          }
+        });
+      });
     };
     this.groupButtons = function () {
-      var _this3 = this;
+      var _this4 = this;
       var play = html.find('.button--play');
       var btns = html.find('.buttons--container > .full-start__button').not('.hide');
       var priority = Storage.get('full_btn_priority', '') + '';
@@ -16515,7 +18851,7 @@
             },
             onLong: function onLong(a) {
               Storage.set('full_btn_priority', Utils$2.hash(a.btn.clone().removeClass('focus').prop('outerHTML')));
-              _this3.setBtnInPriority(a.btn);
+              _this4.setBtnInPriority(a.btn);
             },
             onBack: function onBack() {
               Controller.toggle('full_start');
@@ -16528,7 +18864,7 @@
       play.toggleClass('hide', !Boolean(btns.length));
     };
     this.trailers = function () {
-      var _this4 = this;
+      var _this5 = this;
       if (data.videos && data.videos.results.length) {
         html.find('.view--trailer').on('hover:enter', function () {
           var items = [];
@@ -16569,20 +18905,17 @@
             title: Lang.translate('title_trailers'),
             items: al_lang,
             onSelect: function onSelect(a) {
-              _this4.toggle();
-              var playlist = al_lang.filter(function (v) {
-                return !v.separator;
-              });
-              Player.play(a);
-              Player.playlist(playlist);
-
-              /*
-              if(Platform.is('android')){
-                  Android.openYoutube(a.id)
+              _this5.toggle();
+              if (Platform.is('android') && Storage.field('player_launch_trailers') == 'youtube') {
+                Android.openYoutube(a.id);
+              } else {
+                var playlist = al_lang.filter(function (v) {
+                  return !v.separator;
+                });
+                Player.play(a);
+                Player.playlist(playlist);
               }
-              */
             },
-
             onBack: function onBack() {
               Controller.toggle('full_start');
             }
@@ -16602,7 +18935,7 @@
       });
     };
     this.translations = function () {
-      var _this5 = this;
+      var _this6 = this;
       var button = html.find('.button--subscribe');
       button.on('hover:enter', function () {
         Loading.start(function () {
@@ -16643,7 +18976,7 @@
               title: Lang.translate('title_subscribe'),
               items: items,
               onSelect: function onSelect(a) {
-                _this5.toggle();
+                _this6.toggle();
                 if (a.unsubscribe) {
                   event.call('unsubscribe', {
                     card_id: data.movie.id
@@ -16694,28 +19027,24 @@
     };
     this.favorite = function () {
       var status = Favorite.check(params.object.card);
-      var any = status.book || status.like || status.wath;
-      $('.info__icon', html).not('.button--subscribe').removeClass('active');
-      $('.icon--book', html).toggleClass('active', status.book);
-      $('.icon--like', html).toggleClass('active', status.like);
-      $('.icon--wath', html).toggleClass('active', status.wath);
+      var any = Favorite.checkAnyNotHistory(status);
       $('.button--book path', html).attr('fill', any ? 'currentColor' : 'transparent');
     };
     this.toggleBackground = function () {
       Background.immediately(Utils$2.cardImgBackgroundBlur(data.movie));
     };
     this.toggle = function () {
-      var _this6 = this;
+      var _this7 = this;
       Controller.add('full_start', {
         update: function update() {},
         toggle: function toggle() {
-          _this6.groupButtons();
+          _this7.groupButtons();
           var btns = html.find('.full-start__buttons > *').filter(function () {
             return $(this).is(':visible');
           });
-          Controller.collectionSet(_this6.render());
-          Controller.collectionFocus(last || (btns.length ? btns.eq(0)[0] : false), _this6.render());
-          if (_this6.onToggle) _this6.onToggle(_this6);
+          Controller.collectionSet(_this7.render());
+          Controller.collectionFocus(last || (btns.length ? btns.eq(0)[0] : false), _this7.render());
+          if (_this7.onToggle) _this7.onToggle(_this7);
         },
         right: function right() {
           Navigator.move('right');
@@ -16724,13 +19053,11 @@
           if (Navigator.canmove('left')) Navigator.move('left');else Controller.toggle('menu');
         },
         down: function down() {
-          if (Navigator.canmove('down')) Navigator.move('down');else _this6.onDown();
+          if (Navigator.canmove('down')) Navigator.move('down');else _this7.onDown();
         },
         up: function up() {
-          var inbuttons = _this6.render().find('.full-start__buttons .focus').length;
-          if (Navigator.canmove('up')) Navigator.move('up');else if (inbuttons) {
-            Navigator.focus(_this6.render().find('.full-start__left .selector')[0]);
-          } else _this6.onUp();
+          if (Navigator.canmove('up')) Navigator.move('up');
+          _this7.onUp();
         },
         gone: function gone() {},
         back: this.onBack
@@ -16877,8 +19204,7 @@
       element.ready = true;
       var person = Template$1.get('full_person', {
         name: element.name,
-        role: element.character || element.job,
-        img: element.profile_path ? Api.img(element.profile_path) : element.img || './img/actor.svg'
+        role: element.character || element.job
       });
       person.on('visible', function () {
         var img = person.find('img')[0];
@@ -16888,7 +19214,7 @@
         img.onload = function () {
           person.addClass('full-person--loaded');
         };
-        if (element.profile_path) img.src = Api.img(element.profile_path, 'w300');else img.src = './img/actor.svg';
+        img.src = element.profile_path ? Api.img(element.profile_path, 'w300') : element.img || './img/actor.svg';
       });
       person.on('hover:focus', function (e) {
         last = e.target;
@@ -17094,7 +19420,8 @@
       var episode = Template$1.get('full_episode', element);
       var hash = Utils$2.hash([element.season_number, element.episode_number, params.title].join(''));
       var view = Timeline.view(hash);
-      if (view.percent) episode.find('.full-episode__body').append(Timeline.render(view));
+      episode.append('<div class="full-episode__viewed">' + Template$1.get('icon_viewed', {}, true) + '</div>');
+      episode.toggleClass('full-episode--viewed', Boolean(view.percent));
       if (element.plus) {
         episode.addClass('full-episode--next');
       }
@@ -17127,6 +19454,16 @@
             }
           });
         }
+      }).on('hover:long', function () {
+        if (Boolean(view.percent)) {
+          view.time = 0;
+          view.percent = 0;
+        } else {
+          view.time = view.duration * 0.95;
+          view.percent = 95;
+        }
+        Timeline.update(view);
+        episode.toggleClass('full-episode--viewed', Boolean(view.percent));
       });
       scroll.append(episode);
       return episode;
@@ -17168,7 +19505,7 @@
     comments: create$9,
     episodes: create$8
   };
-  function component$g(object) {
+  function component$h(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -17208,7 +19545,9 @@
             var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
             var time = Utils$2.parseToDate(date).getTime();
             var plus = false;
-            var cameout = data.episodes.episodes.filter(function (e) {
+            var cameout = data.episodes.episodes.filter(function (a) {
+              return a.air_date;
+            }).filter(function (e) {
               var air = Utils$2.parseToDate(e.air_date).getTime();
               if (air <= time) return true;else if (!plus) {
                 plus = true;
@@ -17218,7 +19557,7 @@
               return false;
             });
             if (cameout.length) _this.build('episodes', cameout, {
-              title: data.movie.original_title,
+              title: data.movie.original_title || data.movie.original_name,
               season: data.episodes
             });
           }
@@ -17397,7 +19736,7 @@
     };
   }
 
-  function component$f(object) {
+  function component$g(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -17467,6 +19806,10 @@
           active = items.indexOf(card);
           scroll.update(card.render(true));
           Background.change(Utils$2.cardImgBackground(card_data));
+        };
+        card.onTouch = function (target, card_data) {
+          last = target;
+          active = items.indexOf(card);
         };
         card.onEnter = function (target, card_data) {
           last = target;
@@ -17581,15 +19924,15 @@
     };
   }
 
-  function component$e(object) {
-    var comp = new component$f(object);
+  function component$f(object) {
+    var comp = new component$g(object);
     comp.create = function () {
       Api.list(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$d(object) {
+  function component$e(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       this.activity.loader(true);
@@ -17649,7 +19992,7 @@
     start: create$7,
     line: create$j
   };
-  function component$c(object) {
+  function component$d(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -17765,8 +20108,8 @@
     };
   }
 
-  function component$b(object) {
-    var comp = new component$f(object);
+  function component$c(object) {
+    var comp = new component$g(object);
     var update = function update(e) {
       if (e.name == 'account') comp.activity.needRefresh();
     };
@@ -17784,11 +20127,6 @@
           menu_list.push({
             title: Lang.translate('menu_history'),
             separator: true
-          });
-          menu_list.push({
-            title: Lang.translate('fav_remove_title'),
-            subtitle: Lang.translate('fav_remove_descr'),
-            one: true
           });
           menu_list.push({
             title: Lang.translate('fav_clear_title'),
@@ -17817,11 +20155,6 @@
           } else if (action.timecode) {
             Storage.set('file_view', {});
             Noty.show(Lang.translate('fav_time_cleared'));
-          } else if (action.one) {
-            Favorite.remove('history', data);
-            card.watched = function () {};
-            card.render().find('.card-watched').remove();
-            card.render().css('opacity', '0.5').unbind();
           }
         };
       };
@@ -17910,7 +20243,7 @@
           });
         });
       }
-      if (params.movie.names) {
+      if (params.movie.names && params.movie.names.length) {
         search.push({
           title: Lang.translate('filter_alt_names'),
           separator: true
@@ -18133,7 +20466,7 @@
       }
     }
   }
-  function init$f() {
+  function init$g() {
     memorys = Storage.cache('helper', 300, {});
     Settings.listener.follow('open', function (e) {
       if (e.name == 'more') {
@@ -18148,7 +20481,7 @@
   }
   var Helper = {
     show: show$5,
-    init: init$f
+    init: init$g
   };
 
   var SERVER = {};
@@ -18165,7 +20498,7 @@
       if (movie && movie.id) Favorite.add('history', movie, 100);
       if (callback$1) callback$1();
     } else if (Torserver.url()) {
-      loading$1();
+      loading();
       connect();
     } else install();
   }
@@ -18176,11 +20509,11 @@
       Android.playHash(SERVER);
       if (callback$1) callback$1();
     } else if (Torserver.url()) {
-      loading$1();
+      loading();
       files();
     } else install();
   }
-  function loading$1() {
+  function loading() {
     Modal.open({
       title: '',
       html: Template$1.get('modal_loading'),
@@ -18257,15 +20590,20 @@
     });
   }
   function show$4(files) {
-    var plays = files.filter(function (a) {
-      var exe = a.path.split('.').pop().toLowerCase();
-      return formats.indexOf(exe) >= 0;
-    });
     var active = Activity$1.active(),
       movie = active.movie || SERVER.movie || {};
+    var plays = Torserver.clearFileName(files.filter(function (a) {
+      var exe = a.path.split('.').pop().toLowerCase();
+      return formats.indexOf(exe) >= 0;
+    }));
     var seasons = [];
     plays.forEach(function (element) {
-      var info = Torserver.parse(element.path, movie);
+      var info = Torserver.parse({
+        movie: movie,
+        files: plays,
+        filename: element.path_human,
+        path: element.path
+      });
       if (info.serial && info.season && seasons.indexOf(info.season) == -1) {
         seasons.push(info.season);
       }
@@ -18288,19 +20626,56 @@
   function parseSubs(path, files) {
     var name = path.split('/').pop().split('.').slice(0, -1).join('.');
     var index = -1;
+    var supportedFormats = subsrt.list();
     var subtitles = files.filter(function (a) {
       var _short = a.path.split('/').pop();
-      var issub = ['srt', 'vtt'].indexOf(a.path.split('.').pop().toLowerCase()) >= 0;
+      var issub = supportedFormats.indexOf(a.path.split('.').pop().toLowerCase()) >= 0;
       return _short.indexOf(name) >= 0 && issub;
     }).map(function (a) {
       index++;
+      var segments = a.path.split('/');
+      segments.pop(); // drop filename
+      var label = segments.slice(1).join(' - '); // drop initial folder and concat the rest
+
       return {
-        label: '',
+        label: label,
         url: Torserver.stream(a.path, SERVER.hash, a.id),
         index: index
       };
     });
     return subtitles.length ? subtitles : false;
+  }
+  function preload(data, run) {
+    var need_preload = Torserver.ip() && data.url.indexOf(Torserver.ip()) > -1 && data.url.indexOf('&preload') > -1;
+    if (need_preload) {
+      var checkout;
+      var network = new create$q();
+      var first = true;
+      Loading.start(function () {
+        clearInterval(checkout);
+        network.clear();
+        Loading.stop();
+      });
+      var update = function update() {
+        network.timeout(2000);
+        network.silent(first ? data.url : data.url.replace('preload', 'stat'), function (res) {
+          var pb = res.preloaded_bytes || 0,
+            ps = res.preload_size || 0,
+            sp = res.download_speed ? Utils$2.bytesToSize(res.download_speed * 8, true) : '0.0';
+          var progress = Math.min(100, pb * 100 / ps);
+          if (progress >= 95 || isNaN(progress)) {
+            Loading.stop();
+            clearInterval(checkout);
+            run();
+          } else {
+            Loading.setText(Math.round(progress) + '%' + ' - ' + sp);
+          }
+        });
+        first = false;
+      };
+      checkout = setInterval(update, 1000);
+      update();
+    } else run();
   }
   function list(items, params) {
     var html = $('<div class="torrent-files"></div>');
@@ -18310,9 +20685,16 @@
       type: 'list_open',
       items: items
     });
+    var folder = '';
     items.forEach(function (element) {
       var exe = element.path.split('.').pop().toLowerCase();
-      var info = Torserver.parse(element.path, params.movie, formats_individual.indexOf(exe) >= 0);
+      var info = Torserver.parse({
+        movie: params.movie,
+        files: items,
+        filename: element.path_human,
+        path: element.path,
+        is_file: formats_individual.indexOf(exe) >= 0
+      });
       var view = Timeline.view(info.hash);
       var item;
       var viewed = function viewed(viewing) {
@@ -18325,10 +20707,11 @@
       Arrays.extend(element, {
         season: info.season,
         episode: info.episode,
-        title: Utils$2.pathToNormalTitle(element.path),
+        title: element.path_human,
         size: Utils$2.bytesToSize(element.length),
         url: Torserver.stream(element.path, SERVER.hash, element.id),
         torrent_hash: SERVER.hash,
+        ffprobe: SERVER.object && SERVER.object.ffprobe ? SERVER.object.ffprobe : false,
         timeline: view,
         air_date: '--',
         img: './img/img_broken.svg',
@@ -18337,7 +20720,7 @@
       });
       if (params.seasons) {
         var episodes = params.seasons[info.season];
-        element.title = info.episode + ' / ' + Utils$2.pathToNormalTitle(element.path, false);
+        element.title = (info.episode ? info.episode + ' / ' : '') + element.path_human;
         element.fname = element.title;
         if (episodes) {
           var episode = episodes.episodes.filter(function (a) {
@@ -18350,8 +20733,13 @@
             if (episode.still_path) element.img = Api.img(episode.still_path);else if (episode.img) element.img = episode.img;
           }
         }
-        item = Template$1.get('torrent_file_serial', element);
-        item.find('.torrent-serial__content').append(Timeline.render(view));
+        if (info.episode) {
+          item = Template$1.get('torrent_file_serial', element);
+          item.find('.torrent-serial__content').append(Timeline.render(view));
+        } else {
+          item = Template$1.get('torrent_file', element);
+          item.append(Timeline.render(view));
+        }
       } else if (items.length == 1 && params.movie && !params.movie.name) {
         element.fname = params.movie.title;
         if (params.movie.backdrop_path) element.img = Api.img(params.movie.backdrop_path);
@@ -18367,6 +20755,7 @@
       item[0].visibility = 'hidden';
       if (view.percent > 0) scroll_to_element = item;
       element.subtitles = parseSubs(element.path, params.files);
+      element.title = (element.fname || element.title).replace(/<[^>]*>?/gm, '');
       playlist.push(element);
       item.on('hover:enter', function () {
         if (params.movie.id) Favorite.add('history', params.movie, 100);
@@ -18381,21 +20770,23 @@
           });
           element.playlist = trim_playlist;
         }
-        Player.play(element);
-        Player.callback(function () {
-          Controller.toggle('modal');
-        });
-        Player.playlist(playlist);
-        Player.stat(element.url);
-        if (callback$1) {
-          callback$1();
-          callback$1 = false;
-        }
-        Lampa.Listener.send('torrent_file', {
-          type: 'onenter',
-          element: element,
-          item: item,
-          items: items
+        preload(element, function () {
+          Player.play(element);
+          Player.callback(function () {
+            Controller.toggle('modal');
+          });
+          Player.playlist(playlist);
+          Player.stat(element.url);
+          if (callback$1) {
+            callback$1();
+            callback$1 = false;
+          }
+          Lampa.Listener.send('torrent_file', {
+            type: 'onenter',
+            element: element,
+            item: item,
+            items: items
+          });
         });
       }).on('hover:long', function () {
         var enabled = Controller.enabled().name;
@@ -18475,6 +20866,10 @@
         };
         img[0].src = img.attr('data-src');
       });
+      if (element.folder_name && element.folder_name !== folder) {
+        html.append($('<div class="torrnet-folder-name' + (folder ? '' : ' selector') + '">' + element.folder_name + '</div>'));
+        folder = element.folder_name;
+      }
       html.append(item);
       Lampa.Listener.send('torrent_file', {
         type: 'render',
@@ -18520,7 +20915,7 @@
 
   var url;
   var network$3 = new create$q();
-  function init$e() {
+  function init$f() {
     var source = {
       title: Lang.translate('title_parser'),
       search: function search(params, oncomplite) {
@@ -18772,7 +21167,7 @@
     network$3.clear();
   }
   var Parser = {
-    init: init$e,
+    init: init$f,
     get: get$4,
     torlook: torlook,
     jackett: jackett,
@@ -18844,7 +21239,7 @@
     };
   }
 
-  function component$a(object) {
+  function component$b(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -18860,21 +21255,25 @@
     var filter_items = {
       quality: [Lang.translate('torrent_parser_any_one'), '4k', '1080p', '720p'],
       hdr: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
+      dv: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
       sub: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
       voice: [],
       tracker: [Lang.translate('torrent_parser_any_two')],
-      year: [Lang.translate('torrent_parser_any_two')]
+      year: [Lang.translate('torrent_parser_any_two')],
+      lang: [Lang.translate('torrent_parser_any_two')]
     };
     var filter_translate = {
       quality: Lang.translate('torrent_parser_quality'),
       hdr: 'HDR',
+      dv: 'Dolby Vision',
       sub: Lang.translate('torrent_parser_subs'),
       voice: Lang.translate('torrent_parser_voice'),
       tracker: Lang.translate('torrent_parser_tracker'),
       year: Lang.translate('torrent_parser_year'),
-      season: Lang.translate('torrent_parser_season')
+      season: Lang.translate('torrent_parser_season'),
+      lang: Lang.translate('title_language_short')
     };
-    var filter_multiple = ['quality', 'voice', 'tracker', 'season'];
+    var filter_multiple = ['quality', 'voice', 'tracker', 'season', 'lang'];
     var sort_translate = {
       Seeders: Lang.translate('torrent_parser_sort_by_seeders'),
       Size: Lang.translate('torrent_parser_sort_by_size'),
@@ -18891,7 +21290,236 @@
     var viewed = Storage.cache('torrents_view', 5000, []);
     var finded_seasons = [];
     var finded_seasons_full = [];
-    var voices = ["Laci", "Kerob", "LE-Production", "Parovoz Production", "Paradox", "Omskbird", "LostFilm", "Причудики", "BaibaKo", "NewStudio", "AlexFilm", "FocusStudio", "Gears Media", "Jaskier", "ViruseProject", "Кубик в Кубе", "IdeaFilm", "Sunshine Studio", "Ozz.tv", "Hamster Studio", "Сербин", "To4ka", "Кравец", "Victory-Films", "SNK-TV", "GladiolusTV", "Jetvis Studio", "ApofysTeam", "ColdFilm", "Agatha Studdio", "KinoView", "Jimmy J.", "Shadow Dub Project", "Amedia", "Red Media", "Selena International", "Гоблин", "Universal Russia", "Kiitos", "Paramount Comedy", "Кураж-Бамбей", "Студия Пиратского Дубляжа", "Чадов", "Карповский", "RecentFilms", "Первый канал", "Alternative Production", "NEON Studio", "Колобок", "Дольский", "Синема УС", "Гаврилов", "Живов", "SDI Media", "Алексеев", "GreenРай Studio", "Михалев", "Есарев", "Визгунов", "Либергал", "Кузнецов", "Санаев", "ДТВ", "Дохалов", "Sunshine Studio", "Горчаков", "LevshaFilm", "CasStudio", "Володарский", "ColdFilm", "Шварко", "Карцев", "ETV+", "ВГТРК", "Gravi-TV", "1001cinema", "Zone Vision Studio", "Хихикающий доктор", "Murzilka", "turok1990", "FOX", "STEPonee", "Elrom", "Колобок", "HighHopes", "SoftBox", "GreenРай Studio", "NovaFilm", "Четыре в квадрате", "Greb&Creative", "MUZOBOZ", "ZM-Show", "RecentFilms", "Kerems13", "Hamster Studio", "New Dream Media", "Игмар", "Котов", "DeadLine Studio", "Jetvis Studio", "РенТВ", "Андрей Питерский", "Fox Life", "Рыбин", "Trdlo.studio", "Studio Victory Аsia", "Ozeon", "НТВ", "CP Digital", "AniLibria", "STEPonee", "Levelin", "FanStudio", "Cmert", "Интерфильм", "SunshineStudio", "Kulzvuk Studio", "Кашкин", "Вартан Дохалов", "Немахов", "Sedorelli", "СТС", "Яроцкий", "ICG", "ТВЦ", "Штейн", "AzOnFilm", "SorzTeam", "Гаевский", "Мудров", "Воробьев Сергей", "Студия Райдо", "DeeAFilm Studio", "zamez", "ViruseProject", "Иванов", "STEPonee", "РенТВ", "СВ-Дубль", "BadBajo", "Комедия ТВ", "Мастер Тэйп", "5-й канал СПб", "SDI Media", "Гланц", "Ох! Студия", "СВ-Кадр", "2x2", "Котова", "Позитив", "RusFilm", "Назаров", "XDUB Dorama", "Реальный перевод", "Kansai", "Sound-Group", "Николай Дроздов", "ZEE TV", "Ozz.tv", "MTV", "Сыендук", "GoldTeam", "Белов", "Dream Records", "Яковлев", "Vano", "SilverSnow", "Lord32x", "Filiza Studio", "Sony Sci-Fi", "Flux-Team", "NewStation", "XDUB Dorama", "Hamster Studio", "Dream Records", "DexterTV", "ColdFilm", "Good People", "RusFilm", "Levelin", "AniDUB", "SHIZA Project", "AniLibria.TV", "StudioBand", "AniMedia", "Kansai", "Onibaku", "JWA Project", "MC Entertainment", "Oni", "Jade", "Ancord", "ANIvoice", "Nika Lenina", "Bars MacAdams", "JAM", "Anika", "Berial", "Kobayashi", "Cuba77", "RiZZ_fisher", "OSLIKt", "Lupin", "Ryc99", "Nazel & Freya", "Trina_D", "JeFerSon", "Vulpes Vulpes", "Hamster", "KinoGolos", "Fox Crime", "Денис Шадинский", "AniFilm", "Rain Death", "LostFilm", "New Records", "Ancord", "Первый ТВЧ", "RG.Paravozik", "Profix Media", "Tycoon", "RealFake", "HDrezka", "Jimmy J.", "AlexFilm", "Discovery", "Viasat History", "AniMedia", "JAM", "HiWayGrope", "Ancord", "СВ-Дубль", "Tycoon", "SHIZA Project", "GREEN TEA", "STEPonee", "AlphaProject", "AnimeReactor", "Animegroup", "Shachiburi", "Persona99", "3df voice", "CactusTeam", "AniMaunt", "AniMedia", "AnimeReactor", "ShinkaDan", "Jaskier", "ShowJet", "RAIM", "RusFilm", "Victory-Films", "АрхиТеатр", "Project Web Mania", "ko136", "КураСгречей", "AMS", "СВ-Студия", "Храм Дорам ТВ", "TurkStar", "Медведев", "Рябов", "BukeDub", "FilmGate", "FilmsClub", "Sony Turbo", "ТВЦ", "AXN Sci-Fi", "NovaFilm", "DIVA Universal", "Курдов", "Неоклассика", "fiendover", "SomeWax", "Логинофф", "Cartoon Network", "Sony Turbo", "Loginoff", "CrezaStudio", "Воротилин", "LakeFilms", "Andy", "CP Digital", "XDUB Dorama + Колобок", "SDI Media", "KosharaSerials", "Екатеринбург Арт", "Julia Prosenuk", "АРК-ТВ Studio", "Т.О Друзей", "Anifilm", "Animedub", "AlphaProject", "Paramount Channel", "Кириллица", "AniPLague", "Видеосервис", "JoyStudio", "HighHopes", "TVShows", "AniFilm", "GostFilm", "West Video", "Формат AB", "Film Prestige", "West Video", "Екатеринбург Арт", "SovetRomantica", "РуФилмс", "AveBrasil", "Greb&Creative", "BTI Studios", "Пифагор", "Eurochannel", "NewStudio", "Кармен Видео", "Кошкин", "Кравец", "Rainbow World", "Воротилин", "Варус-Видео", "ClubFATE", "HiWay Grope", "Banyan Studio", "Mallorn Studio", "Asian Miracle Group", "Эй Би Видео", "AniStar", "Korean Craze", "LakeFilms", "Невафильм", "Hallmark", "Netflix", "Mallorn Studio", "Sony Channel", "East Dream", "Bonsai Studio", "Lucky Production", "Octopus", "TUMBLER Studio", "CrazyCatStudio", "Amber", "Train Studio", "Анастасия Гайдаржи", "Мадлен Дюваль", "Fox Life", "Sound Film", "Cowabunga Studio", "Фильмэкспорт", "VO-Production", "Sound Film", "Nickelodeon", "MixFilm", "GreenРай Studio", "Sound-Group", "Back Board Cinema", "Кирилл Сагач", "Bonsai Studio", "Stevie", "OnisFilms", "MaxMeister", "Syfy Universal", "TUMBLER Studio", "NewStation", "Neo-Sound", "Муравский", "IdeaFilm", "Рутилов", "Тимофеев", "Лагута", "Дьяконов", "Zone Vision Studio", "Onibaku", "AniMaunt", "Voice Project", "AniStar", "Пифагор", "VoicePower", "StudioFilms", "Elysium", "AniStar", "BeniAffet", "Selena International", "Paul Bunyan", "CoralMedia", "Кондор", "Игмар", "ViP Premiere", "FireDub", "AveTurk", "Sony Sci-Fi", "Янкелевич", "Киреев", "Багичев", "2x2", "Лексикон", "Нота", "Arisu", "Superbit", "AveDorama", "VideoBIZ", "Киномания", "DDV", "Alternative Production", "WestFilm", "Анастасия Гайдаржи + Андрей Юрченко", "Киномания", "Agatha Studdio", "GreenРай Studio", "VSI Moscow", "Horizon Studio", "Flarrow Films", "Amazing Dubbing", "Asian Miracle Group", "Видеопродакшн", "VGM Studio", "FocusX", "CBS Drama", "NovaFilm", "Novamedia", "East Dream", "Дасевич", "Анатолий Гусев", "Twister", "Морозов", "NewComers", "kubik&ko", "DeMon", "Анатолий Ашмарин", "Inter Video", "Пронин", "AMC", "Велес", "Volume-6 Studio", "Хоррор Мэйкер", "Ghostface", "Sephiroth", "Акира", "Деваль Видео", "RussianGuy27", "neko64", "Shaman", "Franek Monk", "Ворон", "Andre1288", "Selena International", "GalVid", "Другое кино", "Студия NLS", "Sam2007", "HaseRiLLoPaW", "Севастьянов", "D.I.M.", "Марченко", "Журавлев", "Н-Кино", "Lazer Video", "SesDizi", "Red Media", "Рудой", "Товбин", "Сергей Дидок", "Хуан Рохас", "binjak", "Карусель", "Lizard Cinema", "Варус-Видео", "Акцент", "RG.Paravozik", "Max Nabokov", "Barin101", "Васька Куролесов", "Фортуна-Фильм", "Amalgama", "AnyFilm", "Студия Райдо", "Козлов", "Zoomvision Studio", "Пифагор", "Urasiko", "VIP Serial HD", "НСТ", "Кинолюкс", "Project Web Mania", "Завгородний", "AB-Video", "Twister", "Universal Channel", "Wakanim", "SnowRecords", "С.Р.И", "Старый Бильбо", "Ozz.tv", "Mystery Film", "РенТВ", "Латышев", "Ващенко", "Лайко", "Сонотек", "Psychotronic", "DIVA Universal", "Gremlin Creative Studio", "Нева-1", "Максим Жолобов", "Good People", "Мобильное телевидение", "Lazer Video", "IVI", "DoubleRec", "Milvus", "RedDiamond Studio", "Astana TV", "Никитин", "КТК", "D2Lab", "НСТ", "DoubleRec", "Black Street Records", "Останкино", "TatamiFilm", "Видеобаза", "Crunchyroll", "Novamedia", "RedRussian1337", "КонтентикOFF", "Creative Sound", "HelloMickey Production", "Пирамида", "CLS Media", "Сонькин", "Мастер Тэйп", "Garsu Pasaulis", "DDV", "IdeaFilm", "Gold Cinema", "Че!", "Нарышкин", "Intra Communications", "OnisFilms", "XDUB Dorama", "Кипарис", "Королёв", "visanti-vasaer", "Готлиб", "Paramount Channel", "СТС", "диктор CDV", "Pazl Voice", "Прямостанов", "Zerzia", "НТВ", "MGM", "Дьяков", "Вольга", "АРК-ТВ Studio", "Дубровин", "МИР", "Netflix", "Jetix", "Кипарис", "RUSCICO", "Seoul Bay", "Филонов", "Махонько", "Строев", "Саня Белый", "Говинда Рага", "Ошурков", "Horror Maker", "Хлопушка", "Хрусталев", "Антонов Николай", "Золотухин", "АрхиАзия", "Попов", "Ultradox", "Мост-Видео", "Альтера Парс", "Огородников", "Твин", "Хабар", "AimaksaLTV", "ТНТ", "FDV", "3df voice", "The Kitchen Russia", "Ульпаней Эльром", "Видеоимпульс", "GoodTime Media", "Alezan", "True Dubbing Studio", "FDV", "Карусель", "Интер", "Contentica", "Мельница", "RealFake", "ИДДК", "Инфо-фильм", "Мьюзик-трейд", "Кирдин | Stalk", "ДиоНиК", "Стасюк", "TV1000", "Hallmark", "Тоникс Медиа", "Бессонов", "Gears Media", "Бахурани", "NewDub", "Cinema Prestige", "Набиев", "New Dream Media", "ТВ3", "Малиновский Сергей", "Superbit", "Кенс Матвей", "LE-Production", "Voiz", "Светла", "Cinema Prestige", "JAM", "LDV", "Videogram", "Индия ТВ", "RedDiamond Studio", "Герусов", "Элегия фильм", "Nastia", "Семыкина Юлия", "Электричка", "Штамп Дмитрий", "Пятница", "Oneinchnales", "Gravi-TV", "D2Lab", "Кинопремьера", "Бусов Глеб", "LE-Production", "1001cinema", "Amazing Dubbing", "Emslie", "1+1", "100 ТВ", "1001 cinema", "2+2", "2х2", "3df voice", "4u2ges", "5 канал", "A. Lazarchuk", "AAA-Sound", "AB-Video", "AdiSound", "ALEKS KV", "AlexFilm", "AlphaProject", "Alternative Production", "Amalgam", "AMC", "Amedia", "AMS", "Andy", "AniLibria", "AniMedia", "Animegroup", "Animereactor", "AnimeSpace Team", "Anistar", "AniUA", "AniWayt", "Anything-group", "AOS", "Arasi project", "ARRU Workshop", "AuraFilm", "AvePremier", "AveTurk", "AXN Sci-Fi", "Azazel", "AzOnFilm", "BadBajo", "BadCatStudio", "BBC Saint-Petersburg", "BD CEE", "Black Street Records", "Bonsai Studio", "Boльгa", "Brain Production", "BraveSound", "BTI Studios", "Bubble Dubbing Company", "Byako Records", "Cactus Team", "Cartoon Network", "CBS Drama", "CDV", "Cinema Prestige", "CinemaSET GROUP", "CinemaTone", "ColdFilm", "Contentica", "CP Digital", "CPIG", "Crunchyroll", "Cuba77", "D1", "D2lab", "datynet", "DDV", "DeadLine", "DeadSno", "DeMon", "den904", "Description", "DexterTV", "Dice", "Discovery", "DniproFilm", "DoubleRec", "DreamRecords", "DVD Classic", "East Dream", "Eladiel", "Elegia", "ELEKTRI4KA", "Elrom", "ELYSIUM", "Epic Team", "eraserhead", "erogg", "Eurochannel", "Extrabit", "F-TRAIN", "Family Fan Edition", "FDV", "FiliZa Studio", "Film Prestige", "FilmGate", "FilmsClub", "FireDub", "Flarrow Films", "Flux-Team", "FocusStudio", "FOX", "Fox Crime", "Fox Russia", "FoxLife", "Foxlight", "Franek Monk", "Gala Voices", "Garsu Pasaulis", "Gears Media", "Gemini", "General Film", "GetSmart", "Gezell Studio", "Gits", "GladiolusTV", "GoldTeam", "Good People", "Goodtime Media", "GoodVideo", "GostFilm", "Gramalant", "Gravi-TV", "GREEN TEA", "GreenРай Studio", "Gremlin Creative Studio", "Hallmark", "HamsterStudio", "HiWay Grope", "Horizon Studio", "hungry_inri", "ICG", "ICTV", "IdeaFilm", "IgVin &amp; Solncekleshka", "ImageArt", "INTERFILM", "Ivnet Cinema", "IНТЕР", "Jakob Bellmann", "JAM", "Janetta", "Jaskier", "JeFerSon", "jept", "JetiX", "Jetvis", "JimmyJ", "KANSAI", "KIHO", "kiitos", "KinoGolos", "Kinomania", "KosharaSerials", "Kолобок", "L0cDoG", "LakeFilms", "LDV", "LE-Production", "LeDoyen", "LevshaFilm", "LeXiKC", "Liga HQ", "Line", "Lisitz", "Lizard Cinema Trade", "Lord32x", "lord666", "LostFilm", "Lucky Production", "Macross", "madrid", "Mallorn Studio", "Marclail", "Max Nabokov", "MC Entertainment", "MCA", "McElroy", "Mega-Anime", "Melodic Voice Studio", "metalrus", "MGM", "MifSnaiper", "Mikail", "Milirina", "MiraiDub", "MOYGOLOS", "MrRose", "MTV", "Murzilka", "MUZOBOZ", "National Geographic", "NemFilm", "Neoclassica", "NEON Studio", "New Dream Media", "NewComers", "NewStation", "NewStudio", "Nice-Media", "Nickelodeon", "No-Future", "NovaFilm", "Novamedia", "Octopus", "Oghra-Brown", "OMSKBIRD", "Onibaku", "OnisFilms", "OpenDub", "OSLIKt", "Ozz TV", "PaDet", "Paramount Comedy", "Paramount Pictures", "Parovoz Production", "PashaUp", "Paul Bunyan", "Pazl Voice", "PCB Translate", "Persona99", "PiratVoice", "Postmodern", "Profix Media", "Project Web Mania", "Prolix", "QTV", "R5", "Radamant", "RainDeath", "RATTLEBOX", "RealFake", "Reanimedia", "Rebel Voice", "RecentFilms", "Red Media", "RedDiamond Studio", "RedDog", "RedRussian1337", "Renegade Team", "RG Paravozik", "RinGo", "RoxMarty", "Rumble", "RUSCICO", "RusFilm", "RussianGuy27", "Saint Sound", "SakuraNight", "Satkur", "Sawyer888", "Sci-Fi Russia", "SDI Media", "Selena", "seqw0", "SesDizi", "SGEV", "Shachiburi", "SHIZA", "ShowJet", "Sky Voices", "SkyeFilmTV", "SmallFilm", "SmallFilm", "SNK-TV", "SnowRecords", "SOFTBOX", "SOLDLUCK2", "Solod", "SomeWax", "Sony Channel", "Sony Turbo", "Sound Film", "SpaceDust", "ssvss", "st.Elrom", "STEPonee", "SunshineStudio", "Superbit", "Suzaku", "sweet couple", "TatamiFilm", "TB5", "TF-AniGroup", "The Kitchen Russia", "The Mike Rec.", "Timecraft", "To4kaTV", "Tori", "Total DVD", "TrainStudio", "Troy", "True Dubbing Studio", "TUMBLER Studio", "turok1990", "TV 1000", "TVShows", "Twister", "Twix", "Tycoon", "Ultradox", "Universal Russia", "VashMax2", "VendettA", "VHS", "VicTeam", "VictoryFilms", "Video-BIZ", "Videogram", "ViruseProject", "visanti-vasaer", "VIZ Media", "VO-production", "Voice Project Studio", "VoicePower", "VSI Moscow", "VulpesVulpes", "Wakanim", "Wayland team", "WestFilm", "WiaDUB", "WVoice", "XL Media", "XvidClub Studio", "zamez", "ZEE TV", "Zendos", "ZM-SHOW", "Zone Studio", "Zone Vision", "Агапов", "Акопян", "Алексеев", "Артемьев", "Багичев", "Бессонов", "Васильев", "Васильцев", "Гаврилов", "Герусов", "Готлиб", "Григорьев", "Дасевич", "Дольский", "Карповский", "Кашкин", "Киреев", "Клюквин", "Костюкевич", "Матвеев", "Михалев", "Мишин", "Мудров", "Пронин", "Савченко", "Смирнов", "Тимофеев", "Толстобров", "Чуев", "Шуваев", "Яковлев", "ААА-sound", "АБыГДе", "Акалит", "Акира", "Альянс", "Амальгама", "АМС", "АнВад", "Анубис", "Anubis", "Арк-ТВ", "АРК-ТВ Studio", "Б. Федоров", "Бибиков", "Бигыч", "Бойков", "Абдулов", "Белов", "Вихров", "Воронцов", "Горчаков", "Данилов", "Дохалов", "Котов", "Кошкин", "Назаров", "Попов", "Рукин", "Рутилов", "Варус Видео", "Васька Куролесов", "Ващенко С.", "Векшин", "Велес", "Весельчак", "Видеоимпульс", "Витя «говорун»", "Войсовер", "Вольга", "Ворон", "Воротилин", "Г. Либергал", "Г. Румянцев", "Гей Кино Гид", "ГКГ", "Глуховский", "Гризли", "Гундос", "Деньщиков", "Есарев", "Нурмухаметов", "Пучков", "Стасюк", "Шадинский", "Штамп", "sf@irat", "Держиморда", "Домашний", "ДТВ", "Дьяконов", "Е. Гаевский", "Е. Гранкин", "Е. Лурье", "Е. Рудой", "Е. Хрусталёв", "ЕА Синема", "Екатеринбург Арт", "Живаго", "Жучков", "З Ранку До Ночі", "Завгородний", "Зебуро", "Зереницын", "И. Еремеев", "И. Клушин", "И. Сафронов", "И. Степанов", "ИГМ", "Игмар", "ИДДК", "Имидж-Арт", "Инис", "Ирэн", "Ист-Вест", "К. Поздняков", "К. Филонов", "К9", "Карапетян", "Кармен Видео", "Карусель", "Квадрат Малевича", "Килька", "Кипарис", "Королев", "Котова", "Кравец", "Кубик в Кубе", "Кураж-Бамбей", "Л. Володарский", "Лазер Видео", "ЛанселаП", "Лапшин", "Лексикон", "Ленфильм", "Леша Прапорщик", "Лизард", "Люсьена", "Заугаров", "Иванов", "Иванова и П. Пашут", "Латышев", "Ошурков", "Чадов", "Яроцкий", "Максим Логинофф", "Малиновский", "Марченко", "Мастер Тэйп", "Махонько", "Машинский", "Медиа-Комплекс", "Мельница", "Мика Бондарик", "Миняев", "Мительман", "Мост Видео", "Мосфильм", "Муравский", "Мьюзик-трейд", "Н-Кино", "Н. Антонов", "Н. Дроздов", "Н. Золотухин", "Н.Севастьянов seva1988", "Набиев", "Наталья Гурзо", "НЕВА 1", "Невафильм", "НеЗупиняйПродакшн", "Неоклассика", "Несмертельное оружие", "НЛО-TV", "Новий", "Новый диск", "Новый Дубляж", "Новый Канал", "Нота", "НСТ", "НТВ", "НТН", "Оверлорд", "Огородников", "Омикрон", "Гланц", "Карцев", "Морозов", "Прямостанов", "Санаев", "Парадиз", "Пепелац", "Первый канал ОРТ", "Переводман", "Перец", "Петербургский дубляж", "Петербуржец", "Пирамида", "Пифагор", "Позитив-Мультимедиа", "Прайд Продакшн", "Премьер Видео", "Премьер Мультимедиа", "Причудики", "Р. Янкелевич", "Райдо", "Ракурс", "РенТВ", "Россия", "РТР", "Русский дубляж", "Русский Репортаж", "РуФилмс", "Рыжий пес", "С. Визгунов", "С. Дьяков", "С. Казаков", "С. Кузнецов", "С. Кузьмичёв", "С. Лебедев", "С. Макашов", "С. Рябов", "С. Щегольков", "С.Р.И.", "Сolumbia Service", "Самарский", "СВ Студия", "СВ-Дубль", "Светла", "Селена Интернешнл", "Синема Трейд", "Синема УС", "Синта Рурони", "Синхрон", "Советский", "Сокуров", "Солодухин", "Сонотек", "Сонькин", "Союз Видео", "Союзмультфильм", "СПД - Сладкая парочка", "Строев", "СТС", "Студии Суверенного Лепрозория", "Студия «Стартрек»", "KOleso", "Студия Горького", "Студия Колобок", "Студия Пиратского Дубляжа", "Студия Райдо", "Студия Трёх", "Гуртом", "Супербит", "Сыендук", "Так Треба Продакшн", "ТВ XXI век", "ТВ СПб", "ТВ-3", "ТВ6", "ТВИН", "ТВЦ", "ТВЧ 1", "ТНТ", "ТО Друзей", "Толмачев", "Точка Zрения", "Трамвай-фильм", "ТРК", "Уолт Дисней Компани", "Хихидок", "Хлопушка", "Цікава Ідея", "Четыре в квадрате", "Швецов", "Штамп", "Штейн", "Ю. Живов", "Ю. Немахов", "Ю. Сербин", "Ю. Товбин", "Я. Беллманн", "Red Head Sound"];
+    var voices = ["Laci", "Kerob", "LE-Production", "Parovoz Production", "Paradox", "Omskbird", "LostFilm", "Причудики", "BaibaKo", "NewStudio", "AlexFilm", "FocusStudio", "Gears Media", "Jaskier", "ViruseProject", "Кубик в Кубе", "IdeaFilm", "Sunshine Studio", "Ozz.tv", "Hamster Studio", "Сербин", "To4ka", "Кравец", "Victory-Films", "SNK-TV", "GladiolusTV", "Jetvis Studio", "ApofysTeam", "ColdFilm", "Agatha Studdio", "KinoView", "Jimmy J.", "Shadow Dub Project", "Amedia", "Red Media", "Selena International", "Гоблин", "Universal Russia", "Kiitos", "Paramount Comedy", "Кураж-Бамбей", "Студия Пиратского Дубляжа", "Чадов", "Карповский", "RecentFilms", "Первый канал", "Alternative Production", "NEON Studio", "Колобок", "Дольский", "Синема УС", "Гаврилов", "Живов", "SDI Media", "Алексеев", "GreenРай Studio", "Михалев", "Есарев", "Визгунов", "Либергал", "Кузнецов", "Санаев", "ДТВ", "Дохалов", "Sunshine Studio", "Горчаков", "LevshaFilm", "CasStudio", "Володарский", "ColdFilm", "Шварко", "Карцев", "ETV+", "ВГТРК", "Gravi-TV", "1001cinema", "Zone Vision Studio", "Хихикающий доктор", "Murzilka", "turok1990", "FOX", "STEPonee", "Elrom", "Колобок", "HighHopes", "SoftBox", "GreenРай Studio", "NovaFilm", "Четыре в квадрате", "Greb&Creative", "MUZOBOZ", "ZM-Show", "RecentFilms", "Kerems13", "Hamster Studio", "New Dream Media", "Игмар", "Котов", "DeadLine Studio", "Jetvis Studio", "РенТВ", "Андрей Питерский", "Fox Life", "Рыбин", "Trdlo.studio", "Studio Victory Аsia", "Ozeon", "НТВ", "CP Digital", "AniLibria", "STEPonee", "Levelin", "FanStudio", "Cmert", "Интерфильм", "SunshineStudio", "Kulzvuk Studio", "Кашкин", "Вартан Дохалов", "Немахов", "Sedorelli", "СТС", "Яроцкий", "ICG", "ТВЦ", "Штейн", "AzOnFilm", "SorzTeam", "Гаевский", "Мудров", "Воробьев Сергей", "Студия Райдо", "DeeAFilm Studio", "zamez", "ViruseProject", "Иванов", "STEPonee", "РенТВ", "СВ-Дубль", "BadBajo", "Комедия ТВ", "Мастер Тэйп", "5-й канал СПб", "SDI Media", "Гланц", "Ох! Студия", "СВ-Кадр", "2x2", "Котова", "Позитив", "RusFilm", "Назаров", "XDUB Dorama", "Реальный перевод", "Kansai", "Sound-Group", "Николай Дроздов", "ZEE TV", "Ozz.tv", "MTV", "Сыендук", "GoldTeam", "Белов", "Dream Records", "Яковлев", "Vano", "SilverSnow", "Lord32x", "Filiza Studio", "Sony Sci-Fi", "Flux-Team", "NewStation", "XDUB Dorama", "Hamster Studio", "Dream Records", "DexterTV", "ColdFilm", "Good People", "RusFilm", "Levelin", "AniDUB", "SHIZA Project", "AniLibria.TV", "StudioBand", "AniMedia", "Kansai", "Onibaku", "JWA Project", "MC Entertainment", "Oni", "Jade", "Ancord", "ANIvoice", "Nika Lenina", "Bars MacAdams", "JAM", "Anika", "Berial", "Kobayashi", "Cuba77", "RiZZ_fisher", "OSLIKt", "Lupin", "Ryc99", "Nazel & Freya", "Trina_D", "JeFerSon", "Vulpes Vulpes", "Hamster", "KinoGolos", "Fox Crime", "Денис Шадинский", "AniFilm", "Rain Death", "LostFilm", "New Records", "Ancord", "Первый ТВЧ", "RG.Paravozik", "Profix Media", "Tycoon", "RealFake", "HDrezka", "Jimmy J.", "AlexFilm", "Discovery", "Viasat History", "AniMedia", "JAM", "HiWayGrope", "Ancord", "СВ-Дубль", "Tycoon", "SHIZA Project", "GREEN TEA", "STEPonee", "AlphaProject", "AnimeReactor", "Animegroup", "Shachiburi", "Persona99", "3df voice", "CactusTeam", "AniMaunt", "AniMedia", "AnimeReactor", "ShinkaDan", "Jaskier", "ShowJet", "RAIM", "RusFilm", "Victory-Films", "АрхиТеатр", "Project Web Mania", "ko136", "КураСгречей", "AMS", "СВ-Студия", "Храм Дорам ТВ", "TurkStar", "Медведев", "Рябов", "BukeDub", "FilmGate", "FilmsClub", "Sony Turbo", "ТВЦ", "AXN Sci-Fi", "NovaFilm", "DIVA Universal", "Курдов", "Неоклассика", "fiendover", "SomeWax", "Логинофф", "Cartoon Network", "Sony Turbo", "Loginoff", "CrezaStudio", "Воротилин", "LakeFilms", "Andy", "CP Digital", "XDUB Dorama + Колобок", "SDI Media", "KosharaSerials", "Екатеринбург Арт", "Julia Prosenuk", "АРК-ТВ Studio", "Т.О Друзей", "Anifilm", "Animedub", "AlphaProject", "Paramount Channel", "Кириллица", "AniPLague", "Видеосервис", "JoyStudio", "HighHopes", "TVShows", "AniFilm", "GostFilm", "West Video", "Формат AB", "Film Prestige", "West Video", "Екатеринбург Арт", "SovetRomantica", "РуФилмс", "AveBrasil", "Greb&Creative", "BTI Studios", "Пифагор", "Eurochannel", "NewStudio", "Кармен Видео", "Кошкин", "Кравец", "Rainbow World", "Воротилин", "Варус-Видео", "ClubFATE", "HiWay Grope", "Banyan Studio", "Mallorn Studio", "Asian Miracle Group", "Эй Би Видео", "AniStar", "Korean Craze", "LakeFilms", "Невафильм", "Hallmark", "Netflix", "Mallorn Studio", "Sony Channel", "East Dream", "Bonsai Studio", "Lucky Production", "Octopus", "TUMBLER Studio", "CrazyCatStudio", "Amber", "Train Studio", "Анастасия Гайдаржи", "Мадлен Дюваль", "Fox Life", "Sound Film", "Cowabunga Studio", "Фильмэкспорт", "VO-Production", "Sound Film", "Nickelodeon", "MixFilm", "GreenРай Studio", "Sound-Group", "Back Board Cinema", "Кирилл Сагач", "Bonsai Studio", "Stevie", "OnisFilms", "MaxMeister", "Syfy Universal", "TUMBLER Studio", "NewStation", "Neo-Sound", "Муравский", "IdeaFilm", "Рутилов", "Тимофеев", "Лагута", "Дьяконов", "Zone Vision Studio", "Onibaku", "AniMaunt", "Voice Project", "AniStar", "Пифагор", "VoicePower", "StudioFilms", "Elysium", "AniStar", "BeniAffet", "Selena International", "Paul Bunyan", "CoralMedia", "Кондор", "Игмар", "ViP Premiere", "FireDub", "AveTurk", "Sony Sci-Fi", "Янкелевич", "Киреев", "Багичев", "2x2", "Лексикон", "Нота", "Arisu", "Superbit", "AveDorama", "VideoBIZ", "Киномания", "DDV", "Alternative Production", "WestFilm", "Анастасия Гайдаржи + Андрей Юрченко", "Киномания", "Agatha Studdio", "GreenРай Studio", "VSI Moscow", "Horizon Studio", "Flarrow Films", "Amazing Dubbing", "Asian Miracle Group", "Видеопродакшн", "VGM Studio", "FocusX", "CBS Drama", "NovaFilm", "Novamedia", "East Dream", "Дасевич", "Анатолий Гусев", "Twister", "Морозов", "NewComers", "kubik&ko", "DeMon", "Анатолий Ашмарин", "Inter Video", "Пронин", "AMC", "Велес", "Volume-6 Studio", "Хоррор Мэйкер", "Ghostface", "Sephiroth", "Акира", "Деваль Видео", "RussianGuy27", "neko64", "Shaman", "Franek Monk", "Ворон", "Andre1288", "Selena International", "GalVid", "Другое кино", "Студия NLS", "Sam2007", "HaseRiLLoPaW", "Севастьянов", "D.I.M.", "Марченко", "Журавлев", "Н-Кино", "Lazer Video", "SesDizi", "Red Media", "Рудой", "Товбин", "Сергей Дидок", "Хуан Рохас", "binjak", "Карусель", "Lizard Cinema", "Варус-Видео", "Акцент", "RG.Paravozik", "Max Nabokov", "Barin101", "Васька Куролесов", "Фортуна-Фильм", "Amalgama", "AnyFilm", "Студия Райдо", "Козлов", "Zoomvision Studio", "Пифагор", "Urasiko", "VIP Serial HD", "НСТ", "Кинолюкс", "Project Web Mania", "Завгородний", "AB-Video", "Twister", "Universal Channel", "Wakanim", "SnowRecords", "С.Р.И", "Старый Бильбо", "Ozz.tv", "Mystery Film", "РенТВ", "Латышев", "Ващенко", "Лайко", "Сонотек", "Psychotronic", "DIVA Universal", "Gremlin Creative Studio", "Нева-1", "Максим Жолобов", "Good People", "Мобильное телевидение", "Lazer Video", "IVI", "DoubleRec", "Milvus", "RedDiamond Studio", "Astana TV", "Никитин", "КТК", "D2Lab", "НСТ", "DoubleRec", "Black Street Records", "Останкино", "TatamiFilm", "Видеобаза", "Crunchyroll", "Novamedia", "RedRussian1337", "КонтентикOFF", "Creative Sound", "HelloMickey Production", "Пирамида", "CLS Media", "Сонькин", "Мастер Тэйп", "Garsu Pasaulis", "DDV", "IdeaFilm", "Gold Cinema", "Че!", "Нарышкин", "Intra Communications", "OnisFilms", "XDUB Dorama", "Кипарис", "Королёв", "visanti-vasaer", "Готлиб", "Paramount Channel", "СТС", "диктор CDV", "Pazl Voice", "Прямостанов", "Zerzia", "НТВ", "MGM", "Дьяков", "Вольга", "АРК-ТВ Studio", "Дубровин", "МИР", "Netflix", "Jetix", "Кипарис", "RUSCICO", "Seoul Bay", "Филонов", "Махонько", "Строев", "Саня Белый", "Говинда Рага", "Ошурков", "Horror Maker", "Хлопушка", "Хрусталев", "Антонов Николай", "Золотухин", "АрхиАзия", "Попов", "Ultradox", "Мост-Видео", "Альтера Парс", "Огородников", "Твин", "Хабар", "AimaksaLTV", "ТНТ", "FDV", "3df voice", "The Kitchen Russia", "Ульпаней Эльром", "Видеоимпульс", "GoodTime Media", "Alezan", "True Dubbing Studio", "FDV", "Карусель", "Интер", "Contentica", "Мельница", "RealFake", "ИДДК", "Инфо-фильм", "Мьюзик-трейд", "Кирдин | Stalk", "ДиоНиК", "Стасюк", "TV1000", "Hallmark", "Тоникс Медиа", "Бессонов", "Gears Media", "Бахурани", "NewDub", "Cinema Prestige", "Набиев", "New Dream Media", "ТВ3", "Малиновский Сергей", "Superbit", "Кенс Матвей", "LE-Production", "Voiz", "Светла", "Cinema Prestige", "JAM", "LDV", "Videogram", "Индия ТВ", "RedDiamond Studio", "Герусов", "Элегия фильм", "Nastia", "Семыкина Юлия", "Электричка", "Штамп Дмитрий", "Пятница", "Oneinchnales", "Gravi-TV", "D2Lab", "Кинопремьера", "Бусов Глеб", "LE-Production", "1001cinema", "Amazing Dubbing", "Emslie", "1+1", "100 ТВ", "1001 cinema", "2+2", "2х2", "3df voice", "4u2ges", "5 канал", "A. Lazarchuk", "AAA-Sound", "AB-Video", "AdiSound", "ALEKS KV", "AlexFilm", "AlphaProject", "Alternative Production", "Amalgam", "AMC", "Amedia", "AMS", "Andy", "AniLibria", "AniMedia", "Animegroup", "Animereactor", "AnimeSpace Team", "Anistar", "AniUA", "AniWayt", "Anything-group", "AOS", "Arasi project", "ARRU Workshop", "AuraFilm", "AvePremier", "AveTurk", "AXN Sci-Fi", "Azazel", "AzOnFilm", "BadBajo", "BadCatStudio", "BBC Saint-Petersburg", "BD CEE", "Black Street Records", "Bonsai Studio", "Boльгa", "Brain Production", "BraveSound", "BTI Studios", "Bubble Dubbing Company", "Byako Records", "Cactus Team", "Cartoon Network", "CBS Drama", "CDV", "Cinema Prestige", "CinemaSET GROUP", "CinemaTone", "ColdFilm", "Contentica", "CP Digital", "CPIG", "Crunchyroll", "Cuba77", "D1", "D2lab", "datynet", "DDV", "DeadLine", "DeadSno", "DeMon", "den904", "Description", "DexterTV", "Dice", "Discovery", "DniproFilm", "DoubleRec", "DreamRecords", "DVD Classic", "East Dream", "Eladiel", "Elegia", "ELEKTRI4KA", "Elrom", "ELYSIUM", "Epic Team", "eraserhead", "erogg", "Eurochannel", "Extrabit", "F-TRAIN", "Family Fan Edition", "FDV", "FiliZa Studio", "Film Prestige", "FilmGate", "FilmsClub", "FireDub", "Flarrow Films", "Flux-Team", "FocusStudio", "FOX", "Fox Crime", "Fox Russia", "FoxLife", "Foxlight", "Franek Monk", "Gala Voices", "Garsu Pasaulis", "Gears Media", "Gemini", "General Film", "GetSmart", "Gezell Studio", "Gits", "GladiolusTV", "GoldTeam", "Good People", "Goodtime Media", "GoodVideo", "GostFilm", "Gramalant", "Gravi-TV", "GREEN TEA", "GreenРай Studio", "Gremlin Creative Studio", "Hallmark", "HamsterStudio", "HiWay Grope", "Horizon Studio", "hungry_inri", "ICG", "ICTV", "IdeaFilm", "IgVin &amp; Solncekleshka", "ImageArt", "INTERFILM", "Ivnet Cinema", "IНТЕР", "Jakob Bellmann", "JAM", "Janetta", "Jaskier", "JeFerSon", "jept", "JetiX", "Jetvis", "JimmyJ", "KANSAI", "KIHO", "kiitos", "KinoGolos", "Kinomania", "KosharaSerials", "Kолобок", "L0cDoG", "LakeFilms", "LDV", "LE-Production", "LeDoyen", "LevshaFilm", "LeXiKC", "Liga HQ", "Line", "Lisitz", "Lizard Cinema Trade", "Lord32x", "lord666", "LostFilm", "Lucky Production", "Macross", "madrid", "Mallorn Studio", "Marclail", "Max Nabokov", "MC Entertainment", "MCA", "McElroy", "Mega-Anime", "Melodic Voice Studio", "metalrus", "MGM", "MifSnaiper", "Mikail", "Milirina", "MiraiDub", "MOYGOLOS", "MrRose", "MTV", "Murzilka", "MUZOBOZ", "National Geographic", "NemFilm", "Neoclassica", "NEON Studio", "New Dream Media", "NewComers", "NewStation", "NewStudio", "Nice-Media", "Nickelodeon", "No-Future", "NovaFilm", "Novamedia", "Octopus", "Oghra-Brown", "OMSKBIRD", "Onibaku", "OnisFilms", "OpenDub", "OSLIKt", "Ozz TV", "PaDet", "Paramount Comedy", "Paramount Pictures", "Parovoz Production", "PashaUp", "Paul Bunyan", "Pazl Voice", "PCB Translate", "Persona99", "PiratVoice", "Postmodern", "Profix Media", "Project Web Mania", "Prolix", "QTV", "R5", "Radamant", "RainDeath", "RATTLEBOX", "RealFake", "Reanimedia", "Rebel Voice", "RecentFilms", "Red Media", "RedDiamond Studio", "RedDog", "RedRussian1337", "Renegade Team", "RG Paravozik", "RinGo", "RoxMarty", "Rumble", "RUSCICO", "RusFilm", "RussianGuy27", "Saint Sound", "SakuraNight", "Satkur", "Sawyer888", "Sci-Fi Russia", "SDI Media", "Selena", "seqw0", "SesDizi", "SGEV", "Shachiburi", "SHIZA", "ShowJet", "Sky Voices", "SkyeFilmTV", "SmallFilm", "SmallFilm", "SNK-TV", "SnowRecords", "SOFTBOX", "SOLDLUCK2", "Solod", "SomeWax", "Sony Channel", "Sony Turbo", "Sound Film", "SpaceDust", "ssvss", "st.Elrom", "STEPonee", "SunshineStudio", "Superbit", "Suzaku", "sweet couple", "TatamiFilm", "TB5", "TF-AniGroup", "The Kitchen Russia", "The Mike Rec.", "Timecraft", "To4kaTV", "Tori", "Total DVD", "TrainStudio", "Troy", "True Dubbing Studio", "TUMBLER Studio", "turok1990", "TV 1000", "TVShows", "Twister", "Twix", "Tycoon", "Ultradox", "Universal Russia", "VashMax2", "VendettA", "VHS", "VicTeam", "VictoryFilms", "Video-BIZ", "Videogram", "ViruseProject", "visanti-vasaer", "VIZ Media", "VO-production", "Voice Project Studio", "VoicePower", "VSI Moscow", "VulpesVulpes", "Wakanim", "Wayland team", "WestFilm", "WiaDUB", "WVoice", "XL Media", "XvidClub Studio", "zamez", "ZEE TV", "Zendos", "ZM-SHOW", "Zone Studio", "Zone Vision", "Агапов", "Акопян", "Алексеев", "Артемьев", "Багичев", "Бессонов", "Васильев", "Васильцев", "Гаврилов", "Герусов", "Готлиб", "Григорьев", "Дасевич", "Дольский", "Карповский", "Кашкин", "Киреев", "Клюквин", "Костюкевич", "Матвеев", "Михалев", "Мишин", "Мудров", "Пронин", "Савченко", "Смирнов", "Тимофеев", "Толстобров", "Чуев", "Шуваев", "Яковлев", "ААА-sound", "АБыГДе", "Акалит", "Акира", "Альянс", "Амальгама", "АМС", "АнВад", "Анубис", "Anubis", "Арк-ТВ", "АРК-ТВ Studio", "Б. Федоров", "Бибиков", "Бигыч", "Бойков", "Абдулов", "Белов", "Вихров", "Воронцов", "Горчаков", "Данилов", "Дохалов", "Котов", "Кошкин", "Назаров", "Попов", "Рукин", "Рутилов", "Варус Видео", "Васька Куролесов", "Ващенко С.", "Векшин", "Велес", "Весельчак", "Видеоимпульс", "Витя «говорун»", "Войсовер", "Вольга", "Ворон", "Воротилин", "Г. Либергал", "Г. Румянцев", "Гей Кино Гид", "ГКГ", "Глуховский", "Гризли", "Гундос", "Деньщиков", "Есарев", "Нурмухаметов", "Пучков", "Стасюк", "Шадинский", "Штамп", "sf@irat", "Держиморда", "Домашний", "ДТВ", "Дьяконов", "Е. Гаевский", "Е. Гранкин", "Е. Лурье", "Е. Рудой", "Е. Хрусталёв", "ЕА Синема", "Екатеринбург Арт", "Живаго", "Жучков", "З Ранку До Ночі", "Завгородний", "Зебуро", "Зереницын", "И. Еремеев", "И. Клушин", "И. Сафронов", "И. Степанов", "ИГМ", "Игмар", "ИДДК", "Имидж-Арт", "Инис", "Ирэн", "Ист-Вест", "К. Поздняков", "К. Филонов", "К9", "Карапетян", "Кармен Видео", "Карусель", "Квадрат Малевича", "Килька", "Кипарис", "Королев", "Котова", "Кравец", "Кубик в Кубе", "Кураж-Бамбей", "Л. Володарский", "Лазер Видео", "ЛанселаП", "Лапшин", "Лексикон", "Ленфильм", "Леша Прапорщик", "Лизард", "Люсьена", "Заугаров", "Иванов", "Иванова и П. Пашут", "Латышев", "Ошурков", "Чадов", "Яроцкий", "Максим Логинофф", "Малиновский", "Марченко", "Мастер Тэйп", "Махонько", "Машинский", "Медиа-Комплекс", "Мельница", "Мика Бондарик", "Миняев", "Мительман", "Мост Видео", "Мосфильм", "Муравский", "Мьюзик-трейд", "Н-Кино", "Н. Антонов", "Н. Дроздов", "Н. Золотухин", "Н.Севастьянов seva1988", "Набиев", "Наталья Гурзо", "НЕВА 1", "Невафильм", "НеЗупиняйПродакшн", "Неоклассика", "Несмертельное оружие", "НЛО-TV", "Новий", "Новый диск", "Новый Дубляж", "Новый Канал", "Нота", "НСТ", "НТВ", "НТН", "Оверлорд", "Огородников", "Омикрон", "Гланц", "Карцев", "Морозов", "Прямостанов", "Санаев", "Парадиз", "Пепелац", "Первый канал ОРТ", "Переводман", "Перец", "Петербургский дубляж", "Петербуржец", "Пирамида", "Пифагор", "Позитив-Мультимедиа", "Прайд Продакшн", "Премьер Видео", "Премьер Мультимедиа", "Причудики", "Р. Янкелевич", "Райдо", "Ракурс", "РенТВ", "Россия", "РТР", "Русский дубляж", "Русский Репортаж", "РуФилмс", "Рыжий пес", "С. Визгунов", "С. Дьяков", "С. Казаков", "С. Кузнецов", "С. Кузьмичёв", "С. Лебедев", "С. Макашов", "С. Рябов", "С. Щегольков", "С.Р.И.", "Сolumbia Service", "Самарский", "СВ Студия", "СВ-Дубль", "Светла", "Селена Интернешнл", "Синема Трейд", "Синема УС", "Синта Рурони", "Синхрон", "Советский", "Сокуров", "Солодухин", "Сонотек", "Сонькин", "Союз Видео", "Союзмультфильм", "СПД - Сладкая парочка", "Строев", "СТС", "Студии Суверенного Лепрозория", "Студия «Стартрек»", "KOleso", "Студия Горького", "Студия Колобок", "Студия Пиратского Дубляжа", "Студия Райдо", "Студия Трёх", "Гуртом", "Супербит", "Сыендук", "Так Треба Продакшн", "ТВ XXI век", "ТВ СПб", "ТВ-3", "ТВ6", "ТВИН", "ТВЦ", "ТВЧ 1", "ТНТ", "ТО Друзей", "Толмачев", "Точка Zрения", "Трамвай-фильм", "ТРК", "Уолт Дисней Компани", "Хихидок", "Хлопушка", "Цікава Ідея", "Четыре в квадрате", "Швецов", "Штамп", "Штейн", "Ю. Живов", "Ю. Немахов", "Ю. Сербин", "Ю. Товбин", "Я. Беллманн", "Red Head Sound", "UKR"];
+    var filter_langs = [{
+      title: '#{filter_lang_ru}',
+      code: 'ru'
+    }, {
+      title: '#{filter_lang_uk}',
+      code: 'uk'
+    }, {
+      title: '#{filter_lang_en}',
+      code: 'en'
+    }, {
+      title: '#{filter_lang_be}',
+      code: 'be'
+    }, {
+      title: '#{filter_lang_zh}',
+      code: 'zh|cn'
+    }, {
+      title: '#{filter_lang_ja}',
+      code: 'ja'
+    }, {
+      title: '#{filter_lang_ko}',
+      code: 'ko'
+    }, {
+      title: '#{filter_lang_af}',
+      code: 'af'
+    }, {
+      title: '#{filter_lang_sq}',
+      code: 'sq'
+    }, {
+      title: '#{filter_lang_ar}',
+      code: 'ar'
+    }, {
+      title: '#{filter_lang_az}',
+      code: 'az'
+    }, {
+      title: '#{filter_lang_hy}',
+      code: 'hy'
+    }, {
+      title: '#{filter_lang_ba}',
+      code: 'ba'
+    }, {
+      title: '#{filter_lang_bg}',
+      code: 'bg'
+    }, {
+      title: '#{filter_lang_bn}',
+      code: 'bn'
+    }, {
+      title: '#{filter_lang_bs}',
+      code: 'bs'
+    }, {
+      title: '#{filter_lang_ca}',
+      code: 'ca'
+    }, {
+      title: '#{filter_lang_ce}',
+      code: 'ce'
+    }, {
+      title: '#{filter_lang_cs}',
+      code: 'cs'
+    }, {
+      title: '#{filter_lang_da}',
+      code: 'da'
+    }, {
+      title: '#{filter_lang_ka}',
+      code: 'ka'
+    }, {
+      title: '#{filter_lang_de}',
+      code: 'de'
+    }, {
+      title: '#{filter_lang_el}',
+      code: 'el'
+    }, {
+      title: '#{filter_lang_es}',
+      code: 'es'
+    }, {
+      title: '#{filter_lang_et}',
+      code: 'et'
+    }, {
+      title: '#{filter_lang_fa}',
+      code: 'fa'
+    }, {
+      title: '#{filter_lang_fi}',
+      code: 'fi'
+    }, {
+      title: '#{filter_lang_fr}',
+      code: 'fr'
+    }, {
+      title: '#{filter_lang_ga}',
+      code: 'ga'
+    }, {
+      title: '#{filter_lang_gl}',
+      code: 'gl'
+    }, {
+      title: '#{filter_lang_gn}',
+      code: 'gn'
+    }, {
+      title: '#{filter_lang_he}',
+      code: 'he'
+    }, {
+      title: '#{filter_lang_hi}',
+      code: 'hi'
+    }, {
+      title: '#{filter_lang_hr}',
+      code: 'hr'
+    }, {
+      title: '#{filter_lang_hu}',
+      code: 'hu'
+    }, {
+      title: '#{filter_lang_id}',
+      code: 'id'
+    }, {
+      title: '#{filter_lang_is}',
+      code: 'is'
+    }, {
+      title: '#{filter_lang_it}',
+      code: 'it'
+    }, {
+      title: '#{filter_lang_kk}',
+      code: 'kk'
+    }, {
+      title: '#{filter_lang_ks}',
+      code: 'ks'
+    }, {
+      title: '#{filter_lang_ku}',
+      code: 'ku'
+    }, {
+      title: '#{filter_lang_ky}',
+      code: 'ky'
+    }, {
+      title: '#{filter_lang_lt}',
+      code: 'lt'
+    }, {
+      title: '#{filter_lang_lv}',
+      code: 'lv'
+    }, {
+      title: '#{filter_lang_mi}',
+      code: 'mi'
+    }, {
+      title: '#{filter_lang_mk}',
+      code: 'mk'
+    }, {
+      title: '#{filter_lang_mn}',
+      code: 'mn'
+    }, {
+      title: '#{filter_lang_mo}',
+      code: 'mo'
+    }, {
+      title: '#{filter_lang_mt}',
+      code: 'mt'
+    }, {
+      title: '#{filter_lang_no}',
+      code: 'no|nb|nn'
+    }, {
+      title: '#{filter_lang_ne}',
+      code: 'ne'
+    }, {
+      title: '#{filter_lang_nl}',
+      code: 'nl'
+    }, {
+      title: '#{filter_lang_pa}',
+      code: 'pa'
+    }, {
+      title: '#{filter_lang_pl}',
+      code: 'pl'
+    }, {
+      title: '#{filter_lang_ps}',
+      code: 'ps'
+    }, {
+      title: '#{filter_lang_pt}',
+      code: 'pt'
+    }, {
+      title: '#{filter_lang_ro}',
+      code: 'ro'
+    }, {
+      title: '#{filter_lang_si}',
+      code: 'si'
+    }, {
+      title: '#{filter_lang_sk}',
+      code: 'sk'
+    }, {
+      title: '#{filter_lang_sl}',
+      code: 'sl'
+    }, {
+      title: '#{filter_lang_sm}',
+      code: 'sm'
+    }, {
+      title: '#{filter_lang_so}',
+      code: 'so'
+    }, {
+      title: '#{filter_lang_sr}',
+      code: 'sr'
+    }, {
+      title: '#{filter_lang_sv}',
+      code: 'sv'
+    }, {
+      title: '#{filter_lang_sw}',
+      code: 'sw'
+    }, {
+      title: '#{filter_lang_ta}',
+      code: 'ta'
+    }, {
+      title: '#{filter_lang_tg}',
+      code: 'tg'
+    }, {
+      title: '#{filter_lang_th}',
+      code: 'th'
+    }, {
+      title: '#{filter_lang_tk}',
+      code: 'tk'
+    }, {
+      title: '#{filter_lang_tr}',
+      code: 'tr'
+    }, {
+      title: '#{filter_lang_tt}',
+      code: 'tt'
+    }, {
+      title: '#{filter_lang_ur}',
+      code: 'ur'
+    }, {
+      title: '#{filter_lang_uz}',
+      code: 'uz'
+    }, {
+      title: '#{filter_lang_vi}',
+      code: 'vi'
+    }, {
+      title: '#{filter_lang_yi}',
+      code: 'yi'
+    }];
+    filter_items.lang = filter_items.lang.concat(filter_langs.map(function (a) {
+      return Lang.translate(a.title);
+    }));
     scroll.minus(files.render().find('.explorer__files-head'));
     scroll.body().addClass('torrent-list');
     this.create = function () {
@@ -19041,6 +21669,13 @@
           if (title.indexOf(voice) >= 0) {
             if (filter_items.voice.indexOf(voices[_i]) == -1) filter_items.voice.push(voices[_i]);
           }
+          if (element.info && element.info.voices) {
+            if (element.info.voices.map(function (v) {
+              return v.toLowerCase();
+            }).indexOf(voice) >= 0) {
+              if (filter_items.voice.indexOf(voices[_i]) == -1) filter_items.voice.push(voices[_i]);
+            }
+          }
         }
         tracker.split(',').forEach(function (t) {
           if (filter_items.tracker.indexOf(t.trim()) === -1) filter_items.tracker.push(t.trim());
@@ -19083,8 +21718,10 @@
       });
       add('quality', Lang.translate('torrent_parser_quality'));
       add('hdr', 'HDR');
+      add('dv', 'Dolby Vision');
       add('sub', Lang.translate('torrent_parser_subs'));
       add('voice', Lang.translate('torrent_parser_voice'));
+      add('lang', Lang.translate('title_language_short'));
       add('season', Lang.translate('torrent_parser_season'));
       add('tracker', Lang.translate('torrent_parser_tracker'));
       add('year', Lang.translate('torrent_parser_year'));
@@ -19124,6 +21761,9 @@
             Storage.set('torrents_filter', '{}');
             _this3.buildFilterd();
           } else {
+            a.items.forEach(function (n) {
+              return n.checked = false;
+            });
             var filter_data = Storage.get('torrents_filter', '{}');
             filter_data[a.stype] = filter_multiple.indexOf(a.stype) >= 0 ? [] : b.index;
             a.subtitle = b.title;
@@ -19153,7 +21793,7 @@
       this.reset();
       this.showResults();
       last = scroll.render().find('.torrent-item:eq(0)')[0];
-      scroll.update(last);
+      if (last) scroll.update(last);else scroll.reset();
     };
     this.filtred = function () {
       var filter_data = Storage.get('torrents_filter', '{}');
@@ -19174,10 +21814,12 @@
             tracker = element.Tracker;
           var qua = Arrays.toArray(filter_data.quality),
             hdr = filter_data.hdr,
+            dv = filter_data.dv,
             sub = filter_data.sub,
             voi = Arrays.toArray(filter_data.voice),
             tra = Arrays.toArray(filter_data.tracker),
             ses = Arrays.toArray(filter_data.season),
+            lng = Arrays.toArray(filter_data.lang),
             yer = filter_data.year;
           var test = function test(search, test_index) {
             var regex = new RegExp(search);
@@ -19201,6 +21843,9 @@
               }
               if (type == 'voice') {
                 var p = filter_items.voice.indexOf(a);
+                var n = element.info && element.info.voices ? element.info.voices.map(function (v) {
+                  return v.toLowerCase();
+                }) : [];
                 if (p == 1) {
                   if (test('дублирован|дубляж|  apple| dub| d[,| |$]|[,|\\s]дб[,|\\s|$]')) any = true;
                 } else if (p == 2) {
@@ -19209,7 +21854,16 @@
                   if (test('двухголос|двуголос| l2[,| |$]|[,|\\s](лд|пд)[,|\\s|$]')) any = true;
                 } else if (p == 4) {
                   if (test('любитель|авторский| l1[,| |$]|[,|\\s](ло|ап)[,|\\s|$]')) any = true;
-                } else if (test(a.toLowerCase(), true)) any = true;
+                } else if (test(a.toLowerCase(), true)) any = true;else if (n.length && n.indexOf(a.toLowerCase()) >= 0) any = true;
+              }
+              if (type == 'lang') {
+                var _p = filter_items.lang.indexOf(a);
+                var c = filter_langs[_p - 1];
+                if (element.languages) {
+                  if (element.languages.find(function (l) {
+                    return l.toLowerCase().slice(0, 2) == c.code;
+                  })) any = true;
+                } else if (title.indexOf(c.code) >= 0) any = true;
               }
               if (type == 'tracker') {
                 if (tracker.split(',').find(function (t) {
@@ -19239,12 +21893,10 @@
           includes('voice', voi);
           includes('tracker', tra);
           includes('season', ses);
-          if (hdr) {
-            if (hdr == 1) check('[\\[| ]hdr[10| |\\]|,|$]');else check('[\\[| ]hdr[10| |\\]|,|$]', true);
-          }
-          if (sub) {
-            if (sub == 1) check(' sub|[,|\\s]ст[,|\\s|$]');else check(' sub|[,|\\s]ст[,|\\s|$]', true);
-          }
+          includes('lang', lng);
+          if (hdr) check('[\\[| ]hdr[10| |\\]|,|$]', hdr !== 1);
+          if (dv) check('dolby vision', dv !== 1);
+          if (sub) check(' sub|[,|\\s]ст[,|\\s|$]', sub !== 1);
           if (yer) {
             check(filter_items.year[yer]);
           }
@@ -19340,6 +21992,83 @@
           grabs: element.Peers
         });
         var item = Template$1.get('torrent', element);
+        if (element.ffprobe) {
+          var ffprobe_elem = item.find('.torrent-item__ffprobe');
+          var ffprobe_tags = [];
+          var video = element.ffprobe.find(function (a) {
+            return a.codec_type == 'video';
+          });
+          var audio = element.ffprobe.filter(function (a) {
+            return a.codec_type == 'audio' && a.tags;
+          });
+          var subs = element.ffprobe.filter(function (a) {
+            return a.codec_type == 'subtitle' && a.tags;
+          });
+          var voice = element.info && element.info.voices ? element.info.voices : [];
+          if (video) ffprobe_tags.push({
+            media: 'video',
+            value: video.width + 'x' + video.height
+          });
+          var is_71 = element.ffprobe.find(function (a) {
+            return a.codec_type == 'audio' && a.channels == 8;
+          });
+          var is_51 = element.ffprobe.find(function (a) {
+            return a.codec_type == 'audio' && a.channels == 6;
+          });
+          if (is_71) ffprobe_tags.push({
+            media: 'channels',
+            value: '7.1'
+          });
+          if (is_51) ffprobe_tags.push({
+            media: 'channels',
+            value: '5.1'
+          });
+          audio.forEach(function (a) {
+            var line = [];
+            var lang = (a.tags.language || '').toUpperCase();
+            var name = a.tags.title || a.tags.handler_name;
+            if (lang) line.push(lang);
+            if (name && lang !== 'ENG') {
+              var translate = voice.find(function (v) {
+                return name.toLowerCase().indexOf(v.toLowerCase()) >= 0;
+              });
+              name = translate ? translate : name;
+              if (name.toLowerCase().indexOf('dub') >= 0 || name.toLowerCase() == 'd') name = Lang.translate('torrent_parser_voice_dubbing');
+              line.push(Utils$2.shortText(Utils$2.capitalizeFirstLetter(name), 20));
+            }
+            if (line.length) ffprobe_tags.push({
+              media: 'audio',
+              value: line.join(' - ')
+            });
+          });
+          var find_subtitles = [];
+          subs.forEach(function (a) {
+            var lang = (a.tags.language || '').toUpperCase();
+            if (lang) find_subtitles.push(lang);
+          });
+          find_subtitles = find_subtitles.filter(function (el, pos) {
+            return find_subtitles.indexOf(el) == pos;
+          });
+          find_subtitles.slice(0, 4).forEach(function (a) {
+            ffprobe_tags.push({
+              media: 'subtitle',
+              value: a
+            });
+          });
+          if (find_subtitles.length > 4) ffprobe_tags.push({
+            media: 'subtitle',
+            value: '+' + (find_subtitles.length - 4)
+          });
+          ffprobe_tags = ffprobe_tags.filter(function (el, pos) {
+            return ffprobe_tags.map(function (a) {
+              return a.value + a.media;
+            }).indexOf(el.value + el.media) == pos;
+          });
+          ffprobe_tags.forEach(function (tag) {
+            ffprobe_elem.append('<div class="m-' + tag.media + '">' + tag.value + '</div>');
+          });
+          if (ffprobe_tags.length) ffprobe_elem.removeClass('hide');
+        }
         if (!bitrate) item.find('.bitrate').remove();
         if (element.viewed) item.append('<div class="torrent-item__viewed">' + Template$1.get('icon_viewed', {}, true) + '</div>');
         if (!element.size || parseInt(element.size) == 0) item.find('.torrent-item__size').remove();
@@ -19468,7 +22197,7 @@
     };
   }
 
-  function component$9(object) {
+  function component$a(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -19618,8 +22347,8 @@
     };
   }
 
-  function component$8(object) {
-    var comp = new component$f(object);
+  function component$9(object) {
+    var comp = new component$g(object);
     comp.create = function () {
       this.activity.loader(true);
       Api.relise(object, this.build.bind(this), this.empty.bind(this));
@@ -19630,7 +22359,7 @@
     return comp;
   }
 
-  function component$7(object) {
+  function component$8(object) {
     var network = new create$q();
     var scroll = new create$p({
       mask: true,
@@ -19750,15 +22479,15 @@
     };
   }
 
-  function component$6(object) {
-    var comp = new component$f(object);
+  function component$7(object) {
+    var comp = new component$g(object);
     comp.create = function () {
       Api.collections(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$5(object) {
+  function component$6(object) {
     var html = $('<div></div>');
     var empty = new create$a();
     this.create = function () {
@@ -19795,7 +22524,7 @@
     };
   }
 
-  function component$4(object) {
+  function component$5(object) {
     var _this = this;
     var scroll = new create$p({
       mask: true,
@@ -19901,7 +22630,9 @@
             title: elem.card.name,
             descr: Lang.translate('full_season') + ' - <b>' + elem.episode.season_number + '</b><br>' + Lang.translate('full_episode') + ' - <b>' + elem.episode.episode_number + '</b>'
           });
-          Utils$2.imgLoad(noty.find('img'), elem.card.poster ? elem.card.poster : elem.card.img ? elem.card.img : TMDB$1.image('t/p/w200/' + elem.card.poster_path));
+          Utils$2.imgLoad(noty.find('img'), elem.card.poster ? elem.card.poster : elem.card.img ? elem.card.img : TMDB$1.image('t/p/w200/' + elem.card.poster_path), function () {
+            noty.addClass('image--loaded');
+          });
           noty.on('hover:enter', function () {
             Modal.close();
             Activity$1.push({
@@ -19964,8 +22695,8 @@
     };
   }
 
-  function component$3(object) {
-    var comp = new component$f(object);
+  function component$4(object) {
+    var comp = new component$g(object);
     comp.create = function () {
       this.activity.loader(true);
       Account.subscribes(object, this.build.bind(this), this.empty.bind(this));
@@ -20009,7 +22740,7 @@
     };
   }
 
-  function component$2(object) {
+  function component$3(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       var _this = this;
@@ -20025,22 +22756,264 @@
     return comp;
   }
 
+  function Feed(object) {
+    var network = new create$q();
+    var scroll = new create$p({
+      mask: true,
+      over: true,
+      step: 250,
+      end_ratio: 2
+    });
+    var html = document.createElement('div');
+    var feed = [];
+    var last;
+    this.create = function () {
+      var _this = this;
+      this.activity.loader(true);
+      network.silent(Utils$2.protocol() + object$2.cub_domain + '/api/feed/all', this.build.bind(this), function () {
+        var empty = new create$a();
+        html.append(empty.render(true));
+        _this.start = empty.start;
+        _this.activity.loader(false);
+        _this.activity.toggle();
+      });
+      return this.render();
+    };
+    this.next = function () {
+      if (object.page < 15) {
+        object.page++;
+        var offset = object.page - 1;
+        this.append(feed.slice(20 * offset, 20 * offset + 20), true);
+      }
+    };
+    this.loadImg = function (box, src) {
+      var img = box.find('img');
+      img.onload = function () {
+        box.addClass('loaded');
+      };
+      img.onerror = function () {
+        img.src = './img/img_broken.svg';
+      };
+      img.src = src;
+    };
+    this.append = function (data, append) {
+      var _this2 = this;
+      data.forEach(function (element) {
+        var item = Template$1.js(element.type == 'episode' || element.type == 'trailer' ? 'feed_episode' : 'feed_item');
+        item.addClass('feed-item--' + element.type);
+        var type = {
+          top: Lampa.Lang.translate('title_in_top'),
+          now_playing: Lampa.Lang.translate('title_now_watch'),
+          uhd: Lampa.Lang.translate('title_in_high_quality'),
+          popular: Lampa.Lang.translate('title_popular'),
+          trailer: Lampa.Lang.translate('title_trailers'),
+          episode: Lampa.Lang.translate('card_new_episode'),
+          now: Lampa.Lang.translate('title_new')
+        };
+        var sity = element.data.countries || [];
+        var year = ((element.data.release_date || element.data.first_air_date) + '').slice(0, 4);
+        var info = [];
+        var tags = [];
+        info.push(year + (sity.length ? ' - ' + sity.slice(0, 2).join(', ') : ''));
+        if (element.data.imdb_rating && parseFloat(element.data.imdb_rating) > 0) {
+          info.push('IMDB ' + element.data.imdb_rating);
+        }
+        if (element.data.kp_rating && parseFloat(element.data.kp_rating) > 0) {
+          info.push('KP ' + element.data.kp_rating);
+        }
+        if (element.type == 'episode') {
+          tags = element.hash.split(';').map(function (a) {
+            return Lang.translate(a.slice(0, 1) == 's' ? 'torrent_serial_season' : 'torrent_serial_episode') + ' - ' + a.slice(1);
+          });
+        } else if (element.data.genres) tags.push(element.data.genres.join(', '));else if (element.data.genre_ids) {
+          tags.push(Api.sources.tmdb.getGenresNameFromIds(element.card_type, element.data.genre_ids).join(', '));
+        }
+        item.find('.feed-item__label').addClass('feed-item__label--' + element.type).text(type[element.type]);
+        item.find('.feed-item__title').text(element.data.title || element.data.name);
+        item.find('.feed-item__info').text(info.join(' / '));
+        item.find('.feed-item__descr').text(element.data.overview || '');
+        item.find('.feed-item__tags').text(tags.join(' / '));
+        _this2.loadImg(item.find('.feed-item__poster-box'), element.data.poster_path ? Api.img(element.data.poster_path, 'w500') : './img/img_broken.svg');
+        var image = item.find('.feed-item__image-box');
+        if (image) {
+          _this2.loadImg(image, Api.img(element.type == 'episode' ? element.data.episode.still_path : element.data.backdrop_path, 'w780'));
+        }
+        scroll.append(item);
+        var btn_watch = document.createElement('div');
+        btn_watch.addClass('simple-button selector');
+        btn_watch.text(Lang.translate('title_watch'));
+        btn_watch.on('hover:focus', function () {
+          last = btn_watch;
+          scroll.update(item);
+          Background.change(Api.img(element.data.poster_path, 'w500'));
+        });
+        btn_watch.on('hover:enter', function () {
+          Activity$1.push({
+            url: '',
+            component: 'full',
+            id: element.card_id,
+            method: element.card_type,
+            card: element.data,
+            source: element.data.source || 'tmdb'
+          });
+        });
+        item.find('.feed-item__buttons').append(btn_watch);
+        if (append) Controller.collectionAppend(btn_watch);
+      });
+    };
+    this.build = function (data) {
+      feed = data.result;
+      html.addClass('feed');
+      var head = Template$1.js('feed_head');
+      head.find('.feed-head__title').text(Lang.translate('lampa_movie_title'));
+      head.find('.feed-head__info').html(Lang.translate('lampa_movie_descr'));
+      head.on('hover:focus', scroll.update.bind(scroll, head));
+      scroll.minus();
+      scroll.onWheel = function (step) {
+        Navigator.move(step > 0 ? 'down' : 'up');
+      };
+      scroll.onEnd = this.next.bind(this);
+      scroll.append(head);
+      this.append(feed.slice(0, 20));
+      html.append(scroll.render(true));
+      this.activity.loader(false);
+      this.activity.toggle();
+    };
+    this.start = function () {
+      Controller.add('content', {
+        toggle: function toggle() {
+          Controller.collectionSet(scroll.render(true));
+          Controller.collectionFocus(last || false, scroll.render(true));
+        },
+        left: function left() {
+          if (Navigator.canmove('left')) Navigator.move('left');else Controller.toggle('menu');
+        },
+        right: function right() {
+          Navigator.move('right');
+        },
+        up: function up() {
+          if (Navigator.canmove('up')) Navigator.move('up');else Controller.toggle('head');
+        },
+        down: function down() {
+          if (Navigator.canmove('down')) Navigator.move('down');
+        },
+        back: function back() {
+          Activity$1.backward();
+        }
+      });
+      Controller.toggle('content');
+    };
+    this.pause = function () {};
+    this.stop = function () {};
+    this.render = function () {
+      return html;
+    };
+    this.destroy = function () {
+      network.clear();
+      scroll.destroy();
+      html.remove();
+    };
+  }
+
+  function component$2(object) {
+    var all = Favorite.all();
+    var comp = new Lampa.InteractionMain(object);
+    var viev_all = false;
+    comp.create = function () {
+      this.activity.loader(true);
+      var category = ['look', 'scheduled', 'book', 'like', 'wath', 'viewed', 'continued', 'thrown'];
+      var lines = [];
+      category.forEach(function (a) {
+        if (all[a].length) {
+          var items = Arrays.clone(all[a].slice(0, 20));
+          items.forEach(function (a) {
+            return a.ready = false;
+          });
+          lines.push({
+            title: Lang.translate('title_' + a),
+            results: items,
+            type: a
+          });
+        }
+      });
+      if (lines.length) {
+        Arrays.insert(lines, 0, {
+          title: '',
+          results: []
+        });
+        comp.build(lines);
+      } else comp.empty();
+      return this.render();
+    };
+    comp.onAppend = function (line, elem) {
+      if (elem.results.length == 0) {
+        line.render(true).removeClass('items-line--type-cards').find('.items-line__head').addClass('hide');
+        var body = line.render(true).find('.scroll__body');
+        var category = ['book', 'like', 'wath', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
+        category.forEach(function (a) {
+          var register = Template$1.js('register');
+          register.addClass('selector');
+          register.find('.register__name').text(Lang.translate('title_' + a));
+          register.find('.register__counter').text(all[a].length);
+          register.on('hover:enter', function () {
+            Activity$1.push({
+              url: '',
+              title: Lang.translate('title_' + a),
+              component: 'favorite',
+              type: a,
+              page: 1
+            });
+          });
+          register.on('hover:focus', function () {
+            line.render(true).find('.scroll').Scroll.update(register, true);
+          });
+          body.append(register);
+        });
+      } else {
+        line.render(true).on('visible', function () {
+          var more = line.render(true).find('.items-line__more');
+          if (more) {
+            more.text(Lang.translate('settings_param_card_view_all'));
+            more.on('hover:enter', function () {
+              viev_all = true;
+            });
+          }
+        });
+      }
+    };
+    comp.onMore = function (line) {
+      setTimeout(function () {
+        Activity$1.push({
+          url: '',
+          title: Lang.translate('title_' + line.type),
+          component: 'favorite',
+          type: line.type,
+          page: viev_all ? 1 : 2
+        });
+        viev_all = false;
+      }, 50);
+    };
+    return comp;
+  }
+
   var component$1 = {
-    main: component$h,
-    full: component$g,
-    category: component$d,
-    category_full: component$e,
-    actor: component$c,
-    favorite: component$b,
-    torrents: component$a,
-    mytorrents: component$9,
-    relise: component$8,
-    collections: component$7,
-    collections_view: component$6,
-    nocomponent: component$5,
-    timetable: component$4,
-    subscribes: component$3,
-    company: component$2
+    main: component$i,
+    full: component$h,
+    category: component$e,
+    category_full: component$f,
+    actor: component$d,
+    favorite: component$c,
+    torrents: component$b,
+    mytorrents: component$a,
+    relise: component$9,
+    collections: component$8,
+    collections_view: component$7,
+    nocomponent: component$6,
+    timetable: component$5,
+    subscribes: component$4,
+    company: component$3,
+    feed: Feed,
+    bookmarks: component$2
   };
 
   /**
@@ -20066,7 +23039,7 @@
    * @param {string} name 
    * @param {class} comp 
    */
-  function add$7(name, comp) {
+  function add$6(name, comp) {
     component$1[name] = comp;
   }
 
@@ -20080,7 +23053,7 @@
   }
   var Component = {
     create: create$4,
-    add: add$7,
+    add: add$6,
     get: get$3
   };
 
@@ -20241,7 +23214,7 @@
   /**
    * Запуск
    */
-  function init$d() {
+  function init$e() {
     content = Template$1.js('activitys');
     slides = content.querySelector('.activitys__slides');
     maxsave = Storage.get('pages_save_total', 5);
@@ -20293,7 +23266,7 @@
    * Добавить новую активность
    * @param {{component:string}} object 
    */
-  function push(object) {
+  function push$1(object) {
     limit();
     create$3(object);
     activites.push(object);
@@ -20460,32 +23433,32 @@
     var active = Storage.get('activity', 'false');
     var start_from = Storage.field("start_page");
     if (window.start_deep_link) {
-      push(window.start_deep_link);
+      push$1(window.start_deep_link);
     } else if (active && start_from === "last") {
       if (active.page) active.page = 1;
-      push(active);
+      push$1(active);
     } else {
       var _start_from$split = start_from.split('@'),
         _start_from$split2 = _slicedToArray(_start_from$split, 2),
         action = _start_from$split2[0],
         type = _start_from$split2[1];
       if (action == 'favorite') {
-        push({
+        push$1({
           url: '',
-          title: type == 'book' ? Lang.translate('title_book') : type == 'like' ? Lang.translate('title_like') : type == 'history' ? Lang.translate('title_history') : Lang.translate('title_wath'),
-          component: 'favorite',
+          title: Lang.translate(type == 'bookmarks' ? 'settings_input_links' : 'title_history'),
+          component: type == 'bookmarks' ? 'bookmarks' : 'favorite',
           type: type,
           page: 1
         });
       } else if (action == 'mytorrents') {
-        push({
+        push$1({
           url: '',
           title: Lang.translate('title_mytorrents'),
           component: 'mytorrents',
           page: 1
         });
       } else {
-        push({
+        push$1({
           url: '',
           title: Lang.translate('title_main') + ' - ' + Storage.field('source').toUpperCase(),
           component: 'main',
@@ -20539,12 +23512,12 @@
     }
     active$1().activity.destroy();
     activites.pop();
-    push(object);
+    push$1(object);
   }
   var Activity$1 = {
-    init: init$d,
+    init: init$e,
     listener: listener$4,
-    push: push,
+    push: push$1,
     back: back$3,
     render: render$3,
     backward: backward,
@@ -20588,7 +23561,7 @@
    * @param {String} name 
    * @param {Object} calls 
    */
-  function add$6(name, calls) {
+  function add$5(name, calls) {
     controlls[name] = calls;
   }
 
@@ -20842,7 +23815,7 @@
   var Controller = {
     listener: listener$3,
     observe: observe$1,
-    add: add$6,
+    add: add$5,
     move: move,
     enter: enter,
     finish: finish,
@@ -20879,9 +23852,12 @@
       'uk': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ї', 'ф і в а п р о л д ж є {ENTER}', '{SHIFT} я ч с м и т ь б ю . : http://', '{SPACE}'],
       'sim': ['{ABC} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} ! @ # $ % ^ & * ( ) [ ]', '- _ = + \\ | [ ] { }', '; : \' " , . < > / ?', '{SPACE}'],
       'default': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ъ', 'ф ы в а п р о л д ж э {ENTER}', '{SHIFT} я ч с м и т ь б ю , . : http://', '{SPACE}']
+    },
+    nums: {
+      'default': ['0 1 2 3 4 {BKSP}', '5 6 7 8 9 {ENTER}']
     }
   };
-  function add$5(name, layout) {
+  function add$4(name, layout) {
     layers[name] = layout;
   }
   function addLang(name, code, layout) {
@@ -20891,7 +23867,7 @@
     return layers[name];
   }
   var Layers = {
-    add: add$5,
+    add: add$4,
     addLang: addLang,
     get: get$2
   };
@@ -20901,6 +23877,7 @@
     var _keyClass = window.SimpleKeyboard["default"],
       _keyBord;
     var last;
+    var ime;
     var recognition;
     var simple = Storage.field('keyboard_type') !== 'lampa';
     var input;
@@ -20910,10 +23887,43 @@
     this.create = function () {
       var _this = this;
       if (simple) {
-        input = $('<input type="text" class="simple-keyboard-input selector" placeholder="' + Lang.translate('search_input') + '..." />');
+        input = $('<input type="text" id="orsay-keyboard" class="simple-keyboard-input selector" placeholder="' + Lang.translate('search_input') + '..." />');
         var time_blur = 0;
         var time_focus = 0;
         var stated, ended;
+        if (Platform.is('orsay')) {
+          ime = new IMEShell_Common();
+          if ($('.settings-input--free').length > 0) {
+            ime.setUseNumberMode(true);
+          }
+          ime.inputboxID = 'orsay-keyboard';
+          ime.setUseIMEDim(false);
+          ime.setMaxlength(256);
+          ime.inputTitle = Lang.translate('search_input') + "...";
+          ime.onKeyPressFunc = function (key, str, id) {
+            switch (key) {
+              case 29443: // Enter Key
+              case 88: //return
+              case 45:
+                //exit 
+                _this.listener.send('enter');
+                ime.onClose();
+                input.blur();
+                break;
+            }
+          };
+          ime.setOnTextChangeFunc = function (e) {
+            input.val(e);
+            var now_value = input.val();
+            if (last_value !== now_value) {
+              last_value = now_value;
+              stated = ended = false;
+              _this.listener.send('change', {
+                value: now_value
+              });
+            }
+          };
+        }
         input.on('keyup change input keypress', function (e) {
           var now_value = input.val();
           if (last_value !== now_value) {
@@ -20962,26 +23972,34 @@
           }
         });
         input.on('hover:focus', function () {
+          if (Platform.is('orsay')) ime.onShow();
           input.removeAttr('disabled');
           input.focus();
         });
         input.on('hover:enter', function () {
-          if (time_blur + 1000 < Date.now()) input.focus();
-        });
-        var mic = $("<div class=\"selector simple-keyboard-mic\">\n                <svg viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                </svg>\n            </div>");
-        mic.on('hover:enter', function () {
-          if (Platform.is('android')) {
-            Android.voiceStart();
-            window.voiceResult = _this.value.bind(_this);
-          } else if (recognition) {
-            try {
-              if (recognition.record) recognition.stop();else recognition.start();
-            } catch (e) {
-              recognition.stop();
-            }
+          if (time_blur + 1000 < Date.now()) {
+            if (Platform.is('orsay')) ime.onShow();
+            input.focus();
           }
         });
-        $('.simple-keyboard').addClass('simple-keyboard--with-mic').append(mic).append(input);
+        var keyboard = $('.simple-keyboard');
+        if (!Platform.is('orsay') && (window.SpeechRecognition || window.webkitSpeechRecognition) && !params.nomic) {
+          var mic = $("<div class=\"selector simple-keyboard-mic\">\n                    <svg viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                        <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                        <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>");
+          mic.on('hover:enter', function () {
+            if (Platform.is('android')) {
+              Android.voiceStart();
+              window.voiceResult = _this.value.bind(_this);
+            } else if (recognition) {
+              try {
+                if (recognition.record) recognition.stop();else recognition.start();
+              } catch (e) {
+                recognition.stop();
+              }
+            }
+          });
+          keyboard.addClass('simple-keyboard--with-mic').append(mic);
+        }
+        keyboard.append(input);
         if (Platform.screen('mobile')) {
           var buttons = $('<div class="simple-keyboard-buttons"><div class="simple-keyboard-buttons__enter">' + Lang.translate('ready') + '</div><div class="simple-keyboard-buttons__cancel">' + Lang.translate('cancel') + '</div></div>');
           buttons.find('.simple-keyboard-buttons__enter').on('click', function () {
@@ -21250,7 +24268,7 @@
     input = html$4.find('.settings-input__input');
     if (Storage.field('keyboard_type') !== 'lampa') input.hide();
     $('body').append(html$4);
-    keyboard = new create$2();
+    keyboard = new create$2(params);
     keyboard.listener.follow('change', function (event) {
       input.text(event.value.trim());
     });
@@ -21357,7 +24375,7 @@
   /**
    * Запуск
    */
-  function init$c() {
+  function init$d() {
     if (Platform.is('tizen')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
@@ -21710,9 +24728,7 @@
   }, 'tmdb');
   select$1('start_page', {
     'main': '#{title_main}',
-    'favorite@book': '#{title_book}',
-    'favorite@like': '#{title_like}',
-    'favorite@wath': '#{title_wath}',
+    'favorite@bookmarks': '#{settings_input_links}',
     'favorite@history': '#{title_history}',
     'mytorrents': '#{title_mytorrents}',
     'last': '#{title_last}'
@@ -21772,6 +24788,10 @@
     '1440': '1440p',
     '2160': '2160p'
   }, '1080');
+  select$1('player_launch_trailers', {
+    'inner': '#{settings_param_player_inner}',
+    'youtube': 'YouTube'
+  }, 'inner');
 
   /**
    * Добовляем триггеры
@@ -21805,6 +24825,7 @@
   trigger('black_style', false);
   trigger('hide_outside_the_screen', true);
   trigger('card_interfice_cover', true);
+  trigger('card_interfice_reactions', true);
   trigger('cache_images', false);
 
   /**
@@ -21827,12 +24848,14 @@
   select$1('tmdb_proxy_image', '', '');
   var Params = {
     listener: listener$2,
-    init: init$c,
+    init: init$d,
     bind: bind,
     update: update$2,
     field: field$1,
     select: select$1,
-    trigger: trigger
+    trigger: trigger,
+    values: values,
+    defaults: defaults
   };
 
   var network$2 = new create$q();
@@ -22169,12 +25192,12 @@
   var listener$1 = start$5();
   var readed$1 = {};
   var workers = {};
-  function init$b() {
+  function init$c() {
     sync('online_view', 'array_string');
     sync('torrents_view', 'array_string');
     sync('search_history', 'array_string');
     sync('menu_sort', 'array_string');
-    sync('menu_hide', 'array_string');
+    //sync('menu_hide','array_string')
     //sync('timetable','array_object_id') слишком большие данные, что-то потом придумаю
     sync('online_last_balanser', 'object_string');
     sync('user_clarifys', 'object_object');
@@ -22212,7 +25235,7 @@
       value: value
     });
   }
-  function add$4(name, new_value) {
+  function add$3(name, new_value) {
     var list = get$1(name, '[]');
     if (list.indexOf(new_value) == -1) {
       list.push(new_value);
@@ -22255,12 +25278,12 @@
   }
   var Storage = {
     listener: listener$1,
-    init: init$b,
+    init: init$c,
     get: get$1,
     set: set,
     field: field,
     cache: cache,
-    add: add$4,
+    add: add$3,
     value: value,
     sync: sync,
     remove: remove$1
@@ -22352,6 +25375,7 @@
     settings_interface_card_interfice: 'Интерфейс карточек',
     settings_interface_card_poster: 'Показать постер',
     settings_interface_card_cover: 'Показать обложку',
+    settings_interface_card_reactions: 'Показать реакции',
     settings_interface_glass: 'Стекло',
     settings_interface_glass_descr: 'Показывать интерфейс в стекловидном стиле',
     settings_interface_glass_opacity: 'Прозрачность стекла',
@@ -22449,6 +25473,7 @@
     settings_player_hls_descr: 'Не трогайте этот параметр, если не знаете, зачем он',
     settings_player_rewind_title: 'Перемотка',
     settings_player_rewind_descr: 'Интервал перемотки в секундах',
+    settings_player_launch_trailers: 'Плеер для трейлеров',
     settings_plugins_notice: 'Для применения плагина необходимо перезагрузить приложение',
     settings_plugins_add: 'Добавить плагин',
     settings_plugins_add_descr: 'Для удаления добавленного плагина удерживайте или нажмите дважды клавишу (OK) на нем',
@@ -22582,6 +25607,11 @@
     title_book: 'Закладки',
     title_like: 'Нравится',
     title_wath: 'Позже',
+    title_look: 'Смотрю',
+    title_scheduled: 'Запланировано',
+    title_viewed: 'Просмотрено',
+    title_thrown: 'Брошено',
+    title_continued: 'Продолжение следует',
     title_history: 'История просмотров',
     title_mytorrents: 'Мои торренты',
     title_last: 'Последняя',
@@ -22631,6 +25661,7 @@
     title_subscribes: 'Подписки',
     title_unsubscribe: 'Отписаться',
     title_language: 'Язык оригинала',
+    title_language_short: 'Язык',
     title_ongoing: 'Онгоинги',
     title_pgrating: 'Возрастное ограничение',
     title_card: 'Карточка',
@@ -22642,6 +25673,14 @@
     title_author: 'Автор',
     title_buffer: 'Буфер',
     title_upcoming_episodes: 'Ближайшие выходы эпизодов',
+    title_reactions: 'Реакции',
+    reactions_none: 'Нет реакций',
+    reactions_fire: 'Супер',
+    reactions_nice: 'Неплохо',
+    reactions_think: 'Смотрибельно',
+    reactions_bore: 'Скука',
+    reactions_shit: 'Плохо',
+    reactions_ready: 'Вы уже оставили реакцию',
     subscribe_success: 'Вы успешно подписались',
     subscribe_error: 'Возникла ошибка при подписке, попробуйте позже',
     subscribe_noinfo: 'Не удалось получить информацию, попробуйте позже',
@@ -22940,6 +25979,9 @@
     menu_console: 'Консоль',
     menu_multmovie: 'Мультфильмы',
     menu_multtv: 'Мультсериалы',
+    menu_feed: 'Лента',
+    lampa_movie_title: 'Ламповое кино',
+    lampa_movie_descr: 'Следите за новинками на своем смартфоне. <br>Телеграм: <b>@lampa_movie</b>',
     plugins_catalog_work: 'Рабочие плагины',
     plugins_catalog_work_descr: 'Плагины, которые точно работают в лампе.',
     plugins_catalog_popular: 'Популярные плагины среди пользователей',
@@ -22954,6 +25996,7 @@
     plugins_ok_for_check: 'Нажмите (OK) для проверки плагина',
     plugins_no_loaded: 'При загрузке приложения, часть плагинов не удалось загрузить',
     plugins_remove: 'Удалить плагины',
+    plugins_add_success: 'Плагин успешно подключен',
     time_viewed: 'Просмотрено',
     time_from: 'из',
     time_reset: 'Сбросить тайм-код',
@@ -23078,7 +26121,7 @@
     card_wath_add: 'Смотреть позже',
     card_wath_descr: 'Смотрите в меню (Позже)',
     card_history_remove: 'Убрать из истории',
-    card_history_add: 'Добавить в историю',
+    card_history_add: 'В историю',
     card_history_descr: 'Смотрите в меню (История)',
     keyboard_listen: 'Говорите, я слушаю...',
     keyboard_nomic: 'Нет доступа к микрофону',
@@ -23143,12 +26186,12 @@
     size_gb: 'ГБ',
     size_tb: 'ТБ',
     size_pp: 'ПБ',
-    speed_bit: 'бит',
-    speed_kb: 'Кбит',
-    speed_mb: 'Мбит',
-    speed_gb: 'Гбит',
-    speed_tb: 'Тбит',
-    speed_pp: 'Пбит',
+    speed_bit: 'бит/c',
+    speed_kb: 'Кбит/c',
+    speed_mb: 'Мбит/c',
+    speed_gb: 'Гбит/c',
+    speed_tb: 'Тбит/c',
+    speed_pp: 'Пбит/c',
     month_1: 'Январь',
     month_2: 'Февраль',
     month_3: 'Март',
@@ -23224,7 +26267,20 @@
     input_detection_touch: 'Хотите переключить на сенсорное управление?',
     input_detection_mouse: 'Хотите переключить на управление мышью?',
     input_detection_remote: 'Хотите переключить на управление пультом?',
-    https_text: 'Вы используйте HTTPS протокол, в этом протоколе лампа работает некорректно. Для корректной работы лампы, используйте адрес с протоколом HTTP'
+    https_text: 'Вы используйте протокол HTTPS, c которым Lampa работает некорректно. Для корректной работы приложения используйте адрес с протоколом HTTP',
+    termsofuse_t_01: 'Правила использования',
+    termsofuse_t_02: 'Lampa - это удобный инструмент для ознакомления с новинками киноиндустрии, включая фильмы, сериалы, мультфильмы и другую информацию. Для получения информации о фильмах используется открытый источник - сайт themoviedb.org',
+    termsofuse_t_03: 'Контент',
+    termsofuse_t_04: 'Lampa использует API (Application Programming Interface) от каталога themoviedb.org для получения информации о фильмах и телесериалах, а также для просмотра связанных с ними медиафайлов, таких как постеры, трейлеры и другое.',
+    termsofuse_t_05: 'API от themoviedb.org позволяет приложению Lampa получать доступ к базе данных фильмов и телесериалов, предоставляя возможность поиска медиафайлов и просмотра информации о них.',
+    termsofuse_t_06: 'Взаимодействие между приложением Lampa и themoviedb.org происходит через запросы к API, которые отправляются из приложения Lampa на серверы themoviedb.org для получения информации и медиафайлов. Themoviedb.org обрабатывает запросы и отправляет обратно в приложение Lampa запрошенные данные.',
+    termsofuse_t_07: 'Таким образом, благодаря использованию API от themoviedb.org, приложение Lampa предоставляет пользователям доступ к обширной базе данных фильмов и телесериалов, соблюдая при этом условия использования и ограничения, установленные правообладателем.',
+    termsofuse_t_08: 'Расширения',
+    termsofuse_t_09: 'Расширения - это мощный инструмент, предоставляемый для приложения Lampa, который позволяет пользователям расширить его возможности, добавить дополнительный функционал и изменить контент в соответствии с их потребностями.',
+    termsofuse_t_10: 'Однако, следует отметить, что пользователи устанавливают расширения на свой страх и риск. Все последствия, возникающие в результате использования расширений, ложатся на пользователя. Пользователям рекомендуется быть осторожными при установке и использовании расширений, тщательно оценивая их надежность и безопасность.',
+    termsofuse_t_11: 'Нарушения авторских прав',
+    termsofuse_t_12: 'Если вы обнаружили нарушение авторских прав в приложении Lampa - свяжитесь с разработчиками, используя раздел Контакты приложения. Однако, важно учесть, что приложение Lampa использует API от каталога themoviedb.org, который предоставляет открытый доступ к информации о фильмах и сериалах. Это означает, что информация, которая отображается в приложении Lampa, является общедоступной и не нарушает авторских прав.',
+    termsofuse_t_13: 'Если вы считаете, что в приложении Lampa все же есть контент, нарушающий авторские права - обратитесь к правообладателю этого контента с просьбой удалить его со страниц сайта themoviedb.org. В свою очередь, приложение Lampa может удалить контент при получении соответствующего уведомления о нарушении авторских прав.'
   };
 
   var en = {
@@ -23999,7 +27055,7 @@
     card_wath_add: 'Watch Later',
     card_wath_descr: 'See the menu (Later)',
     card_history_remove: 'Remove from history',
-    card_history_add: 'Add to history',
+    card_history_add: 'Into history',
     card_history_descr: 'Look in the menu (History)',
     keyboard_listen: 'Speak, I\'m listening...',
     keyboard_nomic: 'No microphone access',
@@ -24053,12 +27109,12 @@
     size_gb: 'GB',
     size_tb: 'TB',
     size_pp: 'PB',
-    speed_bit: 'bit',
+    speed_bit: 'bps',
     speed_kb: 'Kbps',
     speed_mb: 'Mbps',
-    speed_gb: 'Gbit',
-    speed_tb: 'Tbit',
-    speed_pp: 'Pbit',
+    speed_gb: 'Gbps',
+    speed_tb: 'Tbps',
+    speed_pp: 'Pbps',
     month_1: 'January',
     month_2: 'February',
     month_3: 'March',
@@ -24141,6 +27197,7 @@
     settings_interface_glass_descr: 'Show interface in glassy style',
     settings_interface_black_style: 'Black style',
     plugins_remove: 'Remove plugins',
+    plugins_add_success: 'Plugin connected successfully',
     settings_reset: 'Reset',
     title_channel: 'Channel',
     input_detection_touch: 'Want to switch to touch control?',
@@ -24173,7 +27230,36 @@
     settings_rest_cache_images: 'Image cache',
     settings_rest_cache_images_descr: 'Cache posters and backgrounds to local storage',
     settings_player_rewind_title: 'Rewind',
-    settings_player_rewind_descr: 'Rewind interval in seconds'
+    settings_player_rewind_descr: 'Rewind interval in seconds',
+    settings_interface_card_reactions: 'Show reactions',
+    title_look: 'Looking',
+    title_scheduled: 'Scheduled',
+    title_viewed: 'Viewed',
+    title_thrown: 'Thrown',
+    title_reactions: 'Reactions',
+    reactions_none: 'No reactions',
+    reactions_fire: 'Great',
+    reactions_nice: 'Nice',
+    reactions_think: 'Interesting',
+    reactions_bore: 'Boring',
+    reactions_shit: 'Bad',
+    reactions_ready: 'You have already left a reaction',
+    settings_player_launch_trailers: 'Trailer Player',
+    title_continued: 'To be continued',
+    title_language_short: 'Language',
+    termsofuse_t_01: 'Terms of Use',
+    termsofuse_t_02: 'Lampa is a convenient tool for exploring the latest news in the film industry, including movies, TV shows, cartoons, and other information. To obtain information about movies, an open-source website, themoviedb.org, is used.',
+    termsofuse_t_03: 'Content',
+    termsofuse_t_04: 'Lampa utilizes the API (application programming interface) from the themoviedb.org catalog to retrieve information about movies and TV shows, as well as to view associated media files such as posters, trailers, and more.',
+    termsofuse_t_05: 'The themoviedb.org API allows the Lampa application to access a database of movies and TV shows, providing the ability to search and view media file information.',
+    termsofuse_t_06: 'The interaction between the Lampa application and themoviedb.org occurs through API requests that are sent from the Lampa application to the themoviedb.org servers to obtain information and media files. Themoviedb.org processes the requests and sends the requested data back to the Lampa application.',
+    termsofuse_t_07: 'Thus, thanks to the use of the themoviedb.org API, the Lampa application provides users with access to an extensive database of movies and TV shows, while complying with the terms of use and restrictions set by the rights holder.',
+    termsofuse_t_08: 'Extensions',
+    termsofuse_t_09: 'Extensions are a powerful tool provided for the Lampa application, allowing users to enhance its capabilities, add additional functionality, and modify content according to their needs.',
+    termsofuse_t_10: 'However, it should be noted that users install extensions at their own risk. All consequences arising from the use of extensions are the responsibility of the user. Users are advised to exercise caution when installing and using extensions, carefully evaluating their reliability and security.',
+    termsofuse_t_11: 'Copyright Infringements',
+    termsofuse_t_12: 'If you discover any copyright infringement in the Lampa application, you should contact the developers of the Lampa application. You can use the contacts provided in the Lampa application to do so. However, it is important to note that the Lampa application uses the API from the themoviedb.org catalog, which provides open access to information about movies and TV shows. This means that the information displayed in the Lampa application is publicly available and does not infringe on copyright.',
+    termsofuse_t_13: 'If you believe that the Lampa application still contains content that violates your copyright, you can contact the rights holder of that content and request its removal from the themoviedb.org website. In turn, the Lampa application can remove content upon receiving a proper copyright infringement notification.'
   };
 
   var uk = {
@@ -24527,40 +27613,163 @@
     company_headquarters: 'Штаб',
     company_homepage: 'Сайт',
     company_country: 'Країна',
+    country_ad: 'Андорра',
+    country_ae: 'ОАЕ',
+    country_af: 'Афганістан',
     country_al: 'Албанія',
+    country_am: 'Вірменія',
+    country_ao: 'Ангола',
+    country_ar: 'Аргентина',
+    country_at: 'Австрія',
+    country_au: 'Австралія',
+    country_aw: 'Аруба',
     country_az: 'Азербайджан',
+    country_bа: 'Боснія і Герцеговина',
+    country_bd: 'Бангладеш',
+    country_be: 'Бельгія',
     country_bg: 'Болгарія',
+    country_bh: 'Бахрейн',
+    country_bi: 'Бурунді',
+    country_bj: 'Бенін',
+    country_bo: 'Болівія',
+    country_br: 'Бразилія',
+    country_bs: 'Багамські острови',
+    country_bt: 'Бутан',
+    country_bw: 'Ботсвана',
     country_by: 'Білорусь',
+    country_ca: 'Канада',
+    country_ch: 'Швейцарія',
+    country_cl: 'Чилі',
+    country_cm: 'Камерун',
     country_cn: 'Китай',
-    country_cz: 'Чеська Республіка',
+    country_co: 'Колумбія',
+    country_cr: 'Коста-Рика',
+    country_cu: 'Куба',
+    country_cv: 'Кабо-Верде',
+    country_cy: 'Кіпр',
+    country_cz: 'Чехія',
     country_de: 'Німеччина',
+    country_dj: 'Джибуті',
     country_dk: 'Данія',
+    country_do: 'Домініканська Республіка',
+    country_dz: 'Алжир',
+    country_ec: 'Еквадор',
     country_ee: 'Естонія',
+    country_eg: 'Єгипет',
     country_es: 'Іспанія',
+    country_et: 'Ефіопія',
     country_fi: 'Фінляндія',
+    country_fo: 'Фарерські острови',
     country_fr: 'Франція',
+    country_ga: 'Габон',
+    country_gb: 'Великобританія',
     country_ge: 'Грузія',
+    country_gh: 'Гана',
+    country_gl: 'Гренландія',
+    country_gp: 'Гваделупа',
+    country_gr: 'Греція',
+    country_gt: 'Гватемала',
+    country_hk: 'Гонконг',
     country_hr: 'Хорватія',
+    country_ht: 'Гаїті',
+    country_hu: 'Угорщина',
+    country_id: 'Індонезія',
     country_ie: 'Ірландія',
+    country_il: 'Ізраїль',
+    country_in: 'Індія',
+    country_iq: 'Ірак',
+    country_ir: 'Іран',
+    country_is: 'Ісландія',
     country_it: 'Італія',
+    country_jm: 'Ямайка',
+    country_jo: 'Йорданія',
     country_jp: 'Японія',
-    country_kr: 'Корея',
+    country_ke: 'Кенія',
+    country_kg: 'Киргизстан',
+    country_kh: 'Камбоджа',
+    country_kp: 'Північна Корея',
+    country_kr: 'Південна Корея',
     country_kz: 'Казахстан',
+    country_kw: 'Кувейт',
+    country_la: 'Лаос',
+    country_lb: 'Ліван',
+    country_li: 'Ліхтенштейн',
+    country_lk: 'Шрі-Ланка',
+    country_lr: 'Ліберія',
+    country_lt: 'Литва',
+    country_lu: 'Люксембург',
     country_lv: 'Латвія',
-    country_ne: 'Непал',
+    country_ly: 'Лівія',
+    country_ma: 'Марокко',
+    country_mc: 'Монако',
+    country_md: 'Молдова',
+    country_me: 'Чорногорія',
+    country_mk: 'Македонія',
+    country_mm: 'М\'янма',
+    country_mn: 'Монголія',
+    country_mo: 'Макао',
+    country_mt: 'Мальта',
+    country_mu: 'Маврикій',
+    country_mv: 'Мальдіви',
+    country_mw: 'Малаві',
+    country_mx: 'Мексика',
+    country_my: 'Малайзія',
+    country_mz: 'Мозамбік',
+    country_na: 'Намібія',
+    country_ne: 'Нігер',
+    country_ng: 'Нігерія',
+    country_ni: 'Нікарагуа',
+    country_nl: 'Нідерланди',
     country_no: 'Норвегія',
+    country_np: 'Непал',
+    country_nz: 'Нова Зеландія',
+    country_om: 'Оман',
+    country_pa: 'Панама',
+    country_pe: 'Перу',
+    country_pg: 'Папуа - Нова Гвінея',
+    country_ph: 'Філіппіни',
+    country_pk: 'Пакистан',
     country_pl: 'Польща',
+    country_pr: 'Пуерто-Рико',
+    country_ps: 'Палестина',
+    country_pt: 'Португалія',
+    country_py: 'Парагвай',
+    country_qa: 'Катар',
     country_ro: 'Румунія',
     country_rs: 'Сербія',
     country_ru: 'Росія',
+    country_rw: 'Руанда',
+    country_sa: 'Саудівська Аравія',
+    country_sd: 'Судан',
     country_se: 'Швеція',
+    country_sg: 'Сінгапур',
     country_si: 'Словенія',
     country_sk: 'Словаччина',
+    country_sn: 'Сенегал',
+    country_su: 'СРСР',
+    country_sv: 'Сальвадор',
+    country_sy: 'Сирія',
+    country_th: 'Таїланд',
     country_tj: 'Таджикистан',
+    country_tm: 'Туркменістан',
+    country_tn: 'Туніс',
     country_tr: 'Туреччина',
+    country_tw: 'Тайвань',
+    country_tz: 'Танзанія',
     country_ua: 'Україна',
+    country_ug: 'Уганда',
     country_us: 'США',
+    country_uy: 'Уругвай',
     country_uz: 'Узбекистан',
+    country_ve: 'Венесуела',
+    country_vn: 'В\'єтнам',
+    country_ws: 'Самоа',
+    country_xk: 'Косово',
+    country_ye: 'Ємен',
+    country_yu: 'Югославія',
+    country_za: 'ПАР',
+    country_zm: 'Замбія',
+    country_zw: 'Зімбабве',
     filter_clarify: 'Уточнити',
     filter_clarify_two: 'Уточнити пошук',
     filter_set_name: 'Вказати назву',
@@ -24696,6 +27905,9 @@
     menu_console: 'Консоль',
     menu_multmovie: 'Мультфільми',
     menu_multtv: 'Мультсеріали',
+    menu_feed: 'Стрічка',
+    lampa_movie_title: 'Лампове кіно',
+    lampa_movie_descr: 'Слідкуйте за новинками на своєму смартфоні. <br>Телеграм: <b>@lampa_movie</b>',
     plugins_catalog_work: 'Робочі плагіни',
     plugins_catalog_work_descr: 'Плагіни, які точно працюють у лампі.',
     plugins_catalog_popular: 'Популярні плагіни серед користувачів',
@@ -24824,7 +28036,7 @@
     card_wath_add: 'Дивитися пізніше',
     card_wath_descr: 'Дивіться в меню (Пізніше)',
     card_history_remove: 'Прибрати з історії',
-    card_history_add: 'Додати в історію',
+    card_history_add: 'В історію',
     card_history_descr: 'Дивіться у меню (Історія)',
     keyboard_listen: 'Кажіть, я слухаю...',
     keyboard_nomic: 'Немає доступу до мікрофону',
@@ -24888,12 +28100,12 @@
     size_gb: 'ГБ',
     size_tb: 'ТБ',
     size_pp: 'ПБ',
-    speed_bit: 'біт',
-    speed_kb: 'Кбіт',
-    speed_mb: 'Мбіт',
-    speed_gb: 'Гбіт',
-    speed_tb: 'Тбіт',
-    speed_pp: 'Пбіт',
+    speed_bit: 'біт/c',
+    speed_kb: 'Кбіт/c',
+    speed_mb: 'Мбіт/c',
+    speed_gb: 'Гбіт/c',
+    speed_tb: 'Тбіт/c',
+    speed_pp: 'Пбіт/c',
     month_1: 'Січень',
     month_2: 'Лютий',
     month_3: 'Березень',
@@ -24979,6 +28191,7 @@
     settings_interface_glass_descr: 'Показувати інтерфейс у склоподібному стилі',
     settings_interface_black_style: 'Чорний стиль',
     plugins_remove: 'Видалити плагіни',
+    plugins_add_success: 'Плагін успішно підключений',
     settings_reset: 'Скидання налаштувань',
     title_channel: 'Канал',
     input_detection_touch: 'Бажаєте переключити на сенсорне керування?',
@@ -25011,7 +28224,36 @@
     settings_rest_cache_images: 'Кеш зображень',
     settings_rest_cache_images_descr: 'Кешувати постери та фони у локальне сховище',
     settings_player_rewind_title: 'Перемотування',
-    settings_player_rewind_descr: 'Інтервал перемотування за секунди'
+    settings_player_rewind_descr: 'Інтервал перемотування за секунди',
+    settings_interface_card_reactions: 'Показати реакції',
+    title_look: 'Дивлюся',
+    title_scheduled: 'Заплановано',
+    title_viewed: 'Переглянуто',
+    title_thrown: 'Відкинуто',
+    title_reactions: 'Реакції',
+    reactions_none: 'Немає реакцій',
+    reactions_fire: 'Супер',
+    reactions_nice: 'Непогано',
+    reactions_think: 'Цікаво',
+    reactions_bore: 'Нудно',
+    reactions_shit: 'Погано',
+    reactions_ready: 'Ви вже залишили реакцію',
+    settings_player_launch_trailers: 'Плеєр для трейлерів',
+    title_continued: 'Далі буде',
+    title_language_short: 'Мова',
+    termsofuse_t_01: 'Умови використання',
+    termsofuse_t_02: 'Lampa - це зручний інструмент для ознайомлення з новинками кіноіндустрії, включаючи фільми, серіали, мультфільми та іншу інформацію. Для отримання інформації про фільми використовується відкритий джерело - веб-сайт themoviedb.org',
+    termsofuse_t_03: 'Контент',
+    termsofuse_t_04: 'Lampa використовує API (інтерфейс програмування додатків) від каталогу themoviedb.org для отримання інформації про фільми та телесеріали, а також для перегляду пов\'язаних з ними медіа-файлів, таких як постери, трейлери та інше.',
+    termsofuse_t_05: 'API від themoviedb.org дозволяє додатку Lampa отримувати доступ до бази даних фільмів та телесеріалів, забезпечуючи можливість пошуку та перегляду інформації про медіа-файли.',
+    termsofuse_t_06: 'Взаємодія між додатком Lampa та themoviedb.org відбувається через запити API, які відправляються з додатку Lampa на сервери themoviedb.org для отримання інформації та медіа-файлів. Themoviedb.org обробляє запити і надсилає запрошені дані назад до додатку Lampa.',
+    termsofuse_t_07: 'Таким чином, завдяки використанню API від themoviedb.org, додаток Lampa надає користувачам доступ до обширної бази даних фільмів та телесеріалів, дотримуючись при цьому умов використання та обмежень, встановлених правовласником.',
+    termsofuse_t_08: 'Розширення',
+    termsofuse_t_09: 'Розширення - це потужний інструмент, наданий для додатку Lampa, що дозволяє користувачам розширити його можливості, додати додатковий функціонал та змінити контент згідно зі своїми потребами.',
+    termsofuse_t_10: 'Однак, варто зазначити, що користувачі встановлюють розширення на свій ризик. Всі наслідки, що виникають в результаті використання розширень, несе користувач. Рекомендується користувачам бути обережними під час встановлення та використання розширень, ретельно оцінюючи їх надійність та безпеку.',
+    termsofuse_t_11: 'Порушення авторських прав',
+    termsofuse_t_12: 'Якщо ви виявили порушення авторських прав у додатку Lampa, вам слід зв\'язатися з розробниками додатку Lampa. Для цього ви можете скористатися контактами в додатку Lampa. Однак, важливо враховувати, що додаток Lampa використовує API від каталогу themoviedb.org, який надає відкритий доступ до інформації про фільми та серіали. Це означає, що інформація, яка відображається в додатку Lampa, є загальнодоступною та не порушує авторських прав.',
+    termsofuse_t_13: 'Якщо ви вважаєте, що в додатку Lampa все ж таки є контент, який порушує ваші авторські права, ви можете звернутися до правовласника цього контенту та попросити його видалити зі сторінок сайту themoviedb.org. З свого боку, додаток Lampa може видалити контент при отриманні відповідного повідомлення про порушення авторських прав.'
   };
 
   var be = {
@@ -25657,6 +28899,9 @@
     menu_console: 'Кансоль',
     menu_multmovie: 'Мультфільмы',
     menu_multtv: 'Мультсерыялы',
+    menu_feed: 'Стужка',
+    lampa_movie_title: 'Лямпавае кіно',
+    lampa_movie_descr: 'Сачыце за навінкамі на сваім смартфоне. <br>Тэлеграм: <b>@lampa_movie</b>',
     plugins_catalog_work: 'Працаздольныя плагіны',
     plugins_catalog_work_descr: 'Плагіны, якія сапраўды працуюць у лямпе.',
     plugins_catalog_popular: 'Папулярныя плагіны сярод карыстальнікаў',
@@ -25785,7 +29030,7 @@
     card_wath_add: 'Глядзець пазней',
     card_wath_descr: 'Глядзіце ў меню (Пазней)',
     card_history_remove: 'Прыбраць з гісторыі',
-    card_history_add: 'Дадаць у гісторыю',
+    card_history_add: 'У гісторыю',
     card_history_descr: 'Глядзіце ў меню (Гісторыя)',
     keyboard_listen: 'Гаварыце, я слухаю...',
     keyboard_nomic: 'Няма доступу да мікрафона',
@@ -25849,12 +29094,12 @@
     size_gb: 'ГБ',
     size_tb: 'ТБ',
     size_pp: 'ПБ',
-    speed_bit: 'біт',
-    speed_kb: 'Кбіт',
-    speed_mb: 'Мбіт',
-    speed_gb: 'Гбіт',
-    speed_tb: 'Тбіт',
-    speed_pp: 'Пбіт',
+    speed_bit: 'біт/c',
+    speed_kb: 'Кбіт/c',
+    speed_mb: 'Мбіт/c',
+    speed_gb: 'Гбіт/c',
+    speed_tb: 'Тбіт/c',
+    speed_pp: 'Пбіт/c',
     month_1: 'Студзень',
     month_2: 'Люты',
     month_3: 'Сакавік',
@@ -25939,6 +29184,7 @@
     settings_interface_glass_descr: 'Паказваць інтэрфейс у шклопадобным стылі',
     settings_interface_black_style: 'Чорны стыль',
     plugins_remove: 'Выдаліць плагіны',
+    plugins_add_success: 'Убудова паспяхова падлучаны',
     settings_reset: 'Скід налад',
     title_channel: 'Канал',
     input_detection_touch: 'Жадаеце пераключыць на сэнсарнае кіраванне?',
@@ -25971,7 +29217,23 @@
     settings_rest_cache_images: 'Кэш малюнкаў',
     settings_rest_cache_images_descr: 'Кэшаваць постэры і фоны ў лакальнае сховішча',
     settings_player_rewind_title: 'Перамотка',
-    settings_player_rewind_descr: 'Інтэрвал перамоткі ў секундах'
+    settings_player_rewind_descr: 'Інтэрвал перамоткі ў секундах',
+    settings_interface_card_reactions: 'Паказаць рэакцыі',
+    title_look: 'Гляджу',
+    title_scheduled: 'Запланавана',
+    title_viewed: 'Прагледжана',
+    title_thrown: 'Выбрасена',
+    title_reactions: 'Рэакцыі',
+    reactions_none: 'Няма рэакцый',
+    reactions_fire: 'Выдатна',
+    reactions_nice: 'Добра',
+    reactions_think: 'Цікава',
+    reactions_bore: 'Нудна',
+    reactions_shit: 'Пагана',
+    reactions_ready: 'Вы ўжо пакінулі рэакцыю',
+    settings_player_launch_trailers: 'Плэер для трэйлераў',
+    title_continued: 'Працяг будзе',
+    title_language_short: 'Мова'
   };
 
   var zh = {
@@ -26251,6 +29513,7 @@
     about_group: '组',
     about_version: '版本',
     about_donate: '捐赠',
+    title_language: '原始语言',
     title_watched: '你看过',
     title_settings: '设置',
     title_collections: '合集',
@@ -26324,40 +29587,163 @@
     company_headquarters: '总部',
     company_homepage: '网站',
     company_country: '国家',
+    country_ad: '安道尔',
+    country_ae: '阿联酋',
+    country_af: '阿富汗',
+    country_al: '阿尔巴尼亚',
+    country_am: '亚美尼亚',
+    country_ao: '安哥拉',
+    country_ar: '阿根廷',
+    country_at: '奥地利',
+    country_au: '澳大利亚',
+    country_aw: '阿鲁巴',
     country_az: '阿塞拜疆',
-    country_by: '白俄罗斯',
+    country_bа: '波黑',
+    country_bd: '孟加拉国',
+    country_be: '比利时',
     country_bg: '保加利亚',
-    country_cz: '捷克共和国',
-    country_dk: '丹麦',
+    country_bh: '巴林',
+    country_bi: '布隆迪',
+    country_bj: '贝宁',
+    country_bo: '玻利维亚',
+    country_br: '巴西',
+    country_bs: '巴哈马',
+    country_bt: '不丹',
+    country_bw: '博茨瓦纳',
+    country_by: '白俄罗斯',
+    country_ca: '加拿大',
+    country_ch: '瑞士',
+    country_cl: '智利',
+    country_cm: '喀麦隆',
+    country_cn: '中国',
+    country_co: '哥伦比亚',
+    country_cr: '哥斯达黎加',
+    country_cu: '古巴',
+    country_cv: '佛得角',
+    country_cy: '塞浦路斯',
+    country_cz: '捷克',
     country_de: '德国',
-    country_us: '美国',
-    country_es: '西班牙',
+    country_dj: '吉布提',
+    country_dk: '丹麦',
+    country_do: '多米尼加',
+    country_dz: '阿尔及利亚',
+    country_ec: '厄瓜多尔',
     country_ee: '爱沙尼亚',
+    country_eg: '埃及',
+    country_es: '西班牙',
+    country_et: '埃塞俄比亚',
     country_fi: '芬兰',
+    country_fo: '法罗群岛',
     country_fr: '法国',
-    country_ie: '爱尔兰',
+    country_ga: '加蓬',
+    country_gb: '英国',
+    country_ge: '格鲁吉亚',
+    country_gh: '加纳',
+    country_gl: '格陵兰',
+    country_gp: '瓜德罗普',
+    country_gr: '希腊',
+    country_gt: '危地马拉',
+    country_hk: '香港',
     country_hr: '克罗地亚',
+    country_ht: '海地',
+    country_hu: '匈牙利',
+    country_id: '印度尼西亚',
+    country_ie: '爱尔兰',
+    country_il: '以色列',
+    country_in: '印度',
+    country_iq: '伊拉克',
+    country_ir: '伊朗',
+    country_is: '冰岛',
     country_it: '意大利',
+    country_jm: '牙买加',
+    country_jo: '约旦',
     country_jp: '日本',
-    country_ka: '格鲁吉亚',
+    country_ke: '肯尼亚',
+    country_kg: '吉尔吉斯斯坦',
+    country_kh: '柬埔寨',
+    country_kp: '朝鲜',
     country_kr: '韩国',
     country_kz: '哈萨克斯坦',
+    country_kw: '科威特',
+    country_la: '老挝',
+    country_lb: '黎巴嫩',
+    country_li: '列支敦士登',
+    country_lk: '斯里兰卡',
+    country_lr: '利比里亚',
+    country_lt: '立陶宛',
+    country_lu: '卢森堡',
     country_lv: '拉脱维亚',
-    country_ne: '尼泊尔',
+    country_ly: '利比亚',
+    country_ma: '摩洛哥',
+    country_mc: '摩纳哥',
+    country_md: '摩尔多瓦',
+    country_me: '黑山',
+    country_mk: '北马其顿',
+    country_mm: '缅甸',
+    country_mn: '蒙古',
+    country_mo: '澳门',
+    country_mt: '马耳他',
+    country_mu: '毛里求斯',
+    country_mv: '马尔代夫',
+    country_mw: '马拉维',
+    country_mx: '墨西哥',
+    country_my: '马来西亚',
+    country_mz: '莫桑比克',
+    country_na: '纳米比亚',
+    country_ne: '尼日尔',
+    country_ng: '尼日利亚',
+    country_ni: '尼加拉瓜',
+    country_nl: '荷兰',
     country_no: '挪威',
+    country_np: '尼泊尔',
+    country_nz: '新西兰',
+    country_om: '阿曼',
+    country_pa: '巴拿马',
+    country_pe: '秘鲁',
+    country_pg: '巴布亚新几内亚',
+    country_ph: '菲律宾',
+    country_pk: '巴基斯坦',
     country_pl: '波兰',
+    country_pr: '波多黎各',
+    country_ps: '巴勒斯坦',
+    country_pt: '葡萄牙',
+    country_py: '巴拉圭',
+    country_qa: '卡塔尔',
     country_ro: '罗马尼亚',
-    country_ru: '俄罗斯',
-    country_sk: '斯洛伐克',
-    country_si: '斯洛文尼亚',
-    country_al: '阿尔巴尼亚',
     country_rs: '塞尔维亚',
+    country_ru: '俄罗斯',
+    country_rw: '卢旺达',
+    country_sa: '沙特阿拉伯',
+    country_sd: '苏丹',
     country_se: '瑞典',
+    country_sg: '新加坡',
+    country_si: '斯洛文尼亚',
+    country_sk: '斯洛伐克',
+    country_sn: '塞内加尔',
+    country_su: '苏联',
+    country_sv: '萨尔瓦多',
+    country_sy: '叙利亚',
+    country_th: '泰国',
     country_tj: '塔吉克斯坦',
+    country_tm: '土库曼斯坦',
+    country_tn: '突尼斯',
     country_tr: '土耳其',
+    country_tw: '台湾',
+    country_tz: '坦桑尼亚',
     country_ua: '乌克兰',
+    country_ug: '乌干达',
+    country_us: '美国',
+    country_uy: '乌拉圭',
     country_uz: '乌兹别克斯坦',
-    country_cn: '中国',
+    country_ve: '委内瑞拉',
+    country_vn: '越南',
+    country_ws: '萨摩亚',
+    country_xk: '科索沃',
+    country_ye: '也门',
+    country_yu: '南斯拉夫',
+    country_za: '南非',
+    country_zm: '赞比亚',
+    country_zw: '津巴布韦',
     filter_clarify: '优化',
     filter_clarify_two: '优化搜索',
     filter_set_name: '指定标题',
@@ -26395,6 +29781,81 @@
     filter_genre_op: '肥皂剧',
     filter_genre_tc: '脱口秀',
     filter_genre_mp: '战争与政治',
+    filter_lang_af: '南非荷兰语',
+    filter_lang_ar: '阿拉伯语',
+    filter_lang_az: '阿塞拜疆语',
+    filter_lang_ba: '巴什基尔语',
+    filter_lang_be: '白俄罗斯语',
+    filter_lang_bg: '保加利亚语',
+    filter_lang_bn: '孟加拉语',
+    filter_lang_bs: '波斯尼亚语',
+    filter_lang_ca: '加泰罗尼亚语',
+    filter_lang_ce: '车臣语',
+    filter_lang_cs: '捷克语',
+    filter_lang_da: '丹麦语',
+    filter_lang_de: '德语',
+    filter_lang_el: '希腊语',
+    filter_lang_en: '英语',
+    filter_lang_es: '西班牙语',
+    filter_lang_et: '爱沙尼亚语',
+    filter_lang_fa: '波斯语',
+    filter_lang_fi: '芬兰语',
+    filter_lang_fr: '法语',
+    filter_lang_ga: '爱尔兰语',
+    filter_lang_gl: '加利西亚语',
+    filter_lang_gn: '瓜拉尼语',
+    filter_lang_he: '希伯来语',
+    filter_lang_hi: '印地语',
+    filter_lang_hr: '克罗地亚语',
+    filter_lang_hu: '匈牙利语',
+    filter_lang_hy: '亚美尼亚语',
+    filter_lang_id: '印度尼西亚语',
+    filter_lang_is: '冰岛语',
+    filter_lang_it: '意大利语',
+    filter_lang_ja: '日语',
+    filter_lang_ka: '格鲁吉亚语',
+    filter_lang_kk: '哈萨克语',
+    filter_lang_ko: '韩语',
+    filter_lang_ks: '克什米尔语',
+    filter_lang_ku: '库尔德语',
+    filter_lang_ky: '吉尔吉斯语',
+    filter_lang_lt: '立陶宛语',
+    filter_lang_lv: '拉脱维亚语',
+    filter_lang_mi: '毛利语',
+    filter_lang_mk: '马其顿语',
+    filter_lang_mn: '蒙古语',
+    filter_lang_mo: '摩尔多瓦语',
+    filter_lang_mt: '马耳他语',
+    filter_lang_ne: '尼泊尔语',
+    filter_lang_nl: '荷兰语',
+    filter_lang_no: '挪威语',
+    filter_lang_pa: '旁遮普语',
+    filter_lang_pl: '波兰语',
+    filter_lang_ps: '普什图语',
+    filter_lang_pt: '葡萄牙语',
+    filter_lang_ro: '罗马尼亚语',
+    filter_lang_ru: '俄语',
+    filter_lang_si: '僧伽罗语',
+    filter_lang_sk: '斯洛伐克语',
+    filter_lang_sl: '斯洛文尼亚语',
+    filter_lang_sm: '萨摩亚语',
+    filter_lang_so: '索马里语',
+    filter_lang_sq: '阿尔巴尼亚语',
+    filter_lang_sr: '塞尔维亚语',
+    filter_lang_sv: '瑞典语',
+    filter_lang_sw: '斯瓦希里语',
+    filter_lang_ta: '泰米尔语',
+    filter_lang_tg: '塔吉克语',
+    filter_lang_th: '泰语',
+    filter_lang_tk: '土库曼语',
+    filter_lang_tr: '土耳其语',
+    filter_lang_tt: '鞑靼语',
+    filter_lang_ur: '乌尔都语',
+    filter_lang_uk: '乌克兰语',
+    filter_lang_uz: '乌兹别克语',
+    filter_lang_vi: '越南语',
+    filter_lang_yi: '意第绪语',
+    filter_lang_zh: '中文',
     empty_title: '空',
     empty_text: '没有找到适合您的筛选，请优化您的筛选。',
     empty_title_two: '此处为空',
@@ -26546,7 +30007,7 @@
     card_wath_add: '稍后观看',
     card_wath_descr: '查看菜单（稍后）',
     card_history_remove: '从历史记录中删除',
-    card_history_add: '添加到历史记录',
+    card_history_add: '走进历史',
     card_history_descr: '查看在菜单（历史）中',
     keyboard_listen: '说话，我在听...',
     keyboard_nomic: '没有麦克风访问权限',
@@ -26600,12 +30061,12 @@
     size_gb: 'GB',
     size_tb: 'TB',
     size_pp: 'PB',
-    speed_bit: '位',
+    speed_bit: 'bps',
     speed_kb: 'Kbps',
     speed_mb: 'Mbps',
-    speed_gb: 'Gbit',
-    speed_tb: 'Tbit',
-    speed_pp: 'Pbit',
+    speed_gb: 'Gbps',
+    speed_tb: 'Tbps',
+    speed_pp: 'Pbps',
     month_1: '一月',
     month_2: '二月',
     month_3: '三月',
@@ -26688,11 +30149,12 @@
     settings_interface_glass_descr: '以玻璃风格显示界面',
     settings_interface_black_style: '黑色风格',
     plugins_remove: '删除插件',
+    plugins_add_success: '插件连接成功',
     settings_reset: '重置',
     title_channel: '渠道',
     input_detection_touch: '想切换到触摸控制？',
     input_detection_mouse: '想切换到鼠标控制？',
-    input_detection_remote: '想切换到远程控制？',
+    input_detection_remote: '想切换到遥控器控制？',
     settings_interface_hide_outside_the_screen: '在屏幕外隐藏卡片',
     settings_interface_hide_outside_the_screen_descr: '这将加快 UI 渲染并提高性能。',
     https_text: '您使用的是 HTTPS 协议，在此协议下灯无法正常工作。 为了灯的正确操作，请使用具有 HTTP 协议的地址',
@@ -26720,7 +30182,36 @@
     settings_rest_cache_images: '图片缓存',
     settings_rest_cache_images_descr: '将海报和背景缓存到本地存储',
     settings_player_rewind_title: '倒带',
-    settings_player_rewind_descr: '以秒为单位的倒带间隔'
+    settings_player_rewind_descr: '以秒为单位的倒带间隔',
+    settings_interface_card_reactions: '显示反应',
+    title_look: '正在观看',
+    title_scheduled: '计划',
+    title_viewed: '已查看',
+    title_thrown: '丢弃',
+    title_reactions: '反馈',
+    reactions_none: '无反馈',
+    reactions_fire: '棒极了',
+    reactions_nice: '不错',
+    reactions_think: '值得一看',
+    reactions_bore: '无聊',
+    reactions_shit: '糟糕',
+    reactions_ready: '您已经留下了反馈',
+    settings_player_launch_trailers: '预告片播放器',
+    title_continued: '待续',
+    title_language_short: '语言',
+    termsofuse_t_01: '使用条款',
+    termsofuse_t_02: 'Lampa是一个方便的工具，用于了解电影行业的最新动态，包括电影、电视剧、动画片和其他信息。获取电影信息使用的是一个开放的来源- themoviedb.org 网站。',
+    termsofuse_t_03: '内容',
+    termsofuse_t_04: 'Lampa使用themoviedb.org目录的API（应用程序编程接口）来获取有关电影和电视剧的信息，并查看与其相关的媒体文件，如海报、预告片等。',
+    termsofuse_t_05: 'themoviedb.org的API允许Lampa应用程序访问电影和电视剧的数据库，提供搜索和查看媒体文件信息的功能。',
+    termsofuse_t_06: 'Lampa应用程序与themoviedb.org之间的交互是通过API请求进行的，这些请求从Lampa应用程序发送到themoviedb.org服务器以获取信息和媒体文件。themoviedb.org处理请求并将请求的数据发送回Lampa应用程序。',
+    termsofuse_t_07: '因此，通过使用themoviedb.org的API，Lampa应用程序为用户提供了访问广泛的电影和电视剧数据库的能力，并遵守权利持有人设定的使用条款和限制。',
+    termsofuse_t_08: '扩展',
+    termsofuse_t_09: '扩展是为Lampa应用程序提供的强大工具，允许用户扩展其功能，添加附加功能，并根据其需求修改内容。',
+    termsofuse_t_10: '然而，值得注意的是，用户自行承担安装扩展的风险。使用扩展带来的所有后果由用户承担。建议用户在安装和使用扩展时要谨慎，仔细评估其可靠性和安全性。',
+    termsofuse_t_11: '侵犯版权',
+    termsofuse_t_12: '如果您在Lampa应用程序中发现任何侵犯版权的行为，您应该联系Lampa应用程序的开发人员。您可以使用Lampa应用程序中提供的联系方式进行联系。然而，重要的是要注意，Lampa应用程序使用的是themoviedb.org目录的API，该API提供了有关电影和电视剧的开放访问。这意味着在Lampa应用程序中显示的信息是公开可访问的，并且不侵犯版权。',
+    termsofuse_t_13: '如果您认为Lampa应用程序仍然包含侵犯您版权的内容，您可以联系该内容的权利持有人，并要求他们从themoviedb.org网站上删除该内容。与此同时，Lampa应用程序在收到相应的侵权通知后可以删除该内容。'
   };
 
   var pt = {
@@ -27494,7 +30985,7 @@
     card_wath_add: 'Adicionar ao ver mais tarde',
     card_wath_descr: 'Veja o menu (ver mais tarde)',
     card_history_remove: 'Remover do histórico',
-    card_history_add: 'Adicionar ao histórico',
+    card_history_add: 'Na história',
     card_history_descr: 'Procure no menu (Histórico)',
     keyboard_listen: 'Fale, estou ouvindo...',
     keyboard_nomic: 'Sem acesso ao microfone',
@@ -27548,12 +31039,12 @@
     size_gb: 'GB',
     size_tb: 'TB',
     size_pp: 'PB',
-    speed_bit: 'bit',
+    speed_bit: 'bps',
     speed_kb: 'Kbps',
     speed_mb: 'Mbps',
-    speed_gb: 'Gbit',
-    speed_tb: 'Tbit',
-    speed_pp: 'Pbit',
+    speed_gb: 'Gbps',
+    speed_tb: 'Tbps',
+    speed_pp: 'Pbps',
     month_1: 'Janeiro',
     month_2: 'Fevereiro',
     month_3: 'Março',
@@ -27636,6 +31127,7 @@
     settings_interface_glass_descr: 'Mostrar interface em estilo vítreo',
     settings_interface_black_style: 'Estilo preto',
     plugins_remove: 'Remover plug-ins',
+    plugins_add_success: 'Plug-in conectado com sucesso',
     settings_reset: 'Redefinir',
     title_channel: 'Canal',
     input_detection_touch: 'Quer mudar para o controle de toque?',
@@ -27668,7 +31160,23 @@
     settings_rest_cache_images: 'Cache de imagens',
     settings_rest_cache_images_descr: 'Armazene pôsteres e planos de fundo no armazenamento local',
     settings_player_rewind_title: 'Rebobinar',
-    settings_player_rewind_descr: 'Intervalo de retrocesso em segundos'
+    settings_player_rewind_descr: 'Intervalo de retrocesso em segundos',
+    settings_interface_card_reactions: 'Mostrar reações',
+    title_look: 'A assistir',
+    title_scheduled: 'Agendado',
+    title_viewed: 'Visualizado',
+    title_thrown: 'Descartado',
+    title_reactions: 'Reações',
+    reactions_none: 'Sem reações',
+    reactions_fire: 'Ótimo',
+    reactions_nice: 'Bom',
+    reactions_think: 'Interessante',
+    reactions_bore: 'Entediante',
+    reactions_shit: 'Ruim',
+    reactions_ready: 'Você já deixou uma reação',
+    settings_player_launch_trailers: 'Reprodutor do trailer',
+    title_continued: 'Continua',
+    title_language_short: 'Linguagem'
   };
 
   var langs = {};
@@ -27758,7 +31266,7 @@
    * Добавить переводы
    * @param {{key_name:{en:string,ru:string}}} data 
    */
-  function add$3(data) {
+  function add$2(data) {
     for (var name in data) {
       for (var code in data[name]) {
         if (langs[code]) {
@@ -27814,7 +31322,7 @@
   }
   var Lang = {
     translate: translate,
-    add: add$3,
+    add: add$2,
     codes: codes,
     addCodes: addCodes,
     AddTranslation: AddTranslation,
@@ -28507,7 +32015,7 @@
   var sort_item;
   var sort_timer;
   var visible_timer;
-  function init$a() {
+  function init$b() {
     html$3 = Template$1.get('menu');
     scroll = new create$p({
       mask: true,
@@ -28515,7 +32023,7 @@
     });
     if (!window.lampa_settings.torrents_use) html$3.find('[data-action="mytorrents"]').remove();
     if (!Lang.selected(['ru', 'uk', 'be'])) {
-      html$3.find('[data-action="relise"],[data-action="anime"]').remove();
+      html$3.find('[data-action="relise"],[data-action="anime"],[data-action="feed"]').remove();
     }
     Lampa.Listener.send('menu', {
       type: 'start',
@@ -28739,7 +32247,7 @@
       if (action == 'about') {
         var about = Template$1.get('about');
         if (window.lampa_settings.white_use) {
-          about.find('.about__contacts').remove();
+          about.find('.about__contacts > div:eq(1)').remove();
         }
         if (Platform.is('android')) {
           about.find('.platform_android').removeClass('hide');
@@ -28759,8 +32267,8 @@
       if (action == 'favorite') {
         Activity$1.push({
           url: '',
-          title: type == 'book' ? Lang.translate('title_book') : type == 'like' ? Lang.translate('title_like') : type == 'history' ? Lang.translate('title_history') : Lang.translate('title_wath'),
-          component: 'favorite',
+          title: Lang.translate(type == 'book' ? 'settings_input_links' : 'title_history'),
+          component: type == 'history' ? 'favorite' : 'bookmarks',
           type: type,
           page: 1
         });
@@ -28778,6 +32286,14 @@
           url: '',
           title: Lang.translate('title_timetable'),
           component: 'timetable',
+          page: 1
+        });
+      }
+      if (prepared(action, ['feed'])) {
+        Activity$1.push({
+          url: '',
+          title: Lang.translate('menu_feed'),
+          component: 'feed',
           page: 1
         });
       }
@@ -28839,7 +32355,7 @@
   }
   var Menu = {
     render: render$2,
-    init: init$a,
+    init: init$b,
     ready: ready
   };
 
@@ -28861,7 +32377,7 @@
 
   var html$2;
   var object;
-  function init$9() {
+  function init$a() {
     html$2 = Template$1.get('iframe');
   }
   function show$2() {
@@ -28890,7 +32406,7 @@
     return html$2;
   }
   var Iframe = {
-    init: init$9,
+    init: init$a,
     show: show$2,
     close: close,
     render: render$1
@@ -28902,7 +32418,7 @@
   var scroll_tabs;
   var scroll_body;
   var last_tab;
-  function init$8() {
+  function init$9() {
     Keypad.listener.follow('keydown', function (e) {
       if (e.code == 38 || e.code == 29460) {
         var enable = Controller.enabled();
@@ -29016,7 +32532,7 @@
     scroll_body.height(html$1.find('.console__tabs'));
     $('body').append(html$1);
   }
-  function add$2(name, message) {
+  function add$1(name, message) {
     if (!items[name]) items[name] = [];
     var where = items[name];
     var time = Utils$2.parseTime(Date.now()).time;
@@ -29065,17 +32581,17 @@
       } else {
         msgs[0] = '<span style="color: ' + Utils$2.stringToHslColor(msgs[0], 50, 65) + '">' + msgs[0] + '</span>';
       }
-      add$2(name, msgs.join(' '));
+      add$1(name, msgs.join(' '));
       log.apply(console, mcon);
     };
     window.addEventListener("error", function (e) {
       var stack = (e.error && e.error.stack ? e.error.stack : e.stack || '').split("\n").join('<br>');
-      add$2('Script', (e.error || e).message + '<br><br>' + stack);
+      add$1('Script', (e.error || e).message + '<br><br>' + stack);
       if (stack.indexOf('resetTopStyle') == -1) Noty.show('Error: ' + (e.error || e).message + '<br><br>' + stack);
     });
   }
   var Console = {
-    init: init$8
+    init: init$9
   };
 
   function create$1() {
@@ -29125,7 +32641,7 @@
   /**
    * Запуск
    */
-  function init$7() {
+  function init$8() {
     if (Storage.field('cloud_use')) status(1);
     Settings.listener.follow('open', function (e) {
       body = null;
@@ -29331,7 +32847,7 @@
     }
   }
   var Cloud = {
-    init: init$7
+    init: init$8
   };
 
   function create() {
@@ -29556,9 +33072,14 @@
           onSelect: function onSelect(a) {
             if (a.toggle) {
               _this2.data.status = _this2.data.status == 1 ? 0 : 1;
-              if (_this2.params.cub) Account.pluginsStatus(_this2.data, _this2.data.status);else Plugins.save();
+              if (_this2.params.cub) Account.pluginsStatus(_this2.data, _this2.data.status);else Plugins.save(_this2.data);
               _this2.update();
-              back();
+              if (_this2.data.status == 1) {
+                back();
+                Plugins.push(_this2.data);
+              } else {
+                Utils$1.showReload(back);
+              }
             } else if (a.change) {
               Input.edit({
                 title: a.change == 'name' ? Lang.translate('extensions_set_name') : Lang.translate('extensions_set_url'),
@@ -29568,9 +33089,12 @@
               }, function (new_value) {
                 if (new_value) {
                   _this2.data[a.change] = new_value;
-                  Plugins.save();
+                  Plugins.save(_this2.data);
                   _this2.update();
-                  if (a.change == 'url') _this2.check();
+                  if (a.change == 'url') {
+                    _this2.check();
+                    Plugins.push(_this2.data);
+                  }
                 }
                 back();
               });
@@ -29585,6 +33109,7 @@
                 Noty.show(Lang.translate('extensions_ready'));
                 back();
               } else {
+                back();
                 Plugins.add({
                   url: _this2.data.link,
                   status: 1,
@@ -29592,7 +33117,6 @@
                   author: _this2.data.author
                 });
                 _this2.html.querySelector('.extensions__item-included').classList.remove('hide');
-                Utils$1.showReload(back);
               }
             } else if (a.instruction) {
               Utils$1.showInfo(_this2.data, back);
@@ -29600,7 +33124,7 @@
               Plugins.remove(_this2.data);
               _this2.html.style.opacity = 0.5;
               _this2.removed = true;
-              back();
+              Utils$1.showReload(back);
             }
           }
         });
@@ -29905,7 +33429,14 @@
       key: "display",
       value: function display(num) {
         var _this2 = this;
-        this.data.slice(0, num || this.view).filter(function (e) {
+        this.data.filter(function (p) {
+          if (p.platform) {
+            var platforms = p.platform.split(',');
+            return platforms.find(function (n) {
+              return Platform.is(n);
+            });
+          } else return true;
+        }).slice(0, num || this.view).filter(function (e) {
           return !_this2.items.find(function (f) {
             return f.data == e;
           });
@@ -30003,7 +33534,6 @@
           _this.onAdd(new_value);
         });
       });
-      this.html.addEventListener('hover:focus', function () {});
     }
     _createClass(Add, [{
       key: "render",
@@ -30055,8 +33585,8 @@
             Plugins.add(data);
             $(add.render()).after(plugin.render());
             line.last = add.render();
-            Layer.visible(plugin.render());
-            Utils$1.showReload(line.toggle.bind(line));
+            Layer.visible(line.render());
+            line.toggle();
           } else {
             line.toggle();
           }
@@ -30200,7 +33730,7 @@
 
   var extensions;
   var listener = start$5();
-  function init$6() {}
+  function init$7() {}
   function show() {
     if (extensions) return;
     var controller = Controller.enabled().name;
@@ -30223,7 +33753,7 @@
     return js ? html : $(html);
   }
   var Extensions = {
-    init: init$6,
+    init: init$7,
     listener: listener,
     show: show,
     render: render
@@ -30236,7 +33766,7 @@
   /**
    * Запуск
    */
-  function init$5() {
+  function init$6() {
     _loaded = Storage.get('plugins', '[]');
     Settings.main().render().find('[data-component="plugins"]').unbind('hover:enter').on('hover:enter', function () {
       Extensions.show();
@@ -30263,10 +33793,28 @@
     console.log('Plugins', 'remove:', plug, 'index:', _loaded.indexOf(plug), 'from:', _loaded);
     Storage.set('plugins', _loaded);
   }
-  function add$1(plug) {
+  function add(plug) {
     _loaded.push(plug);
     console.log('Plugins', 'add:', plug);
     Storage.set('plugins', _loaded);
+    push(plug);
+  }
+  function push(plug) {
+    var find = _created.find(function (a) {
+      return a == plug.url;
+    });
+    if (!find && plug.status == 1) {
+      _created.push(plug.url);
+      console.log('Plugins', 'push:', plug);
+      Utils$2.putScriptAsync([addPluginParams(plug.url)], false, function () {
+        Noty.show(Lang.translate('plugins_check_fail'), {
+          time: 8000
+        });
+      }, function () {
+        updatePluginDB(plug.url, addPluginParams(plug.url));
+        Noty.show(Lang.translate('plugins_add_success'));
+      }, false);
+    }
   }
   function save() {
     console.log('Plugins', 'save:', _loaded);
@@ -30305,6 +33853,19 @@
       });
     }
   }
+  function addPluginParams(url) {
+    var encode = url;
+    if (!/[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}/.test(encode)) {
+      encode = encode.replace(/\{storage_(\w+|\d+|_|-)\}/g, function (match, key) {
+        return encodeURIComponent(Base64.encode(localStorage.getItem(key) || ''));
+      });
+      var email = (localStorage.getItem('account_email') || '').trim();
+      if (Account.logged() && email) encode = Utils$2.addUrlComponent(encode, 'email=' + encodeURIComponent(Base64.encode(email)));
+      encode = Utils$2.addUrlComponent(encode, 'logged=' + encodeURIComponent(Account.logged() ? 'true' : 'false'));
+      encode = Utils$2.addUrlComponent(encode, 'reset=' + Math.random());
+    }
+    return encode;
+  }
 
   /**
    * Загрузка всех плагинов
@@ -30331,16 +33892,7 @@
       var original = {};
       var include = [];
       puts.forEach(function (url) {
-        var encode = url;
-        if (!/[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}/.test(encode)) {
-          encode = encode.replace(/\{storage_(\w+|\d+|_|-)\}/g, function (match, key) {
-            return encodeURIComponent(Base64.encode(localStorage.getItem(key) || ''));
-          });
-          var email = localStorage.getItem('account_email');
-          if (Account.logged() && email) encode = Utils$2.addUrlComponent(encode, 'email=' + encodeURIComponent(Base64.encode(email)));
-          encode = Utils$2.addUrlComponent(encode, 'logged=' + encodeURIComponent(Account.logged() ? 'true' : 'false'));
-          encode = Utils$2.addUrlComponent(encode, 'reset=' + Math.random());
-        }
+        var encode = addPluginParams(url);
         include.push(encode);
         original[encode] = url;
       });
@@ -30367,15 +33919,16 @@
     });
   }
   var Plugins = {
-    init: init$5,
+    init: init$6,
     load: load,
     remove: remove,
     loaded: function loaded() {
       return _created;
     },
-    add: add$1,
+    add: add,
     get: get,
-    save: save
+    save: save,
+    push: push
   };
 
   var VideoQuality = {
@@ -30400,7 +33953,7 @@
   /**
    * Запуск
    */
-  function init$4() {
+  function init$5() {
     if (typeof tizen !== 'undefined') {
       setInterval(lauchPick, 1000 * 60 * 10);
       lauchPick();
@@ -30417,7 +33970,7 @@
    * @param {{sections:[{title:string,position:integer,tiles:[{cardToTile}]}]}} data 
    */
   function setPick(data) {
-    var service_id = '0SG81L944v.service';
+    var service_id = tizen.application.getCurrentApplication().appInfo.id.split('.')[0] + '.service';
     var controll_data = new tizen.ApplicationControlData('caller', ['ForegroundApp', JSON.stringify(data)]);
     var controll_app = new tizen.ApplicationControl('http://tizen.org/appcontrol/operation/pick', null, 'image/*', null, [controll_data]);
     tizen.application.launchAppControl(controll_app, service_id, function () {
@@ -30532,7 +34085,7 @@
     }
   }
   var Tizen = {
-    init: init$4
+    init: init$5
   };
 
   function component(object) {
@@ -30610,18 +34163,18 @@
         type: element.line_type || 'cards'
       });
       item.create();
-      this.push(item);
+      this.push(item, element);
     };
     this.back = function () {
       Activity$1.backward();
     };
-    this.push = function (item) {
+    this.push = function (item, element) {
       item.onDown = this.down.bind(this);
       item.onUp = this.up.bind(this);
       item.onBack = this.back.bind(this);
       if (this.onMore) item.onMore = this.onMore.bind(this);
       items.push(item);
-      if (this.onAppend) this.onAppend(item);
+      if (this.onAppend) this.onAppend(item, element);
       scroll.append(item.render(true));
     };
     this.down = function () {
@@ -30738,7 +34291,7 @@
     open: open$1
   };
 
-  function init$3() {
+  function init$4() {
     if (!Platform.is('webos')) return;
     var field = $("<div class=\"settings-folder selector\" data-component=\"webos_launcher\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <g transform=\"matrix(1.06,0,0,1.06,-0.9600000000000009,-0.9600000000000009)\">\n                    <path d=\"m26.59 31h-21.18c-2.431 0-4.41-1.979-4.41-4.41v-21.18c0-2.431 1.979-4.41 4.41-4.41h21.18c2.431 0 4.41 1.979 4.41 4.41v21.18c0 2.431-1.979 4.41-4.41 4.41zm-21.18-28c-1.329 0-2.41 1.081-2.41 2.41v21.18c0 1.329 1.081 2.41 2.41 2.41h21.18c1.329 0 2.41-1.081 2.41-2.41v-21.18c0-1.329-1.081-2.41-2.41-2.41z\" fill=\"#fff\"></path>\n                    <path d=\"m21.129 24h-10.258c-1.583 0-2.871-1.288-2.871-2.871v-6.167c0-.925.449-1.798 1.202-2.336l5.129-3.664c.998-.712 2.339-.712 3.337 0l5.129 3.665c.754.537 1.203 1.41 1.203 2.335v6.167c0 1.583-1.288 2.871-2.871 2.871zm-5.635-13.41-5.129 3.664c-.229.163-.365.428-.365.708v6.167c0 .48.391.871.871.871h10.259c.479 0 .87-.391.87-.871v-6.167c0-.281-.136-.545-.364-.708l-5.129-3.665c-.303-.215-.71-.215-1.013.001z\" fill=\"#fff\"></path>\n                </g>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">".concat(Lang.translate('settings_webos_launcher'), "</div>\n    </div>"));
     Settings.main().render().find('[data-component="more"]').after(field);
@@ -30784,7 +34337,7 @@
     });
   }
   var WebOSLauncher = {
-    init: init$3
+    init: init$4
   };
 
   function open(callSelected) {
@@ -30857,98 +34410,6 @@
   }
   var Developer = {
     open: open
-  };
-
-  var context = false;
-  var buffers = {};
-  var loading = {};
-  try {
-    context = new (window.AudioContext || window.webkitAudioContext)();
-  } catch (e) {}
-  function Sound(option) {
-    var _this = this;
-    this.option = option;
-    this.isPlay = false;
-    this.loaded = false;
-    this.audio = context.createBufferSource();
-    this.buffer = context.createBuffer(2, context.sampleRate * 0.1, context.sampleRate);
-    this.cache = buffers[option.url];
-    this.gain = context.createGain();
-    if (!this.cache) {
-      loadFile(option.url, function (buffer) {
-        _this.buffer = buffer;
-        _this.loaded = true;
-      });
-    } else {
-      this.buffer = this.cache;
-    }
-    this.onended = function () {
-      this.isPlay = false;
-    };
-    this.play = function () {
-      this.stop();
-      this.isPlay = true;
-      this.audio = context.createBufferSource();
-      this.audio.buffer = this.buffer;
-      this.audio.onended = this.onended.bind(this);
-      this.audio.connect(this.gain);
-      this.gain.connect(context.destination);
-      this.gain.gain.value = 0.4;
-      this.audio.start(0);
-      return this;
-    };
-    this.stop = function () {
-      if (this.isPlay) {
-        this.isPlay = false;
-        this.audio.onended = false;
-        this.audio.stop(0);
-      }
-      return this;
-    };
-    return this;
-  }
-  function loadFile(url, call) {
-    if (buffers[url]) {
-      call(buffers[url]);
-      return;
-    }
-    if (loading[url]) {
-      loading[url].push(call);
-      return;
-    } else {
-      loading[url] = [call];
-    }
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'arraybuffer';
-    xhr.onload = function (e) {
-      context.decodeAudioData(this.response, function (decodedArrayBuffer) {
-        buffers[url] = decodedArrayBuffer;
-        for (var i = 0; i < loading[url].length; i++) {
-          loading[url][i](decodedArrayBuffer);
-        }
-        delete loading[url];
-      }, function (e) {
-        console.log('Sound', 'Error decoding file', e);
-      });
-    };
-    xhr.send();
-  }
-  var sounds = {};
-  function play(name) {
-    if (sounds[name]) sounds[name].play();
-  }
-  function add(name, params) {
-    try {
-      sounds[name] = new Sound(params);
-      return sounds[name];
-    } catch (e) {
-      return false;
-    }
-  }
-  var Sound$1 = {
-    add: add,
-    play: play
   };
 
   var CardClass = /*#__PURE__*/function () {
@@ -31107,7 +34568,7 @@
       zh: '首映'
     }
   };
-  function init$2() {
+  function init$3() {
     network = new create$q();
     Socket.listener.follow('message', function (e) {
       if (e.method == 'premiere') update(e.data);
@@ -31167,10 +34628,10 @@
     });
   }
   var Premiere = {
-    init: init$2
+    init: init$3
   };
 
-  function init$1() {
+  function init$2() {
     Lang.add({
       ad_notice_tv_text_1: {
         ru: 'Будьте в курсе новых серий - получайте уведомления о переводах на свой смартфон!',
@@ -31219,10 +34680,10 @@
     Premiere.init();
   }
   var AdManager = {
-    init: init$1
+    init: init$2
   };
 
-  function init() {
+  function init$1() {
     if (Platform.screen('mobile')) {
       var bar = Template$1.get('navigation_bar', {});
       bar.find('.navigation-bar__item').on('click', function () {
@@ -31244,7 +34705,7 @@
     }
   }
   var NavigationBar = {
-    init: init
+    init: init$1
   };
 
   function Endless(onRender) {
@@ -31314,6 +34775,50 @@
     this.draw(0);
   }
 
+  function hide() {
+    Settings.listener.follow('open', function (e) {
+      if (e.name == 'main') {
+        e.body.find(['player', 'account', 'parser', 'server', 'plugins'].map(function (a) {
+          return '[data-component="' + a + '"]';
+        }).join(', ')).addClass('hide');
+      } else {
+        e.body.find(['start_page', 'card_quality', 'card_episodes', 'proxy_tmdb_auto', 'proxy_tmdb', 'tmdb_proxy_api', 'tmdb_proxy_image', 'card_interfice_type', 'source'].map(function (a) {
+          return '[data-name="' + a + '"]';
+        }).join(', ')).addClass('hide');
+      }
+    });
+    var head = $('.head');
+    var menu = $('.menu');
+    $('.open--broadcast, .open--search,.open--notice,.open--premium', head).remove();
+    $(['catalog', 'feed', 'filter', 'relise', 'anime', 'favorite', 'subscribes', 'timetable', 'mytorrents', 'console', 'about'].map(function (a) {
+      return '[data-action="' + a + '"]';
+    }).join(', '), menu).remove();
+    Arrays.remove(TMDB.genres.movie, TMDB.genres.movie.find(function (g) {
+      return g.id == 99;
+    }));
+    var genres_id = [99, 10764, 10766, 10767, 10768, 10763];
+    genres_id.forEach(function (id) {
+      Arrays.remove(TMDB.genres.tv, TMDB.genres.tv.find(function (g) {
+        return g.id == id;
+      }));
+    });
+    Lampa.Listener.follow('full', function (e) {
+      if (e.type == 'complite') {
+        e.object.activity.render().find('.full-start-new__buttons, .full-start__icons, .full-start__footer').remove();
+      }
+    });
+  }
+  function init() {
+    if (window.lampa_settings.demo) {
+      Lampa.Listener.follow('app', function (e) {
+        if (e.type == 'ready') hide();
+      });
+    }
+  }
+  var Demo = {
+    init: init
+  };
+
   /**
    * Настройки движка
    */
@@ -31330,8 +34835,20 @@
     plugins_store: true,
     torrents_use: true,
     white_use: false,
-    lang_use: true
+    lang_use: true,
+    read_only: false
   });
+
+  /**
+   * Для вебось маркета и других маркетов, демо режим, задрали черти.
+   */
+
+  //window.lampa_settings.demo = window.lampa_settings.white_use && typeof webOS !== 'undefined' && webOS.platform.tv === true
+
+  if (window.localStorage.getItem('remove_white_and_demo')) {
+    window.lampa_settings.demo = false;
+    window.lampa_settings.white_use = false;
+  }
   window.Lampa = {
     Listener: start$5(),
     Lang: Lang,
@@ -31385,7 +34902,7 @@
     Broadcast: Broadcast,
     Helper: Helper,
     InteractionMain: component,
-    InteractionCategory: component$f,
+    InteractionCategory: component$g,
     InteractionLine: create$j,
     Status: status$1,
     Plugins: Plugins,
@@ -31403,19 +34920,20 @@
     WebOSLauncher: WebOSLauncher,
     Event: Event,
     Search: Search,
-    Sound: Sound$1,
     DeviceInput: DeviceInput,
     Worker: AppWorker,
     DB: IndexedDB,
     NavigationBar: NavigationBar,
     Endless: Endless,
-    Color: Color
+    Color: Color,
+    Cache: Cache,
+    Torrent: Torrent,
+    Torserver: Torserver
   };
   function closeApp() {
     if (Platform.is('tizen')) tizen.application.getCurrentApplication().exit();
     if (Platform.is('webos')) window.close();
     if (Platform.is('android')) Android.exit();
-    //пока не используем, нужно разобраться почему вызывается активити при загрузке главной
     if (Platform.is('orsay')) Orsay.exit();
     if (Platform.is('netcast')) window.NetCastBack();
   }
@@ -31473,8 +34991,23 @@
     /** Start - для orsay одни стили, для других другие */
     var old_css = $('link[href="css/app.css"]');
     if (Platform.is('orsay')) {
-      Orsay.init();
-      Utils$2.putStyle(['http://lampa.mx/css/app.css?v' + object$2.css_version], function () {
+      var urlStyle = 'http://lampa.mx/css/app.css?v';
+      //Для нового типа виджета берем сохраненный адрес загрузки
+      if (Orsay.isNewWidget()) {
+        //Для фрейм загрузчика запишем полный url 
+        if (location.protocol != 'file:') {
+          var newloaderUrl = location.href.replace(/[^/]*$/, '');
+          if (newloaderUrl.slice(-1) == '/') {
+            newloaderUrl = newloaderUrl.substring(0, newloaderUrl.length - 1);
+          }
+          if (Orsay.getLoaderUrl() != newloaderUrl) {
+            Orsay.setLoaderUrl(newloaderUrl);
+          }
+        }
+        console.log('Loader', 'start url: ', Orsay.getLoaderUrl());
+        urlStyle = Orsay.getLoaderUrl() + '/css/app.css?v';
+      }
+      Utils$2.putStyle([urlStyle + object$2.css_version], function () {
         old_css.remove();
       });
     } else if (old_css.length) {
@@ -31554,6 +35087,7 @@
     Theme$2.init();
     AdManager.init();
     NavigationBar.init();
+    Demo.init();
 
     /** Надо зачиcтить, не хорошо светить пароль ;) */
 
@@ -31785,6 +35319,23 @@
       }
     });
 
+    /** Start - активация полной лампы, жмем 🠔🠔 🠕🠕 🠔🠔 🠕🠕 */
+
+    var mask_full = [37, 37, 38, 38, 37, 37, 38, 38],
+      psdg_full = -1;
+    Keypad.listener.follow('keydown', function (e) {
+      if (e.code == 37 && psdg_full < 0) {
+        psdg_full = 0;
+      }
+      if (psdg_full >= 0 && mask_full[psdg_full] == e.code) psdg_full++;else psdg_full = -1;
+      if (psdg_full == 8) {
+        psdg_full = -1;
+        Noty.show('Full enabled, restart.');
+        window.localStorage.setItem('remove_white_and_demo', 'true');
+        window.location.reload();
+      }
+    });
+
     /** Быстрый доступ к закладкам через кнопки */
 
     var color_keys = {
@@ -31838,25 +35389,6 @@
     });
 
     /** End */
-
-    /**
-     * Для вебось маркета, задрали черти.
-     */
-    Settings.listener.follow('open', function (e) {
-      if (e.name == 'main' && window.lampa_settings.white_use && Platform.is('webos')) {
-        e.body.find('[data-component="player"]').addClass('hide');
-      }
-    });
-    if (window.lampa_settings.white_use && Platform.is('webos')) {
-      $('.head .open--broadcast').remove();
-      Lampa.Listener.follow('full', function (e) {
-        if (e.type == 'complite') {
-          e.object.activity.render().find('.button--play').remove();
-        }
-      });
-    }
-
-    /** End webos */
   }
 
   function checkProtocol() {

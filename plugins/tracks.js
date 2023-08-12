@@ -4,7 +4,13 @@
     var connect_host = '{localhost}';
     var list_opened = false;
     function reguest(params, callback) {
-      {
+      if (params.ffprobe) {
+        setTimeout(function () {
+          callback({
+            streams: params.ffprobe
+          });
+        }, 200);
+      } else {
         if (connect_host == '{localhost}') connect_host = '185.204.0.61';
         var socket = new WebSocket('ws://' + connect_host + ':8080/?' + params.torrent_hash + '&index=' + params.id);
         socket.addEventListener('message', function (event) {
@@ -239,13 +245,21 @@
         if (list_opened) {
           var append = function append(name, fields) {
             if (fields.length) {
-              var where = html.find('.tracks-metainfo__item-' + name + ' .tracks-metainfo__info');
-              fields.slice(0, 4).forEach(function (i) {
-                where.append('<div>' + i + '</div>');
+              var block = Lampa.Template.get('tracks_metainfo_block', {});
+              block.find('.tracks-metainfo__label').text(Lampa.Lang.translate(name == 'video' ? 'extensions_hpu_video' : name == 'audio' ? 'player_tracks' : 'player_' + name));
+              fields.forEach(function (data) {
+                var item = $('<div class="tracks-metainfo__item tracks-metainfo__item--' + name + ' selector"></div>');
+                item.on('hover:focus', function (e) {
+                  Lampa.Modal.scroll().update(item);
+                });
+                for (var i in data) {
+                  var div = $('<div class="tracks-metainfo__column--' + i + '"></div>');
+                  div.text(data[i]);
+                  item.append(div);
+                }
+                block.find('.tracks-metainfo__info').append(item);
               });
-              if (fields.length > 4) where.append('<div>' + Lampa.Lang.translate('more') + ' +' + (fields.length - 4) + '</div>');
-            } else {
-              html.find('.tracks-metainfo__item-' + name).remove();
+              html.append(block);
             }
           };
           var video = [];
@@ -261,30 +275,35 @@
             return a.codec_type == 'subtitle';
           });
           codec_video.slice(0, 1).forEach(function (v) {
-            var line = [];
-            if (v.width && v.height) line.push(v.width + 'х' + v.height);
-            if (v.codec_name) line.push(v.codec_name.toUpperCase());
-            if (Boolean(v.is_avc)) line.push('AVC');
-            if (line.length) video.push(line.join(' / '));
+            var line = {};
+            if (v.width && v.height) line.video = v.width + 'х' + v.height;
+            if (v.codec_name) line.codec = v.codec_name.toUpperCase();
+            if (Boolean(v.is_avc)) line.avc = 'AVC';
+            if (Lampa.Arrays.getKeys(line).length) video.push(line);
           });
           codec_audio.forEach(function (a, i) {
-            var line = [i + 1];
+            var line = {
+              num: i + 1
+            };
             if (a.tags) {
-              line.push(a.tags.language);
-              if (a.tags.title || a.tags.handler_name) line.push(a.tags.title || a.tags.handler_name);
+              line.lang = (a.tags.language || '').toUpperCase();
             }
-            if (a.codec_name) line.push(a.codec_name.toUpperCase());
-            if (a.channels) line.push(a.channels + ' ch.' + (a.channel_layout ? ' ' + a.channel_layout : ''));
-            if (a.bit_rate || a.tags.BPS || a.tags["BPS-eng"]) line.push(Math.round((a.bit_rate || a.tags.BPS || a.tags["BPS-eng"]) / 1000) + ' Kbps');
-            if (line.length) audio.push(line.join(' / '));
+            line.name = a.tags ? a.tags.title || a.tags.handler_name : '';
+            if (a.codec_name) line.codec = a.codec_name.toUpperCase();
+            if (a.channel_layout) line.channels = a.channel_layout.replace('(side)', '').replace('stereo', '2.0');
+            var bit = a.bit_rate ? a.bit_rate : a.tags && (a.tags.BPS || a.tags["BPS-eng"]) ? a.tags.BPS || a.tags["BPS-eng"] : '--';
+            line.rate = bit == '--' ? bit : Math.round(bit / 1000) + ' ' + Lampa.Lang.translate('speed_kb');
+            if (Lampa.Arrays.getKeys(line).length) audio.push(line);
           });
           codec_subs.forEach(function (a, i) {
-            var line = [i + 1];
+            var line = {
+              num: i + 1
+            };
             if (a.tags) {
-              line.push(a.tags.language);
-              if (a.tags.title || a.tags.handler_name) line.push(a.tags.title || a.tags.handler_name);
+              line.lang = (a.tags.language || '').toUpperCase();
             }
-            if (line.length) subs.push(line.join(' / '));
+            line.name = a.tags ? a.tags.title || a.tags.handler_name : '';
+            if (Lampa.Arrays.getKeys(line).length) subs.push(line);
           });
           var html = Lampa.Template.get('tracks_metainfo', {});
           append('video', video);
@@ -294,6 +313,7 @@
           if (video.length || audio.length || subs.length) {
             data.item.after(html);
           }
+          if (Lampa.Controller.enabled().name == 'modal') Lampa.Controller.toggle('modal');
         }
       });
     }
@@ -308,8 +328,9 @@
       }
     });
     Lampa.Template.add('tracks_loading', "\n    <div class=\"tracks-loading\">\n        <span>#{loading}...</span>\n    </div>\n");
-    Lampa.Template.add('tracks_metainfo', "\n    <div class=\"tracks-metainfo\">\n        <div class=\"tracks-metainfo__half\">\n            <div class=\"tracks-metainfo__item-video\">\n                <div class=\"tracks-metainfo__label\">#{extensions_hpu_video}</div>\n                <div class=\"tracks-metainfo__info\"></div>\n            </div>\n            <div class=\"tracks-metainfo__item-audio\">\n                <div class=\"tracks-metainfo__label\">#{player_tracks}</div>\n                <div class=\"tracks-metainfo__info\"></div>\n            </div>\n        </div>\n        <div class=\"tracks-metainfo__half\">\n            <div class=\"tracks-metainfo__item-subs\">\n                <div class=\"tracks-metainfo__label\">#{player_subs}</div>\n                <div class=\"tracks-metainfo__info\"></div>\n            </div>\n        </div>\n    </div>\n");
-    Lampa.Template.add('tracks_css', "\n    <style>\n    .tracks-loading{margin-top:1em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-moz-box-align:start;-ms-flex-align:start;align-items:flex-start}.tracks-loading:before{content:'';display:inline-block;width:1.3em;height:1.3em;background:url('./img/loader.svg') no-repeat 50% 50%;-webkit-background-size:contain;-o-background-size:contain;background-size:contain;margin-right:.4em}.tracks-loading>span{font-size:1.1em;line-height:1.1}.tracks-metainfo{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;margin-top:1em;-webkit-border-radius:.3em;border-radius:.3em;background-color:rgba(0,0,0,0.22);-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.tracks-metainfo__half{width:50%}.tracks-metainfo__half>div{padding:1em}@media screen and (max-width:480px){.tracks-metainfo__half{width:100%}}.tracks-metainfo__label{opacity:.5;font-weight:600}.tracks-metainfo__info{padding-top:1em;line-height:1.2}.tracks-metainfo__info>div+div{margin-top:.5em}\n    </style>\n");
+    Lampa.Template.add('tracks_metainfo', "\n    <div class=\"tracks-metainfo\"></div>\n");
+    Lampa.Template.add('tracks_metainfo_block', "\n    <div class=\"tracks-metainfo__line\">\n        <div class=\"tracks-metainfo__label\"></div>\n        <div class=\"tracks-metainfo__info\"></div>\n    </div>\n");
+    Lampa.Template.add('tracks_css', "\n    <style>\n    .tracks-loading{margin-top:1em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-moz-box-align:start;-ms-flex-align:start;align-items:flex-start}.tracks-loading:before{content:'';display:inline-block;width:1.3em;height:1.3em;background:url('./img/loader.svg') no-repeat 50% 50%;-webkit-background-size:contain;-o-background-size:contain;background-size:contain;margin-right:.4em}.tracks-loading>span{font-size:1.1em;line-height:1.1}.tracks-metainfo{margin-top:1em}.tracks-metainfo__line+.tracks-metainfo__line{margin-top:2em}.tracks-metainfo__label{opacity:.5;font-weight:600}.tracks-metainfo__info{padding-top:1em;line-height:1.2}.tracks-metainfo__info>div{background-color:rgba(0,0,0,0.22);display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-border-radius:.3em;border-radius:.3em;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.tracks-metainfo__info>div.focus{background-color:rgba(255,255,255,0.06)}.tracks-metainfo__info>div>div{padding:1em;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0}.tracks-metainfo__info>div>div:not(:last-child){padding-right:1.5em}.tracks-metainfo__info>div+div{margin-top:1em}.tracks-metainfo__column--video,.tracks-metainfo__column--name{margin-right:auto}.tracks-metainfo__column--num{min-width:3em;padding-right:0}.tracks-metainfo__column--rate{min-width:7em;text-align:right}.tracks-metainfo__column--channels{min-width:5em;text-align:right}\n    </style>\n");
     $('body').append(Lampa.Template.get('tracks_css', {}, true));
 
 })();
