@@ -15,7 +15,7 @@
   },
   "permissions": ["net", "net-connect", "browser-window", "fullscreen", "pictureInPicture"],
   "devDependencies": {
-    "electron": "^25.5.0",
+    "electron": "25.7.0",
     "electron-builder": "^24.6.3"
   },
   "build": {
@@ -60,7 +60,7 @@
         {
           "target": "tar.gz",
           "arch": [
-            "x64", "ia32"
+            "x64"
           ]
         }
       ],
