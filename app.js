@@ -664,7 +664,6 @@
                 attributeNamespace: attr.namespaceURI // in ie<8 it incorrectly will return undefined
               }));
             }
-
             checked[name] = true;
           }
         }
@@ -1163,62 +1162,87 @@
     }(t || (t = {}));
   }();
 
-  function _iterableToArrayLimit(arr, i) {
-    var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"];
-    if (null != _i) {
-      var _s,
-        _e,
-        _x,
-        _r,
-        _arr = [],
-        _n = !0,
-        _d = !1;
+  function _callSuper(t, o, e) {
+    return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e));
+  }
+  function _isNativeReflectConstruct() {
+    try {
+      var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    } catch (t) {}
+    return (_isNativeReflectConstruct = function () {
+      return !!t;
+    })();
+  }
+  function _iterableToArrayLimit(r, l) {
+    var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (null != t) {
+      var e,
+        n,
+        i,
+        u,
+        a = [],
+        f = !0,
+        o = !1;
       try {
-        if (_x = (_i = _i.call(arr)).next, 0 === i) {
-          if (Object(_i) !== _i) return;
-          _n = !1;
-        } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0);
-      } catch (err) {
-        _d = !0, _e = err;
+        if (i = (t = t.call(r)).next, 0 === l) {
+          if (Object(t) !== t) return;
+          f = !1;
+        } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+      } catch (r) {
+        o = !0, n = r;
       } finally {
         try {
-          if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return;
+          if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
         } finally {
-          if (_d) throw _e;
+          if (o) throw n;
         }
       }
-      return _arr;
+      return a;
     }
   }
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
+  function ownKeys(e, r) {
+    var t = Object.keys(e);
     if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-      })), keys.push.apply(keys, symbols);
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function (r) {
+        return Object.getOwnPropertyDescriptor(e, r).enumerable;
+      })), t.push.apply(t, o);
     }
-    return keys;
+    return t;
   }
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = null != arguments[i] ? arguments[i] : {};
-      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+  function _objectSpread2(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
+        _defineProperty(e, r, t[r]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
+        Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
       });
     }
-    return target;
+    return e;
   }
-  function _typeof(obj) {
+  function _toPrimitive(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r || "default");
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  function _toPropertyKey(t) {
+    var i = _toPrimitive(t, "string");
+    return "symbol" == typeof i ? i : String(i);
+  }
+  function _typeof(o) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-      return typeof obj;
-    } : function (obj) {
-      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-    }, _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+      return typeof o;
+    } : function (o) {
+      return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+    }, _typeof(o);
   }
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -1285,17 +1309,6 @@
     };
     return _setPrototypeOf(o, p);
   }
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-    try {
-      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
   function _assertThisInitialized(self) {
     if (self === void 0) {
       throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -1309,20 +1322,6 @@
       throw new TypeError("Derived constructors may only return object or undefined");
     }
     return _assertThisInitialized(self);
-  }
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-        result;
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-      return _possibleConstructorReturn(this, result);
-    };
   }
   function _superPropBase(object, property) {
     while (!Object.prototype.hasOwnProperty.call(object, property)) {
@@ -1368,20 +1367,6 @@
   }
   function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-  function _toPrimitive(input, hint) {
-    if (typeof input !== "object" || input === null) return input;
-    var prim = input[Symbol.toPrimitive];
-    if (prim !== undefined) {
-      var res = prim.call(input, hint || "default");
-      if (typeof res !== "object") return res;
-      throw new TypeError("@@toPrimitive must return a primitive value.");
-    }
-    return (hint === "string" ? String : Number)(input);
-  }
-  function _toPropertyKey(arg) {
-    var key = _toPrimitive(arg, "string");
-    return typeof key === "symbol" ? key : String(key);
   }
 
   /**
@@ -1728,9 +1713,9 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '2.5.1',
-    app_version: '1.9.5',
-    cub_domain: 'cub.watch'
+    css_version: '2.6.9',
+    app_version: '2.0.4',
+    cub_domain: 'cub.red'
   };
   var plugins$1 = [];
   Object.defineProperty(object$2, 'app_digital', {
@@ -1914,293 +1899,308 @@
       this._listeners = {};
     };
   }
-  function start$5() {
+  function start$6() {
     return new Subscribe();
   }
 
-  var html$1L = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1S = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\" style=\"width: 2.1em; height: 2.1em;\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1K = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
+  var html$1R = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
 
-  var html$1J = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"feed\">\n                <div class=\"menu__ico\">\n                    <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_feed}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{settings_input_links}</div>\n            </li>\n\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
+  var html$1Q = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"feed\">\n                <div class=\"menu__ico\">\n                    <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_feed}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{settings_input_links}</div>\n            </li>\n\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
 
-  var html$1I = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
+  var html$1P = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
 
-  var html$1H = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
+  var html$1O = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
 
-  var html$1G = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
+  var html$1N = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
 
-  var html$1F = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$1M = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$1E = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
+  var html$1L = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
 
-  var html$1D = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_account}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
+  var html$1K = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_cub_sync}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parental_control\">\n        <div class=\"settings-folder__icon\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"white\"></path></svg>\n        </div>\n        <div class=\"settings-folder__name\">#{title_parental_control}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
 
-  var html$1C = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_reactions\">\n        <div class=\"settings-param__name\">#{settings_interface_card_reactions}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
+  var html$1J = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_reactions\">\n        <div class=\"settings-param__name\">#{settings_interface_card_reactions}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
 
-  var html$1B = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector hide\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\" data-children-value=\"jackett\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div class=\"settings-param-title\" data-parent=\"type\"><span>Jackett</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
+  var html$1I = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector hide\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\" data-children-value=\"jackett\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div class=\"settings-param-title\" data-parent=\"type\"><span>Jackett</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1A = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n        <div class=\"settings-param__name\">#{settings_server_link}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n        <div class=\"settings-param__status\"></div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n        <div class=\"settings-param__name\">#{settings_server_base}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n        <div class=\"settings-param__name\">#{settings_server_preload}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n        <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div data-parent=\"login\">\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_login}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n            <div class=\"settings-param__name\">#{settings_server_password}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n    </div>\n</div>";
+  var html$1H = "<div>\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\" data-children=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div data-parent=\"internal_torrclient\">\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n            <div class=\"settings-param__name\">#{settings_server_link}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n    \n    \n        <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n            <div class=\"settings-param__name\">#{settings_server_base}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n            <div class=\"settings-param__name\">#{settings_server_preload}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n            <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div data-parent=\"login\">\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_login}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_password}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1z = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
+  var html$1G = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
 
-  var html$1y = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__value\">#{settings_rest_cache_descr}</div>\n    </div>\n</div>";
+  var html$1F = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"protocol\">\n        <div class=\"settings-param__name\">#{settings_rest_protocol_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_protocol_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param settings-param--button layer--visible selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__descr\">#{title_left} - #{player_unknown}</div>\n    </div>\n</div>";
 
-  var html$1x = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
+  var html$1E = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
 
-  var html$1w = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
+  var html$1D = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
 
-  var html$1v = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
+  var html$1C = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
 
-  var html$1u = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
+  var html$1B = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
 
-  var html$1t = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
+  var html$1A = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
 
-  var html$1s = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
+  var html$1z = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
 
-  var html$1r = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
+  var html$1y = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$1q = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__title\">#{title_watched}</div>\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
+  var html$1x = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
 
-  var html$1p = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
+  var html$1w = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1o = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <!--\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n            -->\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n            </div>\n    </div>\n</div>";
+  var html$1v = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <!--\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n            -->\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n            </div>\n    </div>\n</div>";
 
-  var html$1n = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{settings_input_links}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                    <span>#{title_reactions}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
+  var html$1u = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate rate--tmdb\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n                <div class=\"full-start__status hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{settings_input_links}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                    <span>#{title_reactions}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
 
-  var html$1m = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
+  var html$1t = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text selector\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n\n        <div class=\"full-descr__line full--keywords\">\n            <div class=\"full-descr__line-name\">#{full_keywords}</div>\n            <div class=\"full-descr__line-body\">{keywords}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1l = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
+  var html$1s = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
 
-  var html$1k = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
+  var html$1r = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
 
-  var html$1j = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
+  var html$1q = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
 
-  var html$1i = "<div class=\"player\">\n    \n</div>";
+  var html$1p = "<div class=\"player\">\n    \n</div>";
 
-  var html$1h = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1o = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-one\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-two\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1g = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
+  var html$1n = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
 
-  var html$1f = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
+  var html$1m = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
 
-  var html$1e = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
+  var html$1l = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
 
-  var html$1d = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
+  var html$1k = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
 
-  var html$1c = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
+  var html$1j = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
 
-  var html$1b = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
+  var html$1i = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
 
-  var html$1a = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
+  var html$1h = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
 
-  var html$19 = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
+  var html$1g = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
 
-  var html$18 = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
+  var html$1f = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
 
-  var html$17 = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
+  var html$1e = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
 
-  var html$16 = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$1d = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$15 = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
+  var html$1c = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
 
-  var html$14 = "<div class=\"modal-loading\">\n    \n</div>";
+  var html$1b = "<div class=\"modal-loading\">\n    \n</div>";
 
-  var html$13 = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
+  var html$1a = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
 
-  var html$12 = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__descr\">{descr}</div>\n        </div>\n    </div>\n\n    <div class=\"person-start__descr-mobile\">{descr}</div>\n</div>";
+  var html$19 = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__descr\">{descr}</div>\n        </div>\n    </div>\n\n    <div class=\"person-start__descr-mobile\">{descr}</div>\n</div>";
 
-  var html$11 = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
+  var html$18 = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
 
-  var html$10 = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
+  var html$17 = "<div class=\"empty-filter\">\n    <div class=\"empty-filter__title\">#{empty_title}</div>\n    <div class=\"empty-filter__subtitle\">#{empty_text}</div>\n    <div class=\"empty-filter__buttons hide\"></div>\n    <div class=\"empty-filter__templates\">\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n    </div>\n</div>";
 
-  var html$$ = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
+  var html$16 = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
 
-  var html$_ = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__ffprobe hide\"></div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
+  var html$15 = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
 
-  var html$Z = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}<span class=\"exe\">.{exe}</span></div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
+  var html$14 = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__ffprobe hide\"></div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$Y = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
+  var html$13 = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}<span class=\"exe\">.{exe}</span></div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
 
-  var html$X = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$12 = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$W = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
+  var html$11 = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
-  var html$V = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$10 = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
-  var html$U = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$$ = "<div class=\"season-episode selector layer--visible\">\n    <div class=\"season-episode__img\">\n        <img alt=\"\">\n        <div class=\"season-episode__loader\"></div>\n    </div>\n    <div class=\"season-episode__body\">\n        <div class=\"season-episode__head\">\n            <div class=\"season-episode__title\">{title}</div>\n            <div class=\"season-episode__time\">{time}</div>\n        </div>\n\n        <div class=\"season-episode__timeline\"></div>\n\n        <div class=\"season-episode__footer\">\n            <div class=\"season-episode__info\">{info}</div>\n            <div class=\"season-episode__quality\">{quality}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$T = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
+  var html$_ = "<div class=\"season-episode-rate\">\n    <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"></path>\n    </svg>\n    <span>{rate}</span>\n</div>";
 
-  var html$S = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$Z = "<div class=\"season-info selector\">\n    <div class=\"season-info__title\">{name}</div>\n    <div class=\"season-info__head\">{head}</div>\n    <div class=\"season-info__overview\">{overview}</div>\n</div>";
 
-  var html$R = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
+  var html$Y = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$Q = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
+  var html$X = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$P = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
+  var html$W = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
 
-  var html$O = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
+  var html$V = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$N = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$U = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
 
-  var html$M = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$T = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
 
-  var html$L = "\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path></svg>\n";
+  var html$S = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
 
-  var html$K = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
+  var html$R = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
 
-  var html$J = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
+  var html$Q = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$I = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
+  var html$P = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$H = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
+  var html$O = "\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path></svg>\n";
 
-  var html$G = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
+  var html$N = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
 
-  var html$F = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
+  var html$M = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
 
-  var html$E = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
+  var html$L = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
 
-  var html$D = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
+  var html$K = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
 
-  var html$C = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
+  var html$J = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$B = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
+  var html$I = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
 
-  var html$A = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
+  var html$H = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
 
-  var html$z = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
+  var html$G = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
 
-  var html$y = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
+  var html$F = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
 
-  var html$x = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
+  var html$E = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-proto hide\">\n            <svg width=\"21\" height=\"30\" viewBox=\"0 0 21 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"10.5\" cy=\"8.5\" r=\"7\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                <rect y=\"9\" width=\"21\" height=\"21\" rx=\"4\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
 
-  var html$w = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
+  var html$D = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$v = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
+  var html$C = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
 
-  var html$u = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
+  var html$B = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
 
-  var html$t = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.watch/premium</div>\n</div>";
+  var html$A = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
 
-  var html$s = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.watch/premium</div>\n</div>";
+  var html$z = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
 
-  var html$r = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
+  var html$y = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
 
-  var html$q = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
+  var html$x = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
 
-  var html$p = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
+  var html$w = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.red/premium</div>\n</div>";
 
-  var html$o = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
+  var html$v = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.red/premium</div>\n</div>";
 
-  var html$n = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
+  var html$u = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
 
-  var html$m = "<div class=\"account-add-device\">\n    <img src=\"http://cub.watch/img/qr/qr_device.svg\" class=\"account-add-device__qr\" />\n\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
+  var html$t = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
 
-  var html$l = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+  var html$s = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
 
-  var html$k = "<div class=\"feed-head selector layer--visible\">\n    <div class=\"feed-head__icon\">\n        <img src=\"http://cub.watch/img/other/lampa_movie.jpg\" class=\"feed-head__img\" />\n    </div>\n\n    <div class=\"feed-head__body\">\n        <div class=\"feed-head__title\"></div>\n        <div class=\"feed-head__info\"></div>\n    </div>\n</div>";
+  var html$r = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$j = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__image-box\">\n            <img class=\"feed-item__image-img\" />\n        </div>\n        <div class=\"feed-item__minicard\">\n            <div>\n                <div class=\"feed-item__title\"></div>\n                <div class=\"feed-item__info\"></div>\n            </div>\n            <div class=\"feed-item__minicard-poster\">\n                <div class=\"feed-item__poster-box\">\n                    <img class=\"feed-item__poster-img\" />\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+  var html$q = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
 
-  var html$i = "<div class=\"register\">\n    <div class=\"register__name\"></div>\n    <div class=\"register__counter\"></div>\n</div>";
+  var html$p = "<div class=\"account-add-device\">\n    <img src=\"https://cub.red/img/qr/qr_device.svg\" class=\"account-add-device__qr\" />\n\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
+
+  var html$o = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+
+  var html$n = "<div class=\"feed-head selector layer--visible\">\n    <div class=\"feed-head__icon\">\n        <img src=\"http://cub.red/img/other/lampa_movie.jpg\" class=\"feed-head__img\" />\n    </div>\n\n    <div class=\"feed-head__body\">\n        <div class=\"feed-head__title\"></div>\n        <div class=\"feed-head__info\"></div>\n    </div>\n</div>";
+
+  var html$m = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__image-box\">\n            <img class=\"feed-item__image-img\" />\n        </div>\n        <div class=\"feed-item__minicard\">\n            <div>\n                <div class=\"feed-item__title\"></div>\n                <div class=\"feed-item__info\"></div>\n            </div>\n            <div class=\"feed-item__minicard-poster\">\n                <div class=\"feed-item__poster-box\">\n                    <img class=\"feed-item__poster-img\" />\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+
+  var html$l = "<div class=\"register\">\n    <div class=\"register__name\"></div>\n    <div class=\"register__counter\"></div>\n</div>";
+
+  var html$k = "<div class=\"speedtest\">\n    <div class=\"speedtest__body\">\n        <svg viewBox=\"-250 -250 500 305\" width=\"100%\">\n            <g class=\"scale\">\n                <circle r=\"200\" fill=\"none\" stroke-width=\"15\" class=\"speedtest__progress\" id=\"speedtest_progress\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"5\" stroke=\"currentColor\" class=\"speedtest__frequency\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"10\" class=\"speedtest__fill\"></circle>\n            </g>\n        \n            <path d=\"m-220 0 a120 -120 0 0 1 440 0\" fill=\"none\" stroke=\"blue\" stroke-width=\"0\" id=\"speedtest_path\"></path>\n\n            <text font-size=\"20px\" x=\"0\">\n                <textpath href=\"#speedtest_path\" data-text=\"0\">0</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"69\">\n                <textpath href=\"#speedtest_path\" data-text=\"5\">5</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"139\">\n                <textpath href=\"#speedtest_path\" data-text=\"10\">10</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"216\">\n                <textpath href=\"#speedtest_path\" data-text=\"15\">15</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"293\">\n                <textpath href=\"#speedtest_path\" data-text=\"20\">20</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"371\">\n                <textpath href=\"#speedtest_path\" data-text=\"30\">30</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"447\">\n                <textpath href=\"#speedtest_path\" data-text=\"60\">60</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"515\">\n                <textpath href=\"#speedtest_path\" data-text=\"100\">100</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"595\">\n                <textpath href=\"#speedtest_path\" data-text=\"200\">200</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"655\">\n                <textpath href=\"#speedtest_path\" data-text=\"500\">500</textpath>\n            </text>\n        \n            <text id=\"speedtest_num\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-80\" font-size=\"70\">0.000</text>\n            <text id=\"speedtest_num-text\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-20\" font-size=\"25\">Mbps</text>\n            <text id=\"speedtest_status\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"35\" font-size=\"20\"></text>\n        </svg>\n\n        <svg viewBox=\"-250 -300 500 55\" width=\"100%\">\n            <polyline id=\"speedtest_graph\" points=\"-250,-250\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></polyline>\n        </svg>\n    </div>\n</div>";
 
   var templates = {
-    head: html$1L,
-    wrap: html$1K,
-    menu: html$1J,
-    activitys: html$1I,
-    activity: html$1H,
-    activity_wait_refresh: html$1G,
-    settings: html$1E,
-    settings_main: html$1D,
-    settings_interface: html$1C,
-    settings_parser: html$1B,
-    settings_server: html$1A,
-    settings_player: html$1z,
-    settings_more: html$1y,
-    settings_tmdb: html$1x,
-    settings_plugins: html$1w,
-    settings_cloud: html$1v,
-    settings_account: html$1u,
-    scroll: html$1F,
-    items_line: html$1t,
-    card: html$1s,
-    card_parser: html$1r,
-    card_watched: html$1q,
-    card_episode: html$1p,
-    full_start: html$1o,
-    full_start_new: html$1n,
-    full_descr: html$1m,
-    full_person: html$1l,
-    full_review: html$1k,
-    full_episode: html$1j,
-    player: html$1i,
-    player_panel: html$1h,
-    player_video: html$1g,
-    player_info: html$1f,
-    selectbox: html$1e,
-    selectbox_item: html$1d,
-    info: html$1b,
-    more: html$19,
-    search: html$18,
-    settings_input: html$17,
-    modal: html$16,
-    company: html$15,
-    modal_loading: html$14,
-    modal_pending: html$13,
-    person_start: html$12,
-    empty: html$11,
-    notice: html$10,
-    notice_card: html$$,
-    torrent: html$_,
-    torrent_file: html$Z,
-    files: html$Y,
-    about: html$X,
-    error: html$W,
-    torrent_noconnect: html$V,
-    torrent_file_serial: html$Q,
-    torrent_nocheck: html$U,
-    torrent_nohash: html$T,
-    torrent_install: html$S,
-    torrent_error: html$R,
-    filter: html$1a,
-    search_box: html$P,
-    console: html$O,
-    icon_star: html$N,
-    icon_viewed: html$M,
-    icon_lock: html$L,
-    timeline: html$K,
-    timeline_details: html$J,
-    list_empty: html$I,
-    screensaver: html$H,
-    plugins_catalog: html$G,
-    broadcast: html$F,
-    lang_choice: html$E,
-    extensions: html$D,
-    extensions_block: html$C,
-    extensions_item: html$B,
-    extensions_recomend: html$A,
-    extensions_info: html$z,
-    extensions_theme: html$y,
-    extensions_screensaver: html$x,
-    iframe: html$w,
-    account: html$v,
-    account_limited: html$u,
-    cub_premium: html$t,
-    cub_premium_modal: html$s,
-    selectbox_icon: html$1c,
-    explorer: html$r,
-    explorer_button_back: html$q,
-    https: html$p,
-    navigation_bar: html$o,
-    head_backward: html$n,
-    account_add_device: html$m,
-    feed_item: html$l,
-    feed_head: html$k,
-    feed_episode: html$j,
-    register: html$i
+    head: html$1S,
+    wrap: html$1R,
+    menu: html$1Q,
+    activitys: html$1P,
+    activity: html$1O,
+    activity_wait_refresh: html$1N,
+    settings: html$1L,
+    settings_main: html$1K,
+    settings_interface: html$1J,
+    settings_parser: html$1I,
+    settings_server: html$1H,
+    settings_player: html$1G,
+    settings_more: html$1F,
+    settings_tmdb: html$1E,
+    settings_plugins: html$1D,
+    settings_cloud: html$1C,
+    settings_account: html$1B,
+    scroll: html$1M,
+    items_line: html$1A,
+    card: html$1z,
+    card_parser: html$1y,
+    card_watched: html$1x,
+    card_episode: html$1w,
+    full_start: html$1v,
+    full_start_new: html$1u,
+    full_descr: html$1t,
+    full_person: html$1s,
+    full_review: html$1r,
+    full_episode: html$1q,
+    player: html$1p,
+    player_panel: html$1o,
+    player_video: html$1n,
+    player_info: html$1m,
+    selectbox: html$1l,
+    selectbox_item: html$1k,
+    info: html$1i,
+    more: html$1g,
+    search: html$1f,
+    settings_input: html$1e,
+    modal: html$1d,
+    company: html$1c,
+    modal_loading: html$1b,
+    modal_pending: html$1a,
+    person_start: html$19,
+    empty: html$18,
+    empty_filter: html$17,
+    notice: html$16,
+    notice_card: html$15,
+    torrent: html$14,
+    torrent_file: html$13,
+    files: html$12,
+    about: html$11,
+    error: html$10,
+    torrent_noconnect: html$Y,
+    torrent_file_serial: html$T,
+    torrent_nocheck: html$X,
+    torrent_nohash: html$W,
+    torrent_install: html$V,
+    torrent_error: html$U,
+    filter: html$1h,
+    search_box: html$S,
+    console: html$R,
+    icon_star: html$Q,
+    icon_viewed: html$P,
+    icon_lock: html$O,
+    timeline: html$N,
+    timeline_details: html$M,
+    list_empty: html$L,
+    screensaver: html$K,
+    plugins_catalog: html$J,
+    broadcast: html$I,
+    lang_choice: html$H,
+    extensions: html$G,
+    extensions_block: html$F,
+    extensions_item: html$E,
+    extensions_recomend: html$D,
+    extensions_info: html$C,
+    extensions_theme: html$B,
+    extensions_screensaver: html$A,
+    iframe: html$z,
+    account: html$y,
+    account_limited: html$x,
+    cub_premium: html$w,
+    cub_premium_modal: html$v,
+    selectbox_icon: html$1j,
+    explorer: html$u,
+    explorer_button_back: html$t,
+    https: html$s,
+    navigation_bar: html$r,
+    head_backward: html$q,
+    account_add_device: html$p,
+    feed_item: html$o,
+    feed_head: html$n,
+    feed_episode: html$m,
+    register: html$l,
+    speedtest: html$k,
+    season_episode: html$$,
+    season_episode_rate: html$_,
+    season_info: html$Z
   };
   var created = {};
   function get$e(name) {
@@ -2368,24 +2368,24 @@
     }
   };
 
-  var html$h = $('<div class="noty"><div class="noty__body"><div class="noty__text"></div></div></div>'),
-    body$4 = html$h.find('.noty__text'),
+  var html$j = $('<div class="noty"><div class="noty__body"><div class="noty__text"></div></div></div>'),
+    body$4 = html$j.find('.noty__text'),
     time$4;
   function show$9(text) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     clearTimeout(time$4);
     time$4 = setTimeout(function () {
-      html$h.removeClass('noty--visible');
+      html$j.removeClass('noty--visible');
     }, params.time || 3000);
     body$4.html(text);
-    html$h.addClass('noty--visible');
+    html$j.addClass('noty--visible');
   }
-  function render$f() {
-    return html$h;
+  function render$g() {
+    return html$j;
   }
   var Noty = {
     show: show$9,
-    render: render$f
+    render: render$g
   };
 
   var reqCallback = {};
@@ -2654,7 +2654,7 @@
       week: days[current_week],
       day: current_day,
       mouth: months[date.getMonth()],
-      full: current_day + ' ' + months_end[date.getMonth()] + ' ' + time[3],
+      full: current_day + ' ' + months_end[date.getMonth()] + (new Date().getFullYear() == time[3] ? '' : ' ' + time[3]),
       "short": current_day + ' ' + months_end[date.getMonth()],
       briefly: current_day + ' ' + months_end[date.getMonth()] + ' ' + current_time
     };
@@ -2668,14 +2668,20 @@
     var date = new Date(str);
     return date.getTime();
   }
-  function checkHttp(url) {
+  function checkHttp(url, http_only) {
     url = url + '';
-    //url = url.replace(/https:\/\//,'')
-    //url = url.replace(/http:\/\//,'')
-
     if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) return url;
-    url = protocol() + url;
+    url = (http_only ? 'http://' : protocol()) + url;
     return url;
+  }
+  function checkEmptyUrl(url) {
+    url = url + '';
+    if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) return url;
+    url = (window.location.protocol == 'https:' ? 'https://' : 'http://') + url;
+    return url;
+  }
+  function rewriteIfHTTPS(u) {
+    return window.location.protocol == 'https:' ? u.replace(/(http:\/\/|https:\/\/)/g, 'https://') : u;
   }
   function shortText(fullStr, strLen, separator) {
     if (fullStr.length <= strLen) return fullStr;
@@ -2687,7 +2693,7 @@
     return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
   }
   function protocol() {
-    return window.location.protocol == 'https:' ? 'https://' : 'http://';
+    return window.location.protocol == 'https:' ? 'https://' : (localStorage.getItem('protocol') || 'https') + '://';
   }
   function addUrlComponent(url, params) {
     return url + (/\?/.test(url) ? '&' : '?') + params;
@@ -2702,6 +2708,7 @@
         p++;
         return next();
       }
+      u = u.replace('cub.watch', Lampa.Manifest.cub_domain);
       if (l) console.log('Script', 'create:', u);
       var s = document.createElement('script');
       s.onload = function () {
@@ -2728,6 +2735,7 @@
       if (p == items.length && complite) complite();
     }
     function put(u) {
+      u = u.replace('cub.watch', Lampa.Manifest.cub_domain);
       if (l) console.log('Script', 'create:', u);
       var s = document.createElement('script');
       s.onload = function () {
@@ -2814,7 +2822,6 @@
       hash = (hash << 5) - hash + _char;
       hash = hash & hash; // Convert to 32bit integer
     }
-
     return Math.abs(hash) + '';
   }
   function uid(len) {
@@ -2856,7 +2863,10 @@
     img.src = src;
   }
   function isTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+    var touch = ('ontouchstart' in window);
+    var points = navigator.maxTouchPoints > 0 && navigator.maxTouchPoints !== 256 || navigator.msMaxTouchPoints > 0 && navigator.msMaxTouchPoints !== 256;
+    var win = navigator.userAgent.toLowerCase().indexOf('windows nt') !== -1;
+    return touch || points && !win;
   }
   function canFullScreen() {
     var doc = window.document;
@@ -2864,14 +2874,25 @@
     return elem.requestFullscreen || elem.mozRequestFullScreen || elem.webkitRequestFullScreen || elem.msRequestFullscreen;
   }
   function toggleFullscreen() {
-    var doc = window.document;
-    var elem = doc.documentElement;
-    var requestFullScreen = elem.requestFullscreen || elem.mozRequestFullScreen || elem.webkitRequestFullScreen || elem.msRequestFullscreen;
-    var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
-    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
-      requestFullScreen.call(elem);
+    // Check if the User-Agent string contains the word "Tesla"
+    if (navigator.userAgent.indexOf("Tesla") >= 0) {
+      // Get the current domain from the URL
+      var currentDomain = window.location.hostname;
+
+      // Construct the YouTube redirect URL with the current domain
+      var targetURL = "https://www.youtube.com/redirect?q=".concat(currentDomain);
+      // If it's Tesla's browser, redirect to the YouTube URL (which will open the current domain in full-screen, thank you Elon, sarcasm)
+      location.href = targetURL;
     } else {
-      cancelFullScreen.call(doc);
+      var doc = window.document;
+      var elem = doc.documentElement;
+      var requestFullScreen = elem.requestFullscreen || elem.mozRequestFullScreen || elem.webkitRequestFullScreen || elem.msRequestFullscreen;
+      var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+      if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+        requestFullScreen.call(elem);
+      } else {
+        cancelFullScreen.call(doc);
+      }
     }
   }
   function countSeasons(movie) {
@@ -2938,7 +2959,19 @@
     var roundedNumber = (number / Math.pow(1000, suffixIndex)).toFixed(1).replace('.0', '');
     return roundedNumber + suffixes[suffixIndex]; // Возвращаем округленное число с суффиксом
   }
-
+  function gup(name, url) {
+    if (!url) url = location.href;
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(url);
+    return results == null ? null : results[1];
+  }
+  function dcma(media, id) {
+    return window.lampa_settings.dcma && window.lampa_settings.dcma.find(function (a) {
+      return a.cat == media && a.id == id;
+    });
+  }
   var Utils$2 = {
     secondsToTime: secondsToTime,
     secondsToTimeHuman: secondsToTimeHuman,
@@ -2976,7 +3009,11 @@
     decodePG: decodePG,
     trigger: trigger$2,
     isPWA: isPWA,
-    bigNumberToShort: bigNumberToShort
+    bigNumberToShort: bigNumberToShort,
+    rewriteIfHTTPS: rewriteIfHTTPS,
+    checkEmptyUrl: checkEmptyUrl,
+    gup: gup,
+    dcma: dcma
   };
 
   var widgetAPI,
@@ -2985,7 +3022,7 @@
     loader$2,
     orsay_loaded,
     orsay_call = Date.now();
-  function init$y() {
+  function init$C() {
     $('body').append($("<div style=\"position: absolute; left: -1000px; top: -1000px;\">  \n    <object id=\"pluginObjectNNavi\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-NNAVI\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectTVMW\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-TVMW\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectScreen\" border=0 classid=\"clsid:SAMSUNG-INFOLINK-SCREEN\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n</div>"));
     Utils$2.putScript(['$MANAGER_WIDGET/Common/API/Widget.js', '$MANAGER_WIDGET/Common/API/TVKeyValue.js', '$MANAGER_WIDGET/Common/API/Plugin.js', '$MANAGER_WIDGET/Common/webapi/1.0/webapis.js', '$MANAGER_WIDGET/Common/IME_XT9/ime.js', '$MANAGER_WIDGET/Common/IME_XT9/inputCommon/ime_input.js'], function () {
       try {
@@ -3068,7 +3105,7 @@
     if (widgetAPI) widgetAPI.sendReturnEvent();
   }
   var Orsay = {
-    init: init$y,
+    init: init$C,
     isNewWidget: isNewWidget,
     getLoaderUrl: getLoaderUrl,
     setLoaderUrl: setLoaderUrl,
@@ -3076,7 +3113,845 @@
     exit: exit
   };
 
-  function init$x() {
+  var timer$8;
+  var need_update = false;
+  var need_visible = false;
+  var canianimate$1 = typeof requestAnimationFrame !== 'undefined';
+  function init$B() {
+    $(window).on('resize', function () {
+      clearTimeout(timer$8);
+      timer$8 = setTimeout(function () {
+        toggleMobile();
+        toggleOrientation();
+        size$1();
+        update$b();
+      }, 100);
+    });
+    var follow = ['animation', 'mask', 'card_interfice_poster', 'glass_style', 'black_style', 'glass_opacity', 'card_interfice_cover'];
+    Storage.listener.follow('change', function (event) {
+      if (event.name == 'interface_size') {
+        size$1();
+        update$b();
+      }
+      if (follow.indexOf(event.name) >= 0) toggleClasses();
+    });
+    toggleClasses();
+    toggleMobile();
+    toggleOrientation();
+    size$1();
+    setTimeout(blick, 5000);
+    if (Platform.tv() || Platform.desktop()) mouseEvents();
+  }
+  function toggleMobile() {
+    $('body').toggleClass('true--mobile', Platform.screen('mobile'));
+  }
+  function toggleOrientation() {
+    $('body').removeClass('orientation--portrait orientation--landscape').addClass('orientation--' + (window.innerWidth > window.innerHeight && window.innerHeight < 768 ? 'landscape' : 'portrait'));
+  }
+  function mouseEvents() {
+    var body = $('body');
+    var mouse_timer_cursor;
+    $(window).on('mousemove', function () {
+      clearTimeout(mouse_timer_cursor);
+      mouse_timer_cursor = setTimeout(function () {
+        body.toggleClass('no--cursor', true);
+      }, 3000);
+      body.toggleClass('no--cursor', false);
+    });
+  }
+  function size$1() {
+    var sl = Storage.field('interface_size');
+    var sz = {
+      normal: 1,
+      small: 0.9,
+      bigger: 1.05
+    };
+    var fs = sz[sl];
+    $('body').css({
+      fontSize: Math.max(window.innerWidth / 84.17 * fs, 10.6) + 'px'
+    }).removeClass('size--small size--normal size--bigger').addClass('size--' + sl);
+  }
+  function blick() {
+    $('.icon--blink').not('.ready').each(function () {
+      var elem = $(this),
+        time = parseInt(elem.data('blink-interval') || 3) * 1000;
+      elem.addClass('ready');
+      setInterval(function () {
+        elem.addClass('animate');
+        setTimeout(function () {
+          elem.removeClass('animate');
+        }, 1000);
+      }, time);
+    });
+  }
+  function frameUpdate(render) {
+    var where = render || document.body;
+    var target = where instanceof jQuery ? where[0] : where;
+    var landscape = window.innerWidth > window.innerHeight && window.innerHeight < 768;
+    var wrap = document.querySelector('.wrap__left');
+    var head = document.querySelector('.head');
+    var navi = document.querySelector('.navigation-bar');
+    var menu_left = wrap ? wrap.getBoundingClientRect().left : 0;
+    var menu_width = wrap ? wrap.getBoundingClientRect().width : 0;
+    var head_height = head ? head.getBoundingClientRect().height : 0;
+    var navi_height = navi && !landscape ? navi.getBoundingClientRect().height : 0;
+    var navi_width = navi && landscape ? navi.getBoundingClientRect().width : 0;
+    var layer_width = Array.from(target.querySelectorAll('.layer--width'));
+    var layer_height = Array.from(target.querySelectorAll('.layer--height'));
+    var layer_wheight = Array.from(target.querySelectorAll('.layer--wheight'));
+    if (target.classList.contains('layer--width')) layer_width.push(target);
+    if (target.classList.contains('layer--height')) layer_height.push(target);
+    if (target.classList.contains('layer--wheight')) layer_wheight.push(target);
+    for (var i = 0; i < layer_width.length; i++) {
+      var elem = layer_width[i],
+        read = parseFloat(elem.style.width),
+        widh = window.innerWidth - (Platform.screen('light') && menu_left == 0 ? menu_width : 0) - navi_width;
+      if (read !== widh) layer_width[i].style.width = widh;
+    }
+    for (var _i = 0; _i < layer_wheight.length; _i++) {
+      var _elem = layer_wheight[_i],
+        heig = window.innerHeight - head_height - navi_height,
+        attr = _elem.mheight,
+        _read = parseFloat(_elem.style.height);
+      if (attr) {
+        heig -= attr.getBoundingClientRect().height;
+      }
+      if (_read !== heig) _elem.style.height = heig;
+    }
+    for (var _i2 = 0; _i2 < layer_height.length; _i2++) {
+      var _elem2 = layer_height[_i2],
+        _heig = window.innerHeight,
+        _attr = _elem2.mheight,
+        _read2 = parseFloat(_elem2.style.height);
+      if (_attr) {
+        _heig -= _attr.getBoundingClientRect().height;
+      }
+      if (_read2 !== _heig) _elem2.style.height = _heig;
+    }
+  }
+  function intersected(a, b) {
+    return a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
+  }
+  function frameVisible(render) {
+    var active = Lampa.Activity.active();
+    var where = render ? render : active && active.activity ? active.activity.render() : false;
+    var area = 1.5;
+    var hide = Storage.field('hide_outside_the_screen');
+    var v_w = window.innerWidth * area;
+    var v_h = window.innerHeight * area;
+    var m_w = window.innerWidth - v_w;
+    var m_h = window.innerHeight - v_h;
+    if (where) {
+      var target = where instanceof jQuery ? where[0] : where;
+      var elems = [];
+      if (target.classList.contains('layer--visible')) {
+        elems.push({
+          type: 'visible',
+          elem: target
+        });
+      }
+      if (target.classList.contains('layer--render')) {
+        elems.push({
+          type: 'render',
+          elem: target
+        });
+      }
+      elems = elems.concat(Array.from(target.querySelectorAll('.layer--visible')).map(function (elem) {
+        return {
+          type: 'visible',
+          elem: elem
+        };
+      }), Array.from(target.querySelectorAll('.layer--render')).map(function (elem) {
+        return {
+          type: 'render',
+          elem: elem
+        };
+      }));
+      for (var i = 0; i < elems.length; i++) {
+        var item = elems[i];
+        var elem = item.elem;
+        if (item.type == 'visible') {
+          if (!elem.call_visible) {
+            var bond = elem.getBoundingClientRect();
+            if (intersected([m_w, m_h, v_w, v_h], [bond.left, bond.top, bond.left + bond.width, bond.top + bond.height])) {
+              elem.call_visible = true;
+              item.visible = true;
+            }
+          }
+        }
+        if (elem.call_visible) {
+          var _bond = elem.getBoundingClientRect();
+          var view = hide ? intersected([m_w, m_h, v_w, v_h], [_bond.left, _bond.top, _bond.left + _bond.width, _bond.top + _bond.height]) : true;
+          var visibility = view ? 'visible' : 'hidden';
+          if (elem.visibility !== visibility) {
+            if (!elem.visibility && visibility == 'visible') continue;
+            elem.visibility = visibility;
+            item.visibility = visibility;
+          }
+        }
+      }
+      for (var _i3 = 0; _i3 < elems.length; _i3++) {
+        var _item = elems[_i3];
+        var _elem3 = _item.elem;
+        if (_item.type == 'visible') {
+          if (_item.visible) Utils$2.trigger(_elem3, 'visible');
+        }
+        if (_item.visibility) {
+          _elem3.style.visibility = _elem3.visibility;
+        }
+      }
+    }
+  }
+  function toggleClasses() {
+    $('body').toggleClass('no--animation', !Storage.field('animation'));
+    $('body').toggleClass('no--mask', !Storage.field('mask'));
+    $('body').toggleClass('no--poster', !Storage.field('card_interfice_poster'));
+    $('body').toggleClass('glass--style', Storage.field('glass_style'));
+    $('body').toggleClass('black--style', Storage.field('black_style'));
+    $('body').toggleClass('card--no-cover', !Storage.field('card_interfice_cover'));
+    $('body').removeClass('glass--style-opacity--easy glass--style-opacity--medium glass--style-opacity--blacked');
+    if (Storage.field('glass_style')) $('body').addClass('glass--style-opacity--' + Storage.field('glass_opacity'));
+  }
+  function visible(where) {
+    requestFrame$1();
+    need_visible = where;
+    if (!canianimate$1) frameVisible(where);
+  }
+  function update$b(where) {
+    requestFrame$1();
+    need_update = where;
+    if (!canianimate$1) frameUpdate(where);
+  }
+  function requestFrame$1() {
+    if (canianimate$1 && need_update === false && need_visible === false) requestAnimationFrame(updateFrame);
+  }
+  function updateFrame() {
+    if (need_update !== false) frameUpdate(need_update);
+    if (need_visible !== false) frameVisible(need_visible);
+    need_update = false;
+    need_visible = false;
+  }
+  var Layer = {
+    update: update$b,
+    visible: visible,
+    init: init$B
+  };
+
+  function create$q() {
+    var _this = this;
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var _self = this;
+    var html = Template$1.js('scroll');
+    var body = html.querySelector('.scroll__body');
+    var content = html.querySelector('.scroll__content');
+    var caianimate = typeof requestAnimationFrame !== 'undefined';
+    var frame_time = 0;
+    var scroll_position = 0;
+    var scroll_transition = 0;
+    var scroll_time = 0,
+      scroll_step = params.step || 150;
+    var call_update_time = Date.now();
+    var call_transition_time = Date.now();
+    if (params.horizontal) html.classList.toggle('scroll--horizontal', true);
+    if (params.mask) html.classList.toggle('scroll--mask', true);
+    if (params.over) html.classList.toggle('scroll--over', true);
+    if (params.nopadding) html.classList.toggle('scroll--nopadding', true);
+    if (params.notransition) body.classList.toggle('notransition', true);
+    html.addEventListener('mousewheel', function (e) {
+      var parent = $(e.target).parents('.scroll');
+      var inner = onTheRightSide(e, true);
+      if (!params.horizontal && $(html).is(parent[0])) inner = true;
+      if (Storage.field('navigation_type') == 'mouse' && Date.now() - scroll_time > 200 && inner) {
+        scroll_time = Date.now();
+        if (e.wheelDelta / 120 > 0) {
+          if (_this.onWheel) _this.onWheel(-scroll_step);else _this.wheel(-scroll_step);
+        } else {
+          if (_this.onWheel) _this.onWheel(scroll_step);else _this.wheel(scroll_step);
+        }
+      }
+    });
+    html.Scroll = _self;
+    body.addEventListener('webkitTransitionEnd', function () {
+      if (Date.now() - call_transition_time > 400) return;
+
+      //чет на моей карте выходит 180-190, странно, ну да ладно, поставил 150
+      if (Date.now() - call_update_time > 150) scrollEnded();
+    });
+    if (Platform.screen('tv')) {
+      html.addEventListener('scroll', function (e) {
+        html.scrollTop = 0;
+        html.scrollLeft = 0;
+      });
+    } else {
+      html.addEventListener('scroll', scrollEnded);
+    }
+    function onTheRightSide(e) {
+      var inleft = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var offset = content.getBoundingClientRect().left;
+      var width = window.innerWidth - offset;
+      var position = e.clientX - offset;
+      return params.horizontal ? position > width / 2 : inleft ? position < width / 2 : false;
+    }
+    function maxOffset(offset) {
+      var w = params.horizontal ? html.offsetWidth : html.offsetHeight;
+      var p = parseInt(window.getComputedStyle(content, null).getPropertyValue('padding-' + (params.horizontal ? 'left' : 'top')));
+      var s = body[params.horizontal ? 'scrollWidth' : 'scrollHeight'];
+      offset = Math.min(0, offset);
+      offset = Math.max(-(Math.max(s + p * 2, w) - w), offset);
+      return offset;
+    }
+    function scrollEnded() {
+      call_update_time = Date.now();
+      if (_self.onScroll) _self.onScroll(!Platform.screen('tv') ? html[params.horizontal ? 'scrollLeft' : 'scrollTop'] : -scroll_position);else Layer.visible(html);
+      if (_self.onEnd && _self.isEnd()) _self.onEnd();
+    }
+    function scrollTo(scrl) {
+      if (!Platform.screen('tv')) {
+        var object = {};
+        object[params.horizontal ? 'scrollLeft' : 'scrollTop'] = -scrl;
+        $(html).animate(object, 200);
+      } else {
+        if (scroll_transition == false) {
+          scroll_transition = scrl;
+          if (caianimate && Storage.field('animation')) {
+            var cannow = Date.now() - frame_time > 500;
+            if (cannow) animate();else requestAnimationFrame(animate);
+          } else animate();
+        }
+      }
+      scroll_position = scrl;
+    }
+    function animate() {
+      body.style['-webkit-transform'] = 'translate3d(' + Math.round(params.horizontal ? scroll_transition : 0) + 'px, ' + Math.round(params.horizontal ? 0 : scroll_transition) + 'px, 0px)';
+      scroll_transition = false;
+      if (!Storage.field('animation') || Date.now() - call_update_time < 300) scrollEnded();
+      frame_time = Date.now();
+    }
+    function startScroll(scrl) {
+      scrollTo(scrl);
+      call_update_time = Date.now();
+      call_transition_time = Date.now();
+    }
+    this.wheel = function (size) {
+      var direct = params.horizontal ? 'left' : 'top';
+      var scrl = scroll_position,
+        scrl_offset = html.getBoundingClientRect()[direct],
+        scrl_padding = parseInt(window.getComputedStyle(content, null).getPropertyValue('padding-' + direct));
+      if (params.scroll_by_item) {
+        var pos = body.scroll_position;
+        pos = pos || 0;
+        var items = Array.from(body.children);
+        pos += size > 0 ? 1 : -1;
+        pos = Math.max(0, Math.min(items.length - 1, pos));
+        body.scroll_position = pos;
+        var item = items[pos],
+          ofst = item.getBoundingClientRect()[direct];
+        size = ofst - scrl_offset - scrl_padding;
+      }
+      var max = params.horizontal ? 30000 : body.offsetHeight;
+      max -= params.horizontal ? html.offsetWidth : html.offsetHeight;
+      max += scrl_padding * 2;
+      scrl -= size;
+      scrl = Math.min(0, Math.max(-max, scrl));
+      scrl = maxOffset(scrl);
+      startScroll(scrl);
+    };
+    this.update = function (elem, tocenter) {
+      var dir = params.horizontal ? 'left' : 'top',
+        siz = params.horizontal ? 'offsetWidth' : 'offsetHeight';
+      var target = elem instanceof jQuery ? elem[0] : elem;
+      var ofs_elm = target.getBoundingClientRect()[dir],
+        ofs_box = body.getBoundingClientRect()[dir],
+        center = ofs_box + (tocenter ? content[siz] / 2 - target[siz] / 2 : 0),
+        scrl = Math.min(0, center - ofs_elm);
+      scrl = maxOffset(scrl);
+      startScroll(scrl);
+    };
+    this.vieport = function () {
+      var vieport = {};
+      if (!Platform.screen('tv')) {
+        vieport.position = html[params.horizontal ? 'scrollLeft' : 'scrollTop'], vieport.body = body[params.horizontal ? 'scrollWidth' : 'scrollHeight'], vieport.content = html[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
+      } else {
+        vieport.position = scroll_position;
+        vieport.body = body[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
+        vieport.content = html[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
+      }
+      return vieport;
+    };
+    this.isEnd = function (end_ratio) {
+      var vieport = this.vieport();
+      if (vieport.body < vieport.content) return false;
+      return vieport.body - vieport.content * Math.max(1, end_ratio || params.end_ratio || 1) < Math.abs(vieport.position);
+    };
+    this.append = function (object) {
+      body.appendChild(object instanceof jQuery ? object[0] : object);
+    };
+    this.minus = function (minus) {
+      html.classList.add('layer--wheight');
+      html.mheight = minus instanceof jQuery ? minus[0] : minus;
+    };
+    this.height = function (minus) {
+      html.classList.add('layer--height');
+      html.mheight = minus instanceof jQuery ? minus[0] : minus;
+    };
+    this.body = function (js) {
+      return js ? body : $(body);
+    };
+    this.render = function (js) {
+      return js ? html : $(html);
+    };
+    this.clear = function () {
+      body.innerHTML = '';
+    };
+    this.params = function () {
+      return params;
+    };
+    this.reset = function () {
+      body.style['-webkit-transform'] = 'translate3d(0px, 0px, 0px)';
+      scroll_position = 0;
+    };
+    this.destroy = function () {
+      html.remove();
+    };
+  }
+
+  var philipse = {
+    play: typeof VK_PLAY !== 'undefined' ? VK_PLAY : typeof KEYCODE_MEDIA_PLAY !== 'undefined' ? KEYCODE_MEDIA_PLAY : -1,
+    stop: typeof VK_STOP !== 'undefined' ? VK_STOP : typeof KEYCODE_MEDIA_STOP !== 'undefined' ? KEYCODE_MEDIA_STOP : -1,
+    pause: typeof VK_PAUSE !== 'undefined' ? VK_PAUSE : typeof KEYCODE_MEDIA_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PAUSE : -1,
+    play_pause: typeof VK_PLAY_PAUSE !== 'undefined' ? VK_PLAY_PAUSE : typeof KEYCODE_MEDIA_PLAY_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PLAY_PAUSE : -1
+  };
+  var enabled$2 = false;
+  var listener$j = start$6();
+  var time$2 = 0;
+  var lastdown = 0;
+  var timer$7;
+  var longpress;
+  var keydown = false;
+  var canianimate = typeof requestAnimationFrame !== 'undefined';
+  var frame_time = 0;
+  function toggle$b(new_status) {
+    enabled$2 = new_status;
+    listener$j.send('toggle', {
+      status: enabled$2
+    });
+  }
+  function enable$1() {
+    toggle$b(true);
+  }
+  function disable() {
+    toggle$b(false);
+  }
+  function isEnter(keycode) {
+    return keycode == 13 || keycode == 29443 || keycode == 117 || keycode == 65385;
+  }
+  function keyCode(e) {
+    var keycode;
+    if (window.event) {
+      keycode = e.keyCode;
+    } else if (e.which) {
+      keycode = e.which;
+    }
+    return keycode;
+  }
+  function requestFrame() {
+    keydownTrigger(keydown);
+    keydown = false;
+    frame_time = Date.now();
+  }
+  function keydownTrigger(e) {
+    var keycode = keyCode(e);
+    if (time$2 > Date.now() - 100) return;
+    time$2 = Date.now();
+    listener$j.send('keydown', {
+      code: keycode,
+      enabled: enabled$2,
+      event: e
+    });
+    if (e.defaultPrevented) return;
+    if (isEnter(keycode)) return;
+    if (!enabled$2) return; //отключить все
+
+    //4 - Samsung orsay
+    if (keycode == 37 || keycode == 4) {
+      Controller.move('left');
+    }
+    //29460 - Samsung orsay
+    if (keycode == 38 || keycode == 29460) {
+      Controller.move('up');
+    }
+    //5 - Samsung orsay
+    if (keycode == 39 || keycode == 5) {
+      Controller.move('right');
+    }
+    //5 - Samsung orsay
+    //29461 - Samsung orsay
+    if (keycode == 40 || keycode == 29461) {
+      Controller.move('down');
+    }
+    //33 - LG; 427 - Samsung
+    if (keycode == 33 || keycode == 427) {
+      Controller.move('toup');
+    }
+    //34 - LG; 428 - Samsung
+    if (keycode == 34 || keycode == 428) {
+      Controller.move('todown');
+    }
+
+    //Space
+    //10252 - Samsung tizen
+    if (keycode == 32 || keycode == 179 || keycode == 10252 || keycode == philipse.play_pause) {
+      Controller.trigger('playpause');
+    }
+
+    //Samsung media
+    //71 - Samsung orsay
+    if (keycode == 415 || keycode == 71 || keycode == philipse.play) {
+      Controller.trigger('play');
+    }
+
+    //Samsung stop
+    //70 - Samsung orsay
+    if (keycode == 413 || keycode == philipse.stop || keycode == 70) {
+      Controller.trigger('stop');
+    }
+
+    //69 - Samsung orsay
+    if (keycode == 412 || keycode == 69 || keycode == 177) {
+      Controller.trigger('rewindBack');
+    }
+
+    //72 - Samsung orsay
+    if (keycode == 418 || keycode == 417 || keycode == 72 || keycode == 176) {
+      Controller.trigger('rewindForward');
+    }
+
+    //74 - Samsung orsay
+    if (keycode == 19 || keycode == 74 || keycode == philipse.pause) {
+      Controller.trigger('pause');
+    }
+    if (keycode == 457) {
+      Controller.trigger('info');
+    }
+
+    //E-Manual
+    if (keycode == 10146) {
+      e.preventDefault();
+    }
+    if (keycode == 10133) {
+      Controller.toggle('settings');
+    }
+
+    //Кнопка назад
+    //8 - браузер
+    //27
+    //461 - LG
+    //10009 - Samsung
+    //88 - Samsung orsay
+    if (keycode == 8 || keycode == 27 || keycode == 461 || keycode == 10009 || keycode == 88) {
+      e.preventDefault();
+      if (window.appready) Activity$1.back();
+      return false;
+    }
+    //Exit orsay
+    if (keycode == 45) {
+      Orsay.exit();
+    }
+    //Кнопка pre-ch вызывает окно смены адреса в Loader
+    //259 - Samsung orsay
+    if (keycode == 259) {
+      if (Orsay.isNewWidget()) {
+        Orsay.changeLoaderUrl();
+      }
+    }
+    e.preventDefault();
+  }
+  function init$A() {
+    window.addEventListener("keydown", function (e) {
+      lastdown = keyCode(e);
+      if (!timer$7) {
+        timer$7 = setTimeout(function () {
+          if (isEnter(lastdown)) {
+            longpress = true;
+            listener$j.send('longdown', {});
+            Controller["long"]();
+          }
+        }, 800);
+      }
+    });
+    window.addEventListener("keyup", function (e) {
+      clearTimeout(timer$7);
+      time$2 = 0;
+      timer$7 = null;
+      listener$j.send('keyup', {
+        code: keyCode(e),
+        enabled: enabled$2,
+        event: e
+      });
+      if (!longpress) {
+        if (isEnter(keyCode(e)) && !e.defaultPrevented) Controller.enter();
+      } else longpress = false;
+    });
+    window.addEventListener("keydown", function (e) {
+      if (canianimate) {
+        var cannow = Date.now() - frame_time > 500;
+        var presed = keydown;
+        keydown = e;
+        if (presed === false) {
+          if (cannow) requestFrame();else requestAnimationFrame(requestFrame);
+        }
+      } else {
+        keydownTrigger(e);
+      }
+    });
+  }
+  var Keypad = {
+    listener: listener$j,
+    init: init$A,
+    enable: enable$1,
+    disable: disable
+  };
+
+  var keydown_time = 0;
+  var move_time = 0;
+  var touch = false;
+  function init$z() {
+    Keypad.listener.follow('keydown', function () {
+      keydown_time = Date.now();
+      move_time = 0;
+    });
+    $(window).on('mousemove', function (e) {
+      move_time = Date.now();
+    }).on('touchstart', function () {
+      touch = true;
+    });
+    detect$9();
+  }
+  function showModal$1(text, onselect) {
+    var controller = Controller.enabled().name;
+    Modal.open({
+      title: '',
+      align: 'center',
+      zIndex: 300,
+      html: $('<div class="about">' + text + '</div>'),
+      buttons: [{
+        name: Lang.translate('settings_param_no'),
+        onSelect: function onSelect() {
+          Modal.close();
+          Controller.toggle(controller);
+        }
+      }, {
+        name: Lang.translate('settings_param_yes'),
+        onSelect: onselect
+      }]
+    });
+  }
+  function detect$9() {
+    var show_touch, show_mouse, show_remote;
+    $(document).on('touchstart', function (e) {
+      if ($('.modal').length || show_touch) return;
+      if (!Storage.get('is_true_mobile', 'false') && Platform.screen('tv')) {
+        show_touch = true;
+        showModal$1(Lang.translate('input_detection_touch'), function () {
+          Storage.set('is_true_mobile', 'true');
+          window.location.reload();
+        });
+      }
+    }).on('click', function (e) {
+      if ($('.modal').length || show_mouse || !canClick(e.originalEvent)) return;
+      if (Storage.field('navigation_type') !== 'mouse' && Platform.screen('tv')) {
+        show_mouse = true;
+        showModal$1(Lang.translate('input_detection_mouse'), function () {
+          Storage.set('navigation_type', 'mouse');
+          window.location.reload();
+        });
+      }
+    });
+    Keypad.listener.follow('keydown', function () {
+      if ($('.modal').length || show_remote || document.activeElement.tagName == 'INPUT') return;
+      if (Storage.get('is_true_mobile', 'false')) {
+        show_remote = true;
+        showModal$1(Lang.translate('input_detection_remote'), function () {
+          Storage.set('is_true_mobile', 'false');
+          window.location.reload();
+        });
+      }
+    });
+  }
+  function canClick(e) {
+    //Noty.show('pointerType: ' + e.pointerType + '; type: ' + e.type + '; isTrusted: ' + e.isTrusted)
+
+    if (e && e.custom_trigger) return true;
+    return Date.now() - keydown_time < 500 ? false : touch || Platform.is('browser') || Platform.tv() || Platform.desktop() || Date.now() - move_time < 500;
+  }
+  var DeviceInput = {
+    init: init$z,
+    canClick: canClick
+  };
+
+  function HeadBackward (title, use_js) {
+    var head = Template$1[use_js ? 'js' : 'get']('head_backward', {
+      title: title
+    });
+    if (use_js) {
+      head.querySelector('.head-backward__button').addEventListener('click', function () {
+        window.history.back();
+      });
+      head.querySelector('.head-backward__title').innerText = title;
+    } else {
+      head.find('.head-backward__button').on('click', function () {
+        window.history.back();
+      });
+    }
+    return head;
+  }
+
+  var html$i, active$5, _scroll, last$4;
+  function open$5(params) {
+    active$5 = params;
+    html$i = Template$1.get('modal', {
+      title: params.title
+    });
+    html$i.on('click', function (e) {
+      if (!$(e.target).closest($('.modal__content', html$i)).length && DeviceInput.canClick(e.originalEvent)) window.history.back();
+    });
+    title$1(params.title);
+    html$i.toggleClass('modal--medium', params.size == 'medium' ? true : false);
+    html$i.toggleClass('modal--large', params.size == 'large' ? true : false);
+    html$i.toggleClass('modal--full', params.size == 'full' ? true : false);
+    html$i.toggleClass('modal--overlay', params.overlay ? true : false);
+    html$i.toggleClass('modal--align-center', params.align == 'center' ? true : false);
+    if (params.zIndex) html$i.css('z-index', params.zIndex);
+    _scroll = new create$q({
+      over: true,
+      mask: params.mask
+    });
+    _scroll.render().toggleClass('layer--height', params.size == 'full' ? true : false);
+    html$i.find('.modal__body').append(_scroll.render());
+    if (Platform.screen('mobile') && params.size !== 'full') {
+      var close_button = $("<div class=\"modal__close-button\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect x=\"3.51477\" y=\"0.686279\" width=\"28\" height=\"4\" rx=\"2\" transform=\"rotate(45 3.51477 0.686279)\" fill=\"currentColor\"/>\n            <rect width=\"28\" height=\"4\" rx=\"2\" transform=\"matrix(-0.707107 0.707107 0.707107 0.707107 20.4854 0.686279)\" fill=\"currentColor\"/>\n            </svg>\n        </div>");
+      close_button.on('click', function () {
+        window.history.back();
+      });
+      html$i.find('.modal__content').prepend(close_button);
+    }
+    bind$3(params.html);
+    _scroll.onWheel = function (step) {
+      roll(step > 0 ? 'down' : 'up');
+    };
+    if (params.size == 'full' && Platform.screen('mobile')) {
+      _scroll.append(HeadBackward(params.title || ''));
+    }
+    _scroll.append(params.html);
+    if (params.buttons) buttons();
+    $('body').append(html$i);
+    max();
+    toggle$a(params.select);
+  }
+  function max() {
+    _scroll.render().find('.scroll__content').css('max-height', Math.round(window.innerHeight - _scroll.render().offset().top - window.innerHeight * 0.1) + 'px');
+  }
+  function buttons() {
+    var footer = $('<div class="modal__footer"></div>');
+    active$5.buttons.forEach(function (button) {
+      var btn = $('<div class="modal__button selector"></div>');
+      btn.text(button.name);
+      btn.on('click hover:enter', function () {
+        button.onSelect();
+      });
+      footer.append(btn);
+    });
+    _scroll.append(footer);
+  }
+  function bind$3(where) {
+    where.find('.selector').on('hover:focus', function (e) {
+      last$4 = e.target;
+      _scroll.update($(e.target));
+    }).on('hover:enter', function (e) {
+      last$4 = e.target;
+      if (active$5.onSelect) active$5.onSelect($(e.target));
+    });
+  }
+  function jump(tofoward) {
+    var select = _scroll.render().find('.selector.focus');
+    if (tofoward) select = select.nextAll().filter('.selector');else select = select.prevAll().filter('.selector');
+    select = select.slice(0, 10);
+    select = select.last();
+    if (select.length) {
+      Controller.collectionFocus(select[0], _scroll.render());
+    }
+  }
+  function roll(direction) {
+    var select = _scroll.render().find('.selector');
+    if (select.length) {
+      Navigator.move(direction);
+    } else {
+      var step = Math.round(window.innerHeight * 0.15);
+      _scroll.wheel(direction == 'down' ? step : -step);
+    }
+  }
+  function toggle$a(need_select) {
+    Controller.add('modal', {
+      invisible: true,
+      toggle: function toggle() {
+        Controller.collectionSet(_scroll.render());
+        Controller.collectionFocus(need_select || last$4, _scroll.render());
+        Layer.visible(_scroll.render(true));
+      },
+      up: function up() {
+        roll('up');
+      },
+      down: function down() {
+        roll('down');
+      },
+      right: function right() {
+        if (Navigator.canmove('right')) Navigator.move('right');else jump(true);
+      },
+      left: function left() {
+        if (Navigator.canmove('left')) Navigator.move('left');else jump(false);
+      },
+      back: function back() {
+        if (active$5.onBack) active$5.onBack();
+      }
+    });
+    Controller.toggle('modal');
+  }
+  function update$a(new_html) {
+    last$4 = false;
+    _scroll.clear();
+    _scroll.append(new_html);
+    bind$3(new_html);
+    max();
+    toggle$a(active$5.select);
+  }
+  function title$1(tit) {
+    html$i.find('.modal__title').text(tit);
+    html$i.toggleClass('modal--empty-title', tit ? false : true);
+  }
+  function destroy$8() {
+    last$4 = false;
+    _scroll.destroy();
+    html$i.remove();
+  }
+  function close$6() {
+    destroy$8();
+  }
+  function render$f() {
+    return html$i;
+  }
+  var Modal = {
+    open: open$5,
+    close: close$6,
+    update: update$a,
+    title: title$1,
+    toggle: toggle$a,
+    render: render$f,
+    scroll: function scroll() {
+      return _scroll;
+    }
+  };
+
+  function init$y() {
     var agent = navigator.userAgent.toLowerCase();
     if (typeof webOS !== 'undefined' && webOS.platform.tv === true) {
       Storage.set('platform', 'webos');
@@ -3097,6 +3972,8 @@
       Storage.set('platform', 'android');
     } else if (agent.indexOf("whaletv") > -1 || agent.indexOf("philips") > -1 || agent.indexOf("nettv") > -1) {
       Storage.set('platform', 'philips');
+    } else if (agent.indexOf("ipad") > -1 && window.innerWidth == 1920 && window.innerHeight == 1080) {
+      Storage.set('platform', 'apple_tv');
     } else if (agent.indexOf("iphone") > -1 || agent.indexOf("mac os") > -1 && Utils$2.isTouchDevice() || agent.indexOf("macintosh") > -1 && Utils$2.isTouchDevice()) {
       Storage.set('platform', 'apple');
     } else if (typeof nw !== 'undefined') {
@@ -3140,7 +4017,7 @@
    * @returns Boolean
    */
   function any() {
-    return is('tizen') || is('webos') || is('android') || is('netcast') || is('orsay') || is('apple') || desktop() ? true : false;
+    return is('tizen') || is('webos') || is('android') || is('netcast') || is('orsay') || is('apple') || is('apple_tv') || desktop() ? true : false;
   }
 
   /**
@@ -3148,7 +4025,7 @@
    * @returns Boolean
    */
   function tv() {
-    return is('tizen') || is('webos') || is('orsay') || is('netcast') ? true : false;
+    return is('tizen') || is('webos') || is('orsay') || is('netcast') || is('apple_tv') ? true : false;
   }
 
   /**
@@ -3173,36 +4050,55 @@
     if (need == 'light') {
       return Storage.field('light_version') && screen('tv');
     }
-    if (need == 'tv') {
-      if (Boolean(navigator.userAgent.toLowerCase().match(/iphone|ipad/i))) return false;else if (tv()) return true;else if (Utils$2.isTouchDevice()) {
-        if (Boolean(navigator.userAgent.toLowerCase().match(/(large screen)|googletv|mibox|mitv|smarttv|google tv/i))) return true;else {
+    var is_tv = true;
+    if (!tv()) {
+      if (Storage.get('is_true_mobile', 'false')) is_tv = false;else if (Boolean(Storage.get('platform', '') == 'apple')) is_tv = false;else if (Boolean(navigator.userAgent.toLowerCase().match(/iphone|ipad/i))) is_tv = false;else if (Utils$2.isTouchDevice()) {
+        if (!Boolean(navigator.userAgent.toLowerCase().match(/(large screen)|googletv|mibox|mitv|smarttv|google tv/i))) {
           var ratio = window.devicePixelRatio || 1;
           var width = window.innerWidth * ratio;
           var height = window.innerHeight * ratio;
-          if (width > height && width >= 1280) {
-            return Storage.get('is_true_mobile', 'false') ? false : true;
-          }
+          is_tv = width > height && width >= 1280;
         }
-      } else return true;
+      }
     }
-    if (need == 'mobile') {
-      return Utils$2.isTouchDevice() && window.innerHeight > window.innerWidth || Storage.get('is_true_mobile', 'false') || Boolean(Storage.get('platform', '') == 'apple');
-    }
+    if (need == 'tv') return is_tv;
+    if (need == 'mobile') return !is_tv;
     return false;
   }
+  function install$2(what) {
+    var about = Template$1.get('about');
+    if ($('.modal').length) Modal.close();
+    if (what == 'apk') {
+      $('> div:eq(0)', about).html(Lang.translate('install_app_apk_text'));
+      $('.about__contacts', about).empty();
+      $('.about__rules', about).remove();
+      $('.about__contacts', about).append("\n            <div>\n                <small>Telegram</small><br>\n                @lampa_android\n            </div>\n        ");
+      $('.about__contacts', about).append("\n            <div>\n                <small>".concat(Lang.translate('settings_parser_jackett_link'), "</small><br>\n                <a href=\"https://").concat(object$2.cub_domain, "/download/lampa.apk\" target=\"_blank\" style=\"color: inherit; text-decoration: none;\">https://").concat(object$2.cub_domain, "/download/lampa.apk</a>\n            </div>\n        "));
+      Modal.open({
+        title: '',
+        html: about,
+        size: 'medium',
+        onBack: function onBack() {
+          Modal.close();
+          Controller.toggle('content');
+        }
+      });
+    }
+  }
   var Platform = {
-    init: init$x,
+    init: init$y,
     get: get$d,
     any: any,
     is: is,
     tv: tv,
     desktop: desktop,
     version: version,
-    screen: screen
+    screen: screen,
+    install: install$2
   };
 
-  function create$q() {
-    var listener = start$5();
+  function create$p() {
+    var listener = start$6();
     var _calls = [];
     var _last;
     var last_reguest;
@@ -3479,7 +4375,7 @@
         beforeSend: function beforeSend(xhr) {
           var use = Storage.field('torrserver_auth');
           var srv = Storage.get(Storage.field('torrserver_use_link') == 'two' ? 'torrserver_url_two' : 'torrserver_url');
-          if (use && params.url.indexOf(srv) >= 0) {
+          if (use && srv && params.url.indexOf(srv) >= 0) {
             var authorization = "Basic " + Base64.encode(Storage.get('torrserver_login') + ':' + Storage.get('torrserver_password'));
             console.log('Request', 'authorization:', authorization);
             xhr.setRequestHeader("Authorization", authorization);
@@ -3549,408 +4445,6 @@
     }
   }
 
-  var timer$8;
-  var need_update = false;
-  var need_visible = false;
-  var canianimate$1 = typeof requestAnimationFrame !== 'undefined';
-  function init$w() {
-    $(window).on('resize', function () {
-      clearTimeout(timer$8);
-      timer$8 = setTimeout(function () {
-        toggleMobile();
-        toggleOrientation();
-        size$1();
-        update$a();
-      }, 100);
-    });
-    var follow = ['animation', 'mask', 'card_interfice_poster', 'glass_style', 'black_style', 'glass_opacity', 'card_interfice_cover'];
-    Storage.listener.follow('change', function (event) {
-      if (event.name == 'interface_size') {
-        size$1();
-        update$a();
-      }
-      if (follow.indexOf(event.name) >= 0) toggleClasses();
-    });
-    toggleClasses();
-    toggleMobile();
-    toggleOrientation();
-    size$1();
-    setTimeout(blick, 5000);
-    if (Platform.tv() || Platform.desktop()) mouseEvents();
-  }
-  function toggleMobile() {
-    $('body').toggleClass('true--mobile', Platform.screen('mobile'));
-  }
-  function toggleOrientation() {
-    $('body').removeClass('orientation--portrait orientation--landscape').addClass('orientation--' + (window.innerWidth > window.innerHeight && window.innerHeight < 768 ? 'landscape' : 'portrait'));
-  }
-  function mouseEvents() {
-    var body = $('body');
-    var mouse_timer_cursor;
-    $(window).on('mousemove', function () {
-      clearTimeout(mouse_timer_cursor);
-      mouse_timer_cursor = setTimeout(function () {
-        body.toggleClass('no--cursor', true);
-      }, 3000);
-      body.toggleClass('no--cursor', false);
-    });
-  }
-  function size$1() {
-    var sl = Storage.field('interface_size');
-    var sz = {
-      normal: 1,
-      small: 0.9,
-      bigger: 1.05
-    };
-    var fs = sz[sl];
-    $('body').css({
-      fontSize: Math.max(window.innerWidth / 84.17 * fs, 10.6) + 'px'
-    }).removeClass('size--small size--normal size--bigger').addClass('size--' + sl);
-  }
-  function blick() {
-    $('.icon--blink').not('.ready').each(function () {
-      var elem = $(this),
-        time = parseInt(elem.data('blink-interval') || 3) * 1000;
-      elem.addClass('ready');
-      setInterval(function () {
-        elem.addClass('animate');
-        setTimeout(function () {
-          elem.removeClass('animate');
-        }, 1000);
-      }, time);
-    });
-  }
-  function frameUpdate(render) {
-    var where = render || document.body;
-    var target = where instanceof jQuery ? where[0] : where;
-    var landscape = window.innerWidth > window.innerHeight && window.innerHeight < 768;
-    var wrap = document.querySelector('.wrap__left');
-    var head = document.querySelector('.head');
-    var navi = document.querySelector('.navigation-bar');
-    var menu_left = wrap ? wrap.getBoundingClientRect().left : 0;
-    var menu_width = wrap ? wrap.getBoundingClientRect().width : 0;
-    var head_height = head ? head.getBoundingClientRect().height : 0;
-    var navi_height = navi && !landscape ? navi.getBoundingClientRect().height : 0;
-    var navi_width = navi && landscape ? navi.getBoundingClientRect().width : 0;
-    var layer_width = Array.from(target.querySelectorAll('.layer--width'));
-    var layer_height = Array.from(target.querySelectorAll('.layer--height'));
-    var layer_wheight = Array.from(target.querySelectorAll('.layer--wheight'));
-    if (target.classList.contains('layer--width')) layer_width.push(target);
-    if (target.classList.contains('layer--height')) layer_height.push(target);
-    if (target.classList.contains('layer--wheight')) layer_wheight.push(target);
-    for (var i = 0; i < layer_width.length; i++) {
-      var elem = layer_width[i],
-        read = parseFloat(elem.style.width),
-        widh = window.innerWidth - (Platform.screen('light') && menu_left == 0 ? menu_width : 0) - navi_width;
-      if (read !== widh) layer_width[i].style.width = widh;
-    }
-    for (var _i = 0; _i < layer_wheight.length; _i++) {
-      var _elem = layer_wheight[_i],
-        heig = window.innerHeight - head_height - navi_height,
-        attr = _elem.mheight,
-        _read = parseFloat(_elem.style.height);
-      if (attr) {
-        heig -= attr.getBoundingClientRect().height;
-      }
-      if (_read !== heig) _elem.style.height = heig;
-    }
-    for (var _i2 = 0; _i2 < layer_height.length; _i2++) {
-      var _elem2 = layer_height[_i2],
-        _heig = window.innerHeight,
-        _attr = _elem2.mheight,
-        _read2 = parseFloat(_elem2.style.height);
-      if (_attr) {
-        _heig -= _attr.getBoundingClientRect().height;
-      }
-      if (_read2 !== _heig) _elem2.style.height = _heig;
-    }
-  }
-  function intersected(a, b) {
-    return a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
-  }
-  function frameVisible(render) {
-    var active = Lampa.Activity.active();
-    var where = render ? render : active && active.activity ? active.activity.render() : false;
-    var area = 1.5;
-    var hide = Storage.field('hide_outside_the_screen');
-    var v_w = window.innerWidth * area;
-    var v_h = window.innerHeight * area;
-    var m_w = window.innerWidth - v_w;
-    var m_h = window.innerHeight - v_h;
-    if (where) {
-      var target = where instanceof jQuery ? where[0] : where;
-      var elems = [];
-      if (target.classList.contains('layer--visible')) {
-        elems.push({
-          type: 'visible',
-          elem: target
-        });
-      }
-      if (target.classList.contains('layer--render')) {
-        elems.push({
-          type: 'render',
-          elem: target
-        });
-      }
-      elems = elems.concat(Array.from(target.querySelectorAll('.layer--visible')).map(function (elem) {
-        return {
-          type: 'visible',
-          elem: elem
-        };
-      }), Array.from(target.querySelectorAll('.layer--render')).map(function (elem) {
-        return {
-          type: 'render',
-          elem: elem
-        };
-      }));
-      for (var i = 0; i < elems.length; i++) {
-        var item = elems[i];
-        var elem = item.elem;
-        if (item.type == 'visible') {
-          if (!elem.call_visible) {
-            var bond = elem.getBoundingClientRect();
-            if (intersected([m_w, m_h, v_w, v_h], [bond.left, bond.top, bond.left + bond.width, bond.top + bond.height])) {
-              elem.call_visible = true;
-              item.visible = true;
-            }
-          }
-        }
-        if (elem.call_visible) {
-          var _bond = elem.getBoundingClientRect();
-          var view = hide ? intersected([m_w, m_h, v_w, v_h], [_bond.left, _bond.top, _bond.left + _bond.width, _bond.top + _bond.height]) : true;
-          var visibility = view ? 'visible' : 'hidden';
-          if (elem.visibility !== visibility) {
-            if (!elem.visibility && visibility == 'visible') continue;
-            elem.visibility = visibility;
-            item.visibility = visibility;
-          }
-        }
-      }
-      for (var _i3 = 0; _i3 < elems.length; _i3++) {
-        var _item = elems[_i3];
-        var _elem3 = _item.elem;
-        if (_item.type == 'visible') {
-          if (_item.visible) Utils$2.trigger(_elem3, 'visible');
-        }
-        if (_item.visibility) {
-          _elem3.style.visibility = _elem3.visibility;
-        }
-      }
-    }
-  }
-  function toggleClasses() {
-    $('body').toggleClass('no--animation', !Storage.field('animation'));
-    $('body').toggleClass('no--mask', !Storage.field('mask'));
-    $('body').toggleClass('no--poster', !Storage.field('card_interfice_poster'));
-    $('body').toggleClass('glass--style', Storage.field('glass_style'));
-    $('body').toggleClass('black--style', Storage.field('black_style'));
-    $('body').toggleClass('card--no-cover', !Storage.field('card_interfice_cover'));
-    $('body').removeClass('glass--style-opacity--easy glass--style-opacity--medium glass--style-opacity--blacked');
-    if (Storage.field('glass_style')) $('body').addClass('glass--style-opacity--' + Storage.field('glass_opacity'));
-  }
-  function visible(where) {
-    requestFrame$1();
-    need_visible = where;
-    if (!canianimate$1) frameVisible(where);
-  }
-  function update$a(where) {
-    requestFrame$1();
-    need_update = where;
-    if (!canianimate$1) frameUpdate(where);
-  }
-  function requestFrame$1() {
-    if (canianimate$1 && need_update === false && need_visible === false) requestAnimationFrame(updateFrame);
-  }
-  function updateFrame() {
-    if (need_update !== false) frameUpdate(need_update);
-    if (need_visible !== false) frameVisible(need_visible);
-    need_update = false;
-    need_visible = false;
-  }
-  var Layer = {
-    update: update$a,
-    visible: visible,
-    init: init$w
-  };
-
-  function create$p() {
-    var _this = this;
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var _self = this;
-    var html = Template$1.js('scroll');
-    var body = html.querySelector('.scroll__body');
-    var content = html.querySelector('.scroll__content');
-    var caianimate = typeof requestAnimationFrame !== 'undefined';
-    var frame_time = 0;
-    var scroll_position = 0;
-    var scroll_transition = 0;
-    var scroll_time = 0,
-      scroll_step = params.step || 150;
-    var call_update_time = Date.now();
-    var call_transition_time = Date.now();
-    if (params.horizontal) html.classList.toggle('scroll--horizontal', true);
-    if (params.mask) html.classList.toggle('scroll--mask', true);
-    if (params.over) html.classList.toggle('scroll--over', true);
-    if (params.nopadding) html.classList.toggle('scroll--nopadding', true);
-    if (params.notransition) body.classList.toggle('notransition', true);
-    html.addEventListener('mousewheel', function (e) {
-      var parent = $(e.target).parents('.scroll');
-      var inner = onTheRightSide(e, true);
-      if (!params.horizontal && $(html).is(parent[0])) inner = true;
-      if (Storage.field('navigation_type') == 'mouse' && Date.now() - scroll_time > 200 && inner) {
-        scroll_time = Date.now();
-        if (e.wheelDelta / 120 > 0) {
-          if (_this.onWheel) _this.onWheel(-scroll_step);else _this.wheel(-scroll_step);
-        } else {
-          if (_this.onWheel) _this.onWheel(scroll_step);else _this.wheel(scroll_step);
-        }
-      }
-    });
-    html.Scroll = _self;
-    body.addEventListener('webkitTransitionEnd', function () {
-      if (Date.now() - call_transition_time > 400) return;
-
-      //чет на моей карте выходит 180-190, странно, ну да ладно, поставил 150
-      if (Date.now() - call_update_time > 150) scrollEnded();
-    });
-    if (Platform.screen('tv')) {
-      html.addEventListener('scroll', function (e) {
-        html.scrollTop = 0;
-        html.scrollLeft = 0;
-      });
-    } else {
-      html.addEventListener('scroll', scrollEnded);
-    }
-    function onTheRightSide(e) {
-      var inleft = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var offset = content.getBoundingClientRect().left;
-      var width = window.innerWidth - offset;
-      var position = e.clientX - offset;
-      return params.horizontal ? position > width / 2 : inleft ? position < width / 2 : false;
-    }
-    function maxOffset(offset) {
-      var w = params.horizontal ? html.offsetWidth : html.offsetHeight;
-      var p = parseInt(window.getComputedStyle(content, null).getPropertyValue('padding-' + (params.horizontal ? 'left' : 'top')));
-      var s = body[params.horizontal ? 'scrollWidth' : 'scrollHeight'];
-      offset = Math.min(0, offset);
-      offset = Math.max(-(Math.max(s + p * 2, w) - w), offset);
-      return offset;
-    }
-    function scrollEnded() {
-      call_update_time = Date.now();
-      if (_self.onScroll) _self.onScroll(!Platform.screen('tv') ? html[params.horizontal ? 'scrollLeft' : 'scrollTop'] : -scroll_position);else Layer.visible(html);
-      if (_self.onEnd && _self.isEnd()) _self.onEnd();
-    }
-    function scrollTo(scrl) {
-      if (!Platform.screen('tv')) {
-        var object = {};
-        object[params.horizontal ? 'scrollLeft' : 'scrollTop'] = -scrl;
-        $(html).animate(object, 200);
-      } else {
-        if (scroll_transition == false) {
-          scroll_transition = scrl;
-          if (caianimate && Storage.field('animation')) {
-            var cannow = Date.now() - frame_time > 500;
-            if (cannow) animate();else requestAnimationFrame(animate);
-          } else animate();
-        }
-      }
-      scroll_position = scrl;
-    }
-    function animate() {
-      body.style['-webkit-transform'] = 'translate3d(' + Math.round(params.horizontal ? scroll_transition : 0) + 'px, ' + Math.round(params.horizontal ? 0 : scroll_transition) + 'px, 0px)';
-      scroll_transition = false;
-      if (!Storage.field('animation') || Date.now() - call_update_time < 300) scrollEnded();
-      frame_time = Date.now();
-    }
-    function startScroll(scrl) {
-      scrollTo(scrl);
-      call_update_time = Date.now();
-      call_transition_time = Date.now();
-    }
-    this.wheel = function (size) {
-      var direct = params.horizontal ? 'left' : 'top';
-      var scrl = scroll_position,
-        scrl_offset = html.getBoundingClientRect()[direct],
-        scrl_padding = parseInt(window.getComputedStyle(content, null).getPropertyValue('padding-' + direct));
-      if (params.scroll_by_item) {
-        var pos = body.scroll_position;
-        pos = pos || 0;
-        var items = Array.from(body.children);
-        pos += size > 0 ? 1 : -1;
-        pos = Math.max(0, Math.min(items.length - 1, pos));
-        body.scroll_position = pos;
-        var item = items[pos],
-          ofst = item.getBoundingClientRect()[direct];
-        size = ofst - scrl_offset - scrl_padding;
-      }
-      var max = params.horizontal ? 30000 : body.offsetHeight;
-      max -= params.horizontal ? html.offsetWidth : html.offsetHeight;
-      max += scrl_padding * 2;
-      scrl -= size;
-      scrl = Math.min(0, Math.max(-max, scrl));
-      scrl = maxOffset(scrl);
-      startScroll(scrl);
-    };
-    this.update = function (elem, tocenter) {
-      var dir = params.horizontal ? 'left' : 'top',
-        siz = params.horizontal ? 'offsetWidth' : 'offsetHeight';
-      var target = elem instanceof jQuery ? elem[0] : elem;
-      var ofs_elm = target.getBoundingClientRect()[dir],
-        ofs_box = body.getBoundingClientRect()[dir],
-        center = ofs_box + (tocenter ? content[siz] / 2 - target[siz] / 2 : 0),
-        scrl = Math.min(0, center - ofs_elm);
-      scrl = maxOffset(scrl);
-      startScroll(scrl);
-    };
-    this.vieport = function () {
-      var vieport = {};
-      if (!Platform.screen('tv')) {
-        vieport.position = html[params.horizontal ? 'scrollLeft' : 'scrollTop'], vieport.body = body[params.horizontal ? 'scrollWidth' : 'scrollHeight'], vieport.content = html[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
-      } else {
-        vieport.position = scroll_position;
-        vieport.body = body[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
-        vieport.content = html[params.horizontal ? 'offsetWidth' : 'offsetHeight'];
-      }
-      return vieport;
-    };
-    this.isEnd = function (end_ratio) {
-      var vieport = this.vieport();
-      if (vieport.body < vieport.content) return false;
-      return vieport.body - vieport.content * Math.max(1, end_ratio || params.end_ratio || 1) < Math.abs(vieport.position);
-    };
-    this.append = function (object) {
-      body.appendChild(object instanceof jQuery ? object[0] : object);
-    };
-    this.minus = function (minus) {
-      html.classList.add('layer--wheight');
-      html.mheight = minus instanceof jQuery ? minus[0] : minus;
-    };
-    this.height = function (minus) {
-      html.classList.add('layer--height');
-      html.mheight = minus instanceof jQuery ? minus[0] : minus;
-    };
-    this.body = function (js) {
-      return js ? body : $(body);
-    };
-    this.render = function (js) {
-      return js ? html : $(html);
-    };
-    this.clear = function () {
-      body.innerHTML = '';
-    };
-    this.params = function () {
-      return params;
-    };
-    this.reset = function () {
-      body.style['-webkit-transform'] = 'translate3d(0px, 0px, 0px)';
-      scroll_position = 0;
-    };
-    this.destroy = function () {
-      html.remove();
-    };
-  }
-
   var components$2 = {};
   var params$2 = {};
 
@@ -4016,9 +4510,331 @@
     getParam: getParam
   };
 
+  var html$h;
+  var scroll$2;
+  var active$4;
+  function init$x() {
+    html$h = Template$1.get('selectbox');
+    scroll$2 = new create$q({
+      mask: true,
+      over: true
+    });
+    html$h.find('.selectbox__body').append(scroll$2.render());
+    html$h.find('.selectbox__layer').on('click', function (e) {
+      if (DeviceInput.canClick(e.originalEvent)) window.history.back();
+    });
+    $('body').append(html$h);
+  }
+  function bind$2() {
+    scroll$2.clear();
+    html$h.find('.selectbox__title').text(active$4.title);
+    html$h.toggleClass('selectbox--fullsize', active$4.fullsize ? true : false);
+    active$4.items.forEach(function (element) {
+      if (element.hide) return;
+      element.title = Utils$2.capitalizeFirstLetter(element.title || '');
+      if (element.separator) {
+        var _item = $('<div class="settings-param-title"><span>' + element.title + '</span></div>');
+        return scroll$2.append(_item);
+      }
+      var item = Template$1.get(element.template || 'selectbox_item', element);
+      if (!element.subtitle) item.find('.selectbox-item__subtitle').remove();
+      if (element.checkbox) {
+        item.addClass('selectbox-item--checkbox');
+        item.append('<div class="selectbox-item__checkbox"></div>');
+        if (element.checked) item.addClass('selectbox-item--checked');
+      }
+      if (element.ghost) item.css('opacity', 0.5);
+      if (!element.noenter) {
+        var goclose = function goclose() {
+          if (!active$4.nohide) hide$2();else {
+            scroll$2.render().find('.selected').removeClass('selected');
+            item.addClass('selected');
+          }
+          if (element.onSelect) element.onSelect(element, item);else if (active$4.onSelect) active$4.onSelect(element, item);
+        };
+        item.on('hover:enter', function () {
+          if (element.checkbox) {
+            element.checked = !element.checked;
+            item.toggleClass('selectbox-item--checked', element.checked);
+            if (element.onCheck) element.onCheck(element, item);else if (active$4.onCheck) active$4.onCheck(element, item);
+          } else if (active$4.onBeforeClose) {
+            if (active$4.onBeforeClose()) goclose();
+          } else goclose();
+        }).on('hover:focus', function (e) {
+          scroll$2.update($(e.target), true);
+          if (active$4.onFocus) active$4.onFocus(element, e.target);
+        }).on('hover:long', function (e) {
+          if (active$4.onLong) active$4.onLong(element, e.target);
+        });
+      }
+      if (element.selected) item.addClass('selected');
+      if (element.picked) item.addClass('picked');
+      if (active$4.nomark) item.addClass('nomark');
+      if (active$4.onDraw) active$4.onDraw(item, element);
+      scroll$2.append(item);
+    });
+  }
+  function show$8(object) {
+    active$4 = object;
+    bind$2();
+    $('body').toggleClass('selectbox--open', true);
+    html$h.find('.selectbox__body').addClass('layer--wheight').data('mheight', html$h.find('.selectbox__head'));
+    toggle$9();
+  }
+  function toggle$9() {
+    Controller.add('select', {
+      toggle: function toggle() {
+        var selected = scroll$2.render().find('.selected');
+        Controller.collectionSet(html$h);
+        Controller.collectionFocus(selected.length ? selected[0] : false, html$h);
+      },
+      up: function up() {
+        Navigator.move('up');
+      },
+      down: function down() {
+        Navigator.move('down');
+      },
+      left: close$5,
+      back: close$5
+    });
+    Controller.toggle('select');
+  }
+  function hide$2() {
+    $('body').toggleClass('selectbox--open', false);
+  }
+  function close$5() {
+    hide$2();
+    if (active$4.onBack) active$4.onBack();
+  }
+  function render$e() {
+    return html$h;
+  }
+  var Select = {
+    init: init$x,
+    show: show$8,
+    hide: hide$2,
+    close: close$5,
+    render: render$e
+  };
+
+  var IndexedDB = /*#__PURE__*/function () {
+    function IndexedDB(database_name) {
+      var tables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+      var version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
+      _classCallCheck(this, IndexedDB);
+      this.listener = start$6();
+      this.database_name = 'lampa_' + database_name;
+      this.tables = tables;
+      this.version = version;
+      this.db = null;
+      this.logs = true;
+    }
+    _createClass(IndexedDB, [{
+      key: "log",
+      value: function log(err, store_name, key) {
+        if (this.logs) console.log('DB', this.database_name + (store_name ? '_' + store_name : '') + (key ? ' -> [' + key + ']' : ''), err);
+      }
+    }, {
+      key: "openDatabase",
+      value: function openDatabase() {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+          if (!('indexedDB' in window)) return _this.log('Not supported'), reject('Not supported');
+          if (!_this.tables.length) return _this.log('No tables'), reject('No tables');
+          var request = indexedDB.open(_this.database_name, _this.version);
+          request.onerror = function (event) {
+            _this.log(request.error || 'An error occurred while opening the database');
+            reject(request.error || 'An error occurred while opening the database');
+          };
+          request.onsuccess = function (event) {
+            _this.db = event.target.result;
+            resolve();
+          };
+          request.onupgradeneeded = function (event) {
+            var db = event.target.result;
+            _this.log('OnUpgradeNeeded');
+            _this.tables.forEach(function (name) {
+              if (!db.objectStoreNames.contains(name)) {
+                _this.log('Create table - ' + name);
+                db.createObjectStore(name, {
+                  keyPath: 'key'
+                });
+              }
+            });
+          };
+        });
+      }
+    }, {
+      key: "addData",
+      value: function addData(store_name, key, value) {
+        var _this2 = this;
+        return new Promise(function (resolve, reject) {
+          if (!_this2.db) {
+            return _this2.log('Database not open', store_name, key), reject('Database not open');
+          }
+          var transaction = _this2.db.transaction([store_name], 'readwrite');
+          var objectStore = transaction.objectStore(store_name);
+          var addRequest = objectStore.add({
+            key: key,
+            value: value,
+            time: Date.now()
+          });
+          addRequest.onerror = function (event) {
+            _this2.log(addRequest.error || 'An error occurred while adding data', store_name, key);
+            reject(addRequest.error || 'An error occurred while adding data');
+          };
+          addRequest.onsuccess = resolve;
+        });
+      }
+    }, {
+      key: "getData",
+      value: function getData(store_name, key) {
+        var _this3 = this;
+        var life_time = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
+        return new Promise(function (resolve, reject) {
+          if (!_this3.db) {
+            return _this3.log('Database not open', store_name, key), reject('Database not open');
+          }
+          var transaction = _this3.db.transaction([store_name], 'readonly');
+          var objectStore = transaction.objectStore(store_name);
+          var getRequest = key ? objectStore.get(key) : objectStore.getAll();
+          getRequest.onerror = function (event) {
+            _this3.log(getRequest.error || 'An error occurred while retrieving data', store_name, key);
+            reject(getRequest.error || 'An error occurred while retrieving data');
+          };
+          getRequest.onsuccess = function (event) {
+            var result = event.target.result;
+            if (result) {
+              if (key) {
+                if (life_time == -1) resolve(result.value);else {
+                  if (Date.now() < result.time + life_time * 1000 * 60) resolve(result.value);else resolve(null);
+                }
+              } else resolve(result.map(function (r) {
+                return r.value;
+              }));
+            } else {
+              resolve(null);
+            }
+          };
+        });
+      }
+    }, {
+      key: "getDataAnyCase",
+      value: function getDataAnyCase(store_name, key, life_time) {
+        var _this4 = this;
+        return new Promise(function (resolve, reject) {
+          _this4.getData(store_name, key, life_time).then(resolve)["catch"](function () {
+            resolve(null);
+          });
+        });
+      }
+    }, {
+      key: "updateData",
+      value: function updateData(store_name, key, value) {
+        var _this5 = this;
+        return new Promise(function (resolve, reject) {
+          if (!_this5.db) {
+            return _this5.log('Database not open', store_name, key), reject('Database not open');
+          }
+          var transaction = _this5.db.transaction([store_name], 'readwrite');
+          var objectStore = transaction.objectStore(store_name);
+          var getRequest = objectStore.get(key);
+          getRequest.onerror = function (event) {
+            _this5.log(getRequest.error || 'An error occurred while updating data', store_name, key);
+            reject(getRequest.error || 'An error occurred while updating data');
+          };
+          getRequest.onsuccess = function (event) {
+            var result = event.target.result;
+            if (result) {
+              result.value = value;
+              result.time = Date.now();
+              var updateRequest = objectStore.put(result);
+              updateRequest.onerror = function (event) {
+                _this5.log(updateRequest.error || 'An error occurred while updating data', store_name, key);
+                reject(updateRequest.error || 'An error occurred while updating data');
+              };
+              updateRequest.onsuccess = resolve;
+            } else {
+              _this5.log('No data found with the given key', store_name, key);
+              reject('No data found with the given key');
+            }
+          };
+        });
+      }
+    }, {
+      key: "rewriteData",
+      value: function rewriteData(store_name, key, value) {
+        var _this6 = this;
+        return new Promise(function (resolve, reject) {
+          _this6.getData(store_name, key).then(function (ready) {
+            return ready ? _this6.updateData(store_name, key, value) : _this6.addData(store_name, key, value);
+          }).then(resolve)["catch"](reject);
+        });
+      }
+    }, {
+      key: "deleteData",
+      value: function deleteData(store_name, key) {
+        var _this7 = this;
+        return new Promise(function (resolve, reject) {
+          if (!_this7.db) {
+            return _this7.log('Database not open', store_name, key), reject('Database not open');
+          }
+          var transaction = _this7.db.transaction([store_name], 'readwrite');
+          var objectStore = transaction.objectStore(store_name);
+          var deleteRequest = objectStore["delete"](key);
+          deleteRequest.onerror = function (event) {
+            _this7.log(deleteRequest.error || 'An error occurred while deleting data', store_name, key);
+            reject(deleteRequest.error || 'An error occurred while deleting data');
+          };
+          deleteRequest.onsuccess = resolve;
+        });
+      }
+    }, {
+      key: "clearTable",
+      value: function clearTable(store_name) {
+        var _this8 = this;
+        return new Promise(function (resolve, reject) {
+          if (!_this8.db) {
+            return _this8.log('Database not open', store_name), reject('Database not open');
+          }
+          var transaction = _this8.db.transaction([store_name], 'readwrite');
+          var objectStore = transaction.objectStore(store_name);
+          var clearRequest = objectStore.clear();
+          clearRequest.onerror = function (event) {
+            _this8.log(clearRequest.error || 'An error occurred while clearing the table', store_name);
+            reject(clearRequest.error || 'An error occurred while clearing the table');
+          };
+          clearRequest.onsuccess = function () {
+            resolve();
+          };
+        });
+      }
+    }, {
+      key: "clearAll",
+      value: function clearAll() {
+        var _this9 = this;
+        return new Promise(function (resolve, reject) {
+          if (!_this9.db) {
+            return _this9.log('Database not open'), reject('Database not open');
+          }
+          var objectStoreNames = _this9.db.objectStoreNames;
+          var tableNames = Array.from(objectStoreNames);
+          tableNames.forEach(function (n) {
+            _this9.clearTable(n);
+          });
+          resolve();
+        });
+      }
+    }]);
+    return IndexedDB;
+  }();
+
+  var Cache = new IndexedDB('cache', ['screensavers', 'plugins', 'backgrounds', 'images', 'themes', 'other', 'timetable'], 5);
+  Cache.openDatabase();
+
   function Component$1(name) {
     var component_params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var scrl = new create$p({
+    var scrl = new create$q({
       mask: true,
       over: true,
       step: 200
@@ -4053,12 +4869,38 @@
       }
       if (!window.lampa_settings.lang_use) comp.find('[data-name="light_version"]').prev().remove();
       scrl.render().find('.scroll__content').addClass('layer--wheight').data('mheight', $('.settings__head'));
-      comp.find('.clear-storage').on('hover:enter', function () {
-        Noty.show(Lang.translate('settings_clear_cache'));
-        localStorage.clear();
-        setTimeout(function () {
-          window.location.reload();
-        }, 1000);
+      var clear = comp.find('.clear-storage');
+      clear.on('hover:enter', function () {
+        var controller = Controller.enabled().name;
+        var status = clear.find('.settings-param__descr');
+        Select.show({
+          title: Lang.translate('settings_rest_cache'),
+          items: [{
+            title: Lang.translate('settings_rest_cache_calculate'),
+            calculate: true
+          }, {
+            title: Lang.translate('settings_rest_cache_only'),
+            subtitle: Lang.translate('settings_rest_cache_only_descr')
+          }, {
+            title: Lang.translate('settings_rest_cache_all'),
+            subtitle: Lang.translate('settings_rest_cache_all_descr'),
+            full: true
+          }],
+          onSelect: function onSelect(a) {
+            Controller.toggle(controller);
+            if (a.calculate) {
+              Storage.getsize(function (size) {
+                status.text(Lang.translate('title_left') + ' - ' + Lampa.Utils.bytesToSize(size));
+              });
+            } else {
+              Storage.clear(a.full);
+              Cache.clearAll();
+            }
+          },
+          onBack: function onBack() {
+            Controller.toggle(controller);
+          }
+        });
       });
       Params.bind(comp.find('.selector'), comp);
       Params.listener.follow('update_scroll', updateScroll);
@@ -4092,7 +4934,7 @@
             item = $("<div class=\"settings-param selector\" data-static=\"true\">\n                        <div class=\"settings-param__name\">".concat(data.field.name, "</div>\n                    </div>"));
           }
           if (data.param.type == 'button') {
-            item = $("<div class=\"settings-param selector\" data-name=\"".concat(data.param.name, "\" data-static=\"true\" data-type=\"button\">\n                        <div class=\"settings-param__name\">").concat(data.field.name, "</div>\n                    </div>"));
+            item = $("<div class=\"settings-param selector settings-param--button\" data-name=\"".concat(data.param.name, "\" data-static=\"true\" data-type=\"button\">\n                        <div class=\"settings-param__name\">").concat(data.field.name, "</div>\n                    </div>"));
           }
           if (item) {
             if (data.field.description) item.append("<div class=\"settings-param__descr\">".concat(data.field.description, "</div>"));
@@ -4126,7 +4968,7 @@
           scrl.destroy();
           comp.remove();
           Params.listener.remove('update_scroll', updateScroll);
-          Controller.toggle('settings');
+          if (component_params.onBack) component_params.onBack();else Controller.toggle('settings');
         }
       });
     }
@@ -4155,7 +4997,7 @@
   function Main$1() {
     var _this = this;
     var comp;
-    var scrl = new create$p({
+    var scrl = new create$q({
       mask: true,
       over: true,
       step: 200
@@ -4219,455 +5061,19 @@
     };
   }
 
-  var philipse = {
-    play: typeof VK_PLAY !== 'undefined' ? VK_PLAY : typeof KEYCODE_MEDIA_PLAY !== 'undefined' ? KEYCODE_MEDIA_PLAY : -1,
-    stop: typeof VK_STOP !== 'undefined' ? VK_STOP : typeof KEYCODE_MEDIA_STOP !== 'undefined' ? KEYCODE_MEDIA_STOP : -1,
-    pause: typeof VK_PAUSE !== 'undefined' ? VK_PAUSE : typeof KEYCODE_MEDIA_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PAUSE : -1,
-    play_pause: typeof VK_PLAY_PAUSE !== 'undefined' ? VK_PLAY_PAUSE : typeof KEYCODE_MEDIA_PLAY_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PLAY_PAUSE : -1
-  };
-  var enabled$1 = false;
-  var listener$i = start$5();
-  var time$2 = 0;
-  var lastdown = 0;
-  var timer$7;
-  var longpress;
-  var keydown = false;
-  var canianimate = typeof requestAnimationFrame !== 'undefined';
-  var frame_time = 0;
-  function toggle$a(new_status) {
-    enabled$1 = new_status;
-    listener$i.send('toggle', {
-      status: enabled$1
-    });
-  }
-  function enable$1() {
-    toggle$a(true);
-  }
-  function disable() {
-    toggle$a(false);
-  }
-  function isEnter(keycode) {
-    return keycode == 13 || keycode == 29443 || keycode == 117 || keycode == 65385;
-  }
-  function keyCode(e) {
-    var keycode;
-    if (window.event) {
-      keycode = e.keyCode;
-    } else if (e.which) {
-      keycode = e.which;
-    }
-    return keycode;
-  }
-  function requestFrame() {
-    keydownTrigger(keydown);
-    keydown = false;
-    frame_time = Date.now();
-  }
-  function keydownTrigger(e) {
-    var keycode = keyCode(e);
-    if (time$2 > Date.now() - 100) return;
-    time$2 = Date.now();
-    listener$i.send('keydown', {
-      code: keycode,
-      enabled: enabled$1,
-      event: e
-    });
-    if (e.defaultPrevented) return;
-    if (isEnter(keycode)) return;
-    if (!enabled$1) return; //отключить все
-
-    //4 - Samsung orsay
-    if (keycode == 37 || keycode == 4) {
-      Controller.move('left');
-    }
-    //29460 - Samsung orsay
-    if (keycode == 38 || keycode == 29460) {
-      Controller.move('up');
-    }
-    //5 - Samsung orsay
-    if (keycode == 39 || keycode == 5) {
-      Controller.move('right');
-    }
-    //5 - Samsung orsay
-    //29461 - Samsung orsay
-    if (keycode == 40 || keycode == 29461) {
-      Controller.move('down');
-    }
-    //33 - LG; 427 - Samsung
-    if (keycode == 33 || keycode == 427) {
-      Controller.move('toup');
-    }
-    //34 - LG; 428 - Samsung
-    if (keycode == 34 || keycode == 428) {
-      Controller.move('todown');
-    }
-
-    //Space
-    //10252 - Samsung tizen
-    if (keycode == 32 || keycode == 179 || keycode == 10252 || keycode == philipse.play_pause) {
-      Controller.trigger('playpause');
-    }
-
-    //Samsung media
-    //71 - Samsung orsay
-    if (keycode == 415 || keycode == 71 || keycode == philipse.play) {
-      Controller.trigger('play');
-    }
-
-    //Samsung stop
-    //70 - Samsung orsay
-    if (keycode == 413 || keycode == philipse.stop || keycode == 70) {
-      Controller.trigger('stop');
-    }
-
-    //69 - Samsung orsay
-    if (keycode == 412 || keycode == 69 || keycode == 177) {
-      Controller.trigger('rewindBack');
-    }
-
-    //72 - Samsung orsay
-    if (keycode == 418 || keycode == 417 || keycode == 72 || keycode == 176) {
-      Controller.trigger('rewindForward');
-    }
-
-    //74 - Samsung orsay
-    if (keycode == 19 || keycode == 74 || keycode == philipse.pause) {
-      Controller.trigger('pause');
-    }
-    if (keycode == 457) {
-      Controller.trigger('info');
-    }
-
-    //E-Manual
-    if (keycode == 10146) {
-      e.preventDefault();
-    }
-    if (keycode == 10133) {
-      Controller.toggle('settings');
-    }
-
-    //Кнопка назад
-    //8 - браузер
-    //27
-    //461 - LG
-    //10009 - Samsung
-    //88 - Samsung orsay
-    if (keycode == 8 || keycode == 27 || keycode == 461 || keycode == 10009 || keycode == 88) {
-      e.preventDefault();
-      if (window.appready) Activity$1.back();
-      return false;
-    }
-    //Exit orsay
-    if (keycode == 45) {
-      Orsay.exit();
-    }
-    //Кнопка pre-ch вызывает окно смены адреса в Loader
-    //259 - Samsung orsay
-    if (keycode == 259) {
-      if (Orsay.isNewWidget()) {
-        Orsay.changeLoaderUrl();
-      }
-    }
-    e.preventDefault();
-  }
-  function init$v() {
-    window.addEventListener("keydown", function (e) {
-      lastdown = keyCode(e);
-      if (!timer$7) {
-        timer$7 = setTimeout(function () {
-          if (isEnter(lastdown)) {
-            longpress = true;
-            listener$i.send('longdown', {});
-            Controller["long"]();
-          }
-        }, 800);
-      }
-    });
-    window.addEventListener("keyup", function (e) {
-      clearTimeout(timer$7);
-      time$2 = 0;
-      timer$7 = null;
-      listener$i.send('keyup', {
-        code: keyCode(e),
-        enabled: enabled$1,
-        event: e
-      });
-      if (!longpress) {
-        if (isEnter(keyCode(e)) && !e.defaultPrevented) Controller.enter();
-      } else longpress = false;
-    });
-    window.addEventListener("keydown", function (e) {
-      if (canianimate) {
-        var cannow = Date.now() - frame_time > 500;
-        var presed = keydown;
-        keydown = e;
-        if (presed === false) {
-          if (cannow) requestFrame();else requestAnimationFrame(requestFrame);
-        }
-      } else {
-        keydownTrigger(e);
-      }
-    });
-  }
-  var Keypad = {
-    listener: listener$i,
-    init: init$v,
-    enable: enable$1,
-    disable: disable
-  };
-
-  function HeadBackward (title, use_js) {
-    var head = Template$1[use_js ? 'js' : 'get']('head_backward', {
-      title: title
-    });
-    if (use_js) {
-      head.querySelector('.head-backward__button').addEventListener('click', function () {
-        window.history.back();
-      });
-      head.querySelector('.head-backward__title').innerText = title;
-    } else {
-      head.find('.head-backward__button').on('click', function () {
-        window.history.back();
-      });
-    }
-    return head;
-  }
-
-  var html$g, active$4, _scroll, last$4;
-  function open$5(params) {
-    active$4 = params;
-    html$g = Template$1.get('modal', {
-      title: params.title
-    });
-    html$g.on('click', function (e) {
-      if (!$(e.target).closest($('.modal__content', html$g)).length && DeviceInput.canClick(e.originalEvent)) window.history.back();
-    });
-    title$1(params.title);
-    html$g.toggleClass('modal--medium', params.size == 'medium' ? true : false);
-    html$g.toggleClass('modal--large', params.size == 'large' ? true : false);
-    html$g.toggleClass('modal--full', params.size == 'full' ? true : false);
-    html$g.toggleClass('modal--overlay', params.overlay ? true : false);
-    html$g.toggleClass('modal--align-center', params.align == 'center' ? true : false);
-    if (params.zIndex) html$g.css('z-index', params.zIndex);
-    _scroll = new create$p({
-      over: true,
-      mask: params.mask
-    });
-    _scroll.render().toggleClass('layer--height', params.size == 'full' ? true : false);
-    html$g.find('.modal__body').append(_scroll.render());
-    if (Platform.screen('mobile') && params.size !== 'full') {
-      var close_button = $("<div class=\"modal__close-button\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect x=\"3.51477\" y=\"0.686279\" width=\"28\" height=\"4\" rx=\"2\" transform=\"rotate(45 3.51477 0.686279)\" fill=\"currentColor\"/>\n            <rect width=\"28\" height=\"4\" rx=\"2\" transform=\"matrix(-0.707107 0.707107 0.707107 0.707107 20.4854 0.686279)\" fill=\"currentColor\"/>\n            </svg>\n        </div>");
-      close_button.on('click', function () {
-        window.history.back();
-      });
-      html$g.find('.modal__content').prepend(close_button);
-    }
-    bind$3(params.html);
-    _scroll.onWheel = function (step) {
-      roll(step > 0 ? 'down' : 'up');
-    };
-    if (params.size == 'full' && Platform.screen('mobile')) {
-      _scroll.append(HeadBackward(params.title || ''));
-    }
-    _scroll.append(params.html);
-    if (params.buttons) buttons();
-    $('body').append(html$g);
-    max();
-    toggle$9(params.select);
-  }
-  function max() {
-    _scroll.render().find('.scroll__content').css('max-height', Math.round(window.innerHeight - _scroll.render().offset().top - window.innerHeight * 0.1) + 'px');
-  }
-  function buttons() {
-    var footer = $('<div class="modal__footer"></div>');
-    active$4.buttons.forEach(function (button) {
-      var btn = $('<div class="modal__button selector"></div>');
-      btn.text(button.name);
-      btn.on('click hover:enter', function () {
-        button.onSelect();
-      });
-      footer.append(btn);
-    });
-    _scroll.append(footer);
-  }
-  function bind$3(where) {
-    where.find('.selector').on('hover:focus', function (e) {
-      last$4 = e.target;
-      _scroll.update($(e.target));
-    }).on('hover:enter', function (e) {
-      last$4 = e.target;
-      if (active$4.onSelect) active$4.onSelect($(e.target));
-    });
-  }
-  function jump(tofoward) {
-    var select = _scroll.render().find('.selector.focus');
-    if (tofoward) select = select.nextAll().filter('.selector');else select = select.prevAll().filter('.selector');
-    select = select.slice(0, 10);
-    select = select.last();
-    if (select.length) {
-      Controller.collectionFocus(select[0], _scroll.render());
-    }
-  }
-  function roll(direction) {
-    var select = _scroll.render().find('.selector');
-    if (select.length) {
-      Navigator.move(direction);
-    } else {
-      var step = Math.round(window.innerHeight * 0.15);
-      _scroll.wheel(direction == 'down' ? step : -step);
-    }
-  }
-  function toggle$9(need_select) {
-    Controller.add('modal', {
-      invisible: true,
-      toggle: function toggle() {
-        Controller.collectionSet(_scroll.render());
-        Controller.collectionFocus(need_select || last$4, _scroll.render());
-        Layer.visible(_scroll.render(true));
-      },
-      up: function up() {
-        roll('up');
-      },
-      down: function down() {
-        roll('down');
-      },
-      right: function right() {
-        if (Navigator.canmove('right')) Navigator.move('right');else jump(true);
-      },
-      left: function left() {
-        if (Navigator.canmove('left')) Navigator.move('left');else jump(false);
-      },
-      back: function back() {
-        if (active$4.onBack) active$4.onBack();
-      }
-    });
-    Controller.toggle('modal');
-  }
-  function update$9(new_html) {
-    last$4 = false;
-    _scroll.clear();
-    _scroll.append(new_html);
-    bind$3(new_html);
-    max();
-    toggle$9(active$4.select);
-  }
-  function title$1(tit) {
-    html$g.find('.modal__title').text(tit);
-    html$g.toggleClass('modal--empty-title', tit ? false : true);
-  }
-  function destroy$8() {
-    last$4 = false;
-    _scroll.destroy();
-    html$g.remove();
-  }
-  function close$5() {
-    destroy$8();
-  }
-  function render$e() {
-    return html$g;
-  }
-  var Modal = {
-    open: open$5,
-    close: close$5,
-    update: update$9,
-    title: title$1,
-    toggle: toggle$9,
-    render: render$e,
-    scroll: function scroll() {
-      return _scroll;
-    }
-  };
-
-  var keydown_time = 0;
-  var move_time = 0;
-  var touch = false;
-  function init$u() {
-    Keypad.listener.follow('keydown', function () {
-      keydown_time = Date.now();
-      move_time = 0;
-    });
-    $(window).on('mousemove', function (e) {
-      move_time = Date.now();
-    }).on('touchstart', function () {
-      touch = true;
-    });
-    detect$9();
-  }
-  function showModal$1(text, onselect) {
-    var controller = Controller.enabled().name;
-    Modal.open({
-      title: '',
-      align: 'center',
-      zIndex: 300,
-      html: $('<div class="about">' + text + '</div>'),
-      buttons: [{
-        name: Lang.translate('settings_param_no'),
-        onSelect: function onSelect() {
-          Modal.close();
-          Controller.toggle(controller);
-        }
-      }, {
-        name: Lang.translate('settings_param_yes'),
-        onSelect: onselect
-      }]
-    });
-  }
-  function detect$9() {
-    var show_touch, show_mouse, show_remote;
-    $(document).on('touchstart', function (e) {
-      if ($('.modal').length || show_touch) return;
-      if (!Storage.get('is_true_mobile', 'false') && Platform.screen('tv')) {
-        show_touch = true;
-        showModal$1(Lang.translate('input_detection_touch'), function () {
-          Storage.set('is_true_mobile', 'true');
-          window.location.reload();
-        });
-      }
-    }).on('click', function (e) {
-      if ($('.modal').length || show_mouse || !canClick(e.originalEvent)) return;
-      if (Storage.field('navigation_type') !== 'mouse' && Platform.screen('tv')) {
-        show_mouse = true;
-        showModal$1(Lang.translate('input_detection_mouse'), function () {
-          Storage.set('navigation_type', 'mouse');
-          window.location.reload();
-        });
-      }
-    });
-    Keypad.listener.follow('keydown', function () {
-      if ($('.modal').length || show_remote || document.activeElement.tagName == 'INPUT') return;
-      if (Storage.get('is_true_mobile', 'false') && Platform.screen('tv')) {
-        show_remote = true;
-        showModal$1(Lang.translate('input_detection_remote'), function () {
-          Storage.set('is_true_mobile', 'false');
-          window.location.reload();
-        });
-      }
-    });
-  }
-  function canClick(e) {
-    //Noty.show('pointerType: ' + e.pointerType + '; type: ' + e.type + '; isTrusted: ' + e.isTrusted)
-
-    if (e && e.custom_trigger) return true;
-    return Date.now() - keydown_time < 500 ? false : touch || Platform.is('browser') || Platform.tv() || Platform.desktop() || Date.now() - move_time < 500;
-  }
-  var DeviceInput = {
-    init: init$u,
-    canClick: canClick
-  };
-
-  var html$f;
+  var html$g;
   var body$3;
-  var listener$h = start$5();
+  var listener$i = start$6();
   var last$3 = '';
   var _main;
 
   /**
    * Запуск
    */
-  function init$t() {
-    html$f = Template$1.get('settings');
-    body$3 = html$f.find('.settings__body');
-    html$f.find('.settings__layer').on('click', function (e) {
+  function init$w() {
+    html$g = Template$1.get('settings');
+    body$3 = html$g.find('.settings__body');
+    html$g.find('.settings__layer').on('click', function (e) {
       if (DeviceInput.canClick(e.originalEvent)) window.history.back();
     });
     _main = new Main$1();
@@ -4677,7 +5083,7 @@
       toggle: function toggle() {
         _main.render().detach();
         _main.update();
-        listener$h.send('open', {
+        listener$i.send('open', {
           name: 'main',
           body: _main.render()
         });
@@ -4714,7 +5120,7 @@
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var comp = new Component$1(name, params);
     body$3.empty().append(comp.render());
-    listener$h.send('open', {
+    listener$i.send('open', {
       name: name,
       body: comp.render(),
       params: params
@@ -4726,7 +5132,7 @@
   /**
    * Обновить открытый компонент
    */
-  function update$8() {
+  function update$9() {
     var selects = body$3.find('.selector');
     var lastinx = selects.index(body$3.find('.selector.focus'));
     create$o(last$3, {
@@ -4739,131 +5145,24 @@
    * @returns {object}
    */
   function render$d() {
-    return html$f;
+    return html$g;
   }
   var Settings = {
-    listener: listener$h,
-    init: init$t,
+    listener: listener$i,
+    init: init$w,
     render: render$d,
-    update: update$8,
+    update: update$9,
     create: create$o,
     main: function main() {
       return _main;
     }
   };
 
-  var html$e;
-  var scroll$2;
-  var active$3;
-  function init$s() {
-    html$e = Template$1.get('selectbox');
-    scroll$2 = new create$p({
-      mask: true,
-      over: true
-    });
-    html$e.find('.selectbox__body').append(scroll$2.render());
-    html$e.find('.selectbox__layer').on('click', function (e) {
-      if (DeviceInput.canClick(e.originalEvent)) window.history.back();
-    });
-    $('body').append(html$e);
-  }
-  function bind$2() {
-    scroll$2.clear();
-    html$e.find('.selectbox__title').text(active$3.title);
-    html$e.toggleClass('selectbox--fullsize', active$3.fullsize ? true : false);
-    active$3.items.forEach(function (element) {
-      if (element.hide) return;
-      element.title = Utils$2.capitalizeFirstLetter(element.title || '');
-      if (element.separator) {
-        var _item = $('<div class="settings-param-title"><span>' + element.title + '</span></div>');
-        return scroll$2.append(_item);
-      }
-      var item = Template$1.get(element.template || 'selectbox_item', element);
-      if (!element.subtitle) item.find('.selectbox-item__subtitle').remove();
-      if (element.checkbox) {
-        item.addClass('selectbox-item--checkbox');
-        item.append('<div class="selectbox-item__checkbox"></div>');
-        if (element.checked) item.addClass('selectbox-item--checked');
-      }
-      if (element.ghost) item.css('opacity', 0.5);
-      if (!element.noenter) {
-        var goclose = function goclose() {
-          if (!active$3.nohide) hide$2();else {
-            scroll$2.render().find('.selected').removeClass('selected');
-            item.addClass('selected');
-          }
-          if (element.onSelect) element.onSelect(element, item);else if (active$3.onSelect) active$3.onSelect(element, item);
-        };
-        item.on('hover:enter', function () {
-          if (element.checkbox) {
-            element.checked = !element.checked;
-            item.toggleClass('selectbox-item--checked', element.checked);
-            if (element.onCheck) element.onCheck(element, item);else if (active$3.onCheck) active$3.onCheck(element, item);
-          } else if (active$3.onBeforeClose) {
-            if (active$3.onBeforeClose()) goclose();
-          } else goclose();
-        }).on('hover:focus', function (e) {
-          scroll$2.update($(e.target), true);
-          if (active$3.onFocus) active$3.onFocus(element, e.target);
-        }).on('hover:long', function (e) {
-          if (active$3.onLong) active$3.onLong(element, e.target);
-        });
-      }
-      if (element.selected) item.addClass('selected');
-      if (element.picked) item.addClass('picked');
-      if (active$3.nomark) item.addClass('nomark');
-      if (active$3.onDraw) active$3.onDraw(item, element);
-      scroll$2.append(item);
-    });
-  }
-  function show$8(object) {
-    active$3 = object;
-    bind$2();
-    $('body').toggleClass('selectbox--open', true);
-    html$e.find('.selectbox__body').addClass('layer--wheight').data('mheight', html$e.find('.selectbox__head'));
-    toggle$8();
-  }
-  function toggle$8() {
-    Controller.add('select', {
-      toggle: function toggle() {
-        var selected = scroll$2.render().find('.selected');
-        Controller.collectionSet(html$e);
-        Controller.collectionFocus(selected.length ? selected[0] : false, html$e);
-      },
-      up: function up() {
-        Navigator.move('up');
-      },
-      down: function down() {
-        Navigator.move('down');
-      },
-      left: close$4,
-      back: close$4
-    });
-    Controller.toggle('select');
-  }
-  function hide$2() {
-    $('body').toggleClass('selectbox--open', false);
-  }
-  function close$4() {
-    hide$2();
-    if (active$3.onBack) active$3.onBack();
-  }
-  function render$c() {
-    return html$e;
-  }
-  var Select = {
-    init: init$s,
-    show: show$8,
-    hide: hide$2,
-    close: close$4,
-    render: render$c
-  };
-
   function AVPlay$1(call_video) {
     var stream_url, loaded;
     var object = $('<object class="player-video_video" type="application/avplayer"</object>');
     var video = object[0];
-    var listener = start$5();
+    var listener = start$6();
     var change_scale_later;
     var change_speed_later;
     object.width(window.innerWidth);
@@ -5228,14 +5527,18 @@
     };
   }
 
-  var listener$g = start$5();
+  var listener$h = start$6();
   var status$2 = {
     active: false,
     channel: false,
     select: false,
     program: false
   };
-  function init$r() {
+  var numpad = {
+    timer: false,
+    prev: ''
+  };
+  function init$v() {
     Keypad.listener.follow('keydown', function (e) {
       if (!playning()) return;
       PlayerPanel.rewind();
@@ -5251,20 +5554,31 @@
         nextChannel();
         playDelay();
       }
+      var digid = 0;
+      if (e.code >= 48 && e.code <= 57) digid = e.code - 48;else if (e.code >= 96 && e.code <= 105) digid = e.code - 96;
+      if (digid) {
+        clearTimeout(numpad.timer);
+        numpad.prev += digid;
+        toChannel(parseInt(numpad.prev));
+        numpad.timer = setTimeout(function () {
+          play$3();
+          numpad.prev = '';
+        }, 2000);
+      }
     });
   }
-  function start$4(object) {
+  function start$5(object) {
     status$2.position_view = object.position;
     status$2.position_channel = object.position;
     status$2.active = object;
     status$2.channel = channel$1();
-    listener$g.send('channel', {
+    listener$h.send('channel', {
       channel: status$2.channel,
       dir: 0,
       position: status$2.position_view
     });
     if (status$2.active.onPlay) status$2.active.onPlay(status$2.channel);
-    listener$g.send('play', {
+    listener$h.send('play', {
       channel: status$2.channel,
       position: status$2.position_view
     });
@@ -5281,7 +5595,7 @@
       status$2.channel = status$2.select;
       status$2.position_channel = status$2.position_view;
       if (status$2.active.onPlay) status$2.active.onPlay(status$2.channel);
-      listener$g.send('play', {
+      listener$h.send('play', {
         channel: status$2.channel,
         position: status$2.position_view
       });
@@ -5300,7 +5614,7 @@
       if (status$2.select == data.channel) {
         status$2.program = data;
         status$2.position_program = data.position;
-        listener$g.send('draw-program', {
+        listener$h.send('draw-program', {
           dir: 0
         });
       }
@@ -5311,7 +5625,7 @@
   }
   function moveChannel(dir) {
     channel$1(status$2.position_view);
-    listener$g.send('channel', {
+    listener$h.send('channel', {
       channel: status$2.select,
       dir: dir,
       position: status$2.position_view
@@ -5329,11 +5643,21 @@
       moveChannel(-1);
     }
   }
+  function toChannel(num) {
+    num = Math.max(1, num);
+    if (num <= status$2.active.total) {
+      status$2.position_view = num - 1;
+      moveChannel(1);
+    }
+  }
+  function redrawChannel() {
+    moveChannel(0);
+  }
   function moveProgram(dir) {
     if (status$2.program) {
       status$2.position_program += dir;
       status$2.position_program = Math.max(0, Math.min(status$2.program.total, status$2.position_program));
-      listener$g.send('draw-program', {
+      listener$h.send('draw-program', {
         dir: dir
       });
     }
@@ -5350,8 +5674,12 @@
   function playlistProgram() {
     if (status$2.active.onPlaylistProgram) status$2.active.onPlaylistProgram(status$2.select, status$2.position_program);
   }
+  function openMenu() {
+    if (status$2.active.onMenu) status$2.active.onMenu(status$2.select, status$2.position_program);else if (status$2.active.onPlaylistProgram) status$2.active.onPlaylistProgram(status$2.select, status$2.position_program);
+  }
   function destroy$7() {
     clearTimeout(status$2.timer);
+    clearTimeout(numpad.timer);
     status$2 = {
       active: false,
       channel: false,
@@ -5359,10 +5687,10 @@
       program: false
     };
   }
-  var TV = {
-    listener: listener$g,
-    init: init$r,
-    start: start$4,
+  var PlayerIPTV = {
+    listener: listener$h,
+    init: init$v,
+    start: start$5,
     playning: playning,
     channel: channel$1,
     programReady: programReady,
@@ -5375,11 +5703,13 @@
     nextProgram: nextProgram,
     drawProgram: drawProgram,
     playlistProgram: playlistProgram,
+    openMenu: openMenu,
+    redrawChannel: redrawChannel,
     destroy: destroy$7
   };
 
-  var html$d;
-  var listener$f = start$5();
+  var html$f;
+  var listener$g = start$6();
   var state;
   var elems$1;
   var panel_visible = false;
@@ -5392,28 +5722,28 @@
   var tracks = [];
   var subs = [];
   var qualitys = false;
-  var translates$1 = {};
+  var translates = {};
   var last_settings_action;
   var last_panel_focus;
-  function init$q() {
-    html$d = Template$1.get('player_panel');
+  function init$u() {
+    html$f = Template$1.get('player_panel');
     elems$1 = {
-      peding: $('.player-panel__peding', html$d),
-      position: $('.player-panel__position', html$d),
-      time: $('.player-panel__time', html$d),
-      timenow: $('.player-panel__timenow', html$d),
-      timeend: $('.player-panel__timeend', html$d),
-      title: $('.player-panel__filename', html$d),
-      tracks: $('.player-panel__tracks', html$d),
-      subs: $('.player-panel__subs', html$d),
-      timeline: $('.player-panel__timeline', html$d),
-      quality: $('.player-panel__quality', html$d),
-      episode: $('.player-panel__next-episode-name', html$d),
-      rewind_touch: $('.player-panel__time-touch-zone', html$d),
-      iptv_channel: $('.player-panel-iptv__channel', html$d),
-      iptv_arrow_up: $('.player-panel-iptv__arrow-up', html$d),
-      iptv_arrow_down: $('.player-panel-iptv__arrow-down', html$d),
-      iptv_position: $('.player-panel-iptv__position', html$d)
+      peding: $('.player-panel__peding', html$f),
+      position: $('.player-panel__position', html$f),
+      time: $('.player-panel__time', html$f),
+      timenow: $('.player-panel__timenow', html$f),
+      timeend: $('.player-panel__timeend', html$f),
+      title: $('.player-panel__filename', html$f),
+      tracks: $('.player-panel__tracks', html$f),
+      subs: $('.player-panel__subs', html$f),
+      timeline: $('.player-panel__timeline', html$f),
+      quality: $('.player-panel__quality', html$f),
+      episode: $('.player-panel__next-episode-name', html$f),
+      rewind_touch: $('.player-panel__time-touch-zone', html$f),
+      iptv_channel: $('.player-panel-iptv__channel', html$f),
+      iptv_arrow_up: $('.player-panel-iptv__arrow-up', html$f),
+      iptv_arrow_down: $('.player-panel-iptv__arrow-down', html$f),
+      iptv_position: $('.player-panel-iptv__position', html$f)
     };
 
     /**
@@ -5456,51 +5786,51 @@
         hide: function hide() {
           clearTimeout(timer$6.hide);
           timer$6.hide = setTimeout(function () {
-            if (TV.playning()) {
-              TV.reset();
+            if (PlayerIPTV.playning()) {
+              PlayerIPTV.reset();
               Controller.toggle('player');
             } else if (!PlayerVideo.video().paused) _visible(false);
-          }, TV.playning() ? 5000 : 3000);
+          }, PlayerIPTV.playning() ? 5000 : 3000);
         }
       }
     });
-    html$d.find('.selector').on('hover:focus', function (e) {
+    html$f.find('.selector').on('hover:focus', function (e) {
     });
-    html$d.find('.player-panel__playpause').on('hover:enter', function (e) {
-      listener$f.send('playpause', {});
+    html$f.find('.player-panel__playpause').on('hover:enter', function (e) {
+      listener$g.send('playpause', {});
     });
-    html$d.find('.player-panel__next').on('hover:enter', function (e) {
-      listener$f.send('next', {});
+    html$f.find('.player-panel__next').on('hover:enter', function (e) {
+      listener$g.send('next', {});
     });
-    html$d.find('.player-panel__prev').on('hover:enter', function (e) {
-      listener$f.send('prev', {});
+    html$f.find('.player-panel__prev').on('hover:enter', function (e) {
+      listener$g.send('prev', {});
     });
-    html$d.find('.player-panel__rprev').on('hover:enter', function (e) {
-      listener$f.send('rprev', {});
+    html$f.find('.player-panel__rprev').on('hover:enter', function (e) {
+      listener$g.send('rprev', {});
     });
-    html$d.find('.player-panel__rnext').on('hover:enter', function (e) {
-      listener$f.send('rnext', {});
+    html$f.find('.player-panel__rnext').on('hover:enter', function (e) {
+      listener$g.send('rnext', {});
     });
-    html$d.find('.player-panel__playlist').on('hover:enter', function (e) {
-      listener$f.send('playlist', {});
+    html$f.find('.player-panel__playlist').on('hover:enter', function (e) {
+      listener$g.send('playlist', {});
     });
-    html$d.find('.player-panel__tstart').on('hover:enter', function (e) {
-      listener$f.send('to_start', {});
+    html$f.find('.player-panel__tstart').on('hover:enter', function (e) {
+      listener$g.send('to_start', {});
     });
-    html$d.find('.player-panel__tend').on('hover:enter', function (e) {
-      listener$f.send('to_end', {});
+    html$f.find('.player-panel__tend').on('hover:enter', function (e) {
+      listener$g.send('to_end', {});
     });
-    html$d.find('.player-panel__fullscreen').on('hover:enter', function (e) {
-      listener$f.send('fullscreen', {});
+    html$f.find('.player-panel__fullscreen').on('hover:enter', function (e) {
+      listener$g.send('fullscreen', {});
     });
-    html$d.find('.player-panel__settings').on('hover:enter', settings);
-    html$d.find('.player-panel__pip').on('hover:enter', function () {
-      listener$f.send('pip', {});
+    html$f.find('.player-panel__settings').on('hover:enter', settings);
+    html$f.find('.player-panel__pip').on('hover:enter', function () {
+      listener$g.send('pip', {});
     }).toggleClass('hide', !Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA()));
     elems$1.timeline.attr('data-controller', 'player_rewind');
     elems$1.rewind_touch.toggleClass('hide', !Platform.screen('mobile'));
     elems$1.timeline.on('mousemove', function (e) {
-      if (!Platform.screen('mobile')) listener$f.send('mouse_rewind', {
+      if (!Platform.screen('mobile')) listener$g.send('mouse_rewind', {
         method: 'move',
         time: elems$1.time,
         percent: percent(e)
@@ -5508,7 +5838,7 @@
     }).on('mouseout', function () {
       if (!Platform.screen('mobile')) elems$1.time.addClass('hide');
     }).on('click', function (e) {
-      if (DeviceInput.canClick(e.originalEvent) && !Platform.screen('mobile')) listener$f.send('mouse_rewind', {
+      if (DeviceInput.canClick(e.originalEvent) && !Platform.screen('mobile')) listener$g.send('mouse_rewind', {
         method: 'click',
         time: elems$1.time,
         percent: percent(e)
@@ -5518,7 +5848,7 @@
     var touchEnd = function touchEnd(e) {
       window.removeEventListener('touchend', touchEnd);
       PlayerVideo.video().rewind = false;
-      listener$f.send('mouse_rewind', {
+      listener$g.send('mouse_rewind', {
         method: 'click',
         time: elems$1.time,
         percent: touch.to / 100
@@ -5546,8 +5876,8 @@
         rewind$1();
       }
     });
-    html$d.find('.player-panel__line:eq(1) .selector').attr('data-controller', 'player_panel');
-    html$d.find('.player-panel__left .selector,.player-panel__center .selector,.player-panel__right .selector').on('hover:focus', function () {
+    html$f.find('.player-panel__line:eq(1) .selector').attr('data-controller', 'player_panel');
+    html$f.find('.player-panel__left .selector,.player-panel__center .selector,.player-panel__right .selector').on('hover:focus', function () {
       last_panel_focus = $(this)[0];
     });
 
@@ -5581,7 +5911,7 @@
             });
             a.enabled = true;
             a.selected = true;
-            if (!Arrays.isArray(qualitys) || a.change_quality) listener$f.send('quality', {
+            if (!Arrays.isArray(qualitys) || a.change_quality) listener$g.send('quality', {
               name: a.title,
               url: a.url
             });
@@ -5601,7 +5931,7 @@
       if (tracks.length) {
         tracks.forEach(function (element, p) {
           var name = [];
-          var from = translates$1.tracks && Arrays.isArray(translates$1.tracks) && translates$1.tracks[p] ? translates$1.tracks[p] : element;
+          var from = translates.tracks && Arrays.isArray(translates.tracks) && translates.tracks[p] ? translates.tracks[p] : element;
           name.push(p + 1);
           name.push(normalName(from.language || from.name || Lang.translate('player_unknown')));
           if (from.label) name.push(normalName(from.label));
@@ -5649,7 +5979,7 @@
         subs.forEach(function (element, p) {
           if (element.index !== -1) {
             var track_num = element.extra && element.extra.track_num ? parseInt(element.extra.track_num) : element.index;
-            var from = translates$1.subs && Arrays.isArray(translates$1.subs) && translates$1.subs[track_num] ? translates$1.subs[track_num] : element;
+            var from = translates.subs && Arrays.isArray(translates.subs) && translates.subs[track_num] ? translates.subs[track_num] : element;
             element.title = p + ' / ' + normalName(from.language && from.label ? from.language + ' / ' + from.label : from.language || from.label || Lang.translate('player_unknown'));
           }
         });
@@ -5664,7 +5994,7 @@
             });
             a.mode = 'showing';
             a.selected = true;
-            listener$f.send('subsview', {
+            listener$g.send('subsview', {
               status: a.index > -1
             });
             Controller.toggle(enabled.name);
@@ -5675,8 +6005,11 @@
         });
       }
     });
-    TV.listener.follow('channel', channel);
-    TV.listener.follow('draw-program', program);
+    PlayerIPTV.listener.follow('channel', channel);
+    PlayerIPTV.listener.follow('draw-program', program);
+  }
+  function hideRewind() {
+    html$f.addClass('panel--norewind');
   }
   function showParams() {
     var enabled = Controller.enabled().name;
@@ -5701,7 +6034,7 @@
     });
     items.push({
       title: Lang.translate('settings_main_rest'),
-      trigger: html$d.find('.player-panel__settings')
+      trigger: html$f.find('.player-panel__settings')
     });
     Select.show({
       title: Lang.translate('title_settings'),
@@ -5718,7 +6051,7 @@
   function program(data) {
     if (elems$1.iptv_channel_active) {
       var prog = elems$1.iptv_channel_active.find('.player-panel-iptv-item__prog');
-      TV.drawProgram(prog);
+      PlayerIPTV.drawProgram(prog);
       playAnimation(prog, data.dir > 0 ? 'endless-left' : 'endless-right');
     }
   }
@@ -5728,11 +6061,16 @@
     elem.css('animation', (anim || 'pulse') + ' 0.2s ease');
   }
   function channel(data) {
-    var select = TV.select();
+    var select = PlayerIPTV.select();
     elems$1.iptv_channel.removeClass('up down');
     var active = elems$1.iptv_channel.find('.active');
     elems$1.iptv_channel.find('> div:not(.active)').remove();
     var new_item = $("\n        <div class=\"player-panel-iptv-item active\">\n            <div class=\"player-panel-iptv-item__left\">\n                <img class=\"player-panel-iptv-item__ico\" />\n            </div>\n            <div class=\"player-panel-iptv-item__body\">\n                <div class=\"player-panel-iptv-item__group\">".concat(select.group, "</div>\n                <div class=\"player-panel-iptv-item__name\">").concat(select.name, "</div>\n                <div class=\"player-panel-iptv-item__prog\">\n                    <div class=\"player-panel-iptv-item__prog-load\">").concat(Lang.translate('loading'), "...</div>\n                </div>\n            </div>\n        </div>\n    "));
+    if (select.icons) {
+      select.icons.forEach(function (ic) {
+        new_item.find('.player-panel-iptv-item__name').append($('<div class="player-panel-iptv-item__icons-item">' + ic + '</div>'));
+      });
+    }
     var ico = new_item.find('.player-panel-iptv-item__ico');
     var img = ico[0];
     img.onload = function () {
@@ -5810,7 +6148,7 @@
         if (a.method == 'normalization_smooth') selectNormalizationStep('smooth', 'medium');
         if (a.method == 'share') {
           Controller.toggle(Platform.screen('mobile') ? 'player' : 'player_panel');
-          listener$f.send('share', {});
+          listener$g.send('share', {});
         }
       },
       onBack: function onBack() {
@@ -5901,7 +6239,7 @@
       items: items,
       nohide: true,
       onSelect: function onSelect(a) {
-        listener$f.send('size', {
+        listener$g.send('size', {
           size: a.value
         });
       },
@@ -5963,7 +6301,7 @@
       nohide: true,
       onSelect: function onSelect(a) {
         Storage.set('player_speed', a.value);
-        listener$f.send('speed', {
+        listener$g.send('speed', {
           speed: a.value
         });
         settings();
@@ -5990,37 +6328,37 @@
         state.start();
       },
       up: function up() {
-        TV.prevChannel();
+        PlayerIPTV.prevChannel();
         state.start();
       },
       down: function down() {
-        TV.nextChannel();
-        state.start();
-      },
-      right: function right() {
-        condition.visible = true;
-        TV.playlistProgram();
+        PlayerIPTV.nextChannel();
         state.start();
       },
       left: function left() {
+        condition.visible = true;
+        PlayerIPTV.openMenu();
+        state.start();
+      },
+      right: function right() {
         condition.visible = true;
         showParams();
         state.start();
       },
       enter: function enter() {
-        TV.play();
+        PlayerIPTV.play();
         state.start();
       },
       back: function back() {
-        TV.reset();
+        PlayerIPTV.reset();
         Controller.toggle('player');
         hide$1();
       }
     });
     Controller.add('player_rewind', {
       toggle: function toggle() {
-        Controller.collectionSet(render$b());
-        Controller.collectionFocus(false, render$b());
+        Controller.collectionSet(render$c());
+        Controller.collectionFocus(false, render$c());
       },
       up: function up() {
         Controller.toggle('player');
@@ -6029,13 +6367,13 @@
         toggleButtons();
       },
       right: function right() {
-        listener$f.send('rnext', {});
+        listener$g.send('rnext', {});
       },
       left: function left() {
-        listener$f.send('rprev', {});
+        listener$g.send('rprev', {});
       },
       gone: function gone() {
-        html$d.find('.selector').removeClass('focus');
+        html$f.find('.selector').removeClass('focus');
       },
       back: function back() {
         Controller.toggle('player');
@@ -6044,13 +6382,13 @@
     });
     Controller.add('player_panel', {
       toggle: function toggle() {
-        if (TV.playning()) Controller.toggle('player_tv');else {
-          Controller.collectionSet(render$b());
-          Controller.collectionFocus(last_panel_focus ? last_panel_focus : $(isTV() ? '.player-panel__next' : '.player-panel__playpause', html$d)[0], render$b());
+        if (PlayerIPTV.playning()) Controller.toggle('player_tv');else {
+          Controller.collectionSet(render$c());
+          Controller.collectionFocus(last_panel_focus ? last_panel_focus : $(isTV() ? '.player-panel__next' : '.player-panel__playpause', html$f)[0], render$c());
         }
       },
       up: function up() {
-        isTV() ? Controller.toggle('player') : toggleRewind();
+        isTV() || html$f.hasClass('panel--norewind') ? Controller.toggle('player') : toggleRewind();
       },
       right: function right() {
         Navigator.move('right');
@@ -6059,10 +6397,10 @@
         Navigator.move('left');
       },
       down: function down() {
-        listener$f.send('playlist', {});
+        listener$g.send('playlist', {});
       },
       gone: function gone() {
-        html$d.find('.selector').removeClass('focus');
+        html$f.find('.selector').removeClass('focus');
       },
       back: function back() {
         Controller.toggle('player');
@@ -6087,7 +6425,7 @@
    * @param {string} need - что нужно обновить
    * @param {string|number} value - значение
    */
-  function update$7(need, value) {
+  function update$8(need, value) {
     if (need == 'position') {
       timeline_last.position = value;
       if (panel_visible) elems$1.position.css({
@@ -6107,10 +6445,10 @@
       elems$1.timenow.text(value);
     }
     if (need == 'play') {
-      html$d.toggleClass('panel--paused', false);
+      html$f.toggleClass('panel--paused', false);
     }
     if (need == 'pause') {
-      html$d.toggleClass('panel--paused', true);
+      html$f.toggleClass('panel--paused', true);
     }
   }
 
@@ -6119,10 +6457,10 @@
    * @param {boolean} status 
    */
   function _visible(status) {
-    listener$f.send('visible', {
+    listener$g.send('visible', {
       status: status
     });
-    html$d.toggleClass('panel--visible', status);
+    html$f.toggleClass('panel--visible', status);
     panel_visible = status;
     elems$1.position.css({
       width: timeline_last.position
@@ -6152,7 +6490,7 @@
    * Переключить на контроллер перемотки
    */
   function toggleRewind() {
-    Controller.toggle(isTV() ? 'player_panel' : 'player_rewind');
+    Controller.toggle(isTV() || html$f.hasClass('panel--norewind') ? 'player_panel' : 'player_rewind');
   }
 
   /**
@@ -6165,10 +6503,10 @@
   /**
    * Контроллер
    */
-  function toggle$7() {
+  function toggle$8() {
     condition.visible = true;
     state.start();
-    if (TV.playning()) Controller.toggle('player_tv');else if (!Platform.screen('mobile')) toggleRewind();
+    if (PlayerIPTV.playning()) Controller.toggle('player_tv');else if (!Platform.screen('mobile')) toggleRewind();
   }
 
   /**
@@ -6176,7 +6514,7 @@
    */
   function show$7() {
     state.start();
-    html$d.find('.player-panel__fullscreen').toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$2.canFullScreen());
+    html$f.find('.player-panel__fullscreen').toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$2.canFullScreen());
     addController();
   }
 
@@ -6196,7 +6534,7 @@
     _visible(false);
   }
   function visibleStatus() {
-    return html$d.hasClass('panel--visible');
+    return html$f.hasClass('panel--visible');
   }
 
   /**
@@ -6261,10 +6599,10 @@
    * @param {{subs:[],tracks:[]}} data 
    */
   function setTranslate(data) {
-    if (_typeof(data) == 'object') translates$1 = data;
+    if (_typeof(data) == 'object') translates = data;
   }
   function updateTranslate(where, data) {
-    if (!translates$1[where]) translates$1[where] = data;
+    if (!translates[where]) translates[where] = data;
   }
 
   /**
@@ -6275,7 +6613,7 @@
     tracks = [];
     subs = [];
     qualitys = false;
-    translates$1 = {};
+    translates = {};
     timeline_last.position = 0;
     timeline_last.peding = 0;
     last_panel_focus = false;
@@ -6293,26 +6631,27 @@
     elems$1.subs.toggleClass('hide', true);
     elems$1.tracks.toggleClass('hide', true);
     elems$1.episode.toggleClass('hide', true);
-    html$d.toggleClass('panel--paused', false);
+    html$f.toggleClass('panel--paused', false);
+    html$f.toggleClass('panel--norewind', false);
   }
 
   /**
    * Получить html
    * @returns {object}
    */
-  function render$b() {
-    return html$d;
+  function render$c() {
+    return html$f;
   }
   var PlayerPanel = {
-    init: init$q,
-    listener: listener$f,
-    render: render$b,
-    toggle: toggle$7,
+    init: init$u,
+    listener: listener$g,
+    render: render$c,
+    toggle: toggle$8,
     show: show$7,
     destroy: destroy$6,
     hide: hide$1,
     canplay: canplay,
-    update: update$7,
+    update: update$8,
     rewind: rewind$1,
     setTracks: setTracks,
     setSubs: setSubs,
@@ -6324,11 +6663,12 @@
     updateTranslate: updateTranslate,
     visible: _visible,
     visibleStatus: visibleStatus,
-    showParams: showParams
+    showParams: showParams,
+    hideRewind: hideRewind
   };
 
   var subparams;
-  var listener$e = function listener(e) {
+  var listener$f = function listener(e) {
     if (e.code == 405) getWebosmediaId(setSubtitleColor);
     if (e.code == 406) getWebosmediaId(setSubtitleBackgroundColor);
     if (e.code == 403) getWebosmediaId(setSubtitleFontSize);
@@ -6336,7 +6676,7 @@
     if (e.code == 55) getWebosmediaId(setSubtitleBackgroundOpacity);
     if (e.code == 57) getWebosmediaId(setSubtitleCharacterOpacity);
   };
-  Keypad.listener.follow('keydown', listener$e);
+  Keypad.listener.follow('keydown', listener$f);
   function luna$1(params, call, fail) {
     if (call) params.onSuccess = call;
     params.onFailure = function (result) {
@@ -7196,81 +7536,97 @@
         var tag = match[1];
         var lines = match[2].split(/\r?\n/);
         var _loop = function _loop() {
-          line = lines[l];
-          if (/^\s*;/.test(line)) {
-            return "continue"; //Skip comment
-          }
-          m = /^\s*([^:]+):\s*(.*)(\r?\n)?$/.exec(line);
-          if (m) {
-            if (tag == "Script Info") {
-              if (!meta) {
-                meta = {};
-                meta.type = "meta";
-                meta.data = {};
-                captions.push(meta);
-              }
-              name = m[1].trim();
-              value = m[2].trim();
-              meta.data[name] = value;
-              return "continue";
+            line = lines[l];
+            if (/^\s*;/.test(line)) {
+              return 0; // continue
+              //Skip comment
             }
-            if (tag == "V4 Styles" || tag == "V4+ Styles") {
-              name = m[1].trim();
-              value = m[2].trim();
-              if (name == "Format") {
-                columns = value.split(/\s*,\s*/g);
-                return "continue";
-              }
-              if (name == "Style") {
-                values = value.split(/\s*,\s*/g);
-                caption = {};
-                caption.type = "style";
-                caption.data = {};
-                for (c = 0; c < columns.length && c < values.length; c++) {
-                  caption.data[columns[c]] = values[c];
+            m = /^\s*([^:]+):\s*(.*)(\r?\n)?$/.exec(line);
+            if (m) {
+              if (tag == "Script Info") {
+                if (!meta) {
+                  meta = {};
+                  meta.type = "meta";
+                  meta.data = {};
+                  captions.push(meta);
                 }
-                captions.push(caption);
-                return "continue";
+                name = m[1].trim();
+                value = m[2].trim();
+                meta.data[name] = value;
+                return 0; // continue
               }
-            }
-            if (tag == "Events") {
-              name = m[1].trim();
-              value = m[2].trim();
-              if (name == "Format") {
-                columns = value.split(/\s*,\s*/g);
-                return "continue";
-              }
-              if (name == "Dialogue") {
-                //Work-around for missing text (when the text contains ',' char)
-                var getPosition = function getPosition(s, search, index) {
-                  return s.split(search, index).join(search).length;
-                };
-                values = value.split(/\s*,\s*/g);
-                caption = {};
-                caption.type = "caption";
-                caption.data = {};
-                for (c = 0; c < columns.length && c < values.length; c++) {
-                  caption.data[columns[c]] = values[c];
+              if (tag == "V4 Styles" || tag == "V4+ Styles") {
+                name = m[1].trim();
+                value = m[2].trim();
+                if (name == "Format") {
+                  columns = value.split(/\s*,\s*/g);
+                  return 0; // continue
                 }
-                caption.start = helper$2.toMilliseconds(caption.data["Start"]);
-                caption.end = helper$2.toMilliseconds(caption.data["End"]);
-                caption.duration = caption.end - caption.start;
-                caption.content = caption.data["Text"];
-                indexOfText = getPosition(value, ',', columns.length - 1) + 1;
-                caption.content = value.substr(indexOfText);
-                caption.data["Text"] = caption.content;
-                caption.text = caption.content.replace(/\\N/g, eol) //"\N" for new line
-                .replace(/\{[^\}]+\}/g, ""); //{\pos(400,570)}
-                captions.push(caption);
-                return "continue";
+                if (name == "Style") {
+                  values = value.split(/\s*,\s*/g);
+                  caption = {};
+                  caption.type = "style";
+                  caption.data = {};
+                  for (c = 0; c < columns.length && c < values.length; c++) {
+                    caption.data[columns[c]] = values[c];
+                  }
+                  captions.push(caption);
+                  return 0; // continue
+                }
+              }
+              if (tag == "Events") {
+                name = m[1].trim();
+                value = m[2].trim();
+                if (name == "Format") {
+                  columns = value.split(/\s*,\s*/g);
+                  return 0; // continue
+                }
+                if (name == "Dialogue") {
+                  //Work-around for missing text (when the text contains ',' char)
+                  var getPosition = function getPosition(s, search, index) {
+                    return s.split(search, index).join(search).length;
+                  };
+                  values = value.split(/\s*,\s*/g);
+                  caption = {};
+                  caption.type = "caption";
+                  caption.data = {};
+                  for (c = 0; c < columns.length && c < values.length; c++) {
+                    caption.data[columns[c]] = values[c];
+                  }
+                  caption.start = helper$2.toMilliseconds(caption.data["Start"]);
+                  caption.end = helper$2.toMilliseconds(caption.data["End"]);
+                  caption.duration = caption.end - caption.start;
+                  caption.content = caption.data["Text"];
+                  indexOfText = getPosition(value, ',', columns.length - 1) + 1;
+                  caption.content = value.substr(indexOfText);
+                  caption.data["Text"] = caption.content;
+                  caption.text = caption.content.replace(/\\N/g, eol) //"\N" for new line
+                  .replace(/\{[^\}]+\}/g, ""); //{\pos(400,570)}
+                  captions.push(caption);
+                  return 0; // continue
+                }
               }
             }
-          }
-        };
+          },
+          line,
+          m,
+          name,
+          value,
+          name,
+          value,
+          values,
+          caption,
+          c,
+          name,
+          value,
+          values,
+          caption,
+          c,
+          indexOfText,
+          _ret;
         for (var l = 0; l < lines.length; l++) {
-          var line, m, name, value, name, value, values, caption, c, name, value, values, caption, c, indexOfText;
-          var _ret = _loop();
-          if (_ret === "continue") continue;
+          _ret = _loop();
+          if (_ret === 0) continue;
         }
       }
       if (options.verbose) {
@@ -7947,8 +8303,8 @@
    */
   function CustomSubs() {
     var parsed;
-    var network = new create$q();
-    this.listener = start$5();
+    var network = new create$p();
+    this.listener = start$6();
 
     /**
      * Загрузить
@@ -8014,7 +8370,7 @@
     var draw_canvas = draw_html.find('canvas')[0];
     var draw_context = draw_canvas.getContext("2d");
     draw_canvas.width = 5;
-    draw_canvas.height = 200;
+    draw_canvas.height = Math.round(window.innerHeight * 0.26);
 
     //размер буффера
     try {
@@ -8112,7 +8468,7 @@
     var avplay, plugin, stream_url, loaded, current_time;
     var object = $('<object class="player-video_video"  style="visibility:hidden;"></object>');
     var video = object[0];
-    var listener = start$5();
+    var listener = start$6();
     var change_scale_later;
     var change_speed_later;
     var canGetVideoResolution = false;
@@ -8718,7 +9074,7 @@
 
     var object = $('<div class="player-video__youtube"><div class="player-video__youtube-player" id="youtube-player"></div><div class="player-video__youtube-line-top"></div><div class="player-video__youtube-line-bottom"></div><div class="player-video__youtube-noplayed hide">' + Lang.translate('player_youtube_no_played') + '</div></div>');
     var video = object[0];
-    var listener = start$5();
+    var listener = start$6();
     var youtube;
     var timeupdate;
     var timetapplay;
@@ -8990,8 +9346,8 @@
     return object;
   }
 
-  var listener$d = start$5();
-  var html$c;
+  var listener$e = start$6();
+  var html$e;
   var display;
   var paused;
   var subtitles$1;
@@ -9016,25 +9372,25 @@
   var hls_parser;
   var click_nums = 0;
   var click_timer;
-  function init$p() {
-    html$c = Template$1.get('player_video');
-    display = html$c.find('.player-video__display');
-    paused = html$c.find('.player-video__paused');
-    subtitles$1 = html$c.find('.player-video__subtitles');
-    backworkIcon = html$c.find('.player-video__backwork-icon');
-    forwardIcon = html$c.find('.player-video__forward-icon');
-    html$c.find('.player-video__backwork-icon,.player-video__forward-icon').on('animationend', function () {
+  function init$t() {
+    html$e = Template$1.get('player_video');
+    display = html$e.find('.player-video__display');
+    paused = html$e.find('.player-video__paused');
+    subtitles$1 = html$e.find('.player-video__subtitles');
+    backworkIcon = html$e.find('.player-video__backwork-icon');
+    forwardIcon = html$e.find('.player-video__forward-icon');
+    html$e.find('.player-video__backwork-icon,.player-video__forward-icon').on('animationend', function () {
       $(this).removeClass('rewind');
     });
-    html$c.on('click', function (e) {
+    html$e.on('click', function (e) {
       if ((Storage.field('navigation_type') == 'mouse' || Utils$2.isTouchDevice()) && DeviceInput.canClick(e.originalEvent)) {
         clearTimeout(click_timer);
         click_nums++;
-        if (TV.playning()) click_nums = 1;
+        if (PlayerIPTV.playning()) click_nums = 1;
         if (click_nums === 1) {
           click_timer = setTimeout(function () {
             click_nums = 0;
-            if (PlayerPanel.visibleStatus() && !TV.playning()) playpause();else PlayerPanel.mousemove();
+            if (PlayerPanel.visibleStatus() && !PlayerIPTV.playning()) playpause();else PlayerPanel.mousemove();
           }, 300);
         } else if (click_nums > 1) {
           click_timer = setTimeout(function () {
@@ -9066,10 +9422,10 @@
     /**
      * Специально для вебось
      */
-    listener$d.follow('webos_subs', function (data) {
+    listener$e.follow('webos_subs', function (data) {
       webos_wait.subs = convertToArray(data.subs);
     });
-    listener$d.follow('webos_tracks', function (data) {
+    listener$e.follow('webos_tracks', function (data) {
       webos_wait.tracks = convertToArray(data.tracks);
     });
   }
@@ -9138,7 +9494,7 @@
 
     // видео закончилось
     _video.addEventListener('ended', function () {
-      listener$d.send('ended', {});
+      listener$e.send('ended', {});
     });
     if (Platform.is('apple') && Storage.field('player') == 'ios') {
       _video.addEventListener('webkitendfullscreen', function (e) {
@@ -9152,16 +9508,19 @@
       var msg = (error.message || '').toUpperCase();
       if (msg.indexOf('EMPTY SRC') == -1) {
         if (error.code == 3) {
-          listener$d.send('error', {
-            error: Lang.translate('player_error_one')
+          listener$e.send('error', {
+            error: Lang.translate('player_error_one'),
+            fatal: true
           });
         } else if (error.code == 4) {
-          listener$d.send('error', {
-            error: Lang.translate('player_error_two')
+          listener$e.send('error', {
+            error: Lang.translate('player_error_two'),
+            fatal: true
           });
         } else if (typeof error.code !== 'undefined') {
-          listener$d.send('error', {
-            error: 'code [' + error.code + '] details [' + msg + ']'
+          listener$e.send('error', {
+            error: 'code [' + error.code + '] details [' + msg + ']',
+            fatal: true
           });
         }
       }
@@ -9170,7 +9529,7 @@
     // прогресс буферизации
     _video.addEventListener('progress', function (e) {
       if (typeof e.percent !== 'undefined') {
-        listener$d.send('progress', {
+        listener$e.send('progress', {
           down: e.percent + '%'
         });
       } else {
@@ -9182,7 +9541,7 @@
               if (_video.buffered.start && _video.buffered.start(_video.buffered.length - 1 - i) < _video.currentTime) {
                 var down = Math.max(0, Math.min(100, _video.buffered.end(_video.buffered.length - 1 - i) / duration * 100)) + "%";
                 seconds = Math.max(0, _video.buffered.end(_video.buffered.length - 1 - i) - _video.currentTime);
-                listener$d.send('progress', {
+                listener$e.send('progress', {
                   down: down
                 });
                 break;
@@ -9196,16 +9555,16 @@
 
     // можно ли уже проигрывать?
     _video.addEventListener('canplay', function () {
-      listener$d.send('canplay', {});
+      listener$e.send('canplay', {});
     });
 
     // сколько прошло
     _video.addEventListener('timeupdate', function () {
-      if (rewind_position == 0 && !_video.rewind) listener$d.send('timeupdate', {
+      if (rewind_position == 0 && !_video.rewind) listener$e.send('timeupdate', {
         duration: _video.duration,
         current: _video.currentTime
       });
-      listener$d.send('videosize', {
+      listener$e.send('videosize', {
         width: _video.videoWidth,
         height: _video.videoHeight
       });
@@ -9241,10 +9600,11 @@
 
     //получены первые данные
     _video.addEventListener('loadeddata', function (e) {
-      listener$d.send('videosize', {
+      listener$e.send('videosize', {
         width: _video.videoWidth,
         height: _video.videoHeight
       });
+      listener$e.send('loadeddata', {});
       scale();
       if (neeed_speed) speed(neeed_speed);
       loaded$1();
@@ -9255,10 +9615,10 @@
     _video.muted = false;
   }
   function hlsBitrate(seconds) {
-    if (hls && hls.streamController && hls.streamController.fragPlaying && hls.streamController.fragPlaying.baseurl) {
+    if (hls && hls.streamController && hls.streamController.fragPlaying && hls.streamController.fragPlaying.baseurl && hls.streamController.fragPlaying.stats) {
       var ch = Lang.translate('title_channel') + ' ' + parseFloat(hls.streamController.fragLastKbps / 1000).toFixed(2) + ' ' + Lang.translate('speed_mb');
-      var bt = ' / ' + Lang.translate('torrent_item_bitrate') + ' ~' + parseFloat(hls.streamController.fragPlaying.stats.total / 1000000 / 10 * 8).toFixed(2) + ' ' + Lang.translate('speed_mb');
-      var bf = ' / ' + Lang.translate('title_buffer') + ' ' + Utils$2.secondsToTimeHuman(seconds);
+      var bt = ' &nbsp;•&nbsp; ' + Lang.translate('torrent_item_bitrate') + ' ~' + parseFloat(hls.streamController.fragPlaying.stats.total / 1000000 / 10 * 8).toFixed(2) + ' ' + Lang.translate('speed_mb');
+      var bf = ' &nbsp;•&nbsp; ' + Lang.translate('title_buffer') + ' ' + Utils$2.secondsToTimeHuman(seconds);
       Lampa.PlayerInfo.set('bitrate', ch + bt + bf);
     }
   }
@@ -9468,7 +9828,7 @@
         tracks[params$1.track].selected = true;
         console.log('Player', 'enable track by default');
       }
-      listener$d.send('tracks', {
+      listener$e.send('tracks', {
         tracks: tracks
       });
     }
@@ -9495,7 +9855,7 @@
         }
         subsview(true);
       }
-      listener$d.send('subs', {
+      listener$e.send('subs', {
         subs: subs
       });
     }
@@ -9530,7 +9890,7 @@
       } else {
         if (hls.currentLevel >= 0) current_level = hls.levels[hls.currentLevel].title;
       }
-      listener$d.send('levels', {
+      listener$e.send('levels', {
         levels: hls.levels,
         current: current_level
       });
@@ -9560,7 +9920,7 @@
         bitrates[params$1.level].selected = true;
         _current_level = bitrates[params$1.level].title;
       }
-      listener$d.send('levels', {
+      listener$e.send('levels', {
         levels: bitrates,
         current: _current_level
       });
@@ -9663,7 +10023,7 @@
         url$5(src, true);
         _video.customSubs = sub;
         webos.repet(_video);
-        listener$d.send('reset_continue', {});
+        listener$e.send('reset_continue', {});
       };
       webos.start();
     }
@@ -9689,7 +10049,7 @@
    */
   function loader$1(status) {
     wait = status;
-    html$c.toggleClass('video--load', status);
+    html$e.toggleClass('video--load', status);
   }
 
   /**
@@ -9748,23 +10108,25 @@
               if (data.reason === "no EXTM3U delimiter") {
                 load$2(src);
               } else {
-                listener$d.send('error', {
-                  error: 'details [' + data.details + '] fatal [' + data.fatal + ']'
+                listener$e.send('error', {
+                  error: 'details [' + data.details + '] fatal [' + data.fatal + ']',
+                  fatal: data.fatal
                 });
               }
             } else {
-              listener$d.send('error', {
-                error: 'details [' + data.details + '] fatal [' + data.fatal + ']'
+              listener$e.send('error', {
+                error: 'details [' + data.details + '] fatal [' + data.fatal + ']',
+                fatal: data.fatal
               });
             }
           });
           hls.on(Hls.Events.MANIFEST_LOADED, function () {
             play$2();
           });
-          hls.on(Hls.Events.MANIFEST_PARSED, function () {
+          hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
             hls.currentLevel = hlsLevelDefault(hls);
           });
-        } else if (!change_quality && !TV.playning()) {
+        } else if (!change_quality && !PlayerIPTV.playning()) {
           console.log('Player', 'hls start parse');
           var send_load_ready = false;
           hls_parser = new Hls();
@@ -9774,7 +10136,7 @@
             if (!send_load_ready) load$2(src);
           });
           hls_parser.on(Hls.Events.MANIFEST_LOADED, function () {
-            if (hls_parser.audioTracks.length) listener$d.send('translate', {
+            if (hls_parser.audioTracks.length) listener$e.send('translate', {
               where: 'tracks',
               translate: hls_parser.audioTracks.map(function (a) {
                 return {
@@ -9782,7 +10144,7 @@
                 };
               })
             });
-            if (hls_parser.subtitleTracks.length) listener$d.send('translate', {
+            if (hls_parser.subtitleTracks.length) listener$e.send('translate', {
               where: 'subs',
               translate: hls_parser.subtitleTracks.map(function (a) {
                 return {
@@ -9808,7 +10170,7 @@
                 };
               });
               console.log('Player', 'set hls levels', parsed_levels);
-              listener$d.send('levels', {
+              listener$e.send('levels', {
                 levels: parsed_levels,
                 current: hlsLevelName(select_level)
               });
@@ -9832,6 +10194,7 @@
       hls_parser = false;
     }
     _video.src = src;
+    console.log('Player', 'video load url:', src);
     _video.load();
     play$2();
   }
@@ -9852,7 +10215,7 @@
       });
     }
     paused.addClass('hide');
-    listener$d.send('play', {});
+    listener$e.send('play', {});
   }
 
   /**
@@ -9871,7 +10234,7 @@
       });
     }
     paused.removeClass('hide');
-    listener$d.send('pause', {});
+    listener$e.send('pause', {});
   }
 
   /**
@@ -9881,10 +10244,10 @@
     if (wait || rewind_position) return;
     if (_video.paused) {
       play$2();
-      listener$d.send('play', {});
+      listener$e.send('play', {});
     } else {
       pause();
-      listener$d.send('pause', {});
+      listener$e.send('pause', {});
     }
   }
 
@@ -9914,11 +10277,11 @@
     pause();
     if (rewind_position == 0) _video.currentTime = 0;else if (rewind_position == _video.duration) _video.currentTime = _video.duration;
     timer$5.rewind = Date.now();
-    listener$d.send('timeupdate', {
+    listener$e.send('timeupdate', {
       duration: _video.duration,
       current: rewind_position
     });
-    listener$d.send('rewind', {});
+    listener$e.send('rewind', {});
     rewindEnd(immediately);
   }
 
@@ -10032,14 +10395,14 @@
     display.empty();
     loader$1(false);
   }
-  function render$a() {
-    return html$c;
+  function render$b() {
+    return html$e;
   }
   var PlayerVideo = {
-    init: init$p,
-    listener: listener$d,
+    init: init$t,
+    listener: listener$e,
     url: url$5,
-    render: render$a,
+    render: render$b,
     destroy: destroy$5,
     playpause: playpause,
     rewind: rewind,
@@ -10063,28 +10426,45 @@
   function parse$2(data) {
     var result = {
       hash_string: '',
-      season: data.movie.number_of_seasons ? 1 : 0,
-      episode: 0,
+      season: null,
+      episode: null,
       serial: !!data.movie.number_of_seasons
     };
-    var regexps = [[/s([0-9]+)\.?ep?([0-9]+)/i, 'season', 'episode'], [/s([0-9]{2})([0-9]+)/i, 'season', 'episode'], [/s([0-9]+)/i, 'season'], [/[ |\[(]([0-9]{1,2})x([0-9]+)/i, 'season', 'episode'], [/[ |\[(]([0-9]{1,3}) of ([0-9]+)/i, 'season', 'episode'], [/ep([0-9]+)/i, 'episode'], [/ep\.([0-9]+)/i, 'episode'], [/ - ([0-9]+)/i, 'episode'], [/\[([0-9]+)]/i, 'episode']];
+    var regexps = [[/\bs(\d+)\.?ep?(\d+)\b/i, 'season', 'episode'], [/\b(\d{1,2})[x\-](\d+)\b/i, 'season', 'episode'], [/\bs(\d{2})(\d{2,3})\b/i, 'season', 'episode'], [/season (\d+) episode (\d+)/i, 'season', 'episode'], [/сезон (\d+) серия (\d+)/i, 'season', 'episode'], [/(\d+) season (\d+) episode/i, 'season', 'episode'], [/(\d+) сезон (\d+) серия/i, 'season', 'episode'], [/episode (\d+)/i, 'episode'], [/серия (\d+)/i, 'episode'], [/(\d+) episode/i, 'episode'], [/(\d+) серия/i, 'episode'], [/season (\d+)/i, 'season'], [/сезон (\d+)/i, 'season'], [/(\d+) season/i, 'season'], [/(\d+) сезон/i, 'season'], [/\bs(\d+)\b/i, 'season'], [/\bep?\.?(\d+)\b/i, 'episode'], [/\b(\d{1,3}) of (\d+)/i, 'episode'], [/\b(\d{1,3}) из (\d+)/i, 'episode'], [/ - (\d{1,3})\b/i, 'episode'], [/\[(\d{1,3})\]/i, 'episode']];
+    var folder_regexps = [[/season (\d+)/i, 'season'], [/сезон (\d+)/i, 'season'], [/(\d+) season/i, 'season'], [/(\d+) сезон/i, 'season'], [/\bs(\d+)\b/i, 'season']];
+    var parts = data.path.replace(/_/g, ' ').split('/');
+    var fname = parts.pop();
+    var folder = parts.pop();
     regexps.forEach(function (regexp) {
-      var match = data.path.split('/').pop().match(regexp[0]);
+      var match = fname.match(regexp[0]);
       if (match) {
         var arr = regexp.slice(1);
         arr.forEach(function (a, i) {
           var v = match[i + 1];
-          if (v) result[a] = parseInt(v);
+          if (v && result[a] == null) result[a] = parseInt(v);
         });
       }
     });
-    if (result.episode == 0) {
-      var ep = parseInt(data.filename.trim().slice(0, 3).replace(/[a-z]/gi, ''));
-      if (!isNaN(ep)) result.episode = ep;
+    if (folder && result.season == null) {
+      folder_regexps.forEach(function (regexp) {
+        var match = folder.match(regexp[0]);
+        if (match) {
+          var arr = regexp.slice(1);
+          arr.forEach(function (a, i) {
+            var v = match[i + 1];
+            if (v && result[a] == null) result[a] = parseInt(v);
+          });
+        }
+      });
+    }
+    if (result.season == null) result.season = data.movie.number_of_seasons ? 1 : 0;
+    if (result.episode == null) {
+      var match = data.filename.replace(/_/g, ' ').trim().match(/^(\d{1,3})\b/i);
+      result.episode = match ? parseInt(match[1]) : 0;
     }
     if (!data.is_file) {
       if (data.movie.number_of_seasons) {
-        result.hash_string = [result.season, result.episode, data.movie.original_title].join('');
+        result.hash_string = [result.season, result.season > 10 ? ':' : '', result.episode, data.movie.original_title].join('');
       } else if (data.movie.original_title && !result.serial) {
         result.hash_string = data.movie.original_title;
       } else {
@@ -10099,19 +10479,21 @@
     parse: parse$2
   };
 
-  var network$9 = new create$q();
+  var network$9 = new create$p();
   function url$4() {
     var u = ip();
-    return u ? Utils$2.checkHttp(u) : u;
+    return u ? Utils$2.checkEmptyUrl(u) : u;
   }
   function ip() {
-    return Storage.get(Storage.field('torrserver_use_link') == 'two' ? 'torrserver_url_two' : 'torrserver_url');
+    var one = Storage.get('torrserver_url');
+    var two = Storage.get('torrserver_url_two');
+    return Storage.field('torrserver_use_link') == 'two' ? two || one : one || two;
   }
   function my(success, fail) {
     var data = JSON.stringify({
       action: 'list'
     });
-    clear$8();
+    clear$9();
     network$9.silent(url$4() + '/torrents', function (result) {
       if (result.length) success(result);else fail();
     }, fail, data);
@@ -10132,7 +10514,7 @@
       data: object.data ? JSON.stringify(object.data) : '',
       save_to_db: true
     });
-    clear$8();
+    clear$9();
     network$9.silent(url$4() + '/torrents', success, fail, data);
   }
   function hash$1(object, success, fail) {
@@ -10144,7 +10526,7 @@
       data: object.data ? JSON.stringify(object.data) : '',
       save_to_db: Storage.get('torrserver_savedb', 'false')
     });
-    clear$8();
+    clear$9();
     network$9.silent(url$4() + '/torrents', success, function (a, c) {
       fail(network$9.errorDecode(a, c));
     }, data);
@@ -10154,7 +10536,7 @@
       action: 'get',
       hash: hash
     });
-    clear$8();
+    clear$9();
     network$9.timeout(2000);
     network$9.silent(url$4() + '/torrents', function (json) {
       if (json.file_stats) {
@@ -10163,7 +10545,7 @@
     }, fail, data);
   }
   function connected(success, fail) {
-    clear$8();
+    clear$9();
     network$9.timeout(5000);
     network$9.silent(url$4() + '/settings', function (json) {
       if (typeof json.CacheSize == 'undefined') {
@@ -10185,7 +10567,7 @@
       action: 'drop',
       hash: hash
     });
-    clear$8();
+    clear$9();
     network$9.silent(url$4() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
@@ -10195,7 +10577,7 @@
       action: 'rem',
       hash: hash
     });
-    clear$8();
+    clear$9();
     network$9.silent(url$4() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
@@ -10253,7 +10635,7 @@
     }
     return files;
   }
-  function clear$8() {
+  function clear$9() {
     network$9.clear();
   }
   function error$1() {
@@ -10311,7 +10693,7 @@
     url: url$4,
     hash: hash$1,
     files: files$1,
-    clear: clear$8,
+    clear: clear$9,
     drop: drop,
     stream: stream,
     remove: remove$3,
@@ -10322,23 +10704,23 @@
     clearFileName: clearFileName
   };
 
-  var html$b;
-  var listener$c = start$5();
-  var network$8 = new create$q();
+  var html$d;
+  var listener$d = start$6();
+  var network$8 = new create$p();
   var elems;
   var error, stat_timer;
-  function init$o() {
-    html$b = Template$1.get('player_info');
-    html$b.find('.player-info__body').prepend(HeadBackward('Плеер'));
+  function init$s() {
+    html$d = Template$1.get('player_info');
+    html$d.find('.player-info__body').prepend(HeadBackward('Плеер'));
     elems = {
-      name: $('.player-info__name,.head-backward__title', html$b),
-      size: $('.value--size span', html$b),
-      stat: $('.value--stat span', html$b),
-      speed: $('.value--speed span', html$b),
-      error: $('.player-info__error', html$b),
-      pieces: $('.value--pieces', html$b)
+      name: $('.player-info__name,.head-backward__title', html$d),
+      size: $('.value--size span', html$d),
+      stat: $('.value--stat span', html$d),
+      speed: $('.value--speed span', html$d),
+      error: $('.player-info__error', html$d),
+      pieces: $('.value--pieces', html$d)
     };
-    Utils$2.time(html$b);
+    Utils$2.time(html$d);
   }
 
   /**
@@ -10346,14 +10728,14 @@
    * @param {string} need
    * @param {string|{width,height}} value 
    */
-  function set$2(need, value) {
+  function set$3(need, value) {
     if (need == 'name') elems.name.html(value);else if (need == 'size' && value.width && value.height) elems.size.text(value.width + 'x' + value.height);else if (need == 'error') {
       clearTimeout(error);
       elems.error.removeClass('hide').text(value);
       error = setTimeout(function () {
         elems.error.addClass('hide');
       }, 10000);
-    } else if (need == 'stat') stat$1(value);else if (need == 'bitrate') elems.stat.text(value);
+    } else if (need == 'stat') stat$1(value);else if (need == 'bitrate') elems.stat.html(value);
   }
   function pieces(cache) {
     elems.pieces.empty();
@@ -10386,34 +10768,34 @@
    */
   function stat$1(url) {
     var wait = 0;
-    elems.stat.text('- / - • - seeds');
+    elems.stat.text('- / - • - ' + Lang.translate('connected_seeds'));
     elems.speed.text('--');
     var update = function update() {
       // если панель скрыта, то зачем каждую секунду чекать? хватит и 5 сек
       // проверено, если ставить на паузу, разадача удаляется, но если чекать постоянно, то все норм
-      if (!html$b.hasClass('info--visible')) {
+      if (!html$d.hasClass('info--visible')) {
         wait++;
         if (wait <= 5) return;else wait = 0;
       }
       network$8.timeout(2000);
       network$8.silent(url.replace('preload', 'stat').replace('play', 'stat'), function (data) {
-        elems.stat.text((data.active_peers || 0) + ' / ' + (data.total_peers || 0) + ' • ' + (data.connected_seeders || 0) + ' seeds');
-        elems.speed.text(data.download_speed ? Utils$2.bytesToSize(data.download_speed * 8, true) : '0.0');
+        elems.stat.text((data.active_peers || 0) + ' / ' + (data.total_peers || 0) + ' • ' + (data.connected_seeders || 0) + ' ' + Lang.translate('connected_seeds'));
+        elems.speed.text(Utils$2.bytesToSize(data.download_speed ? data.download_speed * 8 : 0, true));
         var hash = url.match(/link=(.*?)\&/);
         if (hash) {
           Torserver.cache(hash[1], function (cache) {
             pieces(cache);
-            listener$c.send('stat', {
+            listener$d.send('stat', {
               data: data,
               cache: cache
             });
           }, function () {
-            listener$c.send('stat', {
+            listener$d.send('stat', {
               data: data
             });
           });
         } else {
-          listener$c.send('stat', {
+          listener$d.send('stat', {
             data: data
           });
         }
@@ -10427,8 +10809,8 @@
    * Показать скрыть инфо
    * @param {boolean} status 
    */
-  function toggle$6(status) {
-    html$b.toggleClass('info--visible', status);
+  function toggle$7(status) {
+    html$d.toggleClass('info--visible', status);
   }
   function loading$1() {
     elems.size.text(Lang.translate('loading') + '...');
@@ -10447,20 +10829,20 @@
     clearInterval(stat_timer);
     network$8.clear();
   }
-  function render$9() {
-    return html$b;
+  function render$a() {
+    return html$d;
   }
   var PlayerInfo = {
-    init: init$o,
-    listener: listener$c,
-    render: render$9,
-    set: set$2,
-    toggle: toggle$6,
+    init: init$s,
+    listener: listener$d,
+    render: render$a,
+    set: set$3,
+    toggle: toggle$7,
     loading: loading$1,
     destroy: destroy$4
   };
 
-  var listener$b = start$5();
+  var listener$c = start$6();
   var current = '';
   var playlist$1 = [];
   var _position = 0;
@@ -10469,14 +10851,14 @@
    * Показать плейлист
    */
   function show$6() {
-    active$2();
+    active$3();
     var enabled = Controller.enabled();
     Select.show({
       title: Lang.translate('player_playlist'),
       items: playlist$1,
       onSelect: function onSelect(a) {
         Controller.toggle(enabled.name);
-        listener$b.send('select', {
+        listener$c.send('select', {
           playlist: playlist$1,
           item: a,
           position: _position
@@ -10491,7 +10873,7 @@
   /**
    * Установить активным
    */
-  function active$2() {
+  function active$3() {
     playlist$1.forEach(function (element) {
       element.selected = element.url == current;
       if (element.selected) _position = playlist$1.indexOf(element);
@@ -10502,9 +10884,9 @@
    * Назад
    */
   function prev() {
-    active$2();
+    active$3();
     if (_position > 0) {
-      listener$b.send('select', {
+      listener$c.send('select', {
         playlist: playlist$1,
         position: _position - 1,
         item: playlist$1[_position - 1]
@@ -10516,9 +10898,9 @@
    * Далее
    */
   function next() {
-    active$2();
+    active$3();
     if (_position < playlist$1.length - 1) {
-      listener$b.send('select', {
+      listener$c.send('select', {
         playlist: playlist$1,
         position: _position + 1,
         item: playlist$1[_position + 1]
@@ -10530,12 +10912,12 @@
    * Установить плейлист
    * @param {[{title:string, url:string}]} p 
    */
-  function set$1(p) {
+  function set$2(p) {
     playlist$1 = p;
     playlist$1.forEach(function (l, i) {
       if (l.url == current) _position = i;
     });
-    listener$b.send('set', {
+    listener$c.send('set', {
       playlist: playlist$1,
       position: _position
     });
@@ -10557,12 +10939,12 @@
     current = u;
   }
   var PlayerPlaylist = {
-    listener: listener$b,
-    active: active$2,
+    listener: listener$c,
+    active: active$3,
     show: show$6,
     url: url$3,
     get: get$c,
-    set: set$1,
+    set: set$2,
     prev: prev,
     next: next,
     position: function position() {
@@ -10641,186 +11023,11 @@
     return Chrome;
   }();
 
-  var IndexedDB = /*#__PURE__*/function () {
-    function IndexedDB(database_name) {
-      var tables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
-      _classCallCheck(this, IndexedDB);
-      this.listener = start$5();
-      this.database_name = 'lampa_' + database_name;
-      this.tables = tables;
-      this.version = version;
-      this.db = null;
-      this.logs = true;
-    }
-    _createClass(IndexedDB, [{
-      key: "log",
-      value: function log(err, store_name, key) {
-        if (this.logs) console.log('DB', this.database_name + (store_name ? '_' + store_name : '') + (key ? ' -> [' + key + ']' : ''), err);
-      }
-    }, {
-      key: "openDatabase",
-      value: function openDatabase() {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-          if (!('indexedDB' in window)) return _this.log('Not supported'), reject('Not supported');
-          if (!_this.tables.length) return _this.log('No tables'), reject('No tables');
-          var request = indexedDB.open(_this.database_name, _this.version);
-          request.onerror = function (event) {
-            _this.log(request.error || 'An error occurred while opening the database');
-            reject(request.error || 'An error occurred while opening the database');
-          };
-          request.onsuccess = function (event) {
-            _this.db = event.target.result;
-            resolve();
-          };
-          request.onupgradeneeded = function (event) {
-            var db = event.target.result;
-            _this.tables.forEach(function (name) {
-              if (!db.objectStoreNames.contains(name)) db.createObjectStore(name, {
-                keyPath: 'key'
-              });
-            });
-          };
-        });
-      }
-    }, {
-      key: "addData",
-      value: function addData(store_name, key, value) {
-        var _this2 = this;
-        return new Promise(function (resolve, reject) {
-          if (!_this2.db) {
-            return _this2.log('Database not open', store_name, key), reject('Database not open');
-          }
-          var transaction = _this2.db.transaction([store_name], 'readwrite');
-          var objectStore = transaction.objectStore(store_name);
-          var addRequest = objectStore.add({
-            key: key,
-            value: value,
-            time: Date.now()
-          });
-          addRequest.onerror = function (event) {
-            _this2.log(addRequest.error || 'An error occurred while adding data', store_name, key);
-            reject(addRequest.error || 'An error occurred while adding data');
-          };
-          addRequest.onsuccess = resolve;
-        });
-      }
-    }, {
-      key: "getData",
-      value: function getData(store_name, key) {
-        var _this3 = this;
-        var life_time = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
-        return new Promise(function (resolve, reject) {
-          if (!_this3.db) {
-            return _this3.log('Database not open', store_name, key), reject('Database not open');
-          }
-          var transaction = _this3.db.transaction([store_name], 'readonly');
-          var objectStore = transaction.objectStore(store_name);
-          var getRequest = key ? objectStore.get(key) : objectStore.getAll();
-          getRequest.onerror = function (event) {
-            _this3.log(getRequest.error || 'An error occurred while retrieving data', store_name, key);
-            reject(getRequest.error || 'An error occurred while retrieving data');
-          };
-          getRequest.onsuccess = function (event) {
-            var result = event.target.result;
-            if (result) {
-              if (key) {
-                if (life_time == -1) resolve(result.value);else {
-                  if (Date.now() < result.time + life_time * 1000 * 60) resolve(result.value);else resolve(null);
-                }
-              } else resolve(result.map(function (r) {
-                return r.value;
-              }));
-            } else {
-              resolve(null);
-            }
-          };
-        });
-      }
-    }, {
-      key: "getDataAnyCase",
-      value: function getDataAnyCase(store_name, key, life_time) {
-        var _this4 = this;
-        return new Promise(function (resolve, reject) {
-          _this4.getData(store_name, key, life_time).then(resolve)["catch"](function () {
-            resolve(null);
-          });
-        });
-      }
-    }, {
-      key: "updateData",
-      value: function updateData(store_name, key, value) {
-        var _this5 = this;
-        return new Promise(function (resolve, reject) {
-          if (!_this5.db) {
-            return _this5.log('Database not open', store_name, key), reject('Database not open');
-          }
-          var transaction = _this5.db.transaction([store_name], 'readwrite');
-          var objectStore = transaction.objectStore(store_name);
-          var getRequest = objectStore.get(key);
-          getRequest.onerror = function (event) {
-            _this5.log(getRequest.error || 'An error occurred while updating data', store_name, key);
-            reject(getRequest.error || 'An error occurred while updating data');
-          };
-          getRequest.onsuccess = function (event) {
-            var result = event.target.result;
-            if (result) {
-              result.value = value;
-              result.time = Date.now();
-              var updateRequest = objectStore.put(result);
-              updateRequest.onerror = function (event) {
-                _this5.log(updateRequest.error || 'An error occurred while updating data', store_name, key);
-                reject(updateRequest.error || 'An error occurred while updating data');
-              };
-              updateRequest.onsuccess = resolve;
-            } else {
-              _this5.log('No data found with the given key', store_name, key);
-              reject('No data found with the given key');
-            }
-          };
-        });
-      }
-    }, {
-      key: "rewriteData",
-      value: function rewriteData(store_name, key, value) {
-        var _this6 = this;
-        return new Promise(function (resolve, reject) {
-          _this6.getData(store_name, key).then(function (ready) {
-            return ready ? _this6.updateData(store_name, key, value) : _this6.addData(store_name, key, value);
-          }).then(resolve)["catch"](reject);
-        });
-      }
-    }, {
-      key: "deleteData",
-      value: function deleteData(store_name, key) {
-        var _this7 = this;
-        return new Promise(function (resolve, reject) {
-          if (!_this7.db) {
-            return _this7.log('Database not open', store_name, key), reject('Database not open');
-          }
-          var transaction = _this7.db.transaction([store_name], 'readwrite');
-          var objectStore = transaction.objectStore(store_name);
-          var deleteRequest = objectStore["delete"](key);
-          deleteRequest.onerror = function (event) {
-            _this7.log(deleteRequest.error || 'An error occurred while deleting data', store_name, key);
-            reject(deleteRequest.error || 'An error occurred while deleting data');
-          };
-          deleteRequest.onsuccess = resolve;
-        });
-      }
-    }]);
-    return IndexedDB;
-  }();
-
-  var Cache = new IndexedDB('cache', ['screensavers', 'plugins', 'backgrounds', 'images', 'themes', 'other'], 4);
-  Cache.openDatabase();
-
   var Cub = /*#__PURE__*/function () {
     function Cub(params) {
       _classCallCheck(this, Cub);
       this.params = params;
-      this["default"] = 'http://cub.watch/img/background/default.mp4';
+      this["default"] = Utils$2.protocol() + object$2.cub_domain + '/img/background/default.mp4';
     }
     _createClass(Cub, [{
       key: "create",
@@ -10928,7 +11135,7 @@
     function Aerial(params) {
       _classCallCheck(this, Aerial);
       this.params = params;
-      this.net = new create$q();
+      this.net = new create$p();
       this.visible = false;
       this.items = [];
       this.opacity = 0;
@@ -11065,7 +11272,7 @@
   var Screensaver$1 = /*#__PURE__*/function () {
     function Screensaver() {
       _classCallCheck(this, Screensaver);
-      this.listener = start$5();
+      this.listener = start$6();
       this.enabled = false;
       this.worked = false;
       this.screensaver;
@@ -11180,7 +11387,7 @@
   var Screensaver$2 = new Screensaver$1();
 
   var timer$4;
-  var listener$a;
+  var listener$b;
 
   /**
    * Открыть окно
@@ -11199,7 +11406,7 @@
     timer$4 = setInterval(function () {
       Socket.send('devices', {});
     }, 3000);
-    listener$a = function listener(e) {
+    listener$b = function listener(e) {
       if (e.method == 'devices') {
         var devices = e.data.filter(function (d) {
           return !(d.name == 'CUB' || d.device_id == Socket.uid());
@@ -11209,7 +11416,7 @@
         devices.forEach(function (device) {
           var item = $('<div class="broadcast__device selector">' + device.name + '</div>');
           item.on('hover:enter', function () {
-            close$3();
+            close$4();
             Controller.toggle(enabled);
             if (params.type == 'card') {
               Socket.send('open', {
@@ -11241,25 +11448,25 @@
       size: 'small',
       mask: true,
       onBack: function onBack() {
-        close$3();
+        close$4();
         Controller.toggle(enabled);
       }
     });
-    listener$a({
+    listener$b({
       method: 'devices',
       data: Socket.devices()
     });
-    Socket.listener.follow('message', listener$a);
+    Socket.listener.follow('message', listener$b);
   }
 
   /**
    * Закрыть окно
    */
-  function close$3() {
-    Socket.listener.remove('message', listener$a);
+  function close$4() {
+    Socket.listener.remove('message', listener$b);
     clearInterval(timer$4);
     Modal.close();
-    listener$a = null;
+    listener$b = null;
   }
   var Broadcast = {
     open: open$4
@@ -12048,7 +12255,7 @@
     var s = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 30;
     var l = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 80;
     var hls = rgbToHsl(c[0], c[1], c[2]);
-    var rgb = hslToRgb(hls[0], Math.min(s, hls[1]), l);
+    var rgb = hslToRgb$1(hls[0], Math.min(s, hls[1]), l);
     return rgba(rgb, o);
   }
 
@@ -12103,7 +12310,7 @@
    * @param   {number}  l       The lightness
    * @return  {Array}           The RGB representation
    */
-  function hslToRgb(h, s, l) {
+  function hslToRgb$1(h, s, l) {
     s /= 100;
     l /= 100;
     var C = (1 - Math.abs(2 * l - 1)) * s;
@@ -12179,7 +12386,8 @@
     blur: blur$1,
     tone: tone,
     rgbToHsl: rgbToHsl,
-    rgbToHex: rgbToHex
+    rgbToHex: rgbToHex,
+    hslToRgb: hslToRgb$1
   };
 
   var canvas = document.createElement('canvas');
@@ -12194,8 +12402,8 @@
       Cache.getData('images', src).then(function (str) {
         if (!str || typeof src == 'string') {
           setTimeout(function () {
-            canvas.width = img.width;
-            canvas.height = img.height;
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
             try {
               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
               canvas.toBlob(function (blob) {
@@ -12234,15 +12442,15 @@
     read: read$2
   };
 
-  var html$a = $("\n    <div class=\"background\">\n        <canvas class=\"background__one\"></canvas>\n        <canvas class=\"background__two\"></canvas>\n    </div>");
+  var html$c = $("\n    <div class=\"background\">\n        <canvas class=\"background__one\"></canvas>\n        <canvas class=\"background__two\"></canvas>\n    </div>");
   var background = {
     one: {
-      canvas: $('.background__one', html$a),
-      ctx: $('.background__one', html$a)[0].getContext('2d')
+      canvas: $('.background__one', html$c),
+      ctx: $('.background__one', html$c)[0].getContext('2d')
     },
     two: {
-      canvas: $('.background__two', html$a),
-      ctx: $('.background__two', html$a)[0].getContext('2d')
+      canvas: $('.background__two', html$c),
+      ctx: $('.background__two', html$c)[0].getContext('2d')
     }
   };
   var theme_elem = $('head meta[name="theme-color"]');
@@ -12262,7 +12470,7 @@
   /**
    * Запуск
    */
-  function init$n() {
+  function init$r() {
     Storage.listener.follow('change', function (event) {
       if (event.name == 'background' || event.name == 'background_type') resize();
     });
@@ -12290,7 +12498,7 @@
   function bg() {
     clearTimeout(timer_change);
     timer_change = setTimeout(function () {
-      html$a.find('canvas').eq(view$1 == 'one' ? 1 : 0).removeClass('visible');
+      html$c.find('canvas').eq(view$1 == 'one' ? 1 : 0).removeClass('visible');
     }, 400);
     view$1 = view$1 == 'one' ? 'two' : 'one';
     return background[view$1];
@@ -12377,7 +12585,7 @@
    */
   function resize() {
     clearTimeout(timer_resize);
-    html$a.find('canvas').removeClass('visible');
+    html$c.find('canvas').removeClass('visible');
     timer_resize = setTimeout(function () {
       background.one.canvas.width(window.innerWidth);
       background.one.canvas.height(window.innerHeight);
@@ -12467,21 +12675,185 @@
    * Рендер
    * @returns {object}
    */
-  function render$8() {
-    return html$a;
+  function render$9() {
+    return html$c;
   }
   var Background = {
-    render: render$8,
+    render: render$9,
     change: change,
     update: resize,
-    init: init$n,
+    init: init$r,
     immediately: immediately,
     theme: theme
   };
 
-  var html$9;
-  var listener$9 = start$5();
-  new create$q();
+  var already_requested = false;
+  var last_time_requested = 0;
+  function init$q() {
+    Params.trigger('parental_control', false);
+    Params.select('parental_control_time', {
+      'always': '#{settings_parental_control_param_time_always}',
+      'once': '#{settings_parental_control_param_time_once}',
+      '10': '#{settings_parental_control_param_time_10}',
+      '20': '#{settings_parental_control_param_time_20}',
+      '30': '#{settings_parental_control_param_time_30}',
+      '60': '#{settings_parental_control_param_time_60}',
+      '120': '#{settings_parental_control_param_time_120}'
+    }, 'once');
+    Template$1.add('settings_parental_control', "<div>\n        <div class=\"settings-param selector parental-control-toggle\" data-type=\"button\" data-static=\"true\">\n            <div class=\"settings-param__name\">#{title_parental_control}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        <div class=\"parental-control-other\">\n            <div class=\"settings-param selector settings-param--button parental-control-change\" data-type=\"button\" data-static=\"true\">\n                <div class=\"settings-param__name\">#{settings_parental_control_change_pin}</div>\n            </div>\n            <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parental_control_time\">\n                <div class=\"settings-param__name\">#{settings_parental_control_demand_title}</div>\n                <div class=\"settings-param__value\"></div>\n                <div class=\"settings-param__descr\">#{settings_parental_control_demand_descr}</div>\n            </div>\n        </div>\n    </div>");
+    Settings.listener.follow('open', function (e) {
+      if (e.name == 'parental_control') {
+        var toggle = e.body.find('.parental-control-toggle');
+        var change = e.body.find('.parental-control-change');
+        var other = e.body.find('.parental-control-other');
+        var active;
+        var updateStatus = function updateStatus() {
+          toggle.find('.settings-param__value').text(Lang.translate(Storage.field('parental_control') ? 'settings_parental_control_enabled' : 'settings_parental_control_disabled'));
+          other.toggleClass('hide', !Boolean(Storage.field('parental_control')));
+        };
+        toggle.on('hover:enter', function () {
+          active = Controller.enabled().name;
+          if (Storage.field('parental_control')) {
+            request(function () {
+              Storage.set('parental_control', false);
+              updateStatus();
+              Controller.toggle(active);
+            }, function () {
+              Controller.toggle(active);
+            });
+          } else if (!Storage.value('parental_control_pin')) {
+            set$1(function (code) {
+              if (code) {
+                Storage.set('parental_control_pin', code);
+                Storage.set('parental_control', true);
+                updateStatus();
+              }
+            });
+          } else {
+            Storage.set('parental_control', true);
+            updateStatus();
+          }
+        });
+        change.on('hover:enter', function () {
+          active = Controller.enabled().name;
+          if (Storage.value('parental_control_pin')) {
+            request(function () {
+              set$1(function (code) {
+                if (code) {
+                  Storage.set('parental_control_pin', code);
+                }
+                Controller.toggle(active);
+              });
+            }, function () {
+              Controller.toggle(active);
+            });
+          }
+        });
+        updateStatus();
+      }
+    });
+  }
+  function set$1(call) {
+    var active = Controller.enabled().name;
+    pin(Lang.translate('parental_control_input_new_code'), function (code_one) {
+      if (code_one) {
+        pin(Lang.translate('parental_control_confirm_new_code'), function (code_two) {
+          if (code_one == code_two) {
+            Controller.toggle(active);
+            call(code_two);
+          } else {
+            Controller.toggle(active);
+            Noty.show(Lang.translate('parental_control_no_match_code'));
+            call();
+          }
+        });
+      } else {
+        Controller.toggle(active);
+        call();
+      }
+    });
+  }
+  function pin(title, call) {
+    Input.edit({
+      free: true,
+      title: title,
+      nosave: true,
+      value: '',
+      layout: 'nums',
+      keyboard: 'lampa'
+    }, call);
+  }
+  function request(call, error) {
+    if (Storage.field('parental_control')) {
+      pin(Lang.translate('parental_control_input_code'), function (code) {
+        if (code == Storage.value('parental_control_pin')) {
+          call();
+        } else if (code) {
+          Noty.show(Lang.translate('parental_control_input_error'));
+          if (error) error();
+        } else if (error) error();
+      });
+    } else {
+      call();
+    }
+  }
+
+  /**
+   * Запросить PIN-код
+   * @param {function} call - если pin верный
+   * @param {function} error - если нет
+   */
+  function query(call, error) {
+    if (Storage.field('parental_control')) {
+      var type = Storage.field('parental_control_time');
+      if (type !== 'always') {
+        if (type == 'once') {
+          if (already_requested) return call();
+        } else {
+          if (last_time_requested + 1000 * 60 * parseInt(type) > Date.now()) return call();
+        }
+      }
+      request(function () {
+        already_requested = true;
+        last_time_requested = Date.now();
+        call();
+      }, error);
+    } else {
+      call();
+    }
+  }
+
+  /**
+   * Запрос на установку PIN-кода, перед этим нужно проверить через enabled()
+   * @param {function} call - callback
+   */
+  function install$1(call) {
+    set$1(function (code) {
+      if (code) {
+        Storage.set('parental_control_pin', code);
+        Storage.set('parental_control', true);
+      }
+      call(Boolean(code));
+    });
+  }
+
+  /**
+   * Проверить, установлен ли контроль
+   * @returns bollean
+   */
+  function enabled$1() {
+    return Storage.field('parental_control');
+  }
+  var ParentalControl = {
+    init: init$q,
+    query: query,
+    enabled: enabled$1,
+    install: install$1
+  };
+
+  var html$b;
+  var listener$a = start$6();
+  new create$p();
   var callback$2;
   var work = false;
   var launch_player;
@@ -12501,16 +12873,16 @@
    * Подписываемся на события
    */
 
-  function init$m() {
+  function init$p() {
     PlayerPanel.init();
     PlayerVideo.init();
     PlayerInfo.init();
-    TV.init();
-    html$9 = Template$1.get('player');
-    html$9.append(PlayerVideo.render());
-    html$9.append(PlayerPanel.render());
-    html$9.append(PlayerInfo.render());
-    html$9.on('mousemove', function () {
+    PlayerIPTV.init();
+    html$b = Template$1.get('player');
+    html$b.append(PlayerVideo.render());
+    html$b.append(PlayerPanel.render());
+    html$b.append(PlayerInfo.render());
+    html$b.on('mousemove', function () {
       if (Storage.field('navigation_type') == 'mouse' && !Utils$2.isTouchDevice()) PlayerPanel.mousemove();
     });
 
@@ -12593,10 +12965,22 @@
 
     /** Ошибка при попытки возпроизвести */
     PlayerVideo.listener.follow('error', function (e) {
-      if (work) PlayerInfo.set('error', e.error);
+      if (work) {
+        PlayerInfo.set('error', e.error);
+        if (e.fatal && work.url_reserve) {
+          PlayerVideo.destroy(true);
+          PlayerVideo.url(work.url_reserve, true);
+          delete work.url_reserve;
+        }
+      }
     });
     PlayerVideo.listener.follow('translate', function (e) {
       PlayerPanel.updateTranslate(e.where, e.translate);
+    });
+    PlayerVideo.listener.follow('loadeddata', function () {
+      if (PlayerVideo.video().duration < 60 * 3 && work.need_check_live_stream) {
+        PlayerPanel.hideRewind();
+      }
     });
 
     /** Сбросить (продолжить) */
@@ -12667,7 +13051,7 @@
     PlayerPanel.listener.follow('visible', function (e) {
       PlayerInfo.toggle(e.status);
       PlayerVideo.normalizationVisible(e.status);
-      html$9.toggleClass('player--panel-visible', e.status);
+      html$b.toggleClass('player--panel-visible', e.status);
     });
 
     /** К началу видео */
@@ -12753,18 +13137,21 @@
         }
       }
     });
-    TV.listener.follow('play', function (data) {
-      PlayerVideo.destroy();
-      console.log('Player', 'url:', data.channel.url);
-      PlayerVideo.url(data.channel.url);
-      PlayerInfo.set('name', '');
+    PlayerIPTV.listener.follow('play', function (data) {
+      locked(data.channel, function () {
+        PlayerVideo.destroy();
+        console.log('Player', 'url:', data.channel.url);
+        PlayerVideo.url(data.channel.url);
+        PlayerInfo.set('name', '');
+        Controller.toggle('player_tv');
+      });
     });
   }
 
   /**
    * Главный контроллер
    */
-  function toggle$5() {
+  function toggle$6() {
     Controller.add('player', {
       invisible: true,
       toggle: function toggle() {
@@ -12777,28 +13164,28 @@
         PlayerPanel.toggle();
       },
       right: function right() {
-        if (TV.playning()) PlayerPanel.toggle();else PlayerVideo.rewind(true);
+        if (PlayerIPTV.playning()) PlayerPanel.toggle();else PlayerVideo.rewind(true);
       },
       left: function left() {
-        if (TV.playning()) PlayerPanel.toggle();else PlayerVideo.rewind(false);
+        if (PlayerIPTV.playning()) PlayerPanel.toggle();else PlayerVideo.rewind(false);
       },
       enter: function enter() {
-        if (TV.playning()) PlayerPanel.toggle();else PlayerVideo.playpause();
+        if (PlayerIPTV.playning()) PlayerPanel.toggle();else PlayerVideo.playpause();
       },
       playpause: function playpause() {
-        if (!TV.playning()) PlayerVideo.playpause();
+        if (!PlayerIPTV.playning()) PlayerVideo.playpause();
       },
       play: function play() {
-        if (!TV.playning()) PlayerVideo.play();
+        if (!PlayerIPTV.playning()) PlayerVideo.play();
       },
       pause: function pause() {
-        if (!TV.playning()) PlayerVideo.pause();
+        if (!PlayerIPTV.playning()) PlayerVideo.pause();
       },
       rewindForward: function rewindForward() {
-        if (!TV.playning()) PlayerVideo.rewind(true);
+        if (!PlayerIPTV.playning()) PlayerVideo.rewind(true);
       },
       rewindBack: function rewindBack() {
-        if (!TV.playning()) PlayerVideo.rewind(false);
+        if (!PlayerIPTV.playning()) PlayerVideo.rewind(false);
       },
       stop: backward$1,
       back: backward$1
@@ -12830,17 +13217,17 @@
     viewing.time = 0;
     viewing.difference = 0;
     viewing.current = 0;
-    html$9.removeClass('player--ios');
-    html$9.removeClass('iptv');
-    html$9.removeClass('player--panel-visible');
-    TV.destroy();
+    html$b.removeClass('player--ios');
+    html$b.removeClass('iptv');
+    html$b.removeClass('player--panel-visible');
+    PlayerIPTV.destroy();
     PlayerVideo.destroy();
     PlayerVideo.clearParamas();
     PlayerPanel.destroy();
     PlayerInfo.destroy();
-    html$9.detach();
+    html$b.detach();
     Background.theme('reset');
-    listener$9.send('destroy', {});
+    listener$a.send('destroy', {});
   }
 
   /**
@@ -12919,7 +13306,7 @@
           onBack: function onBack() {
             work.timeline.continued = true;
             work.timeline.continued_bloc = true;
-            toggle$5();
+            toggle$6();
             clearTimeout(timer_ask);
           },
           onSelect: function onSelect(a) {
@@ -12928,7 +13315,7 @@
               work.timeline.continued = true;
               work.timeline.continued_bloc = true;
             }
-            toggle$5();
+            toggle$6();
             clearTimeout(timer_ask);
           }
         });
@@ -12937,7 +13324,7 @@
           work.timeline.continued = true;
           work.timeline.continued_bloc = true;
           Select.hide();
-          toggle$5();
+          toggle$6();
         }, 8000);
       }
     }
@@ -12957,6 +13344,14 @@
     if (work.timeline) {
       timer_save = setInterval(saveTimeView, 1000 * 60 * 2);
     }
+  }
+  function locked(data, call) {
+    var name = Controller.enabled().name;
+    if (data.locked) {
+      ParentalControl.query(call, function () {
+        Controller.toggle(name);
+      });
+    } else call();
   }
 
   /**
@@ -12978,9 +13373,9 @@
     var lauch = function lauch() {
       Background.theme('black');
       preload$1(data, function () {
-        html$9.toggleClass('tv', data.tv ? true : false);
-        html$9.toggleClass('youtube', Boolean(data.url.indexOf('youtube.com') >= 0));
-        listener$9.send('start', data);
+        html$b.toggleClass('tv', data.tv ? true : false);
+        html$b.toggleClass('youtube', Boolean(data.url.indexOf('youtube.com') >= 0));
+        listener$a.send('start', data);
         work = data;
         if (work.timeline) work.timeline.continued = false;
         PlayerPlaylist.url(data.url);
@@ -12991,20 +13386,23 @@
         PlayerVideo.speed(Storage.get('player_speed', 'default'));
         if (data.subtitles) PlayerVideo.customSubs(data.subtitles);
         PlayerInfo.set('name', data.title);
-        if (!preloader.call) $('body').append(html$9);
-        toggle$5();
+        if (!preloader.call) $('body').append(html$b);
+        toggle$6();
         PlayerPanel.show(true);
         ask();
         saveTimeLoop();
-        listener$9.send('ready', data);
+        listener$a.send('ready', data);
       });
     };
-    if (launch_player == 'lampa' || data.url.indexOf('youtube.com') >= 0) lauch();else if (Platform.is('apple')) {
+    if (launch_player == 'lampa' || launch_player == 'inner' || data.url.indexOf('youtube.com') >= 0) lauch();else if (Platform.is('apple')) {
       data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
-      if (Storage.field('player') == 'vlc') return window.open('vlc://' + data.url);else {
-        if (Storage.field('player') == 'ios') html$9.addClass('player--ios');
+      if (Storage.field('player') == 'vlc') window.open('vlc://' + data.url);else if (Storage.field('player') == 'nplayer') window.open('nplayer-' + data.url);else if (Storage.field('player') == 'infuse') window.open('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'ios') {
+        html$b.addClass('player--ios');
         lauch();
-      }
+      } else lauch();
+    } else if (Platform.is('apple_tv')) {
+      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
+      if (Storage.field('player') == 'vlc') window.location.assign('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'infuse') window.location.assign('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'tvos') window.location.assign('lampa://video?player=tvos&src=' + encodeURIComponent(data.url));else lauch();
     } else if (Platform.is('webos') && (Storage.field('player') == 'webos' || launch_player == 'webos')) {
       data.url = data.url.replace('&preload', '&play');
       runWebOS({
@@ -13013,7 +13411,7 @@
         name: data.path || data.title,
         position: data.timeline ? data.timeline.time || -1 : -1
       });
-    } else if (Platform.is('android') && (Storage.field('player') == 'android' || launch_player == 'android')) {
+    } else if (Platform.is('android') && (Storage.field('player') == 'android' || launch_player == 'android' || data.torrent_hash)) {
       data.url = data.url.replace('&preload', '&play');
       if (data.playlist && Array.isArray(data.playlist)) {
         data.playlist = data.playlist.filter(function (p) {
@@ -13038,48 +13436,54 @@
     launch_player = '';
   }
   function iptv(data) {
-    console.log('Player', 'play iptv');
-    var lauch = function lauch() {
-      Background.theme('black');
-      listener$9.send('start', data);
-      html$9.toggleClass('iptv', true);
-      TV.start(data);
-      PlayerVideo.size(Storage.get('player_size', 'default'));
-      PlayerVideo.speed(Storage.get('player_speed', 'default'));
-      $('body').append(html$9);
-      toggle$5();
-      PlayerPanel.show(true);
-      listener$9.send('ready', data);
-    };
-    if (launch_player == 'lampa') lauch();else if (Platform.is('apple')) {
-      if (Storage.field('player_iptv') == 'vlc') return window.open('vlc://' + data.url);else {
-        if (Storage.field('player_iptv') == 'ios') html$9.addClass('player--ios');
-        lauch();
-      }
-    } else if (Platform.is('webos') && (Storage.field('player_iptv') == 'webos' || launch_player == 'webos')) {
-      runWebOS({
-        need: 'com.webos.app.photovideo',
-        url: data.url,
-        name: data.path || data.title,
-        position: data.timeline ? data.timeline.time || -1 : -1
-      });
-    } else if (Platform.is('android') && (Storage.field('player_iptv') == 'android' || launch_player == 'android')) {
-      if (data.playlist && Array.isArray(data.playlist)) {
-        data.playlist = data.playlist.filter(function (p) {
-          return typeof p.url == 'string';
+    locked(data, function () {
+      console.log('Player', 'play iptv');
+      data.iptv = true; //пометка для ведра, что это iptv
+
+      var lauch = function lauch() {
+        Background.theme('black');
+        listener$a.send('start', data);
+        html$b.toggleClass('iptv', true);
+        PlayerIPTV.start(data);
+        PlayerVideo.size(Storage.get('player_size', 'default'));
+        PlayerVideo.speed(Storage.get('player_speed', 'default'));
+        $('body').append(html$b);
+        toggle$6();
+        PlayerPanel.show(true);
+        listener$a.send('ready', data);
+      };
+      if (launch_player == 'lampa' || launch_player == 'inner') lauch();else if (Platform.is('apple')) {
+        if (Storage.field('player_iptv') == 'vlc') window.open('vlc://' + data.url);else if (Storage.field('player_iptv') == 'nplayer') window.open('nplayer-' + data.url);else if (Storage.field('player_iptv') == 'infuse') window.open('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'ios') {
+          html$b.addClass('player--ios');
+          lauch();
+        } else lauch();
+      } else if (Platform.is('apple_tv')) {
+        if (Storage.field('player_iptv') == 'vlc') window.location.assign('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'infuse') window.location.assign('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'tvos') window.location.assign('lampa://video?player=tvos&src=' + encodeURIComponent(data.url));else lauch();
+      } else if (Platform.is('webos') && (Storage.field('player_iptv') == 'webos' || launch_player == 'webos')) {
+        runWebOS({
+          need: 'com.webos.app.photovideo',
+          url: data.url,
+          name: data.path || data.title,
+          position: data.timeline ? data.timeline.time || -1 : -1
         });
-      }
-      Android.openPlayer(data.url, data);
-    } else if (Platform.desktop() && Storage.field('player_iptv') == 'other') {
-      var path = Storage.field('player_nw_path');
-      var file = require('fs');
-      if (file.existsSync(path)) {
-        var spawn = require('child_process').spawn;
-        spawn(path, [data.url]);
-      } else {
-        Noty.show(Lang.translate('player_not_found') + ': ' + path);
-      }
-    } else lauch();
+      } else if (Platform.is('android') && (Storage.field('player_iptv') == 'android' || launch_player == 'android' || data.torrent_hash)) {
+        if (data.playlist && Array.isArray(data.playlist)) {
+          data.playlist = data.playlist.filter(function (p) {
+            return typeof p.url == 'string';
+          });
+        }
+        Android.openPlayer(data.url, data);
+      } else if (Platform.desktop() && Storage.field('player_iptv') == 'other') {
+        var path = Storage.field('player_nw_path');
+        var file = require('fs');
+        if (file.existsSync(path)) {
+          var spawn = require('child_process').spawn;
+          spawn(path, [data.url]);
+        } else {
+          Noty.show(Lang.translate('player_not_found') + ': ' + path);
+        }
+      } else lauch();
+    });
   }
 
   /**
@@ -13128,8 +13532,8 @@
    * Рендер плеера
    * @returns Html
    */
-  function render$7() {
-    return html$9;
+  function render$8() {
+    return html$b;
   }
 
   /**
@@ -13140,25 +13544,33 @@
     return $('body').find('.player').length ? true : false;
   }
   var Player = {
-    init: init$m,
-    listener: listener$9,
+    init: init$p,
+    listener: listener$a,
     play: play$1,
     playlist: playlist,
-    render: render$7,
+    render: render$8,
     stat: stat,
     subtitles: subtitles,
     runas: runas,
     callback: onBack,
     opened: opened$1,
     iptv: iptv,
-    programReady: TV.programReady,
+    programReady: PlayerIPTV.programReady,
     close: backward$1
   };
 
-  var listener$8 = start$5();
-  function update$6(params) {
+  var listener$9 = start$6();
+  function filename() {
+    var acc = Account.canSync();
+    var name = 'file_view' + (acc ? '_' + acc.profile.id : '');
+    if (window.localStorage.getItem(name) === null && acc) {
+      Storage.set(name, Arrays.clone(Storage.cache('file_view', 10000, {})));
+    }
+    return name;
+  }
+  function update$7(params) {
     if (params.hash == 0) return;
-    var viewed = Storage.cache('file_view', 10000, {});
+    var viewed = Storage.cache(filename(), 10000, {});
     var road = viewed[params.hash];
     if (typeof road == 'undefined' || typeof road == 'number') {
       road = {
@@ -13173,7 +13585,7 @@
     if (typeof params.time !== 'undefined') road.time = params.time;
     if (typeof params.duration !== 'undefined') road.duration = params.duration;
     if (typeof params.profile !== 'undefined') road.profile = params.profile;
-    Storage.set('file_view', viewed);
+    Storage.set(filename(), viewed);
     var line = $('.time-line[data-hash="' + params.hash + '"]').toggleClass('hide', params.percent ? false : true);
     $('> div', line).css({
       width: params.percent + '%'
@@ -13185,7 +13597,7 @@
       $(this).find('[a="d"]').text(f.duration);
       $(this).toggleClass('hide', road.duration ? false : true);
     });
-    listener$8.send('update', {
+    listener$9.send('update', {
       data: {
         hash: params.hash,
         road: road
@@ -13196,7 +13608,7 @@
     });
   }
   function view(hash) {
-    var viewed = Storage.cache('file_view', 10000, {}),
+    var viewed = Storage.cache(filename(), 10000, {}),
       curent = typeof viewed[hash] !== 'undefined' ? viewed[hash] : 0;
     var account = Account.canSync();
     var profile = account && account.profile ? account.profile.id : 0;
@@ -13215,7 +13627,7 @@
       road.percent = curent || 0;
       road.profile = profile;
     }
-    listener$8.send('view', {
+    listener$9.send('view', {
       data: {
         hash: hash,
         road: road
@@ -13228,7 +13640,7 @@
       duration: road.duration,
       profile: road.profile,
       handler: function handler(percent, time, duration) {
-        return update$6({
+        return update$7({
           hash: hash,
           percent: percent,
           time: time,
@@ -13238,7 +13650,7 @@
       }
     };
   }
-  function render$6(params) {
+  function render$7(params) {
     var line = Template$1.get('timeline', params);
     line.toggleClass('hide', params.percent ? false : true);
     return line;
@@ -13260,9 +13672,9 @@
     return road;
   }
   var Timeline = {
-    listener: listener$8,
-    render: render$6,
-    update: update$6,
+    listener: listener$9,
+    render: render$7,
+    update: update$7,
     view: view,
     details: details,
     format: format
@@ -13272,11 +13684,18 @@
   var ping;
   var _uid = Utils$2.uid();
   var _devices = [];
-  var listener$7 = start$5();
+  var listener$8 = start$6();
   var expects = [];
+  var timeping = 5000;
+  var timeout;
   function connect$1() {
     if (!window.lampa_settings.socket_use) return;
     clearInterval(ping);
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      console.log('Socket', 'timeout close');
+      if (socket) socket.close();
+    }, 10000);
     try {
       socket = new WebSocket(window.lampa_settings.socket_url);
     } catch (e) {
@@ -13285,13 +13704,18 @@
     if (!socket) return;
     socket.addEventListener('open', function (event) {
       console.log('Socket', 'open');
+      timeping = 5000;
+      clearTimeout(timeout);
       send('start', {});
-      listener$7.send('open', {});
+      listener$8.send('open', {});
     });
     socket.addEventListener('close', function (event) {
       console.log('Socket', 'close', event.code);
-      listener$7.send('close', {});
-      setTimeout(connect$1, 5000);
+      clearTimeout(timeout);
+      listener$8.send('close', {});
+      console.log('Socket', 'try connect after', Math.round(timeping) / 1000, 'sec.');
+      setTimeout(connect$1, Math.round(timeping));
+      timeping *= 2;
     });
     socket.addEventListener('error', function (event) {
       console.log('Socket', 'error:', 'maybe there is no connection to the server');
@@ -13322,7 +13746,7 @@
           Player.playlist(result.data.object.playlist);
         }
       }
-      listener$7.send('message', result);
+      listener$8.send('message', result);
     });
     setInterval(function () {
       if (expects.length > 50) expects = expects.slice(-50);
@@ -13344,7 +13768,7 @@
     if (socket && socket.readyState == 1) socket.send(JSON.stringify(data));else expects.push(data);
   }
   var Socket = {
-    listener: listener$7,
+    listener: listener$8,
     init: connect$1,
     send: send,
     uid: function uid() {
@@ -13429,12 +13853,11 @@
 
   var NoticeAll = /*#__PURE__*/function (_NoticeClass) {
     _inherits(NoticeAll, _NoticeClass);
-    var _super = _createSuper(NoticeAll);
     function NoticeAll() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _classCallCheck(this, NoticeAll);
-      _this = _super.call(this, params);
+      _this = _callSuper(this, NoticeAll, [params]);
       _this.name = Lang.translate('settings_param_jackett_interview_all');
       return _this;
     }
@@ -13485,12 +13908,11 @@
 
   var NoticeLampa = /*#__PURE__*/function (_NoticeClass) {
     _inherits(NoticeLampa, _NoticeClass);
-    var _super = _createSuper(NoticeLampa);
     function NoticeLampa() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _classCallCheck(this, NoticeLampa);
-      _this = _super.call(this, params);
+      _this = _callSuper(this, NoticeLampa, [params]);
       _this.name = params.name || 'Lampa';
       _this.time = 0;
       _this.view = 0;
@@ -13548,7 +13970,7 @@
     }, {
       key: "viewed",
       value: function viewed() {
-        this.db[this.time == 0 ? 'addData' : 'updateData']('readed', 'time', Date.now());
+        this.db.rewriteData('readed', 'time', Date.now());
         this.view = 0;
         this.time = Date.now();
         Notice$1.drawCount();
@@ -13564,12 +13986,11 @@
 
   var NoticeCub = /*#__PURE__*/function (_NoticeClass) {
     _inherits(NoticeCub, _NoticeClass);
-    var _super = _createSuper(NoticeCub);
     function NoticeCub() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _classCallCheck(this, NoticeCub);
-      _this = _super.call(this, params);
+      _this = _callSuper(this, NoticeCub, [params]);
       _this.name = 'CUB';
       _this.time = Storage.get('cub_notice_time', '0');
       _this.notices = [];
@@ -13651,7 +14072,7 @@
   var Notice = /*#__PURE__*/function () {
     function Notice() {
       _classCallCheck(this, Notice);
-      this.listener = start$5();
+      this.listener = start$6();
       this.display = 'all';
       this.classes = {};
     }
@@ -13831,7 +14252,7 @@
   /**
    * Запуск
    */
-  function init$l() {
+  function init$o() {
     data$3 = Storage.cache('recomends_scan', 300, []);
     setInterval(function () {
       var history = Favorite.get({
@@ -13903,12 +14324,12 @@
     return items;
   }
   var Recomends = {
-    init: init$l,
+    init: init$o,
     get: get$a
   };
 
   var callback_cancel, controller_enabled, loader, timer$2;
-  function start$3(on_cancel, text) {
+  function start$4(on_cancel, text) {
     callback_cancel = on_cancel;
     controller_enabled = Controller.enabled().name;
     loader = $("<div class=\"loading-layer\">\n        <div class=\"loading-layer__box\">\n            <div class=\"loading-layer__text\">".concat(Lang.translate('loading'), "</div>\n            <div class=\"loading-layer__ico\"></div>\n        </div>\n    </div>"));
@@ -13920,9 +14341,9 @@
     timer$2 = setTimeout(function () {
       $('body').append(loader);
     }, 500);
-    toggle$4();
+    toggle$5();
   }
-  function toggle$4() {
+  function toggle$5() {
     Controller.add('loading', {
       invisible: true,
       toggle: function toggle() {},
@@ -13946,7 +14367,7 @@
     if (loader) loader.find('.loading-layer__text').text(text);
   }
   var Loading = {
-    start: start$3,
+    start: start$4,
     stop: stop,
     setText: setText
   };
@@ -14059,7 +14480,7 @@
     };
   }
 
-  var network$7 = new create$q();
+  var network$7 = new create$p();
   var menu_list = [];
   var genres$1 = {
     movie: [{
@@ -14173,14 +14594,15 @@
   function url$2(u) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var ln = [Storage.field('tmdb_lang')];
-    if (params.langs) ln = ln.concat(params.langs.filter(function (n) {
+    if (params.langs) ln = typeof params.langs == 'string' ? [params.langs] : ln.concat(params.langs.filter(function (n) {
       return n !== ln[0];
     }));
     u = add$a(u, 'api_key=' + TMDB$1.key());
     u = add$a(u, 'language=' + ln.join(','));
-    if (params.genres) u = add$a(u, 'with_genres=' + params.genres);
+    if (params.genres && u.indexOf('with_genres') == -1) u = add$a(u, 'with_genres=' + params.genres);
     if (params.page) u = add$a(u, 'page=' + params.page);
     if (params.query) u = add$a(u, 'query=' + params.query);
+    if (params.keywords) u = add$a(u, 'with_keywords=' + params.keywords);
     if (params.filter) {
       for (var i in params.filter) {
         u = add$a(u, i + '=' + params.filter[i]);
@@ -14245,7 +14667,7 @@
         call(json);
       }, call);
     }, function (call) {
-      get$9('tv/popular', params, function (json) {
+      get$9('trending/tv/week', params, function (json) {
         json.title = Lang.translate('title_popular_tv');
         call(json);
       }, call);
@@ -14280,7 +14702,8 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
-    var show = ['movie', 'tv'].indexOf(params.url) > -1 && !params.genres;
+    var fullcat = !(params.genres || params.keywords);
+    var show = ['movie', 'tv'].indexOf(params.url) > -1 && fullcat;
     var books = show ? Favorite.continues(params.url) : [];
     var recomend = show ? Arrays.shuffle(Recomends.get(params.url)).slice(0, 19) : [];
     var parts_limit = 6;
@@ -14313,52 +14736,73 @@
       });
     }, function (call) {
       if (params.url == 'movie') {
-        get$9(params.url + '/now_playing', params, function (json) {
+        get$9('discover/' + params.url + '?with_release_type=3', params, function (json) {
           json.title = Lang.translate('title_now_watch');
           call(json);
         }, call);
       } else call();
     }, function (call) {
-      get$9(params.url + '/popular', params, function (json) {
+      get$9(params.url == 'movie' ? 'discover/movie' : 'trending/tv/day', params, function (json) {
         json.title = Lang.translate('title_popular');
         call(json);
       }, call);
     }, function (call) {
-      var date = new Date();
-      var nparams = Arrays.clone(params);
-      nparams.filter = {
-        sort_by: 'release_date.desc',
-        year: date.getFullYear(),
-        first_air_date_year: date.getFullYear(),
-        'vote_average.gte': 7
-      };
-      get$9('discover/' + params.url, nparams, function (json) {
-        json.filter = nparams.filter;
-        json.title = Lang.translate('title_new');
+      get$9('discover/' + params.url + '?' + (params.url == 'movie' ? 'primary_release_year' : 'first_air_date_year') + '=' + (new Date().getFullYear() - 1), params, function (json) {
+        json.title = Lang.translate('title_last_year');
         call(json);
       }, call);
-    }];
-    if (!params.genres) Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit, params.url));
-    if (params.url == 'tv') {
-      var event = function event(call) {
-        get$9(params.url + '/airing_today', params, function (json) {
+    }, function (call) {
+      var lte = new Date().getFullYear() - 2 + '-12-31';
+      var gte = new Date().getFullYear() - 7 + '-01-01';
+      var reg = params.url == 'movie' ? 'primary_release_date' : 'first_air_date';
+      lte = reg + '.lte=' + lte;
+      gte = reg + '.gte=' + gte;
+      get$9('discover/' + params.url + '?' + lte + '&' + gte, params, function (json) {
+        json.title = Lang.translate('title_worth_rewatch');
+        call(json);
+      }, call);
+    }, function (call) {
+      var lte = new Date().getFullYear() - 2 + '-12-31';
+      var gte = new Date().getFullYear() - 7 + '-01-01';
+      var reg = params.url == 'movie' ? 'primary_release_date' : 'first_air_date';
+      lte = reg + '.lte=' + lte;
+      gte = reg + '.gte=' + gte;
+      get$9('discover/' + params.url + '?' + lte + '&' + gte + '&vote_average.gte=8&vote_average.lte=9', params, function (json) {
+        json.title = Lang.translate('title_hight_voite');
+        call(json);
+      }, call);
+    }, function (call) {
+      if (params.genres) return call();
+      if (params.url == 'tv') {
+        get$9('trending/tv/week', params, function (json) {
           json.title = Lang.translate('title_this_week');
+          call(json);
+        }, call);
+      } else {
+        get$9('movie/upcoming', params, function (json) {
+          json.title = Lang.translate('title_upcoming');
+          json.small = true;
+          json.wide = true;
+          json.results.forEach(function (card) {
+            card.promo = card.overview;
+            card.promo_title = card.title || card.name;
+          });
+          call(json);
+        }, call);
+      }
+    }];
+    if (fullcat) Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit, params.url));
+    genres$1[params.url].forEach(function (genre) {
+      var gen = params.genres ? [].concat(params.genres, genre.id) : [genre.id];
+      if (params.genres && params.genres == genre.id) return;
+      var event = function event(call) {
+        get$9('discover/' + params.url + '/?with_genres=' + gen.join(','), params, function (json) {
+          json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
           call(json);
         }, call);
       };
       parts_data.push(event);
-    }
-    if (!params.genres) {
-      genres$1[params.url].forEach(function (genre) {
-        var event = function event(call) {
-          get$9('discover/' + params.url + '/?with_genres=' + genre.id, params, function (json) {
-            json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
-            call(json);
-          }, call);
-        };
-        parts_data.push(event);
-      });
-    }
+    });
     function loadPart(partLoaded, partEmpty) {
       Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
     }
@@ -14368,9 +14812,11 @@
   function full$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
+    var onerror = arguments.length > 2 ? arguments[2] : undefined;
     var status = new status$1(8);
     status.onComplite = oncomplite;
-    get$9(params.method + '/' + params.id + '?append_to_response=content_ratings,release_dates,external_ids', params, function (json) {
+    if (Utils$2.dcma(params.method, params.id)) return onerror();
+    get$9(params.method + '/' + params.id + '?append_to_response=content_ratings,release_dates,external_ids,keywords', params, function (json) {
       json.source = 'tmdb';
       if (json.external_ids) {
         json.imdb_id = json.external_ids.imdb_id;
@@ -14401,14 +14847,38 @@
     get$9(params.method + '/' + params.id + '/similar', params, function (json) {
       status.append('simular', json);
     }, status.error.bind(status));
-    var video_params = Arrays.clone(params);
-    video_params.langs = ['en'];
-    get$9(params.method + '/' + params.id + '/videos', video_params, function (json) {
+    videos(params, function (json) {
       status.append('videos', json);
     }, status.error.bind(status));
     Api.sources.cub.reactionsGet(params, function (json) {
       status.append('reactions', json);
     });
+  }
+  function videos() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
+    var lg = Storage.field('tmdb_lang');
+    var status = new status$1(lg == 'en' ? 1 : 2);
+    status.onComplite = function (res) {
+      var data = [];
+      if (res.one && res.one.results.length) data = data.concat(res.one.results);
+      if (res.two && res.two.results.length) data = data.concat(res.two.results);
+      oncomplite({
+        results: data
+      });
+    };
+    get$9(params.method + '/' + params.id + '/videos', {
+      langs: Storage.field('tmdb_lang')
+    }, function (json) {
+      status.append('one', json);
+    }, status.error.bind(status));
+    if (lg !== 'en') {
+      get$9(params.method + '/' + params.id + '/videos', {
+        langs: 'en'
+      }, function (json) {
+        status.append('two', json);
+      }, status.error.bind(status));
+    }
   }
   function list$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -14488,7 +14958,6 @@
         return b.vote_average - a.vote_average && b.vote_count - a.vote_count;
       }); //сортируем по оценке и кол-ву голосов (чтобы отсечь мусор с 1-2 оценками)
     };
-
     var convert = function convert(credits, person_data) {
       if (params.only_credits) {
         var cast = sortCredits(credits.cast);
@@ -14994,7 +15463,7 @@
     });
     return finded;
   }
-  function clear$7() {
+  function clear$8() {
     network$7.clear();
   }
   var TMDB = {
@@ -15005,7 +15474,7 @@
     list: list$3,
     category: category$3,
     search: search$5,
-    clear: clear$7,
+    clear: clear$8,
     company: company$1,
     person: person$2,
     seasons: seasons$2,
@@ -15018,7 +15487,8 @@
     parseCountries: parseCountries,
     genres: genres$1,
     external_imdb_id: external_imdb_id,
-    getGenresNameFromIds: getGenresNameFromIds
+    getGenresNameFromIds: getGenresNameFromIds,
+    videos: videos
   };
 
   var data$2 = [];
@@ -15029,12 +15499,12 @@
   /**
    * Запуск
    */
-  function init$k() {
+  function init$n() {
     data$2 = Storage.cache('timetable', limit$1, []);
     setInterval(extract, 1000 * 60 * (2));
     setInterval(favorites, 1000 * 60 * 10);
     Favorite.listener.follow('add,added', function (e) {
-      if (e.card.number_of_seasons && e.where !== 'history') update$5(e.card);
+      if (e.card.number_of_seasons && e.where !== 'history') update$6(e.card);
     });
     Favorite.listener.follow('remove', function (e) {
       if (e.card.number_of_seasons && e.method == 'id') {
@@ -15110,10 +15580,15 @@
   function parse() {
     var check = Favorite.check(object$1);
     var any = Favorite.checkAnyNotHistory(check);
-    console.log('Timetable', 'parse:', object$1.id, 'any:', any);
+    console.log('Timetable', 'parse:', object$1.id, 'any:', any, 'season:', object$1.season);
     if (any) {
       TMDB.get('tv/' + object$1.id + '/season/' + object$1.season, {}, function (ep) {
+        if (!ep.episodes) return save$5();
         object$1.episodes = filter(ep.episodes);
+        Cache.getData('timetable', object$1.id).then(function (obj) {
+          if (obj) obj.episodes = object$1.episodes;else obj = Arrays.clone(object$1);
+          Cache.rewriteData('timetable', object$1.id, obj).then(function () {})["catch"](function () {});
+        })["catch"](function (e) {});
         save$5();
       }, save$5);
     } else {
@@ -15158,18 +15633,28 @@
    * @param {{id:integer}} elem - карточка
    * @returns {array}
    */
-  function get$8(elem) {
+  function get$8(elem, callback) {
     var fid = data$2.filter(function (e) {
       return e.id == elem.id;
     });
-    return (fid.length ? fid[0] : {}).episodes || [];
+    var res = (fid.length ? fid[0] : {}).episodes || [];
+    if (typeof callback == 'function') {
+      if (res.length) return callback(res);
+      Cache.getData('timetable', elem.id).then(function (obj) {
+        callback(obj ? obj.episodes || [] : []);
+      })["catch"](function (e) {
+        callback(res);
+      });
+    } else {
+      return res;
+    }
   }
 
   /**
    * Добавить карточку в парсинг самостоятельно
    * @param {{id:integer,number_of_seasons:integer}} elem - карточка
    */
-  function update$5(elem) {
+  function update$6(elem) {
     var check = Favorite.check(elem);
     var any = Favorite.checkAnyNotHistory(check);
     console.log('Timetable', 'push:', elem.id);
@@ -15187,7 +15672,10 @@
         data$2.push(item);
         Storage.set('timetable', data$2);
         object$1 = item;
-      } else object$1 = id[0];
+      } else {
+        object$1 = id[0];
+        object$1.season = Utils$2.countSeasons(elem);
+      }
       parse();
     }
   }
@@ -15234,11 +15722,11 @@
     return cards;
   }
   var TimeTable = {
-    init: init$k,
+    init: init$n,
     get: get$8,
     add: add$9,
     all: all$3,
-    update: update$5,
+    update: update$6,
     lately: lately
   };
 
@@ -15265,6 +15753,7 @@
     this.build = function () {
       this.card = Template$1.js(params.isparser ? 'card_parser' : 'card', data);
       this.img = this.card.querySelector('.card__img') || {};
+      this.card.card_data = data;
       if (params.isparser) {
         var elem_title = this.card.querySelector('.card-parser__title');
         var elem_size = this.card.querySelector('.card-parser__size');
@@ -15393,41 +15882,44 @@
      * Какие серии просмотрено
      */
     this.watched = function () {
+      var _this2 = this;
       if (!Storage.field('card_episodes')) return;
       if (!this.watched_checked) {
-        var episodes = TimeTable.get(data);
-        var viewed;
-        episodes.forEach(function (ep) {
-          var hash = Utils$2.hash([ep.season_number, ep.episode_number, data.original_title].join(''));
-          var view = Timeline.view(hash);
-          if (view.percent) viewed = {
-            ep: ep,
-            view: view
-          };
-        });
-        if (viewed) {
-          var next = episodes.slice(episodes.indexOf(viewed.ep)).filter(function (ep) {
-            return ep.air_date;
-          }).filter(function (ep) {
-            var date = Utils$2.parseToDate(ep.air_date).getTime();
-            return date < Date.now();
-          }).slice(0, 5);
-          if (next.length == 0) next = [viewed.ep];
-          var wrap = Template$1.js('card_watched', {});
-          wrap.querySelector('.card-watched__title').innerText = Lang.translate('title_watched');
-          next.forEach(function (ep) {
-            var div = document.createElement('div');
-            var span = document.createElement('span');
-            div.classList.add('card-watched__item');
-            div.appendChild(span);
-            span.innerText = ep.episode_number + ' - ' + (ep.name || Lang.translate('noname'));
-            if (ep == viewed.ep) div.appendChild(Timeline.render(viewed.view)[0]);
-            wrap.querySelector('.card-watched__body').appendChild(div);
+        TimeTable.get(data, function (episodes) {
+          var viewed;
+          episodes.forEach(function (ep) {
+            var hash = Utils$2.hash([ep.season_number, ep.season_number > 10 ? ':' : '', ep.episode_number, data.original_title].join(''));
+            var view = Timeline.view(hash);
+            if (view.percent) viewed = {
+              ep: ep,
+              view: view
+            };
           });
-          this.watched_wrap = wrap;
-          var view = this.card.querySelector('.card__view');
-          view.insertBefore(wrap, view.firstChild);
-        }
+          if (viewed) {
+            var next = episodes.slice(episodes.indexOf(viewed.ep)).filter(function (ep) {
+              return ep.air_date;
+            }).filter(function (ep) {
+              var date = Utils$2.parseToDate(ep.air_date).getTime();
+              return date < Date.now();
+            }).slice(0, 5);
+            if (next.length == 0) next = [viewed.ep];
+            var wrap = Template$1.js('card_watched', {});
+            //wrap.querySelector('.card-watched__title').innerText = Lang.translate('title_watched')
+
+            next.forEach(function (ep) {
+              var div = document.createElement('div');
+              var span = document.createElement('span');
+              div.classList.add('card-watched__item');
+              div.appendChild(span);
+              span.innerText = ep.episode_number + ' - ' + (ep.name || Lang.translate('noname'));
+              if (ep == viewed.ep) div.appendChild(Timeline.render(viewed.view)[0]);
+              wrap.querySelector('.card-watched__body').appendChild(div);
+            });
+            _this2.watched_wrap = wrap;
+            var view = _this2.card.querySelector('.card__view');
+            view.insertBefore(wrap, view.firstChild);
+          }
+        });
         this.watched_checked = true;
       }
     };
@@ -15467,7 +15959,7 @@
      * @param {object} data 
      */
     this.onMenu = function (target, data) {
-      var _this2 = this;
+      var _this3 = this;
       var enabled = Controller.enabled().name;
       var status = Favorite.check(data);
       var menu_plugins = [];
@@ -15546,16 +16038,16 @@
           if (params.object) data.source = params.object.source;
           if (a.where) {
             Favorite.toggle(a.where, data);
-            _this2.favorite();
+            _this3.favorite();
           }
         },
         onSelect: function onSelect(a) {
           if (params.object) data.source = params.object.source;
           if (a.collect) {
             Favorite.toggle(a.where, data);
-            _this2.favorite();
+            _this3.favorite();
           }
-          if (_this2.onMenuSelect) _this2.onMenuSelect(a, _this2.card, data);
+          if (_this3.onMenuSelect) _this3.onMenuSelect(a, _this3.card, data);
           Controller.toggle(enabled);
         },
         onDraw: function onDraw(item, elem) {
@@ -15579,25 +16071,25 @@
      * Создать
      */
     this.create = function () {
-      var _this3 = this;
+      var _this4 = this;
       this.build();
       this.card.addEventListener('hover:focus', function () {
-        _this3.watched();
-        if (_this3.onFocus) _this3.onFocus(_this3.card, data);
+        _this4.watched();
+        if (_this4.onFocus) _this4.onFocus(_this4.card, data);
       });
       this.card.addEventListener('hover:touch', function () {
-        _this3.watched();
-        if (_this3.onTouch) _this3.onTouch(_this3.card, data);
+        _this4.watched();
+        if (_this4.onTouch) _this4.onTouch(_this4.card, data);
       });
       this.card.addEventListener('hover:hover', function () {
-        _this3.watched();
-        if (_this3.onHover) _this3.onHover(_this3.card, data);
+        _this4.watched();
+        if (_this4.onHover) _this4.onHover(_this4.card, data);
       });
       this.card.addEventListener('hover:enter', function () {
-        if (_this3.onEnter) _this3.onEnter(_this3.card, data);
+        if (_this4.onEnter) _this4.onEnter(_this4.card, data);
       });
       this.card.addEventListener('hover:long', function () {
-        if (_this3.onMenu) _this3.onMenu(_this3.card, data);
+        if (_this4.onMenu) _this4.onMenu(_this4.card, data);
       });
       this.image();
     };
@@ -15666,7 +16158,7 @@
       title: data.title
     });
     var body = content.querySelector('.items-line__body');
-    var scroll = new create$p({
+    var scroll = new create$q({
       horizontal: true,
       step: params.card_wide ? 600 : 300
     });
@@ -15708,7 +16200,7 @@
       var _this2 = this;
       this.event('create');
       scroll.body(true).classList.add('items-cards');
-      content.querySelector('.items-line__title').innerText = data.title;
+      content.querySelector('.items-line__title').innerHTML = data.title;
       content.classList.add('items-line--type-' + (params.type || 'none'));
       content.addEventListener('visible', this.visible.bind(this));
       data.results.slice(0, view).forEach(this.append.bind(this));
@@ -15873,7 +16365,7 @@
       items = [],
       active = 0,
       query;
-    this.listener = start$5();
+    this.listener = start$6();
     this.create = function () {
       this.empty();
     };
@@ -15905,9 +16397,9 @@
 
               //Layer.visible(html)
             }
-
             _this.listener.send('finded', {
-              count: data.length
+              count: data.length,
+              data: data
             });
           });
         }, immediately ? 10 : 2500);
@@ -16023,9 +16515,9 @@
     var scroll, last, active;
     var html = $('<div></div>'),
       results = [];
-    this.listener = start$5();
+    this.listener = start$6();
     this.create = function () {
-      scroll = new create$p({
+      scroll = new create$q({
         over: true,
         mask: false,
         horizontal: true
@@ -16061,6 +16553,12 @@
         tab.removeClass('search-source--loading');
         tab.find('.search-source__count').text(e.count);
         if (active == result) Layer.visible(result.render());
+        _this.listener.send('finded', {
+          source: source,
+          result: result,
+          count: e.count,
+          data: e.data
+        });
       });
       result.listener.follow('up', function (e) {
         if (results.length < 2) _this.listener.send('up');else _this.toggle();
@@ -16082,6 +16580,10 @@
       });
       scroll.append(tab);
       results.push(result);
+      this.listener.send('create', {
+        source: source,
+        result: result
+      });
     };
     this.toggle = function (from_search) {
       var _this2 = this;
@@ -16117,6 +16619,10 @@
       if (!stop_keys.find(function (k) {
         return k == query.toLowerCase();
       })) {
+        this.listener.send('search', {
+          query: query,
+          immediately: immediately
+        });
         results.forEach(function (result) {
           result.search(query, immediately);
         });
@@ -16141,10 +16647,10 @@
     var scroll,
       last,
       keys = [];
-    this.listener = start$5();
+    this.listener = start$6();
     this.create = function () {
       var _this = this;
-      scroll = new create$p({
+      scroll = new create$q({
         over: true,
         mask: false,
         horizontal: true
@@ -16235,7 +16741,7 @@
     };
   }
 
-  var html$8 = $('<div class="main-search"></div>'),
+  var html$a = $('<div class="main-search"></div>'),
     search$4,
     history,
     sources$1,
@@ -16243,7 +16749,8 @@
     scroll$1,
     input$1 = '',
     params = {},
-    additional = [];
+    additional = [],
+    listener$7 = start$6();
   function open$3() {
     var use_params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     params = use_params;
@@ -16251,10 +16758,11 @@
     $('body').toggleClass('ambience--enable', true);
     $('body').toggleClass('search--open', true);
     create$f();
-    toggle$3();
-    Layer.update(html$8[0]);
+    toggle$4();
+    Layer.update(html$a[0]);
+    listener$7.send('open');
   }
-  function toggle$3() {
+  function toggle$4() {
     Controller.add('search', {
       invisible: true,
       toggle: function toggle() {
@@ -16270,14 +16778,14 @@
   }
   function create$f() {
     search$4 = Template$1.get('search');
-    scroll$1 = new create$p({
+    scroll$1 = new create$q({
       step: 300
     });
     scroll$1.height();
     scroll$1.render().addClass('search');
     scroll$1.append(HeadBackward(Lang.translate('search')));
     scroll$1.append(search$4);
-    html$8.append(scroll$1.render());
+    html$a.append(scroll$1.render());
     scroll$1.onScroll = function (step) {
       Layer.visible(scroll$1.render(true));
     };
@@ -16292,6 +16800,9 @@
     sources$1 = new create$h({
       sources: params.sources,
       additional: additional
+    });
+    listener$7.send('sources', {
+      sources: sources$1
     });
     sources$1.create();
     sources$1.listener.follow('back', destroy$2);
@@ -16353,64 +16864,106 @@
   function removeSource(source) {
     Arrays.remove(additional, source);
   }
-  function render$5() {
-    return html$8;
+  function render$6() {
+    return html$a;
   }
   function destroy$2() {
     keyboard$1.destroy();
     history.destroy();
     sources$1.destroy();
     search$4.remove();
-    html$8.empty();
+    html$a.empty();
     if (params.onBack) params.onBack();else Controller.toggle('content');
     $('body').toggleClass('ambience--enable', false);
     $('body').toggleClass('search--open', false);
     params = {};
     input$1 = '';
+    listener$7.send('close');
   }
-  function close$2() {
+  function close$3() {
     destroy$2();
   }
   var Search = {
+    listener: listener$7,
     open: open$3,
-    render: render$5,
+    render: render$6,
     addSource: addSource,
     removeSource: removeSource,
-    close: close$2
+    close: close$3
   };
 
-  var html$7;
+  var html$9 = $('<div class="processing hide"><div><div class="processing__loader"></div><div class="processing__text"></div></div></div>'),
+    text = html$9.find('.processing__text');
+  var processing = [];
+  function init$m() {
+    update$5();
+  }
+  function update$5() {
+    if (processing.length) {
+      text.text(processing.length > 1 ? processing.length : '1 / ' + Math.round(processing[0].percent) + '%');
+      var complite = processing.find(function (a) {
+        return a.percent >= 100;
+      });
+      if (complite) Lampa.Arrays.remove(processing, complite);
+      requestAnimationFrame(update$5);
+    } else html$9.addClass('hide');
+  }
+  function push$2(id, percent) {
+    var find = processing.find(function (a) {
+      return a.id == id;
+    });
+    if (!find) {
+      processing.push({
+        id: id,
+        percent: percent,
+        start: Date.now()
+      });
+      html$9.removeClass('hide');
+      update$5();
+    } else find.percent = percent;
+  }
+  function render$5(js) {
+    return js ? html$9[0] : html$9;
+  }
+  var Processing = {
+    init: init$m,
+    push: push$2,
+    render: render$5
+  };
+
+  var html$8;
   var last$2;
   var activi = false;
-  function init$j() {
-    html$7 = Template$1.get('head');
-    Utils$2.time(html$7);
-    html$7.find('.selector').data('controller', 'head').on('hover:focus', function (event) {
+  function init$l() {
+    html$8 = Template$1.get('head');
+    html$8.find('.head__actions').prepend(Processing.render());
+    Utils$2.time(html$8);
+    html$8.find('.selector').data('controller', 'head').on('hover:focus', function (event) {
       last$2 = event.target;
     });
-    html$7.find('.open--settings').on('hover:enter', function () {
+    html$8.find('.open--settings').on('hover:enter', function () {
       Controller.toggle('settings');
     });
-    html$7.find('.open--notice').on('hover:enter', Notice$1.open.bind(Notice$1));
-    html$7.find('.open--search').on('hover:enter', Search.open.bind(Search));
-    html$7.find('.head__logo-icon,.head__menu-icon').on('click', function (e) {
+    html$8.find('.open--notice').on('hover:enter', Notice$1.open.bind(Notice$1));
+    html$8.find('.open--search').on('hover:enter', Search.open.bind(Search));
+    html$8.find('.head__logo-icon,.head__menu-icon').on('click', function (e) {
       if (DeviceInput.canClick(e.originalEvent)) Controller.toggle('menu');
     });
     Storage.listener.follow('change', function (e) {
       if (e.name == 'account') {
-        html$7.find('.open--profile').toggleClass('hide', e.value.token && window.lampa_settings.account_use ? false : true);
+        html$8.find('.open--profile').toggleClass('hide', e.value.token && window.lampa_settings.account_use ? false : true);
       }
       if (e.name == 'account_user') {
-        html$7.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru', 'uk', 'be']));
+        html$8.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru', 'uk', 'be']));
       }
     });
-    html$7.find('.full-screen').on('hover:enter', function () {
+    html$8.find('.full-screen').on('hover:enter', function () {
       Utils$2.toggleFullscreen();
     }).toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$2.canFullScreen());
     if (!Lang.selected(['ru', 'uk', 'be'])) {
-      html$7.find('.open--feed').remove();
+      html$8.find('.open--feed').remove();
     } else {
-      html$7.find('.open--feed').on('hover:enter', function () {
+      html$8.find('.open--feed').on('hover:enter', function () {
         Activity$1.push({
           url: '',
           title: Lang.translate('menu_feed'),
@@ -16419,7 +16972,7 @@
         });
       });
     }
-    html$7.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru', 'uk', 'be'])).on('hover:enter', function () {
+    html$8.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru', 'uk', 'be'])).on('hover:enter', function () {
       Modal.open({
         title: '',
         size: 'full',
@@ -16433,8 +16986,8 @@
     });
     Controller.add('head', {
       toggle: function toggle() {
-        Controller.collectionSet(html$7, false, true);
-        Controller.collectionFocus(last$2, html$7, true);
+        Controller.collectionSet(html$8, false, true);
+        Controller.collectionFocus(last$2, html$8, true);
       },
       right: function right() {
         Navigator.move('right');
@@ -16450,7 +17003,7 @@
       }
     });
     var timer;
-    var broadcast = html$7.find('.open--broadcast').hide();
+    var broadcast = html$8.find('.open--broadcast').hide();
     broadcast.on('hover:enter', function () {
       Broadcast.open({
         type: 'card',
@@ -16475,21 +17028,21 @@
     });
   }
   function title(title) {
-    html$7.find('.head__title').text(title || '');
+    html$8.find('.head__title').text(title || '');
   }
   function render$4() {
-    return html$7;
+    return html$8;
   }
   var Head = {
     render: render$4,
     title: title,
-    init: init$j
+    init: init$l
   };
 
   var body$2;
-  var network$6 = new create$q();
+  var network$6 = new create$p();
   var api$1 = Utils$2.protocol() + object$2.cub_domain + '/api/';
-  var listener$6 = start$5();
+  var listener$6 = start$6();
   var start_time = Date.now();
   var notice_load = {
     time: 0,
@@ -16500,7 +17053,7 @@
   /**
    * Запуск
    */
-  function init$i() {
+  function init$k() {
     if (!window.lampa_settings.account_use) return;
     Settings.listener.follow('open', function (e) {
       body$2 = null;
@@ -16529,6 +17082,9 @@
     });
     Head.render().find('.head__body .open--profile').on('hover:enter', function () {
       showProfiles('head');
+    });
+    network$6.silent(Utils$2.protocol() + 'tmdb.' + object$2.cub_domain + '/blocked', function (dcma) {
+      window.lampa_settings.dcma = dcma;
     });
     setInterval(checkValidAccount, 1000 * 60 * 10);
     updateBookmarks(Storage.get('account_bookmarks', '[]'));
@@ -16577,7 +17133,7 @@
       img.onerror = function () {
         img.src = './img/img_load.svg';
       };
-      img.src = 'https://cub.watch/img/profiles/' + (account.profile.icon || 'l_1') + '.png';
+      img.src = Utils$2.protocol() + object$2.cub_domain + '/img/profiles/' + (account.profile.icon || 'l_1') + '.png';
     }
   }
   function getUser() {
@@ -16611,7 +17167,11 @@
             Timeline.update(time);
           }
         } else {
-          var viewed = Storage.cache('file_view', 10000, {});
+          var name = 'file_view_' + account.profile.id;
+          if (window.localStorage.getItem(name) === null) {
+            Storage.set(name, Arrays.clone(Storage.cache('file_view', 10000, {})));
+          }
+          var viewed = Storage.cache(name, 10000, {});
           for (var _i in result.timelines) {
             var _time = result.timelines[_i];
             viewed[_i] = _time;
@@ -16622,7 +17182,7 @@
             });
             delete viewed[_i].hash;
           }
-          Storage.set('file_view', viewed);
+          Storage.set(name, viewed);
         }
         Storage.set('timeline_full_update_time', Date.now());
       }, function () {
@@ -16670,7 +17230,7 @@
       Socket.send('bookmarks', {});
     }
   }
-  function clear$6(where) {
+  function clear$7(where) {
     var account = Storage.get('account', '{}');
     if (account.token && window.lampa_settings.account_use && window.lampa_settings.account_sync) {
       network$6.silent(api$1 + 'bookmarks/clear', function (result) {
@@ -16954,7 +17514,7 @@
           items: items.map(function (elem, index) {
             elem.title = elem.name;
             elem.template = 'selectbox_icon';
-            elem.icon = '<img src="https://cub.watch/img/profiles/' + elem.icon + '.png" />';
+            elem.icon = '<img src="' + Utils$2.protocol() + object$2.cub_domain + '/img/profiles/' + elem.icon + '.png" />';
             elem.index = index;
             elem.selected = account.profile.id == elem.id;
             return elem;
@@ -17064,6 +17624,7 @@
     if (account.token) {
       Select.show({
         title: Lang.translate('settings_cub_backup'),
+        nomark: true,
         items: [{
           title: Lang.translate('settings_cub_backup_export'),
           "export": true,
@@ -17078,6 +17639,7 @@
           if (a["export"]) {
             Select.show({
               title: Lang.translate('sure'),
+              nomark: true,
               items: [{
                 title: Lang.translate('confirm'),
                 "export": true,
@@ -17126,8 +17688,8 @@
                         } else Noty.show(Lang.translate('account_export_fail'));
                         loader.remove();
                       },
-                      error: function error() {
-                        Noty.show(Lang.translate('account_export_fail'));
+                      error: function error(e) {
+                        Noty.show(Lang.translate('account_export_fail_' + (e.responseJSON.code || 500)));
                         loader.remove();
                       }
                     });
@@ -17253,7 +17815,7 @@
   }
   var Account = {
     listener: listener$6,
-    init: init$i,
+    init: init$k,
     working: working,
     canSync: canSync,
     get: get$7,
@@ -17264,7 +17826,7 @@
     showProfiles: showProfiles,
     torrentViewed: torrentViewed,
     torrentPopular: torrentPopular,
-    clear: clear$6,
+    clear: clear$7,
     update: update$4,
     network: network$6,
     backup: backup,
@@ -17282,7 +17844,7 @@
   };
 
   var data$1 = {};
-  var listener$5 = start$5();
+  var listener$5 = start$6();
   var category$2 = ['like', 'wath', 'book', 'history', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
   var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
   function save$3() {
@@ -17296,7 +17858,10 @@
    */
   function add$8(where, card, limit) {
     read$1();
-    if (data$1[where].indexOf(card.id) < 0) {
+    var find = data$1[where].find(function (id) {
+      return id == card.id;
+    });
+    if (!find) {
       Arrays.insert(data$1[where], 0, card.id);
       listener$5.send('add', {
         where: where,
@@ -17372,10 +17937,12 @@
    * @param {String} where 
    * @param {Object} card 
    */
-  function toggle$2(where, card) {
+  function toggle$3(where, card) {
     read$1();
     var find = cloud(card);
-    if (marks.indexOf(where) >= 0) {
+    if (marks.find(function (a) {
+      return a == where;
+    })) {
       var added = marks.find(function (a) {
         return find[a];
       });
@@ -17395,7 +17962,9 @@
       any: false
     };
     category$2.forEach(function (a) {
-      result[a] = data$1[a].indexOf(card.id) > -1;
+      result[a] = data$1[a].find(function (id) {
+        return id == card.id;
+      });
       if (result[a]) result.any = true;
     });
     return result;
@@ -17465,7 +18034,7 @@
    * @param {String} where 
    * @param {Object} card 
    */
-  function clear$5(where, card) {
+  function clear$6(where, card) {
     read$1();
     if (Account.working()) {
       Account.clear(where);
@@ -17529,7 +18098,7 @@
   /**
    * Запуск
    */
-  function init$h() {
+  function init$j() {
     read$1();
   }
   var Favorite = {
@@ -17537,10 +18106,10 @@
     check: cloud,
     add: add$8,
     remove: remove$2,
-    toggle: toggle$2,
+    toggle: toggle$3,
     get: get$6,
-    init: init$h,
-    clear: clear$5,
+    init: init$j,
+    clear: clear$6,
     continues: continues,
     full: full$2,
     checkAnyNotHistory: checkAnyNotHistory,
@@ -17565,87 +18134,11 @@
     };
   }
 
-  var baseurl = Utils$2.protocol() + 'tmdb.cub.watch/';
-  var network$5 = new create$q();
-  var collections$1 = {
-    movie: [{
-      hpu: 'army_of_the_dead_kino',
-      title: 'Армия мертвецов'
-    }, {
-      hpu: 'top_week_10_films',
-      title: 'Топ-10 недели'
-    }, {
-      hpu: 'beautiful_women_in_cinema',
-      title: 'Самые красивые женщины в кино'
-    }, {
-      hpu: 'life_as_it_is',
-      title: 'Жизнь, как она есть'
-    }, {
-      hpu: 'good_always_triumphs_over_evil',
-      title: 'Зло будет уничтожено'
-    }, {
-      hpu: 'movies_about_pilots',
-      title: 'Фильмы про летчиков'
-    }, {
-      hpu: 'light_films',
-      title: 'Легкие фильмы'
-    }, {
-      hpu: 'films_videogames',
-      title: 'Фильмы по мотивам видеоигр'
-    }, {
-      hpu: 'films_paramount',
-      title: 'Фильмы Paramount+'
-    }, {
-      hpu: 'kino_marvel',
-      title: 'Киновселенная Marvel'
-    }, {
-      hpu: 'films_vampires',
-      title: 'Фильмы о вампирах'
-    }, {
-      hpu: 'battle_royale',
-      title: 'Королевская битва'
-    }, {
-      hpu: 'surprise_at_the_end',
-      title: 'С неожиданной концовкой'
-    }, {
-      hpu: 'game_of_thrones',
-      title: 'Игры престолов'
-    }, {
-      hpu: 'shock_content',
-      title: 'Фильмы, которые повергнут вас в шок'
-    }, {
-      hpu: 'films_with_a_twisted_plot_kino',
-      title: 'Фильмы с лихо закрученным сюжетом'
-    }, {
-      hpu: 'films_catastrophes',
-      title: 'Фильмы-катастрофы'
-    }, {
-      hpu: 'lionsgate',
-      title: 'Фильмы Lionsgate'
-    }, {
-      hpu: 'action_movies_with_dangerous_girls_kino',
-      title: 'Боевики с опасными девушками'
-    }],
-    tv: [{
-      hpu: 'hbo_serial',
-      title: 'Сериалы HBO'
-    }, {
-      hpu: 'subserials_sub',
-      title: 'Захватывающие сериалы'
-    }, {
-      hpu: 'korea_serial',
-      title: 'Дорамы'
-    }, {
-      hpu: 'serial_paramount',
-      title: 'Сериалы Paramount+'
-    }, {
-      hpu: 'love_and_autumn',
-      title: 'Сериалы о любви'
-    }]
-  };
+  var baseurl = Utils$2.protocol() + 'tmdb.' + object$2.cub_domain + '/';
+  var network$5 = new create$p();
   function url$1(u) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    if (params.genres) u = add$7(u, 'genre=' + params.genres);
+    if (params.genres && u.indexOf('genre') == -1) u = add$7(u, 'genre=' + params.genres);
     if (params.page) u = add$7(u, 'page=' + params.page);
     if (params.query) u = add$7(u, 'query=' + params.query);
     if (params.filter) {
@@ -17729,6 +18222,23 @@
       };
       parts_data.push(event);
     });
+    network$5.silent(Utils$2.protocol() + object$2.cub_domain + '/api/collections/roll', function (data) {
+      var rolls = data.results.filter(function (a) {
+        return a.type;
+      });
+      var total = parts_data.length - (parts_limit + 3);
+      var offset = Math.round(total / rolls.length);
+      rolls.forEach(function (collection, index) {
+        Arrays.insert(parts_data, index + parts_limit + 3 + offset * index, function (call_inner) {
+          get$5('collections/' + collection.hpu, {}, function (json) {
+            json.title = collection.title;
+            json.collection = true;
+            json.line_type = 'collection';
+            call_inner(json);
+          }, call_inner);
+        });
+      });
+    });
     function loadPart(partLoaded, partEmpty) {
       Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
     }
@@ -17739,6 +18249,7 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
+    var fullcat = !(params.genres || params.keywords);
     var show = ['movie', 'tv'].indexOf(params.url) > -1 && !params.genres;
     var books = show ? Favorite.continues(params.url) : [];
     var recomend = show ? Arrays.shuffle(Recomends.get(params.url)).slice(0, 19) : [];
@@ -17777,16 +18288,29 @@
         call(json);
       }, call);
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=latest&uhd=true' + airdate, params, function (json) {
-        json.title = Lang.translate('title_in_high_quality');
-        json.small = true;
-        json.wide = true;
-        json.results.forEach(function (card) {
-          card.promo = card.overview;
-          card.promo_title = card.title || card.name;
-        });
-        call(json);
-      }, call);
+      if (params.url == 'anime') {
+        get$5('?cat=' + params.url + '&sort=top', params, function (json) {
+          json.title = Lang.translate('title_in_top');
+          json.small = true;
+          json.wide = true;
+          json.results.forEach(function (card) {
+            card.promo = card.overview;
+            card.promo_title = card.title || card.name;
+          });
+          call(json);
+        }, call);
+      } else {
+        get$5('?cat=' + params.url + '&sort=latest&uhd=true' + airdate, params, function (json) {
+          json.title = Lang.translate('title_in_high_quality');
+          json.small = true;
+          json.wide = true;
+          json.results.forEach(function (card) {
+            card.promo = card.overview;
+            card.promo_title = card.title || card.name;
+          });
+          call(json);
+        }, call);
+      }
     }, function (call) {
       if (params.url == 'tv' || params.url == 'anime') {
         get$5('?cat=' + params.url + '&sort=airing' + airdate, params, function (json) {
@@ -17805,40 +18329,67 @@
         call(json);
       }, call);
     }, function (call) {
-      if (params.url == 'movie') trailers('added', call);else call();
+      if (params.url == 'movie' && fullcat) trailers('added', call);else call();
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=latest&vote=7', params, function (json) {
+      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 1), params, function (json) {
+        json.title = Lang.translate('title_last_year');
+        call(json);
+      }, call);
+    }, function (call) {
+      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=6-8', params, function (json) {
+        json.title = Lang.translate('title_worth_rewatch');
+        call(json);
+      }, call);
+    }, function (call) {
+      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=8-10', params, function (json) {
         json.title = Lang.translate('title_hight_voite');
         call(json);
       }, call);
     }];
-    if (!params.genres) {
-      Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit + 3, params.url));
-      if (TMDB.genres[params.url]) {
-        TMDB.genres[params.url].forEach(function (genre) {
-          var event = function event(call) {
-            get$5('?cat=' + params.url + '&sort=now&genre=' + genre.id, params, function (json) {
-              json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
-              call(json);
-            }, call);
-          };
-          parts_data.push(event);
-        });
-      }
-      if (collections$1[params.url]) {
-        var total = parts_data.length - (parts_limit + 3);
-        var offset = Math.round(total / collections$1[params.url].length);
-        collections$1[params.url].forEach(function (collection, index) {
-          Arrays.insert(parts_data, index + parts_limit + 3 + offset * index, function (call_inner) {
-            get$5('collections/' + collection.hpu, {}, function (json) {
-              json.title = collection.title;
-              json.collection = true;
-              json.line_type = 'collection';
-              call_inner(json);
-            }, call_inner);
+    if (fullcat) Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit + 3, params.url));
+    if (TMDB.genres[params.url]) {
+      TMDB.genres[params.url].forEach(function (genre) {
+        var gen = params.genres ? [].concat(params.genres, genre.id) : [genre.id];
+        if (params.genres && params.genres == genre.id) return;
+        var event = function event(call) {
+          get$5('?cat=' + params.url + '&sort=top&genre=' + gen.join(','), params, function (json) {
+            json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
+            call(json);
+          }, call);
+        };
+        parts_data.push(event);
+      });
+      if (fullcat) {
+        network$5.silent(Utils$2.protocol() + object$2.cub_domain + '/api/collections/roll', function (data) {
+          var rolls = data.results.filter(function (a) {
+            return a.type == params.url;
+          });
+          var total = parts_data.length - (parts_limit + 5);
+          var offset = Math.round(total / rolls.length);
+          rolls.forEach(function (collection, index) {
+            Arrays.insert(parts_data, index + parts_limit + 5 + offset * index, function (call_inner) {
+              get$5('collections/' + collection.hpu, {}, function (json) {
+                json.title = collection.title;
+                json.collection = true;
+                json.line_type = 'collection';
+                call_inner(json);
+              }, call_inner);
+            });
           });
         });
       }
+    } else if (params.url == 'anime') {
+      TMDB.genres.tv.filter(function (a) {
+        return !(a.id == 99 || a.id == 10766);
+      }).forEach(function (genre) {
+        var event = function event(call) {
+          get$5('?cat=' + params.url + '&sort=top&genre=' + genre.id, params, function (json) {
+            json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
+            call(json);
+          }, call);
+        };
+        parts_data.push(event);
+      });
     }
     function loadPart(partLoaded, partEmpty) {
       Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
@@ -17849,7 +18400,8 @@
   function full$1(params, oncomplite, onerror) {
     var status = new status$1(8);
     status.onComplite = oncomplite;
-    get$5('3/' + params.method + '/' + params.id + '?api_key=' + TMDB$1.key() + '&append_to_response=content_ratings,release_dates&language=' + Storage.field('tmdb_lang'), params, function (json) {
+    if (Utils$2.dcma(params.method, params.id)) return onerror();
+    get$5('3/' + params.method + '/' + params.id + '?api_key=' + TMDB$1.key() + '&append_to_response=content_ratings,release_dates,keywords&language=' + Storage.field('tmdb_lang'), params, function (json) {
       json.source = 'tmdb';
       if (params.method == 'tv') {
         var season = Utils$2.countSeasons(json);
@@ -17877,9 +18429,7 @@
     TMDB.get(params.method + '/' + params.id + '/similar', params, function (json) {
       status.append('simular', json);
     }, status.error.bind(status));
-    var video_params = Arrays.clone(params);
-    video_params.langs = ['en'];
-    TMDB.get(params.method + '/' + params.id + '/videos', video_params, function (json) {
+    TMDB.videos(params, function (json) {
       status.append('videos', json);
     }, status.error.bind(status));
     reactionsGet(params, function (json) {
@@ -18001,7 +18551,7 @@
   function seasons$1(tv, from, oncomplite) {
     TMDB.seasons(tv, from, oncomplite);
   }
-  function clear$4() {
+  function clear$5() {
     network$5.clear();
   }
   var CUB = {
@@ -18010,7 +18560,7 @@
     full: full$1,
     list: list$2,
     category: category$1,
-    clear: clear$4,
+    clear: clear$5,
     person: person$1,
     seasons: seasons$1,
     menuCategory: menuCategory$1,
@@ -18040,7 +18590,7 @@
       return CUB;
     }
   });
-  var network$4 = new create$q();
+  var network$4 = new create$p();
 
   /**
    * Получить источник
@@ -18243,7 +18793,7 @@
    * @param {function} onerror 
    */
   function relise(params, oncomplite, onerror) {
-    network$4.silent(Utils$2.protocol() + 'tmdb.cub.watch?sort=releases&results=20&page=' + params.page, oncomplite, onerror);
+    network$4.silent(Utils$2.protocol() + 'tmdb.' + object$2.cub_domain + '?sort=releases&results=20&page=' + params.page, oncomplite, onerror);
   }
   function partPersons(parts, parts_limit, type) {
     return function (call) {
@@ -18264,6 +18814,7 @@
               only_credits: type,
               id: person_data.id
             }, function (result) {
+              if (!result.credits) return call_inner();
               var items = (result.credits[type] || []).filter(function (m) {
                 return m.backdrop_path && m.popularity > 30 && m.vote_count > 20;
               });
@@ -18275,10 +18826,12 @@
                 var db = b.release_date || b.first_air_date;
                 if (db > da) return 1;else if (db < da) return -1;else return 0;
               });
+              var src = person_data.profile_path ? TMDB.img(person_data.profile_path, 'w90_and_h90_face') : person_data.img || './img/actor.svg';
+              var icon = "<div class=\"full-person layer--visible full-person--small full-person--loaded\">\n                            <div class=\"full-person__photo\">\n                                <img src=\"".concat(src, "\">\n                            </div>\n                        \n                            <div class=\"full-person__body\">\n                                <div class=\"full-person__name\">").concat(person_data.name, "</div>\n                            </div>\n                        </div>");
               call_inner({
                 results: items.length > 5 ? items.slice(0, 20) : [],
                 nomore: true,
-                title: Lang.translate('title_actor') + ' - ' + person_data.name
+                title: icon
               });
             });
           });
@@ -18317,7 +18870,7 @@
   /**
    * Очистить
    */
-  function clear$3() {
+  function clear$4() {
     for (var i in sources) sources[i].clear();
     network$4.clear();
   }
@@ -18329,7 +18882,7 @@
     genres: genres,
     category: category,
     search: search$1,
-    clear: clear$3,
+    clear: clear$4,
     company: company,
     person: person,
     favorite: favorite,
@@ -18345,7 +18898,7 @@
     partNext: partNext
   };
 
-  function component$i(object) {
+  function component$j(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       this.activity.loader(true);
@@ -18357,11 +18910,11 @@
   }
 
   var player;
-  var html$6;
+  var html$7;
   var timer$1;
   function create$e(id) {
-    html$6 = $('<div class="youtube-player"><div id="youtube-player"></div><div id="youtube-player__progress" class="youtube-player__progress"></div></div>');
-    $('body').append(html$6);
+    html$7 = $('<div class="youtube-player"><div id="youtube-player"></div><div id="youtube-player__progress" class="youtube-player__progress"></div></div>');
+    $('body').append(html$7);
     player = new YT.Player('youtube-player', {
       height: window.innerHeight,
       width: window.innerWidth,
@@ -18428,8 +18981,8 @@
   function destroy$1() {
     clearTimeout(timer$1);
     player.destroy();
-    html$6.remove();
-    html$6 = null;
+    html$7.remove();
+    html$7 = null;
   }
   var YouTube = {
     play: play
@@ -18478,7 +19031,7 @@
         self.groupButtons();
       }
     };
-    var buttons_scroll = new create$p({
+    var buttons_scroll = new create$q({
       horizontal: true,
       nopadding: false
     });
@@ -18550,6 +19103,9 @@
       if (data.movie.number_of_seasons) {
         html.find('.is--serial').removeClass('hide');
       }
+      if (data.movie.vote_average == 0) {
+        html.find('.rate--tmdb').addClass('hide');
+      }
       if (data.movie.imdb_rating && parseFloat(data.movie.imdb_rating) > 0) {
         html.find('.rate--imdb').removeClass('hide').find('> div').eq(0).text(data.movie.imdb_rating);
       }
@@ -18575,8 +19131,8 @@
           info.push('<span>' + txt + '</span>');
         }
       }
-      if (data.movie.vote_count) {
-        info.push('<span>' + Lang.translate('title_rewiews') + ': ' + data.movie.vote_count + '</span>');
+      if (data.movie.status) {
+        html.find('.full-start__status').removeClass('hide').text(Lang.translate('tv_status_' + data.movie.status.toLowerCase().replace(/ /g, '_')));
       }
       tbtn = html.find('.view--torrent');
       tbtn.on('hover:enter', function () {
@@ -18869,17 +19425,19 @@
         html.find('.view--trailer').on('hover:enter', function () {
           var items = [];
           data.videos.results.forEach(function (element) {
-            var _items$push;
             var date = Utils$2.parseTime(element.published_at).full;
-            items.push((_items$push = {
+            items.push({
               title: Utils$2.shortText(element.name, 50),
               subtitle: (element.official ? Lang.translate('full_trailer_official') : Lang.translate('full_trailer_no_official')) + ' - ' + date,
               id: element.key,
               player: element.player,
-              url: element.url,
               code: element.iso_639_1,
-              time: new Date(element.published_at).getTime()
-            }, _defineProperty(_items$push, "url", 'https://www.youtube.com/watch?v=' + element.key), _defineProperty(_items$push, "youtube", true), _defineProperty(_items$push, "icon", '<img class="size-youtube" src="https://img.youtube.com/vi/' + element.key + '/default.jpg" />'), _defineProperty(_items$push, "template", 'selectbox_icon'), _items$push));
+              time: new Date(element.published_at).getTime(),
+              url: element.url || 'https://www.youtube.com/watch?v=' + element.key,
+              youtube: typeof element.youtube !== 'undefined' ? element.youtube : true,
+              icon: '<img class="size-youtube" src="' + (element.icon || 'https://img.youtube.com/vi/' + element.key + '/default.jpg') + '" />',
+              template: 'selectbox_icon'
+            });
           });
           items.sort(function (a, b) {
             return a.time > b.time ? -1 : a.time < b.time ? 1 : 0;
@@ -18906,7 +19464,7 @@
             items: al_lang,
             onSelect: function onSelect(a) {
               _this5.toggle();
-              if (Platform.is('android') && Storage.field('player_launch_trailers') == 'youtube') {
+              if (Platform.is('android') && Storage.field('player_launch_trailers') == 'youtube' && a.youtube) {
                 Android.openYoutube(a.id);
               } else {
                 var playlist = al_lang.filter(function (v) {
@@ -19081,14 +19639,19 @@
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var html, body, last;
     this.create = function () {
+      var _this = this;
       html = Template$1.get('items_line', {
         title: Lang.translate('full_detail')
       });
+      var media = data.movie.number_of_seasons ? 'tv' : 'movie';
       var genres = data.movie.genres.map(function (a) {
-        return '<div class="full-descr__tag selector" data-genre="' + a.id + '" data-url="' + a.url + '">' + Utils$2.capitalizeFirstLetter(a.name) + '</div>';
+        return '<div class="full-descr__tag selector" data-genre="' + a.id + '" data-url="' + (a.url || media) + '" data-name="' + a.name + '">' + Utils$2.capitalizeFirstLetter(a.name) + '</div>';
       }).join('');
       var companies = data.movie.production_companies.map(function (a) {
-        return '<div class="full-descr__tag selector" data-company="' + a.id + '">' + Utils$2.capitalizeFirstLetter(a.name) + '</div>';
+        return '<div class="full-descr__tag selector" data-company="' + a.id + '" data-url="' + (a.url || media) + '" data-name="' + a.name + '">' + Utils$2.capitalizeFirstLetter(a.name) + '</div>';
+      }).join('');
+      var keywords = (data.movie.keywords ? data.movie.keywords.results || data.movie.keywords.keywords : []).map(function (a) {
+        return '<div class="full-descr__tag selector" data-keyword="' + a.id + '" data-name="' + a.name + '">' + Utils$2.capitalizeFirstLetter(a.name) + '</div>';
       }).join('');
       var countries = Api.sources.tmdb.parseCountries(data.movie);
       var date = (data.movie.release_date || data.movie.first_air_date || '') + '';
@@ -19096,30 +19659,41 @@
         text: (data.movie.overview || Lang.translate('full_notext')) + '<br><br>',
         genres: genres,
         companies: companies,
+        keywords: keywords,
         relise: date.length > 3 ? Utils$2.parseTime(date).full : date.length > 0 ? date : '',
         budget: '$ ' + Utils$2.numberWithSpaces(data.movie.budget || 0),
         countries: countries.join(', ')
       });
       if (!genres) $('.full--genres', body).remove();
       if (!companies) $('.full--companies', body).remove();
+      if (!keywords) $('.full--keywords', body).remove();
       if (!data.movie.budget) $('.full--budget', body).remove();
       if (!countries.length) $('.full--countries', body).remove();
       body.find('.selector').on('hover:enter', function (e) {
         var item = $(e.target);
         if (item.data('genre')) {
-          var tmdb = params.object.source == 'tmdb' || params.object.source == 'cub';
           Activity$1.push({
-            url: tmdb ? 'movie' : item.data('url'),
-            component: tmdb ? 'category' : 'category_full',
+            url: item.data('url'),
+            title: Utils$2.capitalizeFirstLetter(item.data('name')),
+            component: params.object.source == 'cub' ? 'category' : 'category_full',
             genres: item.data('genre'),
             source: params.object.source,
             page: 1
           });
         }
-        if (item.data('company')) {
-          var _tmdb = params.object.source == 'tmdb' || params.object.source == 'cub';
+        if (item.data('keyword')) {
           Activity$1.push({
-            url: _tmdb ? 'movie' : item.data('url'),
+            url: 'discover/' + media,
+            title: Utils$2.capitalizeFirstLetter(item.data('name')),
+            keywords: item.data('keyword'),
+            component: 'category_full',
+            source: 'tmdb',
+            page: 1
+          });
+        }
+        if (item.data('company')) {
+          Activity$1.push({
+            url: item.data('url'),
             component: 'company',
             title: Lang.translate('title_company'),
             id: item.data('company'),
@@ -19129,16 +19703,18 @@
         }
       }).on('hover:focus', function (e) {
         last = e.target;
+        _this.onScroll(e.target);
       });
       html.find('.items-line__body').append(body);
     };
     this.toggle = function () {
-      var _this = this;
+      var _this2 = this;
       Controller.add('full_descr', {
         toggle: function toggle() {
-          Controller.collectionSet(_this.render());
-          Controller.collectionFocus(last, _this.render());
-          if (_this.onToggle) _this.onToggle(_this);
+          Controller.collectionSet(_this2.render());
+          Controller.collectionFocus(last, _this2.render());
+          if (_this2.onToggle) _this2.onToggle(_this2);
+          if (last && !$(last).hasClass('full-descr__text')) _this2.onScroll(last);
         },
         update: function update() {},
         right: function right() {
@@ -19148,10 +19724,10 @@
           if (Navigator.canmove('left')) Navigator.move('left');else Controller.toggle('menu');
         },
         down: function down() {
-          if (Navigator.canmove('down')) Navigator.move('down');else _this.onDown();
+          if (Navigator.canmove('down')) Navigator.move('down');else _this2.onDown();
         },
         up: function up() {
-          if (Navigator.canmove('up')) Navigator.move('up');else _this.onUp();
+          if (Navigator.canmove('up')) Navigator.move('up');else _this2.onUp();
         },
         gone: function gone() {},
         back: this.onBack
@@ -19180,7 +19756,7 @@
       html = Template$1.get('items_line', {
         title: params.title || Lang.translate('title_actors')
       });
-      scroll = new create$p({
+      scroll = new create$q({
         horizontal: true,
         scroll_by_item: true
       });
@@ -19214,7 +19790,7 @@
         img.onload = function () {
           person.addClass('full-person--loaded');
         };
-        img.src = element.profile_path ? Api.img(element.profile_path, 'w300') : element.img || './img/actor.svg';
+        img.src = element.profile_path ? Api.img(element.profile_path, 'w276_and_h350_face') : element.img || './img/actor.svg';
       });
       person.on('hover:focus', function (e) {
         last = e.target;
@@ -19320,7 +19896,7 @@
       html = Template$1.get('items_line', {
         title: Lang.translate('title_comments')
       });
-      scroll = new create$p({
+      scroll = new create$q({
         horizontal: true
       });
       scroll.render().find('.scroll__body').addClass('full-reviews');
@@ -19390,7 +19966,7 @@
       html = Template$1.get('items_line', {
         title: params.season.name || Lang.translate('full_series_release')
       });
-      scroll = new create$p({
+      scroll = new create$q({
         horizontal: true
       });
       scroll.render().find('.scroll__body').addClass('full-episodes');
@@ -19411,6 +19987,20 @@
       data.forEach(function (episode, num) {
         return episode.episode_number = episode.episode_number || num + 1;
       });
+      var wath_all = Template$1.get('full_episode', {
+        name: Lang.translate('more')
+      });
+      wath_all.addClass('full-episode--wath-all');
+      wath_all.on('hover:enter', function () {
+        Activity$1.push({
+          url: '',
+          title: Lang.translate('title_episodes'),
+          component: 'episodes',
+          movie: params.movie,
+          page: 1
+        });
+      });
+      scroll.append(wath_all);
       data.slice(0, view).forEach(this.append.bind(this));
     };
     this.append = function (element) {
@@ -19418,7 +20008,7 @@
       element.date = element.air_date ? Utils$2.parseTime(element.air_date).full : '----';
       element.num = element.episode_number;
       var episode = Template$1.get('full_episode', element);
-      var hash = Utils$2.hash([element.season_number, element.episode_number, params.title].join(''));
+      var hash = Utils$2.hash([element.season_number, element.season_number > 10 ? ':' : '', element.episode_number, params.title].join(''));
       var view = Timeline.view(hash);
       episode.append('<div class="full-episode__viewed">' + Template$1.get('icon_viewed', {}, true) + '</div>');
       episode.toggleClass('full-episode--viewed', Boolean(view.percent));
@@ -19433,7 +20023,7 @@
         img.onload = function () {
           episode.addClass('full-episode--loaded');
         };
-        if (element.still_path) img.src = Api.img(element.still_path, 'w300');else img.src = './img/img_broken.svg';
+        if (element.still_path) img.src = Api.img(element.still_path, 'w300');else if (element.img) img.src = element.img;else img.src = './img/img_broken.svg';
       });
       episode.on('hover:focus', function (e) {
         last = e.target;
@@ -19505,9 +20095,9 @@
     comments: create$9,
     episodes: create$8
   };
-  function component$h(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$i(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 400,
@@ -19532,7 +20122,9 @@
       scroll.onScroll = this.visible.bind(this);
       html.append(scroll.render());
       Api.full(object, function (data) {
-        if (data.movie) {
+        if (data.movie && data.movie.blocked) {
+          _this.empty();
+        } else if (data.movie) {
           Lampa.Listener.send('full', {
             type: 'start',
             object: object,
@@ -19556,9 +20148,10 @@
               }
               return false;
             });
-            if (cameout.length) _this.build('episodes', cameout, {
+            _this.build('episodes', cameout, {
               title: data.movie.original_title || data.movie.original_name,
-              season: data.episodes
+              season: data.episodes,
+              movie: data.movie
             });
           }
           if (data.persons && data.persons.crew && data.persons.crew.length) {
@@ -19637,6 +20230,9 @@
           item.onToggle = function () {
             active = items.indexOf(item);
           };
+          item.onScroll = function (e) {
+            scroll.update(e, true);
+          };
           item.create();
           items.push(item);
           Lampa.Listener.send('full', {
@@ -19662,8 +20258,10 @@
     this.down = function () {
       active++;
       active = Math.min(active, items.length - 1);
-      items[active].toggle();
-      scroll.update(items[active].render());
+      if (items[active]) {
+        items[active].toggle();
+        scroll.update(items[active].render());
+      }
     };
     this.up = function () {
       active--;
@@ -19736,9 +20334,9 @@
     };
   }
 
-  function component$g(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$h(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 250,
@@ -19924,15 +20522,15 @@
     };
   }
 
-  function component$f(object) {
-    var comp = new component$g(object);
+  function component$g(object) {
+    var comp = new component$h(object);
     comp.create = function () {
       Api.list(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$e(object) {
+  function component$f(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       this.activity.loader(true);
@@ -19992,9 +20590,9 @@
     start: create$7,
     line: create$j
   };
-  function component$d(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$e(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       scroll_by_item: true
@@ -20108,8 +20706,8 @@
     };
   }
 
-  function component$c(object) {
-    var comp = new component$g(object);
+  function component$d(object) {
+    var comp = new component$h(object);
     var update = function update(e) {
       if (e.name == 'account') comp.activity.needRefresh();
     };
@@ -20215,7 +20813,7 @@
       filter: []
     };
     var similars = [];
-    var buttons_scroll = new create$p({
+    var buttons_scroll = new create$q({
       horizontal: true,
       nopadding: true
     });
@@ -20430,8 +21028,8 @@
     };
   }
 
-  var html$5 = $("<div class=\"helper\">\n    <div class=\"helper__body\">\n        <div class=\"helper__ico\">\n            <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"white\"/>\n            <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"white\"/>\n            <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"white\"/>\n            <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"helper__text\"></div>\n    </div>\n</div>");
-  var body$1 = html$5.find('.helper__text'),
+  var html$6 = $("<div class=\"helper\">\n    <div class=\"helper__body\">\n        <div class=\"helper__ico\">\n            <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"white\"/>\n            <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"white\"/>\n            <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"white\"/>\n            <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"helper__text\"></div>\n    </div>\n</div>");
+  var body$1 = html$6.find('.helper__text'),
     time;
   var memorys = {};
   var remember = 1000 * 60 * 60 * 14;
@@ -20453,10 +21051,10 @@
       Storage.set('helper', memorys);
       clearTimeout(time);
       time = setTimeout(function () {
-        html$5.removeClass('helper--visible');
+        html$6.removeClass('helper--visible');
       }, 10000);
       body$1.html(text);
-      html$5.addClass('helper--visible');
+      html$6.addClass('helper--visible');
       if (elem) {
         var blink = $('<div class="helper-blink"></div>');
         elem.append(blink);
@@ -20466,7 +21064,7 @@
       }
     }
   }
-  function init$g() {
+  function init$i() {
     memorys = Storage.cache('helper', 300, {});
     Settings.listener.follow('open', function (e) {
       if (e.name == 'more') {
@@ -20477,11 +21075,11 @@
         });
       }
     });
-    $('body').append(html$5);
+    $('body').append(html$6);
   }
   var Helper = {
     show: show$5,
-    init: init$g
+    init: init$i
   };
 
   var SERVER = {};
@@ -20490,10 +21088,10 @@
   var callback_back;
   var formats = ['asf', 'wmv', 'divx', 'avi', 'mp4', 'm4v', 'mov', '3gp', '3g2', 'mkv', 'trp', 'tp', 'mts', 'mpg', 'mpeg', 'dat', 'vob', 'rm', 'rmvb', 'm2ts', 'ts'];
   var formats_individual = ['vob', 'm2ts'];
-  function start$2(element, movie) {
+  function start$3(element, movie) {
     SERVER.object = element;
     if (movie) SERVER.movie = movie;
-    if (!Storage.field('internal_torrclient')) {
+    if (Platform.is('android') && !Storage.field('internal_torrclient')) {
       Android.openTorrent(SERVER);
       if (movie && movie.id) Favorite.add('history', movie, 100);
       if (callback$1) callback$1();
@@ -20505,7 +21103,7 @@
   function open$2(hash, movie) {
     SERVER.hash = hash;
     if (movie) SERVER.movie = movie;
-    if (!Storage.field('internal_torrclient')) {
+    if (Platform.is('android') && !Storage.field('internal_torrclient')) {
       Android.playHash(SERVER);
       if (callback$1) callback$1();
     } else if (Torserver.url()) {
@@ -20521,7 +21119,7 @@
       mask: true,
       onBack: function onBack() {
         Modal.close();
-        close$1();
+        close$2();
       }
     });
   }
@@ -20590,6 +21188,15 @@
     });
   }
   function show$4(files) {
+    files.sort(function (a, b) {
+      var an = a.path.replace(/\d+/g, function (m) {
+        return m.length > 3 ? m : ('000' + m).substr(-4);
+      });
+      var bn = b.path.replace(/\d+/g, function (m) {
+        return m.length > 3 ? m : ('000' + m).substr(-4);
+      });
+      return an.localeCompare(bn);
+    });
     var active = Activity$1.active(),
       movie = active.movie || SERVER.movie || {};
     var plays = Torserver.clearFileName(files.filter(function (a) {
@@ -20649,7 +21256,7 @@
     var need_preload = Torserver.ip() && data.url.indexOf(Torserver.ip()) > -1 && data.url.indexOf('&preload') > -1;
     if (need_preload) {
       var checkout;
-      var network = new create$q();
+      var network = new create$p();
       var first = true;
       Loading.start(function () {
         clearInterval(checkout);
@@ -20758,6 +21365,8 @@
       element.title = (element.fname || element.title).replace(/<[^>]*>?/gm, '');
       playlist.push(element);
       item.on('hover:enter', function () {
+        //если это андроид, но не андроид, то нефиг смотреть
+        if (navigator.userAgent.toLowerCase().indexOf('android') >= 0 && !Platform.is('android')) return Platform.install('apk');
         if (params.movie.id) Favorite.add('history', params.movie, 100);
         if (Platform.is('android') && playlist.length > 1) {
           var trim_playlist = [];
@@ -20891,7 +21500,7 @@
   function back$4(call) {
     callback_back = call;
   }
-  function close$1() {
+  function close$2() {
     Torserver.drop(SERVER.hash);
     Torserver.clear();
     clearInterval(timers.files);
@@ -20907,28 +21516,22 @@
     });
   }
   var Torrent = {
-    start: start$2,
+    start: start$3,
     open: open$2,
     opened: opened,
     back: back$4
   };
 
   var url;
-  var network$3 = new create$q();
-  function init$f() {
+  var network$3 = new create$p();
+  function init$h() {
     var source = {
       title: Lang.translate('title_parser'),
       search: function search(params, oncomplite) {
         get$4({
           search: decodeURIComponent(params.query),
           other: true,
-          from_search: true,
-          movie: {
-            genres: [],
-            title: decodeURIComponent(params.query),
-            original_title: decodeURIComponent(params.query),
-            number_of_seasons: 0
-          }
+          from_search: true
         }, function (json) {
           json.title = Lang.translate('title_parser');
           json.results = json.Results.slice(0, 20);
@@ -20936,7 +21539,7 @@
           json.results.forEach(function (element) {
             element.Title = Utils$2.shortText(element.Title, 110);
           });
-          oncomplite([json]);
+          oncomplite(json.results.length ? [json] : []);
         }, function () {
           oncomplite([]);
         });
@@ -20958,6 +21561,7 @@
           title: Lang.translate('title_torrents'),
           component: 'torrents',
           search: params.query,
+          from_search: true,
           noinfo: true,
           movie: {
             title: params.query,
@@ -21029,7 +21633,7 @@
     }
     if (Storage.field('parser_torrent_type') == 'jackett') {
       if (Storage.field('jackett_url')) {
-        url = Utils$2.checkHttp(Storage.field('jackett_url'));
+        url = Utils$2.checkEmptyUrl(Storage.field('jackett_url'));
         var ignore = false; //params.from_search && !url.match(/\d+\.\d+\.\d+/g)
 
         if (ignore) error('');else {
@@ -21042,7 +21646,7 @@
       if (Storage.get('native')) {
         torlook(params, complite, error);
       } else if (Storage.field('torlook_parse_type') == 'site' && Storage.field('parser_website_url')) {
-        url = Utils$2.checkHttp(Storage.field('parser_website_url'));
+        url = Utils$2.checkEmptyUrl(Storage.field('parser_website_url'));
         torlook(params, complite, error);
       } else if (Storage.field('torlook_parse_type') == 'native') {
         torlook(params, complite, error);
@@ -21120,17 +21724,19 @@
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
     network$3.timeout(1000 * Storage.field('parse_timeout'));
     var u = url + '/api/v2.0/indexers/' + (Storage.field('jackett_interview') == 'healthy' ? 'status:healthy' : 'all') + '/results?apikey=' + Storage.field('jackett_key') + '&Query=' + encodeURIComponent(params.search);
-    var genres = params.movie.genres.map(function (a) {
-      return a.name;
-    });
-    if (!params.clarification) {
-      u = Utils$2.addUrlComponent(u, 'title=' + encodeURIComponent(params.movie.title));
-      u = Utils$2.addUrlComponent(u, 'title_original=' + encodeURIComponent(params.movie.original_title));
+    if (!params.from_search) {
+      var genres = params.movie.genres.map(function (a) {
+        return a.name;
+      });
+      if (!params.clarification) {
+        u = Utils$2.addUrlComponent(u, 'title=' + encodeURIComponent(params.movie.title));
+        u = Utils$2.addUrlComponent(u, 'title_original=' + encodeURIComponent(params.movie.original_title));
+      }
+      u = Utils$2.addUrlComponent(u, 'year=' + encodeURIComponent(((params.movie.release_date || params.movie.first_air_date || '0000') + '').slice(0, 4)));
+      u = Utils$2.addUrlComponent(u, 'is_serial=' + (params.movie.first_air_date || params.movie.last_air_date ? '2' : params.other ? '0' : '1'));
+      u = Utils$2.addUrlComponent(u, 'genres=' + encodeURIComponent(genres.join(',')));
+      u = Utils$2.addUrlComponent(u, 'Category[]=' + (params.movie.number_of_seasons > 0 ? 5000 : 2000) + (params.movie.original_language == 'ja' ? ',5070' : ''));
     }
-    u = Utils$2.addUrlComponent(u, 'year=' + encodeURIComponent(((params.movie.release_date || params.movie.first_air_date || '0000') + '').slice(0, 4)));
-    u = Utils$2.addUrlComponent(u, 'is_serial=' + (params.movie.first_air_date || params.movie.last_air_date ? '2' : params.other ? '0' : '1'));
-    u = Utils$2.addUrlComponent(u, 'genres=' + encodeURIComponent(genres.join(',')));
-    u = Utils$2.addUrlComponent(u, 'Category[]=' + (params.movie.number_of_seasons > 0 ? 5000 : 2000) + (params.movie.original_language == 'ja' ? ',5070' : ''));
     network$3["native"](u, function (json) {
       if (json.Results) {
         json.Results.forEach(function (element) {
@@ -21140,9 +21746,9 @@
           element.size = Utils$2.bytesToSize(element.Size);
         });
         oncomplite(json);
-      } else onerror(Lang.translate('torrent_parser_no_responce'));
+      } else onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
     }, function (a, c) {
-      onerror(Lang.translate('torrent_parser_no_responce'));
+      onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
     });
   }
   function marnet(element, oncomplite, onerror) {
@@ -21163,16 +21769,16 @@
       dataType: 'text'
     });
   }
-  function clear$2() {
+  function clear$3() {
     network$3.clear();
   }
   var Parser = {
-    init: init$f,
+    init: init$h,
     get: get$4,
     torlook: torlook,
     jackett: jackett,
     marnet: marnet,
-    clear: clear$2
+    clear: clear$3
   };
 
   function Explorer() {
@@ -21239,9 +21845,9 @@
     };
   }
 
-  function component$b(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$c(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true
     });
@@ -21255,7 +21861,7 @@
     var filter_items = {
       quality: [Lang.translate('torrent_parser_any_one'), '4k', '1080p', '720p'],
       hdr: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
-      dv: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
+      dv: [Lang.translate('torrent_parser_no_choice'), 'Dolby Vision', 'Dolby Vision TV', Lang.translate('torrent_parser_no')],
       sub: [Lang.translate('torrent_parser_no_choice'), Lang.translate('torrent_parser_yes'), Lang.translate('torrent_parser_no')],
       voice: [],
       tracker: [Lang.translate('torrent_parser_any_two')],
@@ -21581,14 +22187,13 @@
       this.activity.toggle();
     };
     this.listEmpty = function () {
-      var em = Template$1.get('list_empty');
+      var em = Template$1.get('empty_filter');
       var bn = $('<div class="simple-button selector"><span>' + Lang.translate('filter_clarify') + '</span></div>');
-      var ft = $('<div class="empty__footer"></div>');
       bn.on('hover:enter', function () {
         filter.render().find('.filter--filter').trigger('hover:enter');
       });
-      ft.append(bn);
-      em.append(ft);
+      em.find('.empty-filter__title').remove();
+      em.find('.empty-filter__buttons').removeClass('hide').append(bn);
       scroll.append(em);
     };
     this.buildSorted = function () {
@@ -21631,8 +22236,23 @@
       });
       results.Results = popular.concat(other);
     };
+    this.cardID = function () {
+      return object.movie.id + ':' + (object.movie.number_of_seasons ? 'tv' : 'movie');
+    };
+    this.getFilterData = function () {
+      var all = Storage.cache('torrents_filter_data', 500, {});
+      var cid = this.cardID();
+      return all[cid] || Storage.get('torrents_filter', '{}');
+    };
+    this.setFilterData = function (filter) {
+      var all = Storage.cache('torrents_filter_data', 500, {});
+      var cid = this.cardID();
+      all[cid] = filter;
+      Storage.set('torrents_filter_data', all);
+      Storage.set('torrents_filter', filter);
+    };
     this.buildFilterd = function () {
-      var need = Storage.get('torrents_filter', '{}');
+      var need = this.getFilterData();
       var select = [];
       var add = function add(type, title) {
         var items = filter_items[type];
@@ -21711,7 +22331,7 @@
       need.voice = Arrays.removeNoIncludes(Arrays.toArray(need.voice), filter_items.voice);
       need.tracker = Arrays.removeNoIncludes(Arrays.toArray(need.tracker), filter_items.tracker);
       need.season = Arrays.removeNoIncludes(Arrays.toArray(need.season), filter_items.season);
-      Storage.set('torrents_filter', need);
+      this.setFilterData(need);
       select.push({
         title: Lang.translate('torrent_parser_reset'),
         reset: true
@@ -21729,7 +22349,7 @@
       this.selectedFilter();
     };
     this.selectedFilter = function () {
-      var need = Storage.get('torrents_filter', '{}'),
+      var need = this.getFilterData(),
         select = [];
       for (var _i2 in need) {
         if (need[_i2]) {
@@ -21758,27 +22378,27 @@
           _this3.sortWithPopular();
         } else {
           if (a.reset) {
-            Storage.set('torrents_filter', '{}');
+            _this3.setFilterData({});
             _this3.buildFilterd();
           } else {
             a.items.forEach(function (n) {
               return n.checked = false;
             });
-            var filter_data = Storage.get('torrents_filter', '{}');
+            var filter_data = _this3.getFilterData();
             filter_data[a.stype] = filter_multiple.indexOf(a.stype) >= 0 ? [] : b.index;
             a.subtitle = b.title;
-            Storage.set('torrents_filter', filter_data);
+            _this3.setFilterData(filter_data);
           }
         }
         _this3.applyFilter();
         _this3.start();
       };
       filter.onCheck = function (type, a, b) {
-        var data = Storage.get('torrents_filter', '{}'),
+        var data = _this3.getFilterData(),
           need = Arrays.toArray(data[a.stype]);
         if (b.checked && need.indexOf(b.title)) need.push(b.title);else if (!b.checked) Arrays.remove(need, b.title);
         data[a.stype] = need;
-        Storage.set('torrents_filter', data);
+        _this3.setFilterData(data);
         a.subtitle = need.length ? need.join(', ') : a.items[0].title;
         _this3.applyFilter();
       };
@@ -21796,7 +22416,7 @@
       if (last) scroll.update(last);else scroll.reset();
     };
     this.filtred = function () {
-      var filter_data = Storage.get('torrents_filter', '{}');
+      var filter_data = this.getFilterData();
       var filter_any = false;
       for (var _i3 in filter_data) {
         var filr = filter_data[_i3];
@@ -21895,7 +22515,15 @@
           includes('season', ses);
           includes('lang', lng);
           if (hdr) check('[\\[| ]hdr[10| |\\]|,|$]', hdr !== 1);
-          if (dv) check('dolby vision', dv !== 1);
+          if (dv == 0) {
+            check(filter_items.dv[dv], dv !== 1);
+          } else if (dv == 1) {
+            check('dolby vision');
+          } else if (dv == 2) {
+            check('dolby vision tv');
+          } else if (dv == 3) {
+            check('dolby vision', dv !== 0);
+          }
           if (sub) check(' sub|[,|\\s]ст[,|\\s|$]', sub !== 1);
           if (yer) {
             check(filter_items.year[yer]);
@@ -22197,9 +22825,9 @@
     };
   }
 
-  function component$a(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$b(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 250,
@@ -22347,8 +22975,8 @@
     };
   }
 
-  function component$9(object) {
-    var comp = new component$g(object);
+  function component$a(object) {
+    var comp = new component$h(object);
     comp.create = function () {
       this.activity.loader(true);
       Api.relise(object, this.build.bind(this), this.empty.bind(this));
@@ -22359,9 +22987,9 @@
     return comp;
   }
 
-  function component$8(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+  function component$9(object) {
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 250,
@@ -22479,18 +23107,39 @@
     };
   }
 
-  function component$7(object) {
-    var comp = new component$g(object);
+  function component$8(object) {
+    var comp = new component$h(object);
     comp.create = function () {
       Api.collections(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$6(object) {
+  function component$7(object) {
     var html = $('<div></div>');
     var empty = new create$a();
     this.create = function () {
+      var card = object.movie || object.card;
+      var foot = $('<div class="empty__footer"></div>');
+      var button_reset = $('<div class="simple-button selector">' + Lang.translate('title_reset') + '</div>');
+      var button_movie = $('<div class="simple-button selector">' + Lang.translate('back_to_card') + '</div>');
+      button_reset.on('hover:enter', function () {
+        Activity$1.replace();
+      });
+      foot.append(button_reset);
+      if (card) {
+        button_movie.on('hover:enter', function () {
+          Activity$1.replace({
+            component: 'full',
+            card: card,
+            id: card.id,
+            method: card.number_of_seasons ? 'tv' : 'movie',
+            source: card.source || 'cub'
+          });
+        });
+        foot.append(button_movie);
+      }
+      empty.append(foot);
       html.append(empty.render());
       this.start = empty.start;
       this.activity.loader(false);
@@ -22524,9 +23173,9 @@
     };
   }
 
-  function component$5(object) {
+  function component$6(object) {
     var _this = this;
-    var scroll = new create$p({
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 300
@@ -22695,8 +23344,8 @@
     };
   }
 
-  function component$4(object) {
-    var comp = new component$g(object);
+  function component$5(object) {
+    var comp = new component$h(object);
     comp.create = function () {
       this.activity.loader(true);
       Account.subscribes(object, this.build.bind(this), this.empty.bind(this));
@@ -22740,7 +23389,7 @@
     };
   }
 
-  function component$3(object) {
+  function component$4(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       var _this = this;
@@ -22757,8 +23406,8 @@
   }
 
   function Feed(object) {
-    var network = new create$q();
-    var scroll = new create$p({
+    var network = new create$p();
+    var scroll = new create$q({
       mask: true,
       over: true,
       step: 250,
@@ -22915,34 +23564,63 @@
     };
   }
 
-  function component$2(object) {
+  function component$3(object) {
     var all = Favorite.all();
     var comp = new Lampa.InteractionMain(object);
     var viev_all = false;
     comp.create = function () {
       this.activity.loader(true);
-      var category = ['look', 'scheduled', 'book', 'like', 'wath', 'viewed', 'continued', 'thrown'];
-      var lines = [];
-      category.forEach(function (a) {
-        if (all[a].length) {
-          var items = Arrays.clone(all[a].slice(0, 20));
-          items.forEach(function (a) {
-            return a.ready = false;
-          });
-          lines.push({
-            title: Lang.translate('title_' + a),
-            results: items,
-            type: a
+      Account.notice(function (notice) {
+        var invoice = notice.filter(function (a) {
+          return a.method == 'tv-voice';
+        });
+        var category = ['look', 'scheduled', 'book', 'like', 'wath', 'viewed', 'continued', 'thrown'];
+        var lines = [];
+        var voice = [];
+        category.forEach(function (a) {
+          if (all[a].length) {
+            var items = Arrays.clone(all[a].slice(0, 20));
+            items.forEach(function (a) {
+              return a.ready = false;
+            });
+            lines.push({
+              title: Lang.translate('title_' + a),
+              results: items,
+              type: a
+            });
+            all[a].forEach(function (card) {
+              var noti = invoice.find(function (a) {
+                return a.card_id == card.id;
+              });
+              if (noti) {
+                // сам не помню, баг будет если не клонировать
+                var card_clone = Arrays.clone(card);
+                card_clone.ready = false;
+                var hash = Utils$2.hash([noti.season, noti.season > 10 ? ':' : '', noti.episode, card_clone.original_title].join(''));
+                var view = Timeline.view(hash);
+                if (!view.percent && !voice.find(function (a) {
+                  return a.id == card_clone.id;
+                })) {
+                  voice.push(card_clone);
+                }
+              }
+            });
+          }
+        });
+        if (voice.length) {
+          Arrays.insert(lines, 0, {
+            title: Lang.translate('card_new_episode'),
+            results: voice.slice(0, 20)
           });
         }
+        if (lines.length) {
+          Arrays.insert(lines, 0, {
+            title: '',
+            results: []
+          });
+          comp.build(lines);
+        } else comp.empty();
       });
-      if (lines.length) {
-        Arrays.insert(lines, 0, {
-          title: '',
-          results: []
-        });
-        comp.build(lines);
-      } else comp.empty();
       return this.render();
     };
     comp.onAppend = function (line, elem) {
@@ -22996,24 +23674,227 @@
     return comp;
   }
 
+  function component$2(object) {
+    var explorer = new Explorer(object);
+    var filter = new create$5(object);
+    var scroll = new create$q({
+      mask: true,
+      over: true
+    });
+    var last;
+    var choice = {
+      season: object.movie.number_of_seasons
+    };
+    this.create = function () {
+      this.filter();
+      this.selected();
+      explorer.appendFiles(scroll.render());
+      explorer.appendHead(filter.render());
+      scroll.body().addClass('torrent-list');
+      explorer.render().find('.filter--search, .filter--sort').remove();
+      scroll.minus(explorer.render().find('.explorer__files-head'));
+      this.load();
+      this.activity.toggle();
+      return this.render();
+    };
+    this.filter = function () {
+      var _this = this;
+      filter.addButtonBack();
+      filter.onSelect = function (type, a, b) {
+        choice.season = b.season; //и так сойде ;]
+
+        _this.selected();
+        _this.load();
+      };
+      filter.onBack = function () {
+        _this.start();
+      };
+    };
+    this.selected = function () {
+      var select = [];
+      var seasons = [];
+      for (var i in choice) {
+        if (i == 'season') select.push(Lang.translate('torrent_serial_season') + ': ' + choice[i]);
+      }
+      for (var _i = 0; _i < object.movie.number_of_seasons; _i++) {
+        seasons.push({
+          title: _i + 1,
+          season: _i + 1
+        });
+      }
+      filter.set('filter', [{
+        title: Lang.translate('torrent_serial_season'),
+        subtitle: choice.season,
+        noselect: true,
+        items: seasons
+      }]);
+      filter.chosen('filter', select);
+    };
+    this.load = function () {
+      var _this2 = this;
+      this.activity.loader(true);
+      var season = choice.season;
+      Api.clear();
+      Api.seasons(object.movie, [season], function (v) {
+        last = false;
+        scroll.clear();
+        scroll.reset();
+        if (v[season] && v[season].episodes && v[season].episodes.length) {
+          _this2.season(v[season]);
+          _this2.draw(v[season].episodes);
+        } else {
+          _this2.empty();
+        }
+        _this2.activity.loader(false);
+      });
+    };
+    this.season = function (season) {
+      var head = [];
+      if (season.vote_average) head.push(Lang.translate('title_rating') + ': ' + parseFloat(season.vote_average + '').toFixed(1));
+      if (season.air_date) head.push(Lang.translate('full_date_of_release') + ': ' + Utils$2.parseTime(season.air_date).full);
+      head.push(Lang.translate('title_episodes') + ': ' + season.episodes.length);
+      season.head = head.join('&nbsp; ● &nbsp;');
+      var tpl = Template$1.get('season_info', season);
+      tpl.on('hover:focus', function (e) {
+        scroll.update($(e.target), true);
+      });
+      if (!season.overview) tpl.find('.season-info__overview').remove();
+      scroll.append(tpl);
+    };
+    this.empty = function () {
+      var em = Template$1.get('empty_filter');
+      var bn = $('<div class="simple-button selector"><span>' + Lang.translate('filter_clarify') + '</span></div>');
+      bn.on('hover:enter', function () {
+        filter.render().find('.filter--filter').trigger('hover:enter');
+      });
+      em.find('.empty-filter__title').remove();
+      em.find('.empty-filter__buttons').removeClass('hide').append(bn);
+      scroll.append(em);
+      Controller.enable('content');
+    };
+    this.draw = function (episodes) {
+      episodes.forEach(function (episode, index) {
+        var number = episode.episode_number || index + 1;
+        var hash = Utils$2.hash([choice.season, choice.season > 10 ? ':' : '', number, object.movie.original_title].join(''));
+        var info = [];
+        var out_air = new Date((episode.air_date + '').replace(/-/g, '/'));
+        var out_now = Date.now();
+        var out_day = episode.air_date ? Math.round((out_air.getTime() - out_now) / (24 * 60 * 60 * 1000)) : 1;
+        var out_txt = Lang.translate('full_episode_days_left') + ': ' + (episode.air_date ? out_day : '- -');
+        episode.timeline = Timeline.view(hash);
+        episode.time = Utils$2.secondsToTime(episode.runtime * 60, true);
+        episode.title = episode.name || Lang.translate('torrent_serial_episode') + ' ' + number;
+        episode.quality = out_day > 0 ? out_txt : '';
+        if (episode.vote_average) info.push(Template$1.get('season_episode_rate', {
+          rate: parseFloat(episode.vote_average + '').toFixed(1)
+        }, true));
+        if (episode.air_date) info.push(Utils$2.parseTime(episode.air_date).full);
+        episode.info = info.length ? info.map(function (i) {
+          return '<span>' + i + '</span>';
+        }).join('<span class="season-episode-split">●</span>') : '';
+        var html = Template$1.get('season_episode', episode);
+        var loader = html.find('.season-episode__loader');
+        var image = html.find('.season-episode__img');
+        var viewed = function viewed() {
+          html.find('.season-episode__viewed').remove();
+          if (Boolean(episode.timeline.percent)) html.find('.season-episode__img').append('<div class="season-episode__viewed">' + Template$1.get('icon_viewed', {}, true) + '</div>');
+        };
+        html.find('.season-episode__timeline').append(Timeline.render(episode.timeline));
+        if (out_day > 0) html.css('opacity', '0.5');else {
+          viewed();
+          if (Boolean(episode.timeline.percent)) last = html[0];
+          html.on('hover:enter', function () {
+            if (Boolean(episode.timeline.percent)) {
+              episode.timeline.time = 0;
+              episode.timeline.percent = 0;
+            } else {
+              episode.timeline.time = episode.timeline.duration * 0.95;
+              episode.timeline.percent = 95;
+            }
+            Timeline.update(episode.timeline);
+            viewed();
+          });
+        }
+        html.on('hover:enter', function () {}).on('hover:focus', function (e) {
+          last = e.target;
+          scroll.update($(e.target), true);
+        }).on('visible', function () {
+          var img = html.find('img')[0];
+          img.onerror = function () {
+            img.src = './img/img_broken.svg';
+          };
+          img.onload = function () {
+            image.addClass('season-episode__img--loaded');
+            loader.remove();
+            image.append('<div class="season-episode__episode-number">' + ('0' + number).slice(-2) + '</div>');
+          };
+          if (episode.still_path) img.src = TMDB$1.image('t/p/w300' + episode.still_path);else if (episode.img) img.src = episode.img;else {
+            loader.remove();
+            image.append('<div class="season-episode__episode-number">' + ('0' + number).slice(-2) + '</div>');
+          }
+        }).on('hover:hover hover:touch', function (e) {
+          last = e.target;
+          Navigator.focused(last);
+        });
+        scroll.append(html);
+      });
+      if (last) scroll.update($(last), true);
+      Layer.visible(scroll.render(true));
+      Controller.enable('content');
+    };
+    this.start = function () {
+      if (Activity$1.active().activity !== this.activity) return;
+      Background.immediately(Utils$2.cardImgBackgroundBlur(object.movie));
+      Controller.add('content', {
+        toggle: function toggle() {
+          Controller.collectionSet(scroll.render(), explorer.render());
+          Controller.collectionFocus(last || false, scroll.render());
+        },
+        left: function left() {
+          if (Navigator.canmove('left')) Navigator.move('left');else Controller.toggle('menu');
+        },
+        right: function right() {
+          filter.show(Lang.translate('title_filter'), 'filter');
+        },
+        up: function up() {
+          if (Navigator.canmove('up')) Navigator.move('up');else Controller.toggle('head');
+        },
+        down: function down() {
+          if (Navigator.canmove('down')) Navigator.move('down');
+        },
+        back: function back() {
+          Activity$1.backward();
+        }
+      });
+      Controller.toggle('content');
+    };
+    this.pause = function () {};
+    this.stop = function () {};
+    this.render = function () {
+      return explorer.render();
+    };
+    this.destroy = function () {};
+  }
+
   var component$1 = {
-    main: component$i,
-    full: component$h,
-    category: component$e,
-    category_full: component$f,
-    actor: component$d,
-    favorite: component$c,
-    torrents: component$b,
-    mytorrents: component$a,
-    relise: component$9,
-    collections: component$8,
-    collections_view: component$7,
-    nocomponent: component$6,
-    timetable: component$5,
-    subscribes: component$4,
-    company: component$3,
+    main: component$j,
+    full: component$i,
+    category: component$f,
+    category_full: component$g,
+    actor: component$e,
+    favorite: component$d,
+    torrents: component$c,
+    mytorrents: component$b,
+    relise: component$a,
+    collections: component$9,
+    collections_view: component$8,
+    nocomponent: component$7,
+    timetable: component$6,
+    subscribes: component$5,
+    company: component$4,
     feed: Feed,
-    bookmarks: component$2
+    bookmarks: component$3,
+    episodes: component$2
   };
 
   /**
@@ -23057,7 +23938,7 @@
     get: get$3
   };
 
-  var listener$4 = start$5();
+  var listener$4 = start$6();
   var activites = [];
   var callback = false;
   var fullout = false;
@@ -23210,14 +24091,30 @@
     };
     this.append();
   }
+  function parseStartCard() {
+    var id = Utils$2.gup('card');
+    if (id && !window.start_deep_link) {
+      window.start_deep_link = {
+        id: id,
+        component: "full",
+        method: Utils$2.gup('media') || 'movie',
+        source: Utils$2.gup('source') || 'cub',
+        card: {
+          id: id,
+          source: Utils$2.gup('source') || 'cub'
+        }
+      };
+    }
+  }
 
   /**
    * Запуск
    */
-  function init$e() {
+  function init$g() {
     content = Template$1.js('activitys');
     slides = content.querySelector('.activitys__slides');
     maxsave = Storage.get('pages_save_total', 5);
+    parseStartCard();
     empty();
     var wait = true;
     setTimeout(function () {
@@ -23248,7 +24145,7 @@
    * Лимит активностей, уничтожать если больше maxsave
    */
   function limit() {
-    var curent = active$1();
+    var curent = active$2();
     if (curent && curent.activity) curent.activity.pause();
     var tree_stop = activites.slice(-2);
     if (tree_stop.length > 1 && tree_stop[0].activity) tree_stop[0].activity.stop();
@@ -23270,7 +24167,7 @@
     limit();
     create$3(object);
     activites.push(object);
-    start$1(object);
+    start$2(object);
   }
 
   /**
@@ -23305,7 +24202,7 @@
    * Получить активную активность
    * @returns {object}
    */
-  function active$1() {
+  function active$2() {
     return activites[activites.length - 1];
   }
   function inActivity() {
@@ -23369,7 +24266,7 @@
     previous_tree = activites.slice(-1)[0];
     if (previous_tree) {
       if (previous_tree.activity) {
-        start$1(previous_tree);
+        start$2(previous_tree);
         Lampa.Listener.send('activity', {
           component: previous_tree.component,
           type: 'archive',
@@ -23377,7 +24274,7 @@
         });
       } else {
         create$3(previous_tree);
-        start$1(previous_tree);
+        start$2(previous_tree);
       }
     }
   }
@@ -23411,7 +24308,7 @@
    * Активируем следующию активность 
    * @param {{component:string, activity:class}} object 
    */
-  function start$1(object) {
+  function start$2(object) {
     object.activity.start();
     save$2(object);
     Array.from(slides.children).forEach(function (slide) {
@@ -23506,16 +24403,17 @@
    */
   function replace() {
     var replace = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var object = extractObject(active$1());
+    var clear = arguments.length > 1 ? arguments[1] : undefined;
+    var object = extractObject(active$2());
     for (var i in replace) {
       object[i] = replace[i];
     }
-    active$1().activity.destroy();
+    active$2().activity.destroy();
     activites.pop();
-    push$1(object);
+    push$1(clear ? replace : object);
   }
   var Activity$1 = {
-    init: init$e,
+    init: init$g,
     listener: listener$4,
     push: push$1,
     back: back$3,
@@ -23525,15 +24423,15 @@
     last: last$1,
     out: out,
     replace: replace,
-    active: active$1,
+    active: active$2,
     all: all,
     extractObject: extractObject,
     renderLayers: renderLayers,
     inActivity: inActivity
   };
 
-  var listener$3 = start$5();
-  var active;
+  var listener$3 = start$6();
+  var active$1;
   var active_name = '';
   var controlls = {};
   var select_active;
@@ -23571,10 +24469,10 @@
    * @param {Object} params 
    */
   function run(name, params) {
-    if (active) {
-      if (active[name]) {
-        if (typeof active[name] == 'function') active[name](params);else if (typeof active[name] == 'string') {
-          run(active[name], params);
+    if (active$1) {
+      if (active$1[name]) {
+        if (typeof active$1[name] == 'function') active$1[name](params);else if (typeof active$1[name] == 'string') {
+          run(active$1[name], params);
         }
       }
     }
@@ -23592,14 +24490,14 @@
    * Вызов enter
    */
   function enter() {
-    if (active && active.enter) run('enter');else if (select_active) Utils$2.trigger(select_active, 'hover:enter');
+    if (active$1 && active$1.enter) run('enter');else if (select_active) Utils$2.trigger(select_active, 'hover:enter');
   }
 
   /**
    * Вызов long
    */
   function _long() {
-    if (active && active["long"]) run('long');else if (select_active) Utils$2.trigger(select_active, 'hover:long');
+    if (active$1 && active$1["long"]) run('long');else if (select_active) Utils$2.trigger(select_active, 'hover:long');
   }
 
   /**
@@ -23620,16 +24518,16 @@
    * Переключить контроллер
    * @param {String} name 
    */
-  function toggle$1(name) {
-    if (active && active.gone) active.gone(name);
+  function toggle$2(name) {
+    if (active$1 && active$1.gone) active$1.gone(name);
     if (controlls[name]) {
-      active = controlls[name];
+      active$1 = controlls[name];
       active_name = name;
       Activity$1.call(function () {
         run('back');
       });
-      if (active.toggle) active.toggle();
-      if (active.update) active.update();else {
+      if (active$1.toggle) active$1.toggle();
+      if (active$1.update) active$1.update();else {
         Layer.update();
       }
       listener$3.send('toggle', {
@@ -23698,7 +24596,7 @@
     }
   }
   function enable(name) {
-    if (active_name == name) toggle$1(name);
+    if (active_name == name) toggle$2(name);
   }
   function clearSelects() {
     select_active = false;
@@ -23758,7 +24656,7 @@
     if (append) {
       colection = colection.concat(Array.from(append.querySelectorAll('.selector')));
     }
-    if (colection.length || active.invisible) {
+    if (colection.length || active$1.invisible) {
       clearSelects();
       Navigator.setCollection(colection);
     }
@@ -23786,12 +24684,12 @@
     }
   }
   function own(link) {
-    return active && active.link == link;
+    return active$1 && active$1.link == link;
   }
   function enabled() {
     return {
       name: active_name,
-      controller: active
+      controller: active$1
     };
   }
   function toContent() {
@@ -23808,7 +24706,7 @@
     };
     go();
   }
-  function clear$1() {
+  function clear$2() {
     clearSelects();
     Navigator.setCollection([]);
   }
@@ -23819,7 +24717,7 @@
     move: move,
     enter: enter,
     finish: finish,
-    toggle: toggle$1,
+    toggle: toggle$2,
     trigger: trigger$1,
     back: back$2,
     focus: focus,
@@ -23832,26 +24730,30 @@
     toContent: toContent,
     updateSelects: function updateSelects() {},
     own: own,
-    clear: clear$1
+    clear: clear$2
   };
 
+  var http = window.location.protocol == 'https:' ? 'https://' : 'http://';
   var layers = {
     search: {
       'sim': ['{MIC} {ABC} 1 2 3 4 5 6 7 8 9 0 {BKSP}', '{LANG} - + _ : ( ) [ ] . / {SPACE}'],
       'en': ['{MIC} q w e r t y u i o p {BKSP}', '{LANG} a s d f g h j k l', '{SIM} z x c v b n m . {SPACE}'],
       'uk': ['{MIC} й ц у к е н г ш щ з х ї {BKSP}', '{LANG} ф і в а п р о л д ж є', '{SIM} я ч с м и т ь б ю . {SPACE}'],
+      'he': ['{MIC} ק ר א ט ו ן ם פ {BKSP}', '{LANG} ש ד ג כ ע י ח ל ך ף', '{SIM} ז ס ב ה נ מ צ ת ץ . {SPACE}'],
       'default': ['{MIC} й ц у к е н г ш щ з х ъ {BKSP}', '{LANG} ё ф ы в а п р о л д ж э', '{SIM} я ч с м и т ь б ю . {SPACE}']
     },
     clarify: {
       'en': ['1 2 3 4 5 6 7 8 9 0 - {BKSP}', 'q w e r t y u i o p', 'a s d f g h j k l', 'z x c v b n m .', '{MIC} {LANG} {SPACE} {SEARCH}'],
       'uk': ['1 2 3 4 5 6 7 8 9 0 - {BKSP}', 'й ц у к е н г ш щ з х ї', 'ф і в а п р о л д ж є', 'я ч с м и т ь б ю .', '{MIC} {LANG} {SPACE} {SEARCH}'],
+      'he': ['1 2 3 4 5 6 7 8 9 0 - {BKSP}', 'ק ר א ט ו ן ם פ', 'ש ד ג כ ע י ח ל ך ף', 'ז ס ב ה נ מ צ ת ץ .', '{MIC} {LANG} {SPACE} {SEARCH}'],
       'default': ['1 2 3 4 5 6 7 8 9 0 - {BKSP}', 'й ц у к е н г ш щ з х ъ', 'ф ы в а п р о л д ж э', 'я ч с м и т ь б ю .', '{MIC} {LANG} {SPACE} {SEARCH}']
     },
     "default": {
-      'en': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} q w e r t y u i o p', 'a s d f g h j k l / {ENTER}', '{SHIFT} z x c v b n m , . : http://', '{SPACE}'],
-      'uk': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ї', 'ф і в а п р о л д ж є {ENTER}', '{SHIFT} я ч с м и т ь б ю . : http://', '{SPACE}'],
+      'en': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} q w e r t y u i o p', 'a s d f g h j k l / {ENTER}', '{SHIFT} z x c v b n m , . : ' + http, '{SPACE}'],
+      'uk': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ї', 'ф і в а п р о л д ж є {ENTER}', '{SHIFT} я ч с м и т ь б ю . : ' + http, '{SPACE}'],
+      'he': ['{SIM} ק ר א ט ו ן ם פ {BKSP}', '{LANG} ש ד ג כ ע י ח ל ך ף', 'ז ס ב ה נ מ צ ת ץ . /', '{SHIFT} ! @ # $ % ^ & * ( ) {SPACE}'],
       'sim': ['{ABC} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} ! @ # $ % ^ & * ( ) [ ]', '- _ = + \\ | [ ] { }', '; : \' " , . < > / ?', '{SPACE}'],
-      'default': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ъ', 'ф ы в а п р о л д ж э {ENTER}', '{SHIFT} я ч с м и т ь б ю , . : http://', '{SPACE}']
+      'default': ['{SIM} 1 2 3 4 5 6 7 8 9 0 - + = {BKSP}', '{LANG} й ц у к е н г ш щ з х ъ', 'ф ы в а п р о л д ж э {ENTER}', '{SHIFT} я ч с м и т ь б ю , . : ' + http, '{SPACE}']
     },
     nums: {
       'default': ['0 1 2 3 4 {BKSP}', '5 6 7 8 9 {ENTER}']
@@ -23883,7 +24785,10 @@
     var input;
     var last_value;
     var height = window.innerHeight;
-    this.listener = start$5();
+    if (params.keyboard) {
+      simple = params.keyboard !== 'lampa';
+    }
+    this.listener = start$6();
     this.create = function () {
       var _this = this;
       if (simple) {
@@ -24102,6 +25007,7 @@
         _keyBord.setOptions({
           layoutName: lang == 'ru' ? 'default' : Arrays.getKeys(layout).indexOf(lang) >= 0 ? lang : layout.en ? 'en' : 'default'
         });
+        $('.simple-keyboard').addClass('hg-style-' + (params.layout || 'default'));
       }
       this.speechRecognition();
     };
@@ -24173,6 +25079,7 @@
         });
       });
       keys.addClass('binded');
+      $('.simple-keyboard').addClass('hg-style-' + (params.layout || 'default'));
     };
     this.shifted = function (shifted, layout, code) {
       if (!(shifted && _keyBord.options.layout[layout])) {
@@ -24256,7 +25163,7 @@
     };
   }
 
-  var html$4, keyboard, input;
+  var html$5, keyboard, input;
 
   /**
    * Заустить редактор
@@ -24264,10 +25171,11 @@
    * @param {function} call 
    */
   function edit(params, call) {
-    html$4 = Template$1.get('settings_input');
-    input = html$4.find('.settings-input__input');
-    if (Storage.field('keyboard_type') !== 'lampa') input.hide();
-    $('body').append(html$4);
+    html$5 = Template$1.get('settings_input');
+    input = html$5.find('.settings-input__input');
+    var lamp = Storage.field('keyboard_type') == 'lampa' || params.keyboard == 'lampa';
+    if (!lamp) input.hide();
+    $('body').addClass('keyboard-input--visible').append(html$5);
     keyboard = new create$2(params);
     keyboard.listener.follow('change', function (event) {
       input.text(event.value.trim());
@@ -24277,9 +25185,9 @@
       back$1();
       call(val);
     });
-    html$4.toggleClass('settings-input--free', params.free ? true : false);
-    $('.settings-input__links', html$4).toggleClass('hide', params.nosave ? true : false);
-    if (params.title) html$4.find('.settings-input__content').prepend('<div class="settings-input__title">' + params.title + '</div>');
+    html$5.toggleClass('settings-input--free', params.free ? true : false);
+    $('.settings-input__links', html$5).toggleClass('hide', params.nosave ? true : false);
+    if (params.title) html$5.find('.settings-input__content').prepend('<div class="settings-input__title">' + params.title + '</div>');
     keyboard.listener.follow('down', function (event) {
       if (params.nosave) return;
       var members = Storage.get('setting_member', []);
@@ -24359,8 +25267,9 @@
    */
   function destroy() {
     keyboard.destroy();
-    html$4.remove();
-    html$4 = null;
+    html$5.remove();
+    $('body').removeClass('keyboard-input--visible');
+    html$5 = null;
     keyboard = null;
     input = null;
   }
@@ -24370,12 +25279,12 @@
 
   var values = {};
   var defaults = {};
-  var listener$2 = start$5();
+  var listener$2 = start$6();
 
   /**
    * Запуск
    */
-  function init$d() {
+  function init$f() {
     if (Platform.is('tizen')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
@@ -24427,12 +25336,29 @@
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
         'ios': 'iOS',
-        'vlc': 'VLC'
+        'vlc': 'VLC',
+        'nplayer': 'nPlayer',
+        'infuse': 'Infuse'
       }, 'inner');
       select$1('player_iptv', {
         'inner': '#{settings_param_player_inner}',
         'ios': 'iOS',
-        'vlc': 'VLC'
+        'vlc': 'VLC',
+        'nplayer': 'nPlayer',
+        'infuse': 'Infuse'
+      }, 'inner');
+    } else if (Platform.is('apple_tv')) {
+      select$1('player', {
+        'inner': '#{settings_param_player_inner}',
+        'vlc': 'VLC',
+        'infuse': 'Infuse',
+        'tvos': 'tvOS'
+      }, 'inner');
+      select$1('player_iptv', {
+        'inner': '#{settings_param_player_inner}',
+        'vlc': 'VLC',
+        'infuse': 'Infuse',
+        'tvos': 'tvOS'
       }, 'inner');
     }
     trigger('glass_style', Platform.screen('mobile'));
@@ -24446,7 +25372,7 @@
     select$1('keyboard_type', {
       'lampa': '#{settings_param_keyboard_lampa}',
       'integrate': '#{settings_param_keyboard_system}'
-    }, Platform.screen('mobile') ? 'integrate' : 'lampa');
+    }, Platform.screen('mobile') || Platform.is('apple_tv') ? 'integrate' : 'lampa');
 
     //язык и комбинации для поиска
     var langcode = Storage.get('language', 'ru');
@@ -24464,6 +25390,14 @@
     if (Arrays.getKeys(selector).indexOf(Storage.get('parse_lang', 'df')) == -1) Storage.set('parse_lang', 'df');
     select$1('parse_lang', selector, 'df');
     select$1('tmdb_lang', Lang.codes(), 'ru');
+    var agent = navigator.userAgent.toLowerCase();
+    var versi = agent.match(/chrome\/(\d+)/);
+    versi = versi ? parseInt(versi[1]) : 60;
+    versi = isNaN(versi) ? 60 : versi;
+    select$1('protocol', {
+      'http': '#{settings_param_no}',
+      'https': '#{settings_param_yes}'
+    }, versi >= 60 ? 'https' : 'http');
   }
 
   /**
@@ -24528,6 +25462,7 @@
         listener$2.send('button', {
           name: name
         });
+        if (onChange) onChange();
       }
       if (type == 'add') {
         Input.edit({
@@ -24621,7 +25556,9 @@
     if (children) {
       var parent = elems_html ? elems_html.find('[data-parent="' + children + '"]') : elems.filter('[data-parent="' + children + '"]');
       var value = elem.data('children-value');
-      if (value) parent.toggleClass('hide', Storage.field(name) !== value);else parent.toggleClass('hide', !Storage.field(name));
+      var visibl = value ? Storage.field(name) !== value : !Storage.field(name);
+      if (elem.data('children-reverse')) visibl = !visibl;
+      parent.toggleClass('hide', visibl);
       listener$2.send('update_scroll_position');
     }
   }
@@ -24848,7 +25785,7 @@
   select$1('tmdb_proxy_image', '', '');
   var Params = {
     listener: listener$2,
-    init: init$d,
+    init: init$f,
     bind: bind,
     update: update$2,
     field: field$1,
@@ -24858,7 +25795,7 @@
     defaults: defaults
   };
 
-  var network$2 = new create$q();
+  var network$2 = new create$p();
   var api = Utils$2.protocol() + object$2.cub_domain + '/api/';
   var WorkerArray = /*#__PURE__*/function () {
     function WorkerArray(field) {
@@ -25020,6 +25957,18 @@
         }
       }
     }, {
+      key: "sendClean",
+      value: function sendClean() {
+        Socket.send('storage', {
+          params: {
+            id: null,
+            name: this.field,
+            value: '',
+            clean: true
+          }
+        });
+      }
+    }, {
       key: "save",
       value: function save(value) {
         var _this3 = this;
@@ -25037,15 +25986,20 @@
         Arrays.remove(this.data, value);
         this.sendRemove(null, value);
       }
+    }, {
+      key: "clean",
+      value: function clean() {
+        this.data = [];
+        this.sendClean();
+      }
     }]);
     return WorkerArray;
   }();
   var WorkerFilterID = /*#__PURE__*/function (_WorkerArray) {
     _inherits(WorkerFilterID, _WorkerArray);
-    var _super = _createSuper(WorkerFilterID);
     function WorkerFilterID() {
       _classCallCheck(this, WorkerFilterID);
-      return _super.apply(this, arguments);
+      return _callSuper(this, WorkerFilterID, arguments);
     }
     _createClass(WorkerFilterID, [{
       key: "filter",
@@ -25114,11 +26068,10 @@
   }(WorkerArray);
   var WorkerObject = /*#__PURE__*/function (_WorkerArray2) {
     _inherits(WorkerObject, _WorkerArray2);
-    var _super2 = _createSuper(WorkerObject);
     function WorkerObject(params) {
       var _this5;
       _classCallCheck(this, WorkerObject);
-      _this5 = _super2.call(this, params);
+      _this5 = _callSuper(this, WorkerObject, [params]);
       _this5.data = {};
       _this5.empty = {};
       return _this5;
@@ -25175,6 +26128,12 @@
         delete this.data[id];
         this.sendRemove(id, null);
       }
+    }, {
+      key: "clean",
+      value: function clean() {
+        this.data = {};
+        this.sendClean();
+      }
     }]);
     return WorkerObject;
   }(WorkerArray);
@@ -25189,18 +26148,19 @@
     object_string: WorkerObject
   };
 
-  var listener$1 = start$5();
+  var listener$1 = start$6();
   var readed$1 = {};
   var workers = {};
-  function init$c() {
+  function init$e() {
     sync('online_view', 'array_string');
     sync('torrents_view', 'array_string');
     sync('search_history', 'array_string');
-    sync('menu_sort', 'array_string');
+    //sync('menu_sort','array_string')
     //sync('menu_hide','array_string')
     //sync('timetable','array_object_id') слишком большие данные, что-то потом придумаю
     sync('online_last_balanser', 'object_string');
     sync('user_clarifys', 'object_object');
+    sync('torrents_filter_data', 'object_object');
   }
   function get$1(name, empty) {
     var value = readed$1[name] || window.localStorage.getItem(name) || empty || '';
@@ -25276,9 +26236,50 @@
   function remove$1(field_name, value) {
     if (workers[field_name]) workers[field_name].remove(value);
   }
+  function clean(field_name) {
+    if (workers[field_name]) workers[field_name].clean();
+  }
+  function clear$1(full) {
+    if (full) {
+      Noty.show(Lang.translate('settings_clear_cache'));
+      localStorage.clear();
+    } else {
+      Noty.show(Lang.translate('settings_clear_cache_only'));
+      var need = ['online_view', 'ser_clarifys', 'torrents_view', 'account_bookmarks', 'recomends_list', 'file_view', 'timetable', 'search_history', 'recomends_scan'];
+      var more = ['online_', 'file_view_', 'storage_'];
+      for (var key in localStorage) {
+        if (more.find(function (w) {
+          return key.indexOf(w) >= 0;
+        })) need.push(key);
+      }
+      need.forEach(function (a) {
+        localStorage.removeItem(a);
+      });
+    }
+    setTimeout(function () {
+      window.location.reload();
+    }, 3000);
+  }
+  function getsize(call) {
+    if (localStorage) {
+      var i = 0;
+      var t = setInterval(function () {
+        i += 250;
+        try {
+          localStorage.setItem('testsize', new Array(i * 1024 + 1).join('a'));
+        } catch (e) {
+          localStorage.removeItem('testsize');
+          clearInterval(t);
+        }
+        call((i - 250) * 1024);
+      }, 100);
+    } else {
+      call(5000 * 1024);
+    }
+  }
   var Storage = {
     listener: listener$1,
-    init: init$c,
+    init: init$e,
     get: get$1,
     set: set,
     field: field,
@@ -25286,7 +26287,63 @@
     add: add$3,
     value: value,
     sync: sync,
-    remove: remove$1
+    remove: remove$1,
+    clear: clear$1,
+    clean: clean,
+    getsize: getsize
+  };
+
+  var meta = {
+    languages: {
+      ru: {
+        code: 'ru',
+        name: 'Русский',
+        lang_choice_title: 'Добро пожаловать',
+        lang_choice_subtitle: 'Выберите свой язык'
+      },
+      en: {
+        code: 'en',
+        name: 'English',
+        lang_choice_title: 'Welcome',
+        lang_choice_subtitle: 'Choose your language'
+      },
+      uk: {
+        code: 'uk',
+        name: 'Українська',
+        lang_choice_title: 'Ласкаво просимо',
+        lang_choice_subtitle: 'Виберіть мову'
+      },
+      be: {
+        code: 'be',
+        name: 'Беларуская',
+        lang_choice_title: 'Сардэчна запрашаем',
+        lang_choice_subtitle: 'Выберыце сваю мову'
+      },
+      zh: {
+        code: 'zh',
+        name: '简体中文',
+        lang_choice_title: '欢迎',
+        lang_choice_subtitle: '选择你的语言'
+      },
+      pt: {
+        code: 'pt',
+        name: 'Português',
+        lang_choice_title: 'Bem-vindo',
+        lang_choice_subtitle: 'Escolhe o teu idioma'
+      },
+      bg: {
+        code: 'bg',
+        name: 'Български',
+        lang_choice_title: 'Здравейте',
+        lang_choice_subtitle: 'Изберете вашият език'
+      },
+      he: {
+        code: 'he',
+        name: 'עִברִית',
+        lang_choice_title: 'ברוך הבא',
+        lang_choice_subtitle: 'בחר את השפה שלך'
+      }
+    }
   };
 
   var ru = {
@@ -25306,6 +26363,7 @@
     back: 'Назад',
     ready: 'Готово',
     close_app_modal: 'Вы уверены, что хотите покинуть приложение?',
+    connected_seeds: 'подкл.',
     search: 'Поиск',
     search_input: 'Введите текст',
     search_empty: 'История поиска пуста.',
@@ -25333,8 +26391,9 @@
     full_episode: 'Эпизод',
     full_directing: 'Режиссура',
     full_writing: 'Сценарий',
+    full_keywords: 'Теги',
     settings_cub_sync: 'Синхронизация',
-    settings_cub_sync_descr: 'Синхронизация с сервисом CUB: синхронизация ваших закладок, истории просмотров, меток и тайм-кодов. Сайт: www.cub.watch',
+    settings_cub_sync_descr: 'Синхронизация с сервисом CUB: синхронизация ваших закладок, истории просмотров, меток и тайм-кодов. Сайт: www.cub.red',
     settings_cub_account: 'Аккаунт',
     settings_cub_logged_in_as: 'Вошли как',
     settings_cub_profile: 'Профиль',
@@ -25413,7 +26472,6 @@
     settings_rest_device: 'Название устройства',
     settings_rest_device_placeholder: 'Например: Моя Лампа',
     settings_rest_cache: 'Очистить кэш',
-    settings_rest_cache_descr: 'Будут очищены все настройки и данные',
     settings_rest_tmdb_example: 'Например:',
     settings_rest_tmdb_api_descr: 'Для получения данных',
     settings_rest_tmdb_image_descr: 'Для получения изображений',
@@ -25423,6 +26481,13 @@
     settings_rest_card_episodes_descr: 'Отображать отметки эпизодов на карточках',
     settings_rest_cache_images: 'Кэш изображений',
     settings_rest_cache_images_descr: 'Кэшировать постеры и фоны в локальное хранилище',
+    settings_rest_protocol_use: 'Безопасное соединение',
+    settings_rest_protocol_descr: 'Использовать протокол HTTPS',
+    settings_rest_cache_only: 'Только кеш',
+    settings_rest_cache_only_descr: 'Основные настройки сохранятся',
+    settings_rest_cache_all: 'Кеш и данные',
+    settings_rest_cache_all_descr: 'Будут очищены все настройки и данные',
+    settings_rest_cache_calculate: 'Сколько осталось памяти',
     settings_parser_use: 'Использовать парсер',
     settings_parser_use_descr: 'Тем самым, вы соглашаетесь принять на себя всю ответственность за использование публичных ссылок для просмотра торрент и онлайн контента.',
     settings_parser_type: 'Тип парсера для торрентов',
@@ -25488,7 +26553,7 @@
     settings_server_link_two_descr: 'Укажите дополнительную ссылку на скрипт TorrServer',
     settings_server_additionally: 'Дополнительно',
     settings_server_client: 'Встроенный клиент',
-    settings_server_client_descr: 'Использовать встроенный JS-клиент TorrServe, иначе запускается системный.',
+    settings_server_client_descr: 'Использовать встроенный JS-клиент TorrServer, иначе запускается системный.',
     settings_server_base: 'Сохранять в базу',
     settings_server_base_descr: 'Торрент будет добавлен в базу TorrServer',
     settings_server_preload: 'Использовать буфер пред.загрузки',
@@ -25501,6 +26566,23 @@
     settings_webos_launcher: 'Запуск приложения',
     settings_webos_launcher_add_device: 'Установить как стартовое',
     settings_webos_launcher_remove_device: 'Убрать из стартовых приложений',
+    settings_parental_control_param_time_always: 'Всегда',
+    settings_parental_control_param_time_once: 'Один раз',
+    settings_parental_control_param_time_10: 'Через 10 минут',
+    settings_parental_control_param_time_20: 'Через 20 минут',
+    settings_parental_control_param_time_30: 'Через 30 минут',
+    settings_parental_control_param_time_60: 'Через 1 час',
+    settings_parental_control_param_time_120: 'Через 2 часа',
+    settings_parental_control_change_pin: 'Изменить PIN-код',
+    settings_parental_control_demand_title: 'Когда запрашивать',
+    settings_parental_control_demand_descr: 'Через какое время запрашивать PIN-код',
+    settings_parental_control_enabled: 'Включено',
+    settings_parental_control_disabled: 'Отключено',
+    parental_control_input_new_code: 'Введите новый PIN-код',
+    parental_control_confirm_new_code: 'Повторите PIN-код',
+    parental_control_no_match_code: 'PIN-код не совпадает с прошлым кодом',
+    parental_control_input_code: 'Введите PIN-код',
+    parental_control_input_error: 'Вы ввели неправильный PIN-код',
     torent_nohash_reasons: 'Причины',
     torent_nohash_reason_one: 'TorServer не смог скачать торрент файл',
     torent_nohash_reason_two: 'Ответ от TorServer',
@@ -25511,20 +26593,20 @@
     torent_nohash_do_three: 'Убедитесь что Jackett тоже может скачать файл',
     torent_nohash_do_four: 'Написать в нашу Telegram-группу: @lampa_group',
     torent_nohash_do_five: 'Укажите какой фильм, какая раздача и по возможности фото этой раздачи',
-    torrent_error_text: 'Не удалось подключиться к TorrServe. Давайте быстро пройдёмся по списку возможных проблем и всё проверим.',
-    torrent_error_step_1: 'Запущен ли TorrServe',
+    torrent_error_text: 'Не удалось подключиться к TorrServer. Давайте быстро пройдёмся по списку возможных проблем и всё проверим.',
+    torrent_error_step_1: 'Запущен ли TorrServer',
     torrent_error_step_2: 'Динамический IP-адрес',
     torrent_error_step_3: 'Протокол и порт',
     torrent_error_step_4: 'Блокировка антивирусами',
     torrent_error_step_5: 'Проверьте на доступность',
     torrent_error_step_6: 'Все равно не работает',
-    torrent_error_info_1: 'Убедитесь, что вы запустили TorrServe на устройстве, где он установлен.',
-    torrent_error_info_2: 'Частая ошибка, изменился IP-адрес устройства с TorrServe. Убедитесь, что IP-адрес, который вы ввели - {ip}, совпадает с адресом устройства, на котором установлен TorrServe.',
-    torrent_error_info_3: 'Для подключения к TorrServe, необходимо указать протокол http:// в начале и порт :8090 в конце адреса. Убедитесь, что после IP-адреса указан порт, ваш текущий адрес - {ip}',
+    torrent_error_info_1: 'Убедитесь, что вы запустили TorrServer на устройстве, где он установлен.',
+    torrent_error_info_2: 'Частая ошибка, изменился IP-адрес устройства с TorrServer. Убедитесь, что IP-адрес, который вы ввели - {ip}, совпадает с адресом устройства, на котором установлен TorrServer.',
+    torrent_error_info_3: 'Для подключения к TorrServer, необходимо указать протокол http:// в начале и порт :8090 в конце адреса. Убедитесь, что после IP-адреса указан порт, ваш текущий адрес - {ip}',
     torrent_error_info_4: 'Частое явление, антивирус или брандмауэр может блокировать доступ по IP-адресу, попробуйте отключить антивирус и брандмауэр.',
-    torrent_error_info_5: 'На любом другом устройстве в этой же сети, откройте в браузере адрес {ip} и проверьте, доступен ли веб-интерфейс TorrServe.',
-    torrent_error_info_6: 'Если после всех проверок всё равно возникает ошибка подключения, попробуйте перезагрузить TorrServe и интернет-адаптер.',
-    torrent_error_info_7: 'Если проблема не устранена, пишите в Telegram-группу @lampa_group с текстом (Lampa не подключается к TorrServe после всех проверок, текущий адрес {ip})',
+    torrent_error_info_5: 'На любом другом устройстве в этой же сети, откройте в браузере адрес {ip} и проверьте, доступен ли веб-интерфейс TorrServer.',
+    torrent_error_info_6: 'Если после всех проверок всё равно возникает ошибка подключения, попробуйте перезагрузить TorrServer и интернет-адаптер.',
+    torrent_error_info_7: 'Если проблема не устранена, пишите в Telegram-группу @lampa_group с текстом (Lampa не подключается к TorrServer после всех проверок, текущий адрес {ip})',
     torrent_error_start: 'Начать проверку',
     torrent_error_nomatrix: 'Не удалось подтвердить версию Matrix',
     torrent_error_made: 'Выполнено',
@@ -25533,8 +26615,8 @@
     torrent_error_complite: 'Завершить',
     torrent_error_connect: 'Ошибка подключения',
     torrent_error_check_no_auth: 'Сервер ответил на запрос, но не удалось пройти авторизацию',
-    torrent_install_need: 'Необходим TorrServe',
-    torrent_install_text: 'TorrServe – приложение, которое позволяет просматривать контент из торрент-файлов в онлайн режиме.<br><br>Более детальную информацию по установке вы найдете в Telegram-группах, указанных ниже.',
+    torrent_install_need: 'Необходим TorrServer',
+    torrent_install_text: 'TorrServer – приложение, которое позволяет просматривать контент из торрент-файлов в онлайн режиме.<br><br>Более детальную информацию по установке вы найдете в Telegram-группах, указанных ниже.',
     torrent_install_contact: 'Telegram-группы',
     torrent_item_bitrate: 'Битрейт',
     torrent_item_seeds: 'Раздают',
@@ -25674,6 +26756,11 @@
     title_buffer: 'Буфер',
     title_upcoming_episodes: 'Ближайшие выходы эпизодов',
     title_reactions: 'Реакции',
+    title_last_year: 'Прошлый год',
+    title_reset: 'Перезагрузить',
+    title_left: 'Осталось',
+    title_parental_control: 'Родительский контроль',
+    title_worth_rewatch: 'Стоит пересмотреть',
     reactions_none: 'Нет реакций',
     reactions_fire: 'Супер',
     reactions_nice: 'Неплохо',
@@ -25960,6 +27047,7 @@
     empty_text: 'По вашему фильтру ничего не нашлось, уточните фильтр.',
     empty_title_two: 'Здесь пусто',
     empty_text_two: 'На данный момент список пустой',
+    back_to_card: 'Вернуться в карточку',
     menu_main: 'Главная',
     menu_movies: 'Фильмы',
     menu_tv: 'Сериалы',
@@ -26001,6 +27089,7 @@
     time_from: 'из',
     time_reset: 'Сбросить тайм-код',
     settings_clear_cache: 'Кеш и данные очищены',
+    settings_clear_cache_only: 'Кеш очищен',
     settings_user_links: 'Пользовательская ссылка',
     settings_for_local: 'Для локального TorrServer',
     settings_add: 'Добавить',
@@ -26056,7 +27145,7 @@
     helper_cleared: 'Успешно, подсказки будут показаны заново.',
     helper_torrents_view: 'Для сброса тайм-кода и вызова меню удерживайте клавишу (ОК)',
     fav_sync_title: 'Синхронизация закладок',
-    fav_sync_text: 'Ваши любимые закладки вместе с Вами. Подключите синхронизацию и просматривайте на любом устройстве. <br><br>Для этого зарегистрируйтесь на сайте www.cub.watch, создайте профиль и авторизуйтесь в приложение.',
+    fav_sync_text: 'Ваши любимые закладки вместе с Вами. Подключите синхронизацию и просматривайте на любом устройстве. <br><br>Для этого зарегистрируйтесь на сайте www.cub.red, создайте профиль и авторизуйтесь в приложение.',
     fav_sync_site: 'Сайт',
     fav_remove_title: 'Удалить из истории',
     fav_remove_descr: 'Удалить выделенную карточку',
@@ -26128,7 +27217,7 @@
     notice_new_quality: 'Доступно новое качество',
     notice_quality: 'Качество',
     notice_new_episode: 'Новая серия',
-    notice_none: 'У вас еще нет никаких уведомлений, зарегистрируйтесь на сайте <b>www.cub.watch</b>, чтобы следить за новыми сериями и релизами.',
+    notice_none: 'У вас еще нет никаких уведомлений, зарегистрируйтесь на сайте <b>www.cub.red</b>, чтобы следить за новыми сериями и релизами.',
     notice_in_quality: 'В качестве',
     notice_none_account: 'У вас еще нет никаких уведомлений, добавьте сериалы в закладки и ожидайте уведомления о новых сериях.',
     notice_none_system: 'На данный момент у вас отсутствуют уведомления. Мы обязательно оповестим вас, когда появятся новые уведомления.',
@@ -26146,14 +27235,19 @@
     account_profile_main: 'Общий',
     account_export_secuses: 'Экспорт успешно завершён',
     account_export_fail: 'Ошибка при экспорте',
+    account_export_fail_500: 'Неизвестная ошибка',
+    account_export_fail_610: 'Вы исчерпали лимит на сегодня',
+    account_export_fail_200: 'Ошибка базы данных, попробуйте позже',
+    account_export_fail_600: 'Ошибка, не удалось загрузить файл',
+    account_export_fail_620: 'Ошибка, файл не передан',
     account_import_secuses: 'Импорт успешно завершён',
     account_import_fail: 'Ошибка при импорте',
     account_imported: 'импортировано',
     account_reload_after: 'перезагрузка через 5 сек.',
-    account_create: 'Откройте больше возможностей с аккаунтом CUB. Зарегистрируйтесь на сайте <span class="account-modal__site">www.cub.watch</span> и получите доступ к синхронизации ваших закладок, тайм-кодов и других возможностей аккаунта CUB.',
+    account_create: 'Откройте больше возможностей с аккаунтом CUB. Зарегистрируйтесь на сайте <span class="account-modal__site">www.cub.red</span> и получите доступ к синхронизации ваших закладок, тайм-кодов и других возможностей аккаунта CUB.',
     account_premium: 'Раскройте новые горизонты с аккаунтом CUB Premium! Наслаждайтесь увеличенными лимитами и обогащенным функционалом сервиса. Дополнительные возможности ждут вас уже сегодня!',
     account_premium_more: 'Подробнее о CUB Premium',
-    account_limited: 'Вы достигли максимального лимита. Увеличьте лимит с аккаунтом CUB Premium. Подробнее на сайте <span class="account-modal__site">www.cub.watch/premium</span>',
+    account_limited: 'Вы достигли максимального лимита. Увеличьте лимит с аккаунтом CUB Premium. Подробнее на сайте <span class="account-modal__site">www.cub.red/premium</span>',
     account_premium_include_1: 'Увеличение количество закладок',
     account_premium_include_2: 'Увеличение истории просмотров',
     account_premium_include_3: 'Увеличение количество тайм-кодов',
@@ -26169,7 +27263,7 @@
     account_code_enter: 'Введите шестизначный код',
     account_code_error: 'Возможно, вы ввели неверный или устаревший код',
     account_code_wrong: 'Возможно, вы указали неверный формат',
-    account_code_where: 'Перейдите на сайт <span class="account-add-device__site">cub.watch/add</span> и введите указанный там код.',
+    account_code_where: 'Перейдите на сайт <span class="account-add-device__site">cub.red/add</span> и введите указанный там код.',
     account_code_input: 'Ввести код',
     network_noconnect: 'Нет подключения к сети',
     network_404: 'Запрошенная страница не найдена. [404]',
@@ -26263,11 +27357,30 @@
     extensions_hpu_control: 'Управление',
     extensions_hpu_other: 'Разное',
     extensions_hpu_: 'Остальное',
+    speedtest_connect: 'подключение',
+    speedtest_test: 'тестирование',
+    speedtest_ready: 'готово',
+    speedtest_button: 'Тестировать скорость',
     change_source_on_cub: 'Сменить источник на CUB',
+    tv_status_returning_series: 'Онгоинг',
+    tv_status_planned: 'Запланировано',
+    tv_status_in_production: 'В производстве',
+    tv_status_ended: 'Завершено',
+    tv_status_canceled: 'Отменено',
+    tv_status_pilot: 'Пилотный',
+    tv_status_released: 'Выпущенный',
+    tv_status_rumored: 'По слухам',
+    tv_status_post_production: 'Скоро',
     input_detection_touch: 'Хотите переключить на сенсорное управление?',
     input_detection_mouse: 'Хотите переключить на управление мышью?',
     input_detection_remote: 'Хотите переключить на управление пультом?',
     https_text: 'Вы используйте протокол HTTPS, c которым Lampa работает некорректно. Для корректной работы приложения используйте адрес с протоколом HTTP',
+    premiere_author_recomend_1: 'Закажите пиццу и готовьтесь к драйву.',
+    premiere_author_recomend_2: 'Вечеринка только начинается.',
+    premiere_author_recomend_3: 'Подготовьтесь к адреналину.',
+    premiere_author_recomend_4: 'Готовы к незабываемому вечеру?',
+    premiere_author_recomend_5: 'Рекомендую к просмотру.',
+    premiere_title: 'Премьера',
     termsofuse_t_01: 'Правила использования',
     termsofuse_t_02: 'Lampa - это удобный инструмент для ознакомления с новинками киноиндустрии, включая фильмы, сериалы, мультфильмы и другую информацию. Для получения информации о фильмах используется открытый источник - сайт themoviedb.org',
     termsofuse_t_03: 'Контент',
@@ -26280,7 +27393,8 @@
     termsofuse_t_10: 'Однако, следует отметить, что пользователи устанавливают расширения на свой страх и риск. Все последствия, возникающие в результате использования расширений, ложатся на пользователя. Пользователям рекомендуется быть осторожными при установке и использовании расширений, тщательно оценивая их надежность и безопасность.',
     termsofuse_t_11: 'Нарушения авторских прав',
     termsofuse_t_12: 'Если вы обнаружили нарушение авторских прав в приложении Lampa - свяжитесь с разработчиками, используя раздел Контакты приложения. Однако, важно учесть, что приложение Lampa использует API от каталога themoviedb.org, который предоставляет открытый доступ к информации о фильмах и сериалах. Это означает, что информация, которая отображается в приложении Lampa, является общедоступной и не нарушает авторских прав.',
-    termsofuse_t_13: 'Если вы считаете, что в приложении Lampa все же есть контент, нарушающий авторские права - обратитесь к правообладателю этого контента с просьбой удалить его со страниц сайта themoviedb.org. В свою очередь, приложение Lampa может удалить контент при получении соответствующего уведомления о нарушении авторских прав.'
+    termsofuse_t_13: 'Если вы считаете, что в приложении Lampa все же есть контент, нарушающий авторские права - обратитесь к правообладателю этого контента с просьбой удалить его со страниц сайта themoviedb.org. В свою очередь, приложение Lampa может удалить контент при получении соответствующего уведомления о нарушении авторских прав.',
+    install_app_apk_text: 'Мы заметили, что для запуска Lampa на Android вы используете MediaStationX. Мы рекомендуем вам установить Lampa в виде APK-приложения. Вы можете скачать последнюю версию приложения здесь:'
   };
 
   var en = {
@@ -26300,6 +27414,7 @@
     back: 'Back',
     ready: 'Ready',
     close_app_modal: 'Are you sure you want to leave the app?',
+    connected_seeds: 'connected',
     search: 'Search',
     search_input: 'Enter text',
     search_empty: 'Search history is empty.',
@@ -26327,8 +27442,9 @@
     full_episode: 'Episode',
     full_directing: 'Directing',
     full_writing: 'Writing',
+    full_keywords: 'Tags',
     settings_cub_sync: 'Synchronization',
-    settings_cub_sync_descr: 'Synchronization with the CUB service: Synchronization of your bookmarks, browsing history, tags and timecodes. Website: www.cub.watch',
+    settings_cub_sync_descr: 'Synchronization with the CUB service: Synchronization of your bookmarks, browsing history, tags and timecodes. Website: www.cub.red',
     settings_cub_account: 'Account',
     settings_cub_logged_in_as: 'Logged in as',
     settings_cub_profile: 'Profile',
@@ -26465,7 +27581,7 @@
     settings_server_link_two_descr: 'Provide an additional link to the TorrServer script',
     settings_server_additionally: 'Additionally',
     settings_server_client: 'Embedded client',
-    settings_server_client_descr: 'Use the built-in TorrServe JS client, otherwise the system one starts.',
+    settings_server_client_descr: 'Use the built-in TorrServer JS client, otherwise the system one starts.',
     settings_server_base: 'Save to database',
     settings_server_base_descr: 'The torrent will be added to the TorrServer database',
     settings_server_preload: 'Use prefetch buffer',
@@ -26485,20 +27601,20 @@
     torent_nohash_do_three: 'Make sure Jackett can download the file too',
     torent_nohash_do_four: 'Write to our telegram group: @lampa_group',
     torent_nohash_do_five: 'Specify which movie, which distribution and, if possible, a photo of this distribution',
-    torrent_error_text: 'Failed to connect to TorrServe. Let\'s quickly go through the list of possible problems and check everything.',
-    torrent_error_step_1: 'Is TorrServe running',
+    torrent_error_text: 'Failed to connect to TorrServer. Let\'s quickly go through the list of possible problems and check everything.',
+    torrent_error_step_1: 'Is TorrServer running',
     torrent_error_step_2: 'Dynamic IP',
     torrent_error_step_3: 'Protocol and Port',
     torrent_error_step_4: 'Antivirus blocking',
     torrent_error_step_5: 'Check for availability',
     torrent_error_step_6: 'Still doesn\'t work',
-    torrent_error_info_1: 'Make sure you have launched TorrServe on the device where it is installed.',
-    torrent_error_info_2: 'A common mistake, the IP address of the device with TorrServe has changed. Make sure that the IP address you entered - {ip} - matches the address of the device on which TorrServe is installed.',
-    torrent_error_info_3: 'To connect to TorrServe, you must specify the protocol http:// at the beginning and port :8090 at the end of the address. Make sure there is a port after the IP address, your current address is {ip}',
+    torrent_error_info_1: 'Make sure you have launched TorrServer on the device where it is installed.',
+    torrent_error_info_2: 'A common mistake, the IP address of the device with TorrServer has changed. Make sure that the IP address you entered - {ip} - matches the address of the device on which TorrServer is installed.',
+    torrent_error_info_3: 'To connect to TorrServer, you must specify the protocol http:// at the beginning and port :8090 at the end of the address. Make sure there is a port after the IP address, your current address is {ip}',
     torrent_error_info_4: 'Frequent occurrence, antivirus or firewall can block access by IP address, try disabling antivirus and firewall.',
-    torrent_error_info_5: 'On any other device on the same network, open the {ip} address in a browser and check if the TorrServe web interface is available.',
-    torrent_error_info_6: 'If, after all the checks, a connection error still occurs, try restarting TorrServe and the Internet adapter.',
-    torrent_error_info_7: 'If the problem persists, write to the Telegram group @lampa_group with the text (Lampa does not connect to TorrServe after all checks, the current address is {ip})',
+    torrent_error_info_5: 'On any other device on the same network, open the {ip} address in a browser and check if the TorrServer web interface is available.',
+    torrent_error_info_6: 'If, after all the checks, a connection error still occurs, try restarting TorrServer and the Internet adapter.',
+    torrent_error_info_7: 'If the problem persists, write to the Telegram group @lampa_group with the text (Lampa does not connect to TorrServer after all checks, the current address is {ip})',
     torrent_error_start: 'Start verification',
     torrent_error_nomatrix: 'Failed to verify Matrix version',
     torrent_error_made: 'Performed',
@@ -26506,8 +27622,8 @@
     torrent_error_next: 'Further',
     torrent_error_complite: 'To complete',
     torrent_error_connect: 'Connection error',
-    torrent_install_need: 'Requires TorrServe',
-    torrent_install_text: 'TorrServe is an application that allows you to view content from torrent files online.<br><br>More detailed information on installation can be found in the Telegram groups below.',
+    torrent_install_need: 'Requires TorrServer',
+    torrent_install_text: 'TorrServer is an application that allows you to view content from torrent files online.<br><br>More detailed information on installation can be found in the Telegram groups below.',
     torrent_install_contact: 'Telegram groups',
     torrent_item_bitrate: 'Bitrate',
     torrent_item_seeds: 'Seeds',
@@ -26991,7 +28107,7 @@
     helper_cleared: 'Success, tooltips will be shown again.',
     helper_torrents_view: 'Hold down the (OK) key to reset the timecode and display the menu',
     fav_sync_title: 'Bookmark sync',
-    fav_sync_text: 'Your favorite bookmarks with you. Connect synchronization and view on any device. <br><br>To do this, register on the site www.cub.watch, create a profile and log in to the application.',
+    fav_sync_text: 'Your favorite bookmarks with you. Connect synchronization and view on any device. <br><br>To do this, register on the site www.cub.red, create a profile and log in to the application.',
     fav_sync_site: 'Website',
     fav_remove_title: 'Remove from history',
     fav_remove_descr: 'Delete selected card',
@@ -27062,7 +28178,7 @@
     notice_new_quality: 'New quality available',
     notice_quality: 'Quality',
     notice_new_episode: 'New series',
-    notice_none: 'You don\'t have any notifications yet, register at <b>www.cub.watch</b> to follow new episodes and releases.',
+    notice_none: 'You don\'t have any notifications yet, register at <b>www.cub.red</b> to follow new episodes and releases.',
     notice_in_quality: 'As',
     notice_none_account: 'You don\'t have any notifications yet, bookmark the series and wait for notifications of new episodes.',
     notice_none_system: 'You currently have no notifications. We will be sure to notify you when new notifications become available.',
@@ -27084,14 +28200,14 @@
     account_import_fail: 'Import error',
     account_imported: 'imported',
     account_reload_after: 'reboot after 5 sec.',
-    account_create: 'Discover more opportunities with a CUB account. Register at <span class="account-modal__site">www.cub.watch</span> and get access to sync your bookmarks, timecodes and other CUB account features.',
+    account_create: 'Discover more opportunities with a CUB account. Register at <span class="account-modal__site">www.cub.red</span> and get access to sync your bookmarks, timecodes and other CUB account features.',
     account_premium: 'Discover more features with a CUB Premium account. Increasing limits and access to additional features of the service.',
     account_premium_more: 'Learn more about CUB Premium',
-    account_limited: 'You have reached the maximum limit. Increase the limit with a CUB Premium account. Learn more at <span class="account-modal__site">www.cub.watch/premium</span>',
+    account_limited: 'You have reached the maximum limit. Increase the limit with a CUB Premium account. Learn more at <span class="account-modal__site">www.cub.red/premium</span>',
     account_code_enter: 'Enter a six-digit code',
     account_code_error: 'Perhaps you entered an incorrect or outdated code',
     account_code_wrong: 'Perhaps you entered an incorrect format',
-    account_code_where: 'Go to the <span class="account-add-device__site">cub.watch/add</span> website and enter the code provided there.',
+    account_code_where: 'Go to the <span class="account-add-device__site">cub.red/add</span> website and enter the code provided there.',
     account_code_input: 'Enter code',
     settings_cub_signin_button: 'Sign in',
     network_noconnect: 'No network connection',
@@ -27247,6 +28363,10 @@
     settings_player_launch_trailers: 'Trailer Player',
     title_continued: 'To be continued',
     title_language_short: 'Language',
+    speedtest_connect: 'connection',
+    speedtest_test: 'testing',
+    speedtest_ready: 'ready',
+    speedtest_button: 'Test Speed',
     termsofuse_t_01: 'Terms of Use',
     termsofuse_t_02: 'Lampa is a convenient tool for exploring the latest news in the film industry, including movies, TV shows, cartoons, and other information. To obtain information about movies, an open-source website, themoviedb.org, is used.',
     termsofuse_t_03: 'Content',
@@ -27259,3924 +28379,59 @@
     termsofuse_t_10: 'However, it should be noted that users install extensions at their own risk. All consequences arising from the use of extensions are the responsibility of the user. Users are advised to exercise caution when installing and using extensions, carefully evaluating their reliability and security.',
     termsofuse_t_11: 'Copyright Infringements',
     termsofuse_t_12: 'If you discover any copyright infringement in the Lampa application, you should contact the developers of the Lampa application. You can use the contacts provided in the Lampa application to do so. However, it is important to note that the Lampa application uses the API from the themoviedb.org catalog, which provides open access to information about movies and TV shows. This means that the information displayed in the Lampa application is publicly available and does not infringe on copyright.',
-    termsofuse_t_13: 'If you believe that the Lampa application still contains content that violates your copyright, you can contact the rights holder of that content and request its removal from the themoviedb.org website. In turn, the Lampa application can remove content upon receiving a proper copyright infringement notification.'
-  };
-
-  var uk = {
-    lang_choice_title: 'Ласкаво просимо',
-    lang_choice_subtitle: 'Виберіть мову',
-    more: 'Ще',
-    back: 'Назад',
-    ready: 'Готово',
-    close_app_modal: 'Ви впевнені, що хочете залишити програму?',
-    show_more: 'Показати ще',
-    more_results: 'Показати більше результатів',
-    loading: 'Завантаження',
-    nofind_movie: 'Не вдалось знайти фільм.',
-    noname: 'Без назви',
-    nochoice: 'Не вибрано',
-    cancel: 'Скасувати',
-    confirm: 'Підтверджую',
-    sure: 'Ви впевнені?',
-    nodata: 'Немає даних',
-    search: 'Пошук',
-    search_input: 'Введіть текст',
-    search_empty: 'Історія пошуку порожня.',
-    search_delete: 'Ліворуч - видалити',
-    search_start_typing: 'Почніть вводити текст для пошуку.',
-    search_searching: 'Йде пошук...',
-    search_start: 'Розпочати пошук',
-    search_nofound: 'На ваш запит нічого не знайдено.',
-    full_genre: 'Жанр',
-    full_production: 'Виробництво',
-    full_date_of_release: 'Дата релізу',
-    full_budget: 'Бюджет',
-    full_countries: 'Країни',
-    full_like: 'Подобається',
-    full_torrents: 'Торренти',
-    full_trailers: 'Трейлери',
-    full_detail: 'Детально',
-    full_notext: 'Без опису.',
-    full_series_release: 'Вихід серій',
-    full_next_episode: 'Наступна',
-    full_episode_days_left: 'Залишилось днів',
-    full_trailer_official: 'Офіційний',
-    full_trailer_no_official: 'Неофіційний',
-    full_season: 'Сезон',
-    full_episode: 'Епізод',
-    full_directing: 'Режисура',
-    full_writing: 'Сценарій',
-    settings_cub_sync: 'Синхронізація',
-    settings_cub_sync_descr: 'Синхронізація із сервісом CUB: синхронізація ваших закладок, історії переглядів, міток та тайм-кодів. Сайт: www.cub.watch',
-    settings_cub_account: 'Акаунт',
-    settings_cub_logged_in_as: 'Увійшли як',
-    settings_cub_profile: 'Профіль',
-    settings_cub_sync_btn: 'Синхронізувати',
-    settings_cub_sync_btn_descr: 'Зберегти локальні закладки в обліковий запис CUB',
-    settings_cub_backup: 'Бекап',
-    settings_cub_backup_descr: 'Зберегти або завантажити бекап даних',
-    settings_cub_logout: 'Вийти з облікового запису',
-    settings_cub_signin: 'Авторизація',
-    settings_cub_not_specified: 'Не вказано',
-    settings_cub_password: 'Пароль',
-    settings_cub_status: 'Статус',
-    settings_cub_backup_import: 'Імпорт',
-    settings_cub_backup_export: 'Експорт',
-    settings_cub_sync_filters: 'Синхронізація фільтрів',
-    settings_cub_sync_calendar: 'Синхронізація календаря',
-    settings_cub_sync_quality: 'Синхронізація позначок (якість)',
-    settings_cub_sync_search: 'Синхронізація історії пошуку',
-    settings_cub_sync_recomends: 'Синхронізація рекомендацій',
-    settings_cub_sync_timecodes: 'Синхронізація тайм-кодів',
-    settings_input_links: 'Вибране',
-    settings_interface_type: 'Полегшена версія',
-    settings_interface_size: 'Розмір інтерфейсу',
-    settings_interface_background: 'Фон',
-    settings_interface_background_use: 'Показувати фон',
-    settings_interface_background_type: 'Тип фону',
-    settings_interface_performance: 'Швидкодія',
-    settings_interface_animation: 'Анімація',
-    settings_interface_animation_descr: 'Анімація карток та контенту',
-    settings_interface_attenuation: 'Згасання',
-    settings_interface_attenuation_descr: 'Плавне згасання карток знизу та зверху',
-    settings_interface_scroll: 'Тип скролінгу',
-    settings_interface_view_card: 'Тип перегляду карток',
-    settings_interface_view_card_descr: 'У міру скролінгу стрічки картки підвантажуватимуться поступово або завантажуватимуться всі',
-    settings_interface_lang: 'Мова інтерфейсу',
-    settings_interface_lang_reload: 'Необхідно перезавантажити програму, натисніть "OK" для перезавантаження.',
-    settings_main_account: 'Акаунт',
-    settings_main_interface: 'Інтерфейс',
-    settings_main_player: 'Плеєр',
-    settings_main_parser: 'Парсер',
-    settings_main_torrserver: 'TorrServer',
-    settings_main_plugins: 'Розширення',
-    settings_main_rest: 'Iнше',
-    settings_rest_start: 'Початкова сторінка',
-    settings_rest_start_descr: 'З якої сторінки починати під час запуску',
-    settings_rest_source: 'Джерело',
-    settings_rest_source_use: 'Основне джерело',
-    settings_rest_source_descr: 'Звідки брати інформацію про фільми',
-    settings_rest_tmdb_lang: 'Якою мовою відображати дані з TMDB',
-    settings_rest_tmdb_prox: 'Проксирувати TMDB',
-    settings_rest_tmdb_prox_auto: 'Увімкнути проксі автоматично',
-    settings_rest_tmdb_posters: 'Раздільна здатність TMDB',
-    settings_rest_screensaver: 'Скрінсейвер',
-    settings_rest_screensaver_use: 'Показувати заставку за бездіяльності',
-    settings_rest_screensaver_type: 'Тип заставки',
-    settings_rest_helper: 'Підказки',
-    settings_rest_helper_use: 'Показувати підказки',
-    settings_rest_helper_reset: 'Показати підказки знову',
-    settings_rest_pages: 'Скільки сторінок зберігати у пам\'яті',
-    settings_rest_pages_descr: 'Зберігає сторінки в тому стані, в якому ви їх покинули',
-    settings_rest_time: 'Змістити час',
-    settings_rest_navigation: 'Тип навігації',
-    settings_rest_keyboard: 'Тип клавіатури',
-    settings_rest_device: 'Назва пристрою',
-    settings_rest_device_placeholder: 'Наприклад: Моя Лампа',
-    settings_rest_cache: 'Очистити кеш',
-    settings_rest_cache_descr: 'Будуть очищені всі налаштування та дані',
-    settings_rest_tmdb_example: 'Наприклад:',
-    settings_rest_tmdb_api_descr: 'Для отримання даних',
-    settings_rest_tmdb_image_descr: 'Для отримання зображень',
-    settings_rest_card_quality: 'Відмітки якості',
-    settings_rest_card_quality_descr: 'Відображати позначки якості на картках',
-    settings_rest_card_episodes: 'Відмітки епізодів',
-    settings_rest_card_episodes_descr: 'Показувати позначки епізодів на картках',
-    settings_parser_use: 'Використовувати парсер',
-    settings_parser_use_descr: 'Тим самим ви погоджуєтесь взяти на себе всю відповідальність за використання публічних посилань для перегляду торрент та онлайн контенту.',
-    settings_parser_type: 'Тип парсера для торентів',
-    settings_parser_jackett_placeholder: 'Наприклад: 192.168.х',
-    settings_parser_jackett_link: 'Посилання',
-    settings_parser_jackett_link_descr: 'Вкажіть посилання на скрипт Jackett',
-    settings_parser_jackett_key_placeholder: 'Наприклад: sa0sk83d.',
-    settings_parser_jackett_key: 'Api ключ',
-    settings_parser_jackett_key_descr: 'Знаходиться у Jackett',
-    settings_parser_torlook_type: 'Метод парсингу сайту TorLook',
-    settings_parser_scraperapi_placeholder: 'Наприклад: scraperapi.com',
-    settings_parser_scraperapi_link: 'Посилання на парсер сайтів',
-    settings_parser_scraperapi_descr: 'Зареєструйтесь на сайті scraperapi.com, введіть посилання api.scraperapi.com?api_key=...&url={q}<br>У {q} буде поставлятися сайт w41.torlook.info',
-    settings_parser_search: 'Пошук',
-    settings_parser_search_descr: 'Якою мовою здійснювати пошук?',
-    settings_parser_in_search: 'Парсер у пошуку',
-    settings_parser_in_search_descr: 'Показувати результати у пошуку?',
-    settings_parser_timeout_title: 'Таймаут парсера',
-    settings_parser_timeout_descr: 'Час у секундах, який очікуватиметься відповіді від сервера',
-    settings_player_type: 'Тип плеєра',
-    settings_player_type_descr: 'Яким плеєром відтворювати',
-    settings_player_iptv_type: 'Тип плеєра для IPTV',
-    settings_player_iptv_type_descr: 'Яким плеєром відтворювати IPTV канали',
-    settings_player_reset: 'Скинути програвач за замовчуванням',
-    settings_player_reset_descr: 'Скидає вибраний Android плеєр у програмі',
-    settings_player_path: 'Шлях до плеєра',
-    settings_player_path_descr: 'Вкажіть шлях до програвача .exe.',
-    settings_player_normalization: 'Нормалізація звуку',
-    settings_player_normalization_descr: 'Нормалізує звук в один рівень, знижує гучні звуки та підвищує тихі.',
-    settings_player_next_episode: 'Наступна серія',
-    settings_player_next_episode_descr: 'Автоматично перемикати на наступну серію після закінчення поточної',
-    settings_player_timecode: 'Тайм-код',
-    settings_player_timecode_descr: 'Продовжити з останнього місця перегляду',
-    settings_player_scale: 'Метод масштабування',
-    settings_player_scale_descr: 'Як проводити обчислення для масштабування відео',
-    settings_player_subs: 'Субтитри',
-    settings_player_subs_use: 'Увімкнути',
-    settings_player_subs_use_descr: 'Завжди включати субтитри після запуску відео',
-    settings_player_subs_size: 'Розмір',
-    settings_player_subs_size_descr: 'Розмір субтитрів на екрані',
-    settings_player_subs_stroke_use: 'Використовувати окантовку',
-    settings_player_subs_stroke_use_descr: 'Субтитри будуть обведені чорним кольором для покращення читаності',
-    settings_player_subs_backdrop_use: 'Використовувати підкладку',
-    settings_player_subs_backdrop_use_descr: 'Субтитри відображатимуться на напівпрозорій підкладці для покращення читаності',
-    settings_player_quality: 'Якість відео за замовчуванням',
-    settings_player_quality_descr: 'Переважна якість відео для перегляду',
-    settings_player_hls_title: 'Обробка потоку .m3u8',
-    settings_player_hls_descr: 'Не чіпайте цей параметр, якщо не знаєте навіщо він.',
-    settings_plugins_notice: 'Для застосування плагіна необхідно перезавантажити програму',
-    settings_plugins_add: 'Додати плагін',
-    settings_plugins_add_descr: 'Щоб видалити доданий плагін, утримуйте або натисніть двічі клавішу (OK) на ньому.',
-    settings_plugins_install: 'Встановити плагін',
-    settings_plugins_install_descr: 'Встановити плагін зі списку доступних',
-    settings_server_link: 'Використовувати посилання',
-    settings_server_links: 'Посилання',
-    settings_server_placeholder: 'Наприклад: 192.168.х',
-    settings_server_link_one: 'Основне посилання',
-    settings_server_link_one_descr: 'Вкажіть основне посилання на скрипт TorrServer',
-    settings_server_link_two: 'Додаткове посилання',
-    settings_server_link_two_descr: 'Вкажіть додаткове посилання на скрипт TorrServer',
-    settings_server_additionally: 'Додатково',
-    settings_server_client: 'Вбудований клієнт',
-    settings_server_client_descr: 'Використовувати вбудований JS-клієнт TorrServe, інакше запускається системний.',
-    settings_server_base: 'Зберегти у базу',
-    settings_server_base_descr: 'Торрент буде додано до бази TorrServer',
-    settings_server_preload: 'Використовувати буфер попереднього завантаження',
-    settings_server_preload_descr: 'Чекати на заповнення буфера попереднього завантаження TorrServer перед програванням',
-    settings_server_auth: 'Авторизація',
-    settings_server_password_use: 'Вхід паролем',
-    settings_server_login: 'Логін',
-    settings_server_password: 'Пароль',
-    settings_server_not_specified: 'Не вказано',
-    torent_nohash_reasons: 'Причини',
-    torent_nohash_reason_one: 'TorServer не зміг завантажити файл торрент',
-    torent_nohash_reason_two: 'Відповідь від TorServer',
-    torent_nohash_reason_three: 'Посилання',
-    torent_nohash_do: 'Що робити?',
-    torent_nohash_do_one: 'Перевірте, чи правильно ви налаштували Jackett',
-    torent_nohash_do_two: 'Приватні джерела можуть не видавати посилання на файл',
-    torent_nohash_do_three: 'Переконайтеся, що Jackett теж може завантажити файл',
-    torent_nohash_do_four: 'Написати в нашу телеграму групу: @lampa_group',
-    torent_nohash_do_five: 'Вкажіть який фільм, яка роздача та по можливості фото цієї роздачі',
-    torrent_error_text: 'Не вдалося підключитися до TorrServe. Давайте швидко пройдемося по списку можливих проблем і перевіримо все.',
-    torrent_error_step_1: 'Чи запущений TorrServe',
-    torrent_error_step_2: 'Динамічна IP-адреса',
-    torrent_error_step_3: 'Протокол та порт',
-    torrent_error_step_4: 'Блокування антивірусами',
-    torrent_error_step_5: 'Перевірте доступність',
-    torrent_error_step_6: 'Все одно не працює',
-    torrent_error_info_1: 'Переконайтеся, що TorrServe запущено на пристрої, де він встановлений.',
-    torrent_error_info_2: 'Часта помилка змінилася IP-адреса пристрою з TorrServe. Переконайтеся, що IP-адреса, яку ви ввели - {ip}, збігається з адресою пристрою, на якому встановлено TorrServe.',
-    torrent_error_info_3: 'Для підключення до TorrServe необхідно вказати протокол http:// на початку та порт :8090 в кінці адреси. Переконайтеся, що після IP-адреси вказано порт, ваша поточна адреса - {ip}',
-    torrent_error_info_4: 'Часте явище, антивірус або брандмауер може блокувати доступ за IP-адресою, спробуйте вимкнути антивірус та брандмауер.',
-    torrent_error_info_5: 'На будь-якому іншому пристрої в цій мережі, відкрийте в браузері адресу {ip} і перевірте, чи доступний веб-інтерфейс TorrServe.',
-    torrent_error_info_6: 'Якщо після всіх перевірок все одно виникає помилка підключення, спробуйте перезавантажити TorrServe та інтернет-адаптер.',
-    torrent_error_info_7: 'Якщо проблему не вирішено, пишіть у Telegram-групу @lampa_group з текстом (Lampa не підключається до TorrServe після всіх перевірок, поточна адреса {ip})',
-    torrent_error_start: 'Розпочати перевірку',
-    torrent_error_nomatrix: 'Неможливо підтвердити версію Matrix',
-    torrent_error_made: 'Виконано',
-    torrent_error_from: 'з',
-    torrent_error_next: 'Далі',
-    torrent_error_complite: 'Завершити',
-    torrent_error_connect: 'Помилка підключення',
-    torrent_install_need: 'Необхідний TorrServe',
-    torrent_install_text: 'TorrServe – додаток, який дозволяє переглядати контент з торрент-файлів в онлайн режимі.',
-    torrent_install_contact: 'Telegram-групи',
-    torrent_item_bitrate: 'Бітрейт',
-    torrent_item_seeds: 'Роздають',
-    torrent_item_grabs: 'Качають',
-    torrent_item_mb: 'Мбіт/с',
-    torrent_serial_episode: 'Серія',
-    torrent_serial_season: 'Сезон',
-    torrent_serial_date: 'Вихід',
-    torrent_get_magnet: 'Запитую magnet посилання',
-    torrent_remove_title: 'вилучити',
-    torrent_remove_descr: 'Торрент буде видалено зі списку',
-    torrent_parser_any_one: 'Будь-яке',
-    torrent_parser_any_two: 'Будь-який',
-    torrent_parser_no_choice: 'Не вибрано',
-    torrent_parser_yes: 'Так',
-    torrent_parser_no: 'Ні',
-    torrent_parser_quality: 'Якість',
-    torrent_parser_subs: 'Субтитри',
-    torrent_parser_voice: 'Переклад',
-    torrent_parser_tracker: 'Трекер',
-    torrent_parser_year: 'Рік',
-    torrent_parser_season: 'Сезон',
-    torrent_parser_sort_by_seeders: 'По роздаючих',
-    torrent_parser_sort_by_size: 'По розміру',
-    torrent_parser_sort_by_name: 'За назвою',
-    torrent_parser_sort_by_tracker: 'За джерелом',
-    torrent_parser_sort_by_date: 'По даті',
-    torrent_parser_sort_by_viewed: 'За переглянутими',
-    torrent_parser_voice_dubbing: 'Дубляж',
-    torrent_parser_voice_polyphonic: 'Багатоголосий',
-    torrent_parser_voice_two: 'Двоголосий',
-    torrent_parser_voice_amateur: 'Аматорський',
-    torrent_parser_reset: 'Скинути фільтр',
-    torrent_parser_empty: 'Не вдалося отримати результатів',
-    torrent_parser_no_hash: 'Неможливо отримати HASH',
-    torrent_parser_added_to_mytorrents: 'додано до «Моїх торрентів»',
-    torrent_parser_add_to_mytorrents: 'Додати до «Моїх торентів»',
-    torrent_parser_label_title: 'Позначити',
-    torrent_parser_label_descr: 'Позначити роздачу з прапором (переглянуто)',
-    torrent_parser_label_cancel_title: 'Зняти позначку',
-    torrent_parser_label_cancel_descr: 'Зняти відмітку з роздачі (переглянуто)',
-    torrent_parser_timeout: 'Час очікування минув',
-    torrent_parser_nofiles: 'Не вдалося вилучити відповідні файли',
-    torrent_parser_set_link: 'Вкажіть посилання для парсингу',
-    torrent_parser_request_error: 'Помилка у запиті',
-    torrent_parser_magnet_error: 'Не вдалося отримати magnet посилання',
-    torrent_parser_torlook_fallback_search_notification: 'Парсер Jackett недоступний або налаштування підключення не вірні. Здійснюється пошук у Torlook...',
-    about_text: 'Додаток повністю безкоштовний і використовує публічні посилання для отримання інформації про відео, новинки, популярні фільми і т.д. Вся доступна інформація використовується виключно з пізнавальною метою, додаток не використовує свої власні сервери для поширення інформації.',
-    about_channel: 'Наш канал',
-    about_group: 'Група',
-    about_version: 'Версія',
-    about_donate: 'Донат',
-    title_watched: 'Ви дивилися',
-    title_settings: 'Налаштування',
-    title_collections: 'Добірки',
-    title_company: 'Компанія',
-    title_actors: 'Актори',
-    title_actor: 'Актор',
-    title_actress: 'Актриса',
-    title_person: 'Персона',
-    title_comments: 'Коментарі',
-    title_torrents: 'Торренти',
-    title_trailers: 'Трейлери',
-    title_watch: 'Дивитись',
-    title_error: 'Помилка',
-    title_links: 'Посилання',
-    title_choice: 'Вибрати',
-    title_main: 'Головна',
-    title_book: 'Закладки',
-    title_like: 'Подобається',
-    title_wath: 'Пізніше',
-    title_history: 'Історія переглядів',
-    title_mytorrents: 'Мої торенти',
-    title_last: 'Остання',
-    title_action: 'Дія',
-    title_producer: 'Режисер',
-    title_collection: 'Колекція',
-    title_recomendations: 'Рекомендації',
-    title_similar: 'Подібні',
-    title_about: 'Про додаток',
-    title_timetable: 'Розклад',
-    title_relises: 'Цифрові релізи',
-    title_catalog: 'Каталог',
-    title_category: 'Категорія',
-    title_parser: 'Парсер',
-    title_type: 'Тип',
-    title_rating: 'Рейтинг',
-    title_country: 'Країна',
-    title_year: 'Рік',
-    title_genre: 'Жанр',
-    title_filter: 'Фільтр',
-    title_notice: 'Повідомлення',
-    title_files: 'Файли',
-    title_now_watch: 'Зараз дивляться',
-    title_latest: 'Останнє додавання',
-    title_continue: 'Продовжити перегляд',
-    title_recomend_watch: 'Рекомендуємо подивитись',
-    title_new_episodes: 'Нові серії',
-    title_popular: 'Популярне',
-    title_popular_movie: 'Популярні фільми',
-    title_popular_tv: 'Популярні серіали',
-    title_new_this_year: 'Новинки цього року',
-    title_hight_voite: 'З високим рейтингом',
-    title_new: 'Новинки',
-    title_trend_day: 'Сьогодні у тренді',
-    title_trend_week: 'У тренді за тиждень',
-    title_upcoming: 'Дивіться у кінозалах',
-    title_top_movie: 'Топ фільми',
-    title_top_tv: 'Топ серіали',
-    title_tv_today: 'Сьогодні в ефірі',
-    title_this_week: 'На цьому тижні',
-    title_in_top: 'У топі',
-    title_out: 'Вихід',
-    title_out_confirm: 'Так, вийти',
-    title_continue_two: 'Продовжити',
-    title_choice_language: 'Вибрати мову',
-    title_subscribe: 'Підписатися',
-    title_subscribes: 'Підписки',
-    title_unsubscribe: 'Відписатися',
-    title_language: 'Мова оригіналу',
-    subscribe_success: 'Ви успішно підписалися',
-    subscribe_error: 'Виникла помилка під час передплати, спробуйте пізніше',
-    subscribe_noinfo: 'Не вдалося отримати інформацію, спробуйте пізніше',
-    company_headquarters: 'Штаб',
-    company_homepage: 'Сайт',
-    company_country: 'Країна',
-    country_ad: 'Андорра',
-    country_ae: 'ОАЕ',
-    country_af: 'Афганістан',
-    country_al: 'Албанія',
-    country_am: 'Вірменія',
-    country_ao: 'Ангола',
-    country_ar: 'Аргентина',
-    country_at: 'Австрія',
-    country_au: 'Австралія',
-    country_aw: 'Аруба',
-    country_az: 'Азербайджан',
-    country_bа: 'Боснія і Герцеговина',
-    country_bd: 'Бангладеш',
-    country_be: 'Бельгія',
-    country_bg: 'Болгарія',
-    country_bh: 'Бахрейн',
-    country_bi: 'Бурунді',
-    country_bj: 'Бенін',
-    country_bo: 'Болівія',
-    country_br: 'Бразилія',
-    country_bs: 'Багамські острови',
-    country_bt: 'Бутан',
-    country_bw: 'Ботсвана',
-    country_by: 'Білорусь',
-    country_ca: 'Канада',
-    country_ch: 'Швейцарія',
-    country_cl: 'Чилі',
-    country_cm: 'Камерун',
-    country_cn: 'Китай',
-    country_co: 'Колумбія',
-    country_cr: 'Коста-Рика',
-    country_cu: 'Куба',
-    country_cv: 'Кабо-Верде',
-    country_cy: 'Кіпр',
-    country_cz: 'Чехія',
-    country_de: 'Німеччина',
-    country_dj: 'Джибуті',
-    country_dk: 'Данія',
-    country_do: 'Домініканська Республіка',
-    country_dz: 'Алжир',
-    country_ec: 'Еквадор',
-    country_ee: 'Естонія',
-    country_eg: 'Єгипет',
-    country_es: 'Іспанія',
-    country_et: 'Ефіопія',
-    country_fi: 'Фінляндія',
-    country_fo: 'Фарерські острови',
-    country_fr: 'Франція',
-    country_ga: 'Габон',
-    country_gb: 'Великобританія',
-    country_ge: 'Грузія',
-    country_gh: 'Гана',
-    country_gl: 'Гренландія',
-    country_gp: 'Гваделупа',
-    country_gr: 'Греція',
-    country_gt: 'Гватемала',
-    country_hk: 'Гонконг',
-    country_hr: 'Хорватія',
-    country_ht: 'Гаїті',
-    country_hu: 'Угорщина',
-    country_id: 'Індонезія',
-    country_ie: 'Ірландія',
-    country_il: 'Ізраїль',
-    country_in: 'Індія',
-    country_iq: 'Ірак',
-    country_ir: 'Іран',
-    country_is: 'Ісландія',
-    country_it: 'Італія',
-    country_jm: 'Ямайка',
-    country_jo: 'Йорданія',
-    country_jp: 'Японія',
-    country_ke: 'Кенія',
-    country_kg: 'Киргизстан',
-    country_kh: 'Камбоджа',
-    country_kp: 'Північна Корея',
-    country_kr: 'Південна Корея',
-    country_kz: 'Казахстан',
-    country_kw: 'Кувейт',
-    country_la: 'Лаос',
-    country_lb: 'Ліван',
-    country_li: 'Ліхтенштейн',
-    country_lk: 'Шрі-Ланка',
-    country_lr: 'Ліберія',
-    country_lt: 'Литва',
-    country_lu: 'Люксембург',
-    country_lv: 'Латвія',
-    country_ly: 'Лівія',
-    country_ma: 'Марокко',
-    country_mc: 'Монако',
-    country_md: 'Молдова',
-    country_me: 'Чорногорія',
-    country_mk: 'Македонія',
-    country_mm: 'М\'янма',
-    country_mn: 'Монголія',
-    country_mo: 'Макао',
-    country_mt: 'Мальта',
-    country_mu: 'Маврикій',
-    country_mv: 'Мальдіви',
-    country_mw: 'Малаві',
-    country_mx: 'Мексика',
-    country_my: 'Малайзія',
-    country_mz: 'Мозамбік',
-    country_na: 'Намібія',
-    country_ne: 'Нігер',
-    country_ng: 'Нігерія',
-    country_ni: 'Нікарагуа',
-    country_nl: 'Нідерланди',
-    country_no: 'Норвегія',
-    country_np: 'Непал',
-    country_nz: 'Нова Зеландія',
-    country_om: 'Оман',
-    country_pa: 'Панама',
-    country_pe: 'Перу',
-    country_pg: 'Папуа - Нова Гвінея',
-    country_ph: 'Філіппіни',
-    country_pk: 'Пакистан',
-    country_pl: 'Польща',
-    country_pr: 'Пуерто-Рико',
-    country_ps: 'Палестина',
-    country_pt: 'Португалія',
-    country_py: 'Парагвай',
-    country_qa: 'Катар',
-    country_ro: 'Румунія',
-    country_rs: 'Сербія',
-    country_ru: 'Росія',
-    country_rw: 'Руанда',
-    country_sa: 'Саудівська Аравія',
-    country_sd: 'Судан',
-    country_se: 'Швеція',
-    country_sg: 'Сінгапур',
-    country_si: 'Словенія',
-    country_sk: 'Словаччина',
-    country_sn: 'Сенегал',
-    country_su: 'СРСР',
-    country_sv: 'Сальвадор',
-    country_sy: 'Сирія',
-    country_th: 'Таїланд',
-    country_tj: 'Таджикистан',
-    country_tm: 'Туркменістан',
-    country_tn: 'Туніс',
-    country_tr: 'Туреччина',
-    country_tw: 'Тайвань',
-    country_tz: 'Танзанія',
-    country_ua: 'Україна',
-    country_ug: 'Уганда',
-    country_us: 'США',
-    country_uy: 'Уругвай',
-    country_uz: 'Узбекистан',
-    country_ve: 'Венесуела',
-    country_vn: 'В\'єтнам',
-    country_ws: 'Самоа',
-    country_xk: 'Косово',
-    country_ye: 'Ємен',
-    country_yu: 'Югославія',
-    country_za: 'ПАР',
-    country_zm: 'Замбія',
-    country_zw: 'Зімбабве',
-    filter_clarify: 'Уточнити',
-    filter_clarify_two: 'Уточнити пошук',
-    filter_set_name: 'Вказати назву',
-    filter_sorted: 'Сортувати',
-    filter_filtred: 'Фільтр',
-    filter_any: 'Будь-який',
-    filter_combinations: 'Комбінації',
-    filter_alt_names: 'Інші назви',
-    filter_rating_from: 'від',
-    filter_rating_to: 'до',
-    filter_lang_af: 'Африкаанс',
-    filter_lang_ar: 'Арабська',
-    filter_lang_az: 'Азербайджанська',
-    filter_lang_ba: 'Башкирська',
-    filter_lang_be: 'Білоруська',
-    filter_lang_bg: 'Болгарська',
-    filter_lang_bn: 'Бенгальська',
-    filter_lang_bs: 'Боснійська',
-    filter_lang_ca: 'Каталанська',
-    filter_lang_ce: 'Чеченська',
-    filter_lang_cs: 'Чеська',
-    filter_lang_da: 'Дацька',
-    filter_lang_de: 'Німецька',
-    filter_lang_el: 'Грецька',
-    filter_lang_en: 'Англійська',
-    filter_lang_es: 'Іспанська',
-    filter_lang_et: 'Естонська',
-    filter_lang_fa: 'Персидська',
-    filter_lang_fi: 'Фінська',
-    filter_lang_fr: 'Французька',
-    filter_lang_ga: 'Ірландська',
-    filter_lang_gl: 'Галісійська',
-    filter_lang_gn: 'Гуарані',
-    filter_lang_he: 'Іврит',
-    filter_lang_hi: 'Хінді',
-    filter_lang_hr: 'Хорватська',
-    filter_lang_hu: 'Угорська',
-    filter_lang_hy: 'Вірменська',
-    filter_lang_id: 'Індонезійська',
-    filter_lang_is: 'Ісландська',
-    filter_lang_it: 'Італійська',
-    filter_lang_ja: 'Японська',
-    filter_lang_ka: 'Грузинська',
-    filter_lang_kk: 'Казахська',
-    filter_lang_ko: 'Корейська',
-    filter_lang_ks: 'Кашмірі',
-    filter_lang_ku: 'Курдська',
-    filter_lang_ky: 'Киргизька',
-    filter_lang_lt: 'Литовська',
-    filter_lang_lv: 'Латишська',
-    filter_lang_mi: 'Маорі',
-    filter_lang_mk: 'Македонська',
-    filter_lang_mn: 'Монгольська',
-    filter_lang_mo: 'Молдовська',
-    filter_lang_mt: 'Мальтійська',
-    filter_lang_ne: 'Непальська',
-    filter_lang_nl: 'Нідерландська',
-    filter_lang_no: 'Норвезька',
-    filter_lang_pa: 'Пенджабська',
-    filter_lang_pl: 'Польська',
-    filter_lang_ps: 'Пушту',
-    filter_lang_pt: 'Португальська',
-    filter_lang_ro: 'Румунська',
-    filter_lang_ru: 'Російська',
-    filter_lang_si: 'Сінгальська',
-    filter_lang_sk: 'Словацька',
-    filter_lang_sl: 'Словенська',
-    filter_lang_sm: 'Самоанська',
-    filter_lang_so: 'Сомалійська',
-    filter_lang_sq: 'Албанська',
-    filter_lang_sr: 'Сербська',
-    filter_lang_sv: 'Шведська',
-    filter_lang_sw: 'Суахілі',
-    filter_lang_ta: 'Тамільська',
-    filter_lang_tg: 'Таджицька',
-    filter_lang_th: 'Тайська',
-    filter_lang_tk: 'Туркменська',
-    filter_lang_tr: 'Турецька',
-    filter_lang_tt: 'Татарська',
-    filter_lang_ur: 'Урду',
-    filter_lang_uk: 'Українська',
-    filter_lang_uz: 'Узбецька',
-    filter_lang_vi: 'В\'єтнамська',
-    filter_lang_yi: 'Ідиш',
-    filter_lang_zh: 'Китайська',
-    filter_genre_ac: 'Бойовик',
-    filter_genre_ad: 'Пригоди',
-    filter_genre_mv: 'Мультфільм',
-    filter_genre_cm: 'Комедія',
-    filter_genre_cr: 'Кримінал',
-    filter_genre_dc: 'Документальний',
-    filter_genre_dr: 'Драма',
-    filter_genre_fm: 'Сімейний',
-    filter_genre_fe: 'Фентезі',
-    filter_genre_hi: 'Історія',
-    filter_genre_ho: 'Жахи',
-    filter_genre_mu: 'Музика',
-    filter_genre_de: 'Детектив',
-    filter_genre_md: 'Мелодрама',
-    filter_genre_fa: 'Фантастика',
-    filter_genre_tv: 'Телевізійний фільм',
-    filter_genre_tr: 'Трилер',
-    filter_genre_mi: 'Військовий',
-    filter_genre_ve: 'Вестерн',
-    filter_genre_aa: 'Бойовик та Пригоди',
-    filter_genre_ch: 'Дитячий',
-    filter_genre_nw: 'Новини',
-    filter_genre_rs: 'Реаліті шоу',
-    filter_genre_hf: 'НФ та Фентезі',
-    filter_genre_op: 'Мильна опера',
-    filter_genre_tc: 'Ток шоу',
-    filter_genre_mp: 'Війна та Політика',
-    empty_title: 'Пусто',
-    empty_text: 'За вашим фільтром нічого не знайшлося, уточніть фільтр.',
-    empty_title_two: 'Тут порожньо',
-    empty_text_two: 'На даний момент список порожній',
-    menu_main: 'Головна',
-    menu_movies: 'Фільми',
-    menu_tv: 'Серіали',
-    menu_catalog: 'Каталог',
-    menu_filter: 'Фільтр',
-    menu_collections: 'Добірки',
-    menu_relises: 'Релізи',
-    menu_anime: 'Аніме',
-    menu_bookmark: 'Закладки',
-    menu_like: 'Подобається',
-    menu_time: 'Пізніше',
-    menu_history: 'Історія',
-    menu_timeline: 'Розклад',
-    menu_torrents: 'Торренти',
-    menu_settings: 'Налаштування',
-    menu_about: 'Інформація',
-    menu_console: 'Консоль',
-    menu_multmovie: 'Мультфільми',
-    menu_multtv: 'Мультсеріали',
-    menu_feed: 'Стрічка',
-    lampa_movie_title: 'Лампове кіно',
-    lampa_movie_descr: 'Слідкуйте за новинками на своєму смартфоні. <br>Телеграм: <b>@lampa_movie</b>',
-    plugins_catalog_work: 'Робочі плагіни',
-    plugins_catalog_work_descr: 'Плагіни, які точно працюють у лампі.',
-    plugins_catalog_popular: 'Популярні плагіни серед користувачів',
-    plugins_catalog_popular_descr: 'Встановлення з невідомих джерел може призвести до некоректної роботи програми.',
-    plugins_online: 'Перегляд онлайн',
-    plugins_check_fail: 'Не вдалося перевірити працездатність плагіна. Однак це не означає, що плагін не працює. Перезавантажте програму для з\'ясування, чи завантажується плагін.',
-    plugins_need_reload: 'Для застосування плагіна необхідно перезавантажити програму',
-    plugins_install: 'Встановити',
-    plugins_install_ready: 'Цей плагін вже встановлено.',
-    plugins_installed: 'Установок',
-    plugins_load_from: 'Завантажено із CUB',
-    plugins_ok_for_check: 'Натисніть (OK), щоб перевірити плагін',
-    plugins_no_loaded: 'При завантаженні програми частина плагінів не вдалося завантажити',
-    time_viewed: 'Переглянуто',
-    time_from: 'з',
-    time_reset: 'Скинути тайм-код',
-    settings_clear_cache: 'Кеш та дані очищені',
-    settings_user_links: 'Користувальницьке посилання',
-    settings_for_local: 'Для локального TorrServer',
-    settings_add: 'Додати',
-    settings_remove: 'Вилучити',
-    settings_this_value: 'поточне значення',
-    settings_added: 'Додано',
-    settings_removed: 'Вилучено',
-    settings_param_player_inner: 'Вбудований',
-    settings_param_player_outside: 'Зовнішній',
-    settings_param_yes: 'Так',
-    settings_param_no: 'Ні',
-    settings_param_interface_size_small: 'Менше',
-    settings_param_interface_size_normal: 'Нормальний',
-    settings_param_interface_size_bigger: 'Більше',
-    settings_param_poster_quality_low: 'Низьке',
-    settings_param_poster_quality_average: 'Середнє',
-    settings_param_poster_quality_high: 'Висока',
-    settings_param_parse_directly: 'Безпосередньо',
-    settings_param_parse_api: 'Через API сайту',
-    settings_param_background_complex: 'Складний',
-    settings_param_background_simple: 'Простий',
-    settings_param_background_image: 'Картинка',
-    settings_param_link_use_one: 'Основну',
-    settings_param_link_use_two: 'Додаткову',
-    settings_param_subtitles_size_small: 'Маленькі',
-    settings_param_subtitles_size_normal: 'Звичайні',
-    settings_param_subtitles_size_bigger: 'Великі',
-    settings_param_screensaver_nature: 'Природа',
-    settings_param_torrent_lang_orig: 'Оригінал',
-    settings_param_torrent_lang_ru: 'Русский',
-    settings_param_player_timecode_again: 'Почати спочатку',
-    settings_param_player_timecode_continue: 'Продовжити',
-    settings_param_player_timecode_ask: 'Запитувати',
-    settings_param_player_scale_method: 'Розрахувати',
-    settings_param_player_hls_app: 'Системний',
-    settings_param_player_hls_js: 'Програмний',
-    settings_param_card_view_load: 'Підвантажувати',
-    settings_param_card_view_all: 'Показати все',
-    settings_param_navigation_remote: 'Пульт',
-    settings_param_navigation_mouse: 'Пульт з мишкою',
-    settings_param_keyboard_lampa: 'Вбудована',
-    settings_param_keyboard_system: 'Системна',
-    helper_keyboard: 'Після введення значення натисніть кнопку «Назад», щоб зберегти',
-    helper_torrents: 'Утримуйте клавішу (OK), щоб викликати контекстне меню',
-    helper_cleared: 'Успішно підказки будуть показані заново.',
-    helper_torrents_view: 'Щоб скинути тайм-код та виклик меню, утримуйте (OK).',
-    fav_sync_title: 'Синхронізація закладок',
-    fav_sync_text: 'Ваші улюблені закладки разом із Вами. Підключіть синхронізацію та переглядайте на будь-якому пристрої. <br><br>Для цього зареєструйтесь на сайті www.cub.watch, створіть профіль та авторизуйтесь у додаток.',
-    fav_sync_site: 'Сайт',
-    fav_remove_title: 'Видалити з історії',
-    fav_remove_descr: 'Видалити виділену картку',
-    fav_clear_title: 'Очистити історію',
-    fav_clear_descr: 'Видалити всі картки з історії',
-    fav_clear_label_title: 'Очистити мітки',
-    fav_clear_label_descr: 'Очистити мітки про перегляд',
-    fav_clear_time_title: 'Очистити тайм-коди',
-    fav_clear_time_descr: 'Очистити всі тайм-коди',
-    fav_label_cleared: 'Відмітки очищені',
-    fav_time_cleared: 'Тайм-коди очищені',
-    timetable_empty: 'У цьому розділі відображатимуться дати виходу нових серій',
-    player_quality: 'Якість',
-    player_tracks: 'Аудіодоріжки',
-    player_disabled: 'Вимкнено',
-    player_unknown: 'Невідомо',
-    player_subs: 'Субтитри',
-    player_size_default_title: 'За замовчуванням',
-    player_size_default_descr: 'Розмір відео за замовчуванням',
-    player_size_cover_title: 'Розширити',
-    player_size_cover_descr: 'Розширює відео на весь екран',
-    player_size_fill_title: 'Заповнити',
-    player_size_fill_descr: 'Помістити відео на весь екран',
-    player_size_s115_title: 'Збільшити 115%',
-    player_size_s115_descr: 'Збільшити відео на 115%',
-    player_size_s130_title: 'Збільшити 130%',
-    player_size_s130_descr: 'Збільшити відео на 130%',
-    player_size_v115_title: 'По вертикалі 115%',
-    player_size_v115_descr: 'Збільшити відео на 115%',
-    player_size_v130_title: 'По вертикалі 130%',
-    player_size_v130_descr: 'Збільшити відео на 130%',
-    player_video_size: 'Розмір відео',
-    player_playlist: 'Плейлист',
-    player_error_one: 'Не вдалося декодувати відео',
-    player_error_two: 'Відео не знайдено або пошкоджено',
-    player_start_from: 'Продовжити перегляд з',
-    player_not_found: 'Плеєр не знайдено',
-    player_lauch: 'Запустити плеєр',
-    player_speed_default_title: 'Звичайна',
-    player_speed_two_descr: 'Відтворення без звуку',
-    player_video_speed: 'Швидкість відтворення',
-    player_share_title: 'Поділиться',
-    player_share_descr: 'Запустити це відео на іншому пристрої',
-    player_normalization_power_title: 'Сила нормалізації',
-    player_normalization_smooth_title: 'Швидкість нормалізації',
-    player_normalization_step_low: 'Низьке',
-    player_normalization_step_medium: 'Середнє',
-    player_normalization_step_hight: 'Висока',
-    player_youtube_no_played: 'На жаль, це відео не доступне у вашому регіоні, можливо, воно було заблоковане або видалено.',
-    player_youtube_start_play: 'Для початку відтворення відео, натисніть кнопку "Плей"',
-    broadcast_open: 'Відкрити картку на іншому пристрої',
-    broadcast_play: 'Виберіть пристрій, на якому дивитися',
-    card_new_episode: 'Нова серія',
-    card_book_remove: 'Прибрати із закладок',
-    card_book_add: 'В закладки',
-    card_book_descr: 'Дивіться у меню (Закладки)',
-    card_like_remove: 'Прибрати з уподобаних',
-    card_like_add: 'Подобається',
-    card_like_descr: 'Дивіться у меню (Подобається)',
-    card_wath_remove: 'Прибрати з очікуваних',
-    card_wath_add: 'Дивитися пізніше',
-    card_wath_descr: 'Дивіться в меню (Пізніше)',
-    card_history_remove: 'Прибрати з історії',
-    card_history_add: 'В історію',
-    card_history_descr: 'Дивіться у меню (Історія)',
-    keyboard_listen: 'Кажіть, я слухаю...',
-    keyboard_nomic: 'Немає доступу до мікрофону',
-    notice_new_quality: 'Доступна нова якість',
-    notice_quality: 'Якість',
-    notice_new_episode: 'Нова серія',
-    notice_none: 'У вас ще немає жодних повідомлень, зареєструйтесь на сайті <b>www.cub.watch</b>, щоб стежити за новими серіями та релізами.',
-    notice_in_quality: 'В якості',
-    copy_link: 'Копіювати посилання на відео',
-    copy_secuses: 'Посилання скопійоване в буфер обміну',
-    copy_error: 'Помилка під час копіювання посилання',
-    account_sync_to_profile: 'Усі закладки будуть перенесені до профілю',
-    account_sync_secuses: 'Усі закладки успішно перенесені',
-    account_profiles: 'Профілі',
-    account_profiles_empty: 'Неможливо отримати список профілів',
-    account_authorized: 'Авторизовані',
-    account_logged_in: 'Ви увійшли під обліковий запис',
-    account_login_failed: 'Вхід не виконано',
-    account_login_wait: 'Очікуємо входу до облікового запису',
-    account_profile_main: 'Загальний',
-    account_export_secuses: 'Експорт успішно завершено',
-    account_export_fail: 'Помилка під час експорту',
-    account_import_secuses: 'Імпорт успішно завершено',
-    account_import_fail: 'Помилка при імпорті',
-    account_imported: 'імпортовано',
-    account_reload_after: 'перезавантаження через 5 с.',
-    account_create: 'Відкрийте більше можливостей з облікового запису CUB. Зареєструйтесь на сайті <span class="account-modal__site">www.cub.watch</span> та отримайте доступ до синхронізації ваших закладок, тайм-кодів та інших можливостей облікового запису CUB.',
-    account_premium: 'Розкрийте нові горизонти з обліковим записом CUB Premium! Насолоджуйтесь збільшеними лімітами та збагаченим функціоналом сервісу. Додаткові можливості чекають на вас вже сьогодні!',
-    account_premium_more: 'Докладніше про CUB Premium',
-    account_limited: 'Ви досягли максимального ліміту. Збільште ліміт з обліковим записом CUB Premium. Докладніше на сайті <span class="account-modal__site">www.cub.watch/premium</span>',
-    account_premium_include_1: 'Збільшення кількості закладок',
-    account_premium_include_2: 'Збільшення історії переглядів',
-    account_premium_include_3: 'Збільшення кількості тайм-кодів',
-    account_premium_include_4: 'Кількість профілів на обліковий запис',
-    account_premium_include_5: 'Повідомлення',
-    account_premium_include_6: 'Синхронізація даних',
-    account_premium_include_text_1: 'Більше закладок – більше можливостей! Зберігайте свої улюблені фільми та серіали, створюйте списки перегляду та насолоджуйтесь переглядом у будь-який зручний час.',
-    account_premium_include_text_2: 'Збільште історію переглядів у програмі та стежте за тим, що вже подивилися. Легко знаходите та переглядайте свої улюблені фільми та серіали.',
-    account_premium_include_text_3: 'Не бійтеся пропустити жодну важливу сцену! Збільште кількість тайм-кодів у додатку та легко відстежуйте, де зупинилися у перегляді улюблених фільмів та серіалів.',
-    account_premium_include_text_4: 'Отримайте більше свободи з нашим преміум-доступом! Збільште кількість профілів на обліковому записі та дозвольте своїм друзям та близьким насолоджуватися фільмами та серіалами разом з вами. Жодних обмежень - насолоджуйтесь переглядом з коханими людьми.',
-    account_premium_include_text_5: 'Не пропустіть жодної нової серії чи перекладу! Отримуйте сповіщення вчасно та будьте в курсі всіх оновлень. Збільште свій кінопотік разом з нами та отримуйте повідомлення про вихід нових серій та перекладів прямо на свій смартфон.',
-    account_premium_include_text_6: 'Синхронізуйте дані між пристроями з преміум-доступом! Більше не потрібно гаяти час на пошук останнього епізоду, на якому ви зупинилися. З нашим преміум доступом ви можете синхронізувати свої дані між пристроями, щоб продовжувати перегляд з місця, де ви зупинилися, на будь-якому пристрої, де встановлено програму.',
-    account_code_enter: 'Введіть шестизначний код',
-    account_code_error: 'Можливо, ви ввели невірний або застарілий код',
-    account_code_wrong: 'Можливо, ви вказали неправильний формат',
-    account_code_where: 'Перейдіть на сайт <span class="account-add-device__site">cub.watch/add</span> та введіть вказаний там код.',
-    account_code_input: 'Ввести код',
-    settings_cub_signin_button: 'Увійти',
-    network_noconnect: 'Немає підключення до мережі',
-    network_404: 'Запрошеної сторінки не знайдено. [404]',
-    network_401: 'Авторизація не вдалася',
-    network_500: 'Внутрішня помилка сервера. [500]',
-    network_parsererror: 'Запитаний синтаксичний аналіз JSON завершився невдало.',
-    network_timeout: 'Час запиту минув.',
-    network_abort: 'Запит було перервано.',
-    network_error: 'Невідома помилка',
-    size_zero: '0 Байт',
-    size_byte: 'Байт',
-    size_kb: 'КБ',
-    size_mb: 'МБ',
-    size_gb: 'ГБ',
-    size_tb: 'ТБ',
-    size_pp: 'ПБ',
-    speed_bit: 'біт/c',
-    speed_kb: 'Кбіт/c',
-    speed_mb: 'Мбіт/c',
-    speed_gb: 'Гбіт/c',
-    speed_tb: 'Тбіт/c',
-    speed_pp: 'Пбіт/c',
-    month_1: 'Січень',
-    month_2: 'Лютий',
-    month_3: 'Березень',
-    month_4: 'Квітень',
-    month_5: 'Травень',
-    month_6: 'Червень',
-    month_7: 'Липня',
-    month_8: 'Серпень',
-    month_9: 'Вересень',
-    month_10: 'Жовтень',
-    month_11: 'Листопад',
-    month_12: 'Грудень',
-    day_1: 'Понеділок',
-    day_2: 'Вівторок',
-    day_3: 'Середа',
-    day_4: 'Четвер',
-    day_5: 'П\'ятниця',
-    day_6: 'Субота',
-    day_7: 'Неділя',
-    month_1_e: 'Січня',
-    month_2_e: 'Лютого',
-    month_3_e: 'Березня',
-    month_4_e: 'Квітня',
-    month_5_e: 'Травня',
-    month_6_e: 'Червня',
-    month_7_e: 'Липня',
-    month_8_e: 'Серпня',
-    month_9_e: 'Вересня',
-    month_10_e: 'Жовтня',
-    month_11_e: 'Листопада',
-    month_12_e: 'Грудня',
-    week_1: 'Пн',
-    week_2: 'Вт',
-    week_3: 'Ср',
-    week_4: 'Чт',
-    week_5: 'Пт',
-    week_6: 'Сб',
-    week_7: 'Нд',
-    notice_none_account: 'У вас ще немає жодних повідомлень, додайте серіали в закладки та чекайте на повідомлення про нові серії.',
-    notice_none_system: 'На даний момент у вас відсутні повідомлення. Ми обов\'язково повідомимо вас, коли з\'являться нові повідомлення.',
-    torrent_parser_no_responce: 'Парсер не відповідає на запит',
-    extensions_enable: 'Увімкнути',
-    extensions_disable: 'Вимкнути',
-    extensions_check: 'Перевірити статус',
-    extensions_install: 'Встановити',
-    extensions_info: 'Інформація',
-    extensions_edit: 'Редагувати',
-    extensions_change_name: 'Змінити назву',
-    extensions_change_link: 'Змінити посилання',
-    extensions_remove: 'Вилучити',
-    extensions_set_name: 'Введіть назву плагіна',
-    extensions_set_url: 'Введіть адресу плагіна',
-    extensions_ready: 'Цей плагін вже встановлено',
-    extensions_no_info: 'Без інформації',
-    extensions_no_name: 'Без назви',
-    extensions_worked: 'Робочий',
-    extensions_no_plugin: 'Плагін не підтверджений',
-    extensions_add: 'Додати плагін',
-    extensions_from_memory: 'Встановлені в пам\'ять',
-    extensions_from_cub: 'Встановлені з CUB',
-    extensions_from_popular: 'Популярні плагіни',
-    extensions_from_lib: 'Бібліотека плагінів',
-    extensions_from_connected: 'Підключені плагіни',
-    settings_webos_launcher: 'Запуск програми',
-    settings_webos_launcher_add_device: 'Встановити як стартове',
-    settings_webos_launcher_remove_device: 'Прибрати зі стартових додатків',
-    player_normalization: 'Нормалізація',
-    change_source_on_cub: 'Змінити джерело на CUB',
-    settings_param_jackett_interview_all: 'Всі',
-    settings_param_jackett_interview_healthy: 'Тільки доступні',
-    settings_parser_jackett_interview: 'Опитувати трекери',
-    title_ongoing: 'Онгоїнги',
-    title_pgrating: 'Вікове обмеження',
-    settings_interface_card_interfice: 'Інтерфейс карток',
-    settings_interface_card_poster: 'Показати постер',
-    title_card: 'Картка',
-    settings_param_card_interface_old: 'Старий',
-    settings_param_card_interface_new: 'Новий',
-    title_seasons: 'Сезони',
-    title_episodes: 'Серії',
-    title_rewiews: 'Відгуки',
-    settings_interface_glass: 'Скло',
-    settings_interface_glass_descr: 'Показувати інтерфейс у склоподібному стилі',
-    settings_interface_black_style: 'Чорний стиль',
-    plugins_remove: 'Видалити плагіни',
-    plugins_add_success: 'Плагін успішно підключений',
-    settings_reset: 'Скидання налаштувань',
-    title_channel: 'Канал',
-    input_detection_touch: 'Бажаєте переключити на сенсорне керування?',
-    input_detection_mouse: 'Бажаєте переключити на керування мишею?',
-    input_detection_remote: 'Бажаєте переключити на керування пультом?',
-    settings_interface_hide_outside_the_screen: 'Приховувати картки поза екраном',
-    settings_interface_hide_outside_the_screen_descr: 'Це прискорить рендер інтерфейсу та покращить продуктивність',
-    https_text: 'Використовуйте протокол HTTPS, в цьому протоколі лампа працює некоректно. Для коректної роботи лампи використовуйте адресу з протоколом HTTP',
-    extensions_hpu_best: 'Популярні',
-    extensions_hpu_recomend: 'Рекомендуємо',
-    extensions_hpu_theme: 'Теми',
-    extensions_hpu_screensaver: 'Скрінсейвер',
-    extensions_hpu_video: 'Відео',
-    extensions_hpu_control: 'Управління',
-    extensions_hpu_other: 'Різне',
-    extensions_hpu_: 'Решта',
-    title_author: 'Автор',
-    title_buffer: 'Буфер',
-    settings_rest_screensaver_time: 'Через скільки хвилин запустити скрінсейвер',
-    time_h: 'г.',
-    time_m: 'х.',
-    time_s: 'с.',
-    settings_param_glass_easy: 'Прозора',
-    settings_param_glass_medium: 'Напівпрозора',
-    settings_param_glass_blacked: 'Затемнена',
-    settings_interface_glass_opacity: 'Прозорість скла',
-    torrent_error_check_no_auth: 'Сервер відповів на запит, але не вдалося пройти авторизацію',
-    settings_interface_card_cover: 'Показати обкладинку',
-    title_upcoming_episodes: 'Найближчі виходи епізодів',
-    settings_rest_cache_images: 'Кеш зображень',
-    settings_rest_cache_images_descr: 'Кешувати постери та фони у локальне сховище',
-    settings_player_rewind_title: 'Перемотування',
-    settings_player_rewind_descr: 'Інтервал перемотування за секунди',
-    settings_interface_card_reactions: 'Показати реакції',
-    title_look: 'Дивлюся',
-    title_scheduled: 'Заплановано',
-    title_viewed: 'Переглянуто',
-    title_thrown: 'Відкинуто',
-    title_reactions: 'Реакції',
-    reactions_none: 'Немає реакцій',
-    reactions_fire: 'Супер',
-    reactions_nice: 'Непогано',
-    reactions_think: 'Цікаво',
-    reactions_bore: 'Нудно',
-    reactions_shit: 'Погано',
-    reactions_ready: 'Ви вже залишили реакцію',
-    settings_player_launch_trailers: 'Плеєр для трейлерів',
-    title_continued: 'Далі буде',
-    title_language_short: 'Мова',
-    termsofuse_t_01: 'Умови використання',
-    termsofuse_t_02: 'Lampa - це зручний інструмент для ознайомлення з новинками кіноіндустрії, включаючи фільми, серіали, мультфільми та іншу інформацію. Для отримання інформації про фільми використовується відкритий джерело - веб-сайт themoviedb.org',
-    termsofuse_t_03: 'Контент',
-    termsofuse_t_04: 'Lampa використовує API (інтерфейс програмування додатків) від каталогу themoviedb.org для отримання інформації про фільми та телесеріали, а також для перегляду пов\'язаних з ними медіа-файлів, таких як постери, трейлери та інше.',
-    termsofuse_t_05: 'API від themoviedb.org дозволяє додатку Lampa отримувати доступ до бази даних фільмів та телесеріалів, забезпечуючи можливість пошуку та перегляду інформації про медіа-файли.',
-    termsofuse_t_06: 'Взаємодія між додатком Lampa та themoviedb.org відбувається через запити API, які відправляються з додатку Lampa на сервери themoviedb.org для отримання інформації та медіа-файлів. Themoviedb.org обробляє запити і надсилає запрошені дані назад до додатку Lampa.',
-    termsofuse_t_07: 'Таким чином, завдяки використанню API від themoviedb.org, додаток Lampa надає користувачам доступ до обширної бази даних фільмів та телесеріалів, дотримуючись при цьому умов використання та обмежень, встановлених правовласником.',
-    termsofuse_t_08: 'Розширення',
-    termsofuse_t_09: 'Розширення - це потужний інструмент, наданий для додатку Lampa, що дозволяє користувачам розширити його можливості, додати додатковий функціонал та змінити контент згідно зі своїми потребами.',
-    termsofuse_t_10: 'Однак, варто зазначити, що користувачі встановлюють розширення на свій ризик. Всі наслідки, що виникають в результаті використання розширень, несе користувач. Рекомендується користувачам бути обережними під час встановлення та використання розширень, ретельно оцінюючи їх надійність та безпеку.',
-    termsofuse_t_11: 'Порушення авторських прав',
-    termsofuse_t_12: 'Якщо ви виявили порушення авторських прав у додатку Lampa, вам слід зв\'язатися з розробниками додатку Lampa. Для цього ви можете скористатися контактами в додатку Lampa. Однак, важливо враховувати, що додаток Lampa використовує API від каталогу themoviedb.org, який надає відкритий доступ до інформації про фільми та серіали. Це означає, що інформація, яка відображається в додатку Lampa, є загальнодоступною та не порушує авторських прав.',
-    termsofuse_t_13: 'Якщо ви вважаєте, що в додатку Lampa все ж таки є контент, який порушує ваші авторські права, ви можете звернутися до правовласника цього контенту та попросити його видалити зі сторінок сайту themoviedb.org. З свого боку, додаток Lampa може видалити контент при отриманні відповідного повідомлення про порушення авторських прав.'
-  };
-
-  var be = {
-    lang_choice_title: 'Сардэчна запрашаем',
-    lang_choice_subtitle: 'Выберыце сваю мову',
-    more: 'Яшчэ',
-    show_more: 'Паказаць яшчэ',
-    more_results: 'Паказаць больш вынікаў',
-    loading: 'Загрузка',
-    nofind_movie: 'Не атрымалася знайсці фільм.',
-    noname: 'Без назвы',
-    nochoice: 'Не абрана',
-    cancel: 'Адмяніць',
-    confirm: 'Сцвярджаю',
-    sure: 'Вы ўпэўненыя?',
-    nodata: 'Няма дадзеных',
-    back: 'Назад',
-    ready: 'Гатова',
-    close_app_modal: 'Вы ўпэўненыя, што хочаце пакінуць дадатак?',
-    search: 'Пошук',
-    search_input: 'Увядзіце тэкст',
-    search_empty: 'Гісторыя пошуку пустая.',
-    search_delete: 'Налева - выдаліць',
-    search_start_typing: 'Пачніце ўводзіць тэкст для пошуку.',
-    search_searching: 'Ідзе пошук...',
-    search_start: 'Пачаць пошук',
-    search_nofound: 'Па вашым запыце нічога не знойдзена.',
-    full_genre: 'Жанр',
-    full_production: 'Вытворчасць',
-    full_date_of_release: 'Дата рэлізу',
-    full_budget: 'Бюджэт',
-    full_countries: 'Краіны',
-    full_like: 'Падабаецца',
-    full_torrents: 'Торэнты',
-    full_trailers: 'Трэйлеры',
-    full_detail: 'Падрабязна',
-    full_notext: 'Без апісання.',
-    full_series_release: 'Выхад серый',
-    full_next_episode: 'Наступная',
-    full_episode_days_left: 'Засталося дзён',
-    full_trailer_official: 'Афіцыйны',
-    full_trailer_no_official: 'Неафіцыйны',
-    full_season: 'Сезон',
-    full_episode: 'Эпізод',
-    full_directing: 'Рэжысура',
-    settings_cub_sync: 'Сінхранізацыя',
-    settings_cub_sync_descr: 'Сінхранізацыя з сэрвісам CUB: сінхранізацыя вашых закладак, гісторыі праглядаў, пазнак і тайм-кодаў. Сайт: www.cub.watch',
-    settings_cub_account: 'Акаўнт',
-    settings_cub_logged_in_as: 'Увайшлі як',
-    settings_cub_profile: 'Профіль',
-    settings_cub_sync_btn: 'Сінхранізаваць',
-    settings_cub_sync_btn_descr: 'Захаваць лакальныя закладкі ў рахунак CUB',
-    settings_cub_backup: 'Бэкап',
-    settings_cub_backup_descr: 'Захаваць або загрузіць бэкап дадзеных',
-    settings_cub_logout: 'Выйсці з акаўнта',
-    settings_cub_signin: 'аўтарызацыя',
-    settings_cub_not_specified: 'Не паказаны',
-    settings_cub_password: 'Пароль',
-    settings_cub_status: 'Статус',
-    settings_cub_backup_import: 'Імпарт',
-    settings_cub_backup_export: 'Экспарт',
-    settings_cub_sync_filters: 'Сінхранізацыя фільтраў',
-    settings_cub_sync_calendar: 'Сінхранізацыя календара',
-    settings_cub_sync_quality: 'Сінхранізацыя адзнак (якасць)',
-    settings_cub_sync_search: 'Сінхранізацыя гісторыі пошуку',
-    settings_cub_sync_recomends: 'Сінхранізацыя рэкамендацый',
-    settings_cub_sync_timecodes: 'Сінхранізацыя тайм-кодаў',
-    settings_input_links: 'Выбранае',
-    settings_interface_type: 'Аблегчаная версія',
-    settings_interface_size: 'Памер інтэрфейсу',
-    settings_interface_background: 'Фон',
-    settings_interface_background_use: 'Паказваць фон',
-    settings_interface_background_type: 'Тып фону',
-    settings_interface_performance: 'Хуткадзейнасць',
-    settings_interface_animation: 'Анімацыя',
-    settings_interface_animation_descr: 'Анімацыя картак і кантэнту',
-    settings_interface_attenuation: 'Згасанне',
-    settings_interface_attenuation_descr: 'Плыўнае згасанне картак знізу і зверху',
-    settings_interface_scroll: 'Тып скролінга',
-    settings_interface_view_card: 'Тып прагляду картак',
-    settings_interface_view_card_descr: 'Па меры скралінга стужкі карткі будуць падгружацца паступова або загружацца ўсё',
-    settings_interface_lang: 'Мова інтэрфейсу',
-    settings_interface_lang_reload: 'Неабходна перазагрузіць дадатак, націсніце "OK" для перазагрузкі.',
-    settings_main_account: 'Акаўнт',
-    settings_main_interface: 'Інтэрфейс',
-    settings_main_player: 'Плэер',
-    settings_main_parser: 'Парсер',
-    settings_main_torrserver: 'TorrServer',
-    settings_main_plugins: 'Пашырэння',
-    settings_main_rest: 'Астатняе',
-    settings_rest_start: 'Стартавая старонка',
-    settings_rest_start_descr: 'З якой старонкі пачынаць пры запуску',
-    settings_rest_source: 'Крыніца',
-    settings_rest_source_use: 'Асноўная крыніца',
-    settings_rest_source_descr: 'Адкуль браць інфармацыю пра фільмы',
-    settings_rest_tmdb_lang: 'На якой мове адлюстроўваць дадзеныя з TMDB',
-    settings_rest_tmdb_prox: 'Праксіраваць TMDB',
-    settings_rest_tmdb_prox_auto: 'Уключыць проксі аўтаматычна',
-    settings_rest_tmdb_posters: 'Разрозненне постэраў TMDB',
-    settings_rest_screensaver: 'Скрынсэйвер',
-    settings_rest_screensaver_use: 'Паказваць застаўку пры бяздзейнасці',
-    settings_rest_screensaver_type: 'Тып застаўкі',
-    settings_rest_helper: 'Падказкі',
-    settings_rest_helper_use: 'Паказваць падказкі',
-    settings_rest_helper_reset: 'Паказаць падказкі зноў',
-    settings_rest_pages: 'Колькі старонак захоўваць у памяці',
-    settings_rest_pages_descr: 'Захоўвае старонкі ў тым стане, у якім вы іх пакінулі',
-    settings_rest_time: 'Зрушыць час',
-    settings_rest_navigation: 'Тып навігацыі',
-    settings_rest_keyboard: 'Тып клавіятуры',
-    settings_rest_device: 'Назва прылады',
-    settings_rest_device_placeholder: 'Напрыклад: Мая Лямпа',
-    settings_rest_cache: 'Ачысціць кэш',
-    settings_rest_cache_descr: 'Будуць ачышчаны ўсе налады і дадзеныя',
-    settings_rest_tmdb_example: 'Напрыклад:',
-    settings_rest_tmdb_api_descr: 'Для атрымання дадзеных',
-    settings_rest_tmdb_image_descr: 'Для атрымання малюнкаў',
-    settings_rest_card_quality: 'Адзнакі якасці',
-    settings_rest_card_quality_descr: 'Адлюстроўваць адзнакі якасці на картках',
-    settings_rest_card_episodes: 'Адзнакі эпізодаў',
-    settings_rest_card_episodes_descr: 'Адлюстроўваць адзнакі эпізодаў на картках',
-    settings_parser_use: 'Выкарыстоўваць парсер',
-    settings_parser_use_descr: 'Тым самым, вы згаджаецеся прыняць на сябе ўсю адказнасць за выкарыстанне публічных спасылак для прагляду торэнт і анлайн кантэнту.',
-    settings_parser_type: 'Тып парсера для торэнтаў',
-    settings_parser_jackett_placeholder: 'Напрыклад: 192.168.х',
-    settings_parser_jackett_link: 'спасылка',
-    settings_parser_jackett_link_descr: 'Укажыце спасылку на скрыпт Jackett',
-    settings_parser_jackett_key_placeholder: 'Напрыклад: sa0sk83d..',
-    settings_parser_jackett_key: 'Api ключ',
-    settings_parser_jackett_key_descr: 'Знаходзіцца ў Jackett',
-    settings_parser_torlook_type: 'Метад парсінгу сайта TorLook',
-    settings_parser_scraperapi_placeholder: 'Напрыклад: scraperapi.com',
-    settings_parser_scraperapi_link: 'Спасылка на парсер сайтаў',
-    settings_parser_scraperapi_descr: 'Зарэгіструйцеся на сайце scraperapi.com, увядзіце спасылку api.scraperapi.com?api_key=...&url={q}<br>У {q} будзе пастаўляцца сайт w41.torlook.info',
-    settings_parser_search: 'Пошук',
-    settings_parser_search_descr: 'На якой мове рабіць пошук?',
-    settings_parser_in_search: 'Парсер у пошуку',
-    settings_parser_in_search_descr: 'Паказваць вынікі ў пошуку?',
-    settings_parser_timeout_title: 'Таймаўт парсера',
-    settings_parser_timeout_descr: 'Час у секундах, які будзе чакацца адказу ад сервера',
-    settings_player_type: 'Тып плэера',
-    settings_player_type_descr: 'Якім плэерам прайграваць',
-    settings_player_iptv_type: 'Тып плэера для IPTV',
-    settings_player_iptv_type_descr: 'Якім плэерам прайграваць IPTV каналы',
-    settings_player_reset: 'Скінуць плэер па змаўчанні',
-    settings_player_reset_descr: 'Скідае абраны Android плэер у дадатку',
-    settings_player_path: 'Шлях да плэера',
-    settings_player_path_descr: 'Укажыце шлях да плэера .exe',
-    settings_player_normalization: 'Нармалізацыя гуку',
-    settings_player_normalization_descr: 'Нармалізуе гук у адзін узровень, паніжае гучныя гукі і павялічвае ціхія.',
-    settings_player_next_episode: 'Наступная серыя',
-    settings_player_next_episode_descr: 'Аўтаматычна пераключаць на наступную серыю пасля заканчэння бягучай',
-    settings_player_timecode: 'Тайм-код',
-    settings_player_timecode_descr: 'Працягнуць з апошняга месца прагляду',
-    settings_player_scale: 'Метад маштабавання',
-    settings_player_scale_descr: 'Якім чынам рабіць вылічэнні для маштабавання відэа',
-    settings_player_subs: 'Субтытры',
-    settings_player_subs_use: 'Уключыць',
-    settings_player_subs_use_descr: 'Заўсёды ўключаць субтытры пасля запуску відэа',
-    settings_player_subs_size: 'Памер',
-    settings_player_subs_size_descr: 'Памер субтытраў на экране',
-    settings_player_subs_stroke_use: 'Выкарыстоўваць акантоўку',
-    settings_player_subs_stroke_use_descr: 'Субтытры будуць абведзены чорным колерам для паляпшэння чытальнасці',
-    settings_player_subs_backdrop_use: 'Выкарыстоўваць падкладку',
-    settings_player_subs_backdrop_use_descr: 'Субтытры будуць адлюстроўвацца на напаўпразрыстай падкладцы для паляпшэння чытальнасці',
-    settings_player_quality: 'Якасць відэа па змаўчанні',
-    settings_player_quality_descr: 'Пераважная якасць відэа для прагляду',
-    settings_player_hls_title: 'Апрацоўка патоку .m3u8',
-    settings_player_hls_descr: 'Не чапайце гэты параметр калі не ведаеце навошта ён.',
-    settings_plugins_notice: 'Для прымянення плагіна неабходна перазагрузіць дадатак',
-    settings_plugins_add: 'Дадаць плагін',
-    settings_plugins_add_descr: 'Для выдалення дададзенага плагіна ўтрымлівайце ці націсніце двойчы клавішу (OK) на ім',
-    settings_plugins_install: 'Усталяваць плагін',
-    settings_plugins_install_descr: 'Усталяваць плагін са спісу даступных',
-    settings_server_link: 'Выкарыстоўваць спасылку',
-    settings_server_links: 'Спасылкі',
-    settings_server_placeholder: 'Напрыклад: 192.168.х',
-    settings_server_link_one: 'Асноўная спасылка',
-    settings_server_link_one_descr: 'Укажыце асноўную спасылку на скрыпт TorrServer',
-    settings_server_link_two: 'Дадатковая спасылка',
-    settings_server_link_two_descr: 'Укажыце дадатковую спасылку на скрыпт TorrServer',
-    settings_server_additionally: 'Дадаткова',
-    settings_server_client: 'Убудаваны кліент',
-    settings_server_client_descr: 'Выкарыстоўваць убудаваны JS-кліент TorrServe, інакш запускаецца сістэмны.',
-    settings_server_base: 'Захаваць у базу',
-    settings_server_base_descr: 'Торэнт будзе дададзены ў базу TorrServer',
-    settings_server_preload: 'Выкарыстоўваць буфер перад.загрузкі',
-    settings_server_preload_descr: 'Чакаць запаўнення буфера папярэдняй загрузкі TorrServer перад прайграваннем',
-    settings_server_auth: 'аўтарызацыя',
-    settings_server_password_use: 'Уваход па паролі',
-    settings_server_login: 'Лагін',
-    settings_server_password: 'Пароль',
-    settings_server_not_specified: 'Не паказаны',
-    torent_nohash_reasons: 'Прычыны',
-    torent_nohash_reason_one: 'TorServer не змог спампаваць торэнт файл',
-    torent_nohash_reason_two: 'Адказ ад TorServer',
-    torent_nohash_reason_three: 'Спасылка',
-    torent_nohash_do: 'Што рабіць?',
-    torent_nohash_do_one: 'Праверце ці правільна вы наладзілі Jackett',
-    torent_nohash_do_two: 'Прыватныя крыніцы могуць не выдаваць спасылку на файл',
-    torent_nohash_do_three: 'Пераканайцеся, што Jackett таксама можа спампаваць файл',
-    torent_nohash_do_four: 'Напісаць у нашу тэлеграм групу: @lampa_group',
-    torent_nohash_do_five: 'Пакажыце які фільм, якая раздача і па магчымасці фота гэтай раздачы',
-    torrent_error_text: 'Немагчыма падлучыцца да TorrServe. Давайце хутка пройдземся па спісе магчымых праблем і ўсё праверым.',
-    torrent_error_step_1: 'Ці запушчаны TorrServe',
-    torrent_error_step_2: 'Дынамічны IP-адрас',
-    torrent_error_step_3: 'Пратакол і порт',
-    torrent_error_step_4: 'Блакіроўка антывірусамі',
-    torrent_error_step_5: 'Праверце на даступнасць',
-    torrent_error_step_6: 'Усё роўна не працуе',
-    torrent_error_info_1: 'Упэўніцеся, што вы запусцілі TorrServe на прыладзе, дзе ён усталяваны.',
-    torrent_error_info_2: 'Частая памылка, змяніўся IP-адрас прылады з TorrServe. Упэўніцеся, што IP-адрас, які вы ўвялі - {ip}, супадае з адрасам прылады, на якім усталяваны TorrServe.',
-    torrent_error_info_3: 'Для падключэння да TorrServe, неабходна пазначыць пратакол http:// у пачатку і порт :8090 у канцы адрасу. Пераканайцеся, што пасля IP-адрасы паказаны порт, ваш бягучы адрас - {ip}',
-    torrent_error_info_4: 'Частая з\'ява, антывірус ці брандмаўэр можа блакаваць доступ па IP-адрасу, паспрабуйце адключыць антывірус і брандмаўэр.',
-    torrent_error_info_5: 'На любой іншай прыладзе ў гэтай жа сетцы, адкрыйце ў браўзэры адрас {ip} і праверце, ці даступны вэб-інтэрфейс TorrServe.',
-    torrent_error_info_6: 'Калі пасля ўсіх праверак усё роўна ўзнікае памылка падлучэння, паспрабуйце перазагрузіць TorrServe і інтэрнэт-адаптар.',
-    torrent_error_info_7: 'Калі праблема не ўхіленая, пішыце ў Telegram-групу @lampa_group з тэкстам (Lampa не падлучаецца да TorrServe пасля ўсіх праверак, бягучы адрас {ip})',
-    torrent_error_start: 'Пачаць праверку',
-    torrent_error_nomatrix: 'Не атрымалася пацвердзіць версію Matrix',
-    torrent_error_made: 'Выканана',
-    torrent_error_from: 'з',
-    torrent_error_next: 'Далей',
-    torrent_error_complite: 'Завяршыць',
-    torrent_error_connect: 'Памылка падключэння',
-    torrent_install_need: 'Неабходны TorrServe',
-    torrent_install_text: 'TorrServe – дадатак, якое дазваляе праглядаць кантэнт з торэнт-файлаў у анлайн рэжыме.<br><br>Больш дэталёвую інфармацыю па ўстаноўцы вы знойдзеце ў Telegram-групах, указаных ніжэй.',
-    torrent_install_contact: 'Telegram-групы',
-    torrent_item_bitrate: 'Бітрэйт',
-    torrent_item_seeds: 'Раздаюць',
-    torrent_item_grabs: 'пампуюць',
-    torrent_item_mb: 'Мбіт/с',
-    torrent_serial_episode: 'Серыя',
-    torrent_serial_season: 'Сезон',
-    torrent_serial_date: 'Выхад',
-    torrent_get_magnet: 'Запытваю magnet спасылку',
-    torrent_remove_title: 'Выдаліць',
-    torrent_remove_descr: 'Торэнт будзе выдалены з вашага спісу',
-    torrent_parser_any_one: 'Любое',
-    torrent_parser_any_two: 'Любы',
-    torrent_parser_no_choice: 'Не абрана',
-    torrent_parser_yes: 'Так',
-    torrent_parser_no: 'Не',
-    torrent_parser_quality: 'Якасць',
-    torrent_parser_subs: 'Субтытры',
-    torrent_parser_voice: 'Пераклад',
-    torrent_parser_tracker: 'Трэкер',
-    torrent_parser_year: 'Год',
-    torrent_parser_season: 'Сезон',
-    torrent_parser_sort_by_seeders: 'Па раздавальных',
-    torrent_parser_sort_by_size: 'Па памеры',
-    torrent_parser_sort_by_name: 'Па назве',
-    torrent_parser_sort_by_tracker: 'Па крыніцы',
-    torrent_parser_sort_by_date: 'Па даце',
-    torrent_parser_sort_by_viewed: 'Па прагледжаным',
-    torrent_parser_voice_dubbing: 'Дубляж',
-    torrent_parser_voice_polyphonic: 'Шматгалосы',
-    torrent_parser_voice_two: 'Двухгалосы',
-    torrent_parser_voice_amateur: 'Любіцельскі',
-    torrent_parser_reset: 'Скінуць фільтр',
-    torrent_parser_empty: 'Немагчыма атрымаць вынікаў',
-    torrent_parser_no_hash: 'Не атрымалася атрымаць HASH',
-    torrent_parser_added_to_mytorrents: 'дададзена ў «Мае торэнты»',
-    torrent_parser_add_to_mytorrents: 'Дадаць у «Мае торэнты»',
-    torrent_parser_label_title: 'Пазначыць',
-    torrent_parser_label_descr: 'Пазначыць раздачу са сцягам (прагледжана)',
-    torrent_parser_label_cancel_title: 'Зняць адзнаку',
-    torrent_parser_label_cancel_descr: 'Зняць адзнаку з раздачы (прагледжана)',
-    torrent_parser_timeout: 'Час чакання скончыўся',
-    torrent_parser_nofiles: 'Немагчыма атрымаць патрэбныя файлы',
-    torrent_parser_set_link: 'Пазначце спасылку для парсінгу',
-    torrent_parser_request_error: 'Памылка ў запыце',
-    torrent_parser_magnet_error: 'Не ўдалося атрымаць magnet спасылку',
-    torrent_parser_no_responce: 'Парсер не адказвае на запыт',
-    torrent_parser_torlook_fallback_search_notification: 'Парсэр Jackett не даступны або налады падлучэння не дакладныя. Ажыццяўляецца пошук у Torlook...',
-    about_text: 'Дадатак цалкам бясплатны і выкарыстоўвае публічныя спасылкі для атрымання інфармацыі пра відэа, навінкі, папулярныя фільмы і г.д. Уся даступная інфармацыя выкарыстоўваецца выключна ў пазнавальных мэтах, прыкладанне не выкарыстоўвае свае ўласныя серверы для распаўсюджвання інфармацыі.',
-    about_channel: 'Наш канал',
-    about_group: 'Група',
-    about_version: 'Версія',
-    about_donate: 'Данат',
-    title_watched: 'Вы глядзелі',
-    title_settings: 'Налады',
-    title_collections: 'Падборкі',
-    title_company: 'Кампанія',
-    title_actors: 'Акцёры',
-    title_actor: 'Акцёр',
-    title_actress: 'Актрыса',
-    title_person: 'Персона',
-    title_comments: 'Каментары',
-    title_torrents: 'Торэнты',
-    title_trailers: 'Трэйлеры',
-    title_watch: 'Глядзець',
-    title_error: 'Памылка',
-    title_links: 'Спасылкі',
-    title_choice: 'Выбраць',
-    title_main: 'Галоўная',
-    title_book: 'Закладкі',
-    title_like: 'Падабаецца',
-    title_wath: 'Пазней',
-    title_history: 'Гісторыя праглядаў',
-    title_mytorrents: 'Мае торэнты',
-    title_last: 'Апошняя',
-    title_action: 'Дзеянне',
-    title_producer: 'Рэжысёр',
-    title_collection: 'Калекцыя',
-    title_recomendations: 'Рэкамендацыі',
-    title_similar: 'Падобныя',
-    title_about: 'Пра прыкладанне',
-    title_timetable: 'Расклад',
-    title_relises: 'Лічбавыя рэлізы',
-    title_catalog: 'Каталог',
-    title_category: 'Катэгорыя',
-    title_parser: 'Парсер',
-    title_type: 'Тып',
-    title_rating: 'Рэйтынг',
-    title_country: 'Краіна',
-    title_year: 'Год',
-    title_genre: 'Жанр',
-    title_filter: 'Фільтр',
-    title_notice: 'Апавяшчэнні',
-    title_files: 'Файлы',
-    title_now_watch: 'Глядзяць зараз',
-    title_latest: 'Апошняе даданне',
-    title_continue: 'Працягнуць прагляд',
-    title_recomend_watch: 'Рэкамендуем паглядзець',
-    title_new_episodes: 'Новыя серыі',
-    title_popular: 'Папулярнае',
-    title_popular_movie: 'Папулярныя фільмы',
-    title_popular_tv: 'Папулярныя серыялы',
-    title_new_this_year: 'Навінкі гэтага года',
-    title_hight_voite: 'З высокім рэйтынгам',
-    title_new: 'Навінкі',
-    title_trend_day: 'Сёння ў трэндзе',
-    title_trend_week: 'У трэндзе за тыдзень',
-    title_upcoming: 'Глядзіце ў кіназалах',
-    title_top_movie: 'Топ фільмы',
-    title_top_tv: 'Топ серыялы',
-    title_tv_today: 'Сёння ў эфіры',
-    title_this_week: 'На гэтым тыдні',
-    title_in_top: 'У топе',
-    title_out: 'Выхад',
-    title_out_confirm: 'Так, выйсці',
-    title_continue_two: 'Працягнуць',
-    title_choice_language: 'Выберыце мову',
-    title_subscribe: 'Падпісацца',
-    title_subscribes: 'Падпіскі',
-    title_unsubscribe: 'Адпісацца',
-    title_language: 'Арыгінальная мова',
-    subscribe_success: 'Вы паспяхова падпісаліся',
-    subscribe_error: 'Узнікла памылка пры падпісцы, паспрабуйце пазней',
-    subscribe_noinfo: 'Не ўдалося атрымаць інфармацыю, паспрабуйце пазней',
-    company_headquarters: 'Штаб',
-    company_homepage: 'Сайт',
-    company_country: 'Краіна',
-    country_ad: 'Андора',
-    country_ae: 'ААЭ',
-    country_af: 'Афганістан',
-    country_al: 'Албанія',
-    country_am: 'Арменія',
-    country_ao: 'Ангола',
-    country_ar: 'Аргенціна',
-    country_at: 'Аўстрыя',
-    country_au: 'Аўстралія',
-    country_aw: 'Аруба',
-    country_az: 'Азербайджан',
-    country_bа: 'Боснія і Герцагавіна',
-    country_bd: 'Бангладэш',
-    country_be: 'Бельгія',
-    country_bg: 'Балгарыя',
-    country_bh: 'Бахрэйн',
-    country_bi: 'Бурунды',
-    country_bj: 'Бенін',
-    country_bo: 'Балівія',
-    country_br: 'Бразілія',
-    country_bs: 'Багамскія а-вы',
-    country_bt: 'Бутан',
-    country_bw: 'Батсвана',
-    country_by: 'Беларусь',
-    country_ca: 'Канада',
-    country_ch: 'Швейцарыя',
-    country_cl: 'Чылі',
-    country_cm: 'Камерун',
-    country_cn: 'Кітай',
-    country_co: 'Калумбія',
-    country_cr: 'Коста-Рыка',
-    country_cu: 'Куба',
-    country_cv: 'Каба-Вэрдэ',
-    country_cy: 'Кіпр',
-    country_cz: 'Чэхія',
-    country_de: 'Германія',
-    country_dj: 'Джыбуці',
-    country_dk: 'Данія',
-    country_do: 'Дамінікана',
-    country_dz: 'Алжыр',
-    country_ec: 'Эквадор',
-    country_ee: 'Эстонія',
-    country_eg: 'Егіпет',
-    country_es: 'Іспанія',
-    country_et: 'Эфіопія',
-    country_fi: 'Фінляндыя',
-    country_fo: 'Фарэрскія а-вы',
-    country_fr: 'Францыя',
-    country_ga: 'Габон',
-    country_gb: 'Вялікабрытанія',
-    country_ge: 'Грузія',
-    country_gh: 'Гана',
-    country_gl: 'Грэнландыя',
-    country_gp: 'Гвадэлупа',
-    country_gr: 'Грэцыя',
-    country_gt: 'Гватэмала',
-    country_hk: 'Ганконг',
-    country_hr: 'Харватыя',
-    country_ht: 'Гаіці',
-    country_hu: 'Венгрыя',
-    country_id: 'Інданезія',
-    country_ie: 'Ірландыя',
-    country_il: 'Ізраіль',
-    country_in: 'Індыя',
-    country_iq: 'Ірак',
-    country_ir: 'Іран',
-    country_is: 'Ісландыя',
-    country_it: 'Італія',
-    country_jm: 'Ямайка',
-    country_jo: 'Іарданія',
-    country_jp: 'Японія',
-    country_ke: 'Кенія',
-    country_kg: 'Кіргізія',
-    country_kh: 'Камбоджа',
-    country_kp: 'Паўночная Карэя',
-    country_kr: 'Паўднёвая Карэя',
-    country_kz: 'Казахстан',
-    country_kw: 'Кувейт',
-    country_la: 'Лаос',
-    country_lb: 'Ліван',
-    country_li: 'Ліхтэнштэйн',
-    country_lk: 'Шры-Ланка',
-    country_lr: 'Ліберыя',
-    country_lt: 'Літва',
-    country_lu: 'Люксембург',
-    country_lv: 'Латвія',
-    country_ly: 'Лівія',
-    country_ma: 'Марока',
-    country_mc: 'Манака',
-    country_md: 'Малдова',
-    country_me: 'Чарнагорыя',
-    country_mk: 'Македонія',
-    country_mm: 'М\'янма',
-    country_mn: 'Манголія',
-    country_mo: 'Макаа',
-    country_mt: 'Мальта',
-    country_mu: 'Маўрыкій',
-    country_mv: 'Мальдывы',
-    country_mw: 'Малаві',
-    country_mx: 'Мексіка',
-    country_my: 'Малайзія',
-    country_mz: 'Мазамбік',
-    country_na: 'Намібія',
-    country_ne: 'Нігер',
-    country_ng: 'Нігерыя',
-    country_ni: 'Нікарагуа',
-    country_nl: 'Нідэрланды',
-    country_no: 'Нарвегія',
-    country_np: 'Непал',
-    country_nz: 'Новая Зеландыя',
-    country_om: 'Аман',
-    country_pa: 'Панама',
-    country_pe: 'Пяру',
-    country_pg: 'Папуа - Новая Гвінея',
-    country_ph: 'Філіпіны',
-    country_pk: 'Пакістан',
-    country_pl: 'Польшча',
-    country_pr: 'Пуэрта-Рыка',
-    country_ps: 'Палестына',
-    country_pt: 'Партугалія',
-    country_py: 'Парагвай',
-    country_qa: 'Катар',
-    country_ro: 'Румынія',
-    country_rs: 'Сербія',
-    country_ru: 'Расія',
-    country_rw: 'Руанда',
-    country_sa: 'Саудаўская Аравія',
-    country_sd: 'Судан',
-    country_se: 'Швецыя',
-    country_sg: 'Сінгапур',
-    country_si: 'Славенія',
-    country_sk: 'Славакія',
-    country_sn: 'Сенегал',
-    country_su: 'СССР',
-    country_sv: 'Сальвадор',
-    country_sy: 'Сірыя',
-    country_th: 'Тайланд',
-    country_tj: 'Таджыкістан',
-    country_tm: 'Туркменістан',
-    country_tn: 'Туніс',
-    country_tr: 'Турцыя',
-    country_tw: 'Тайвань',
-    country_tz: 'Танзанія',
-    country_ua: 'Украіна',
-    country_ug: 'Уганда',
-    country_us: 'ЗША',
-    country_uy: 'Уругвай',
-    country_uz: 'Узбекістан',
-    country_ve: 'Венесуэла',
-    country_vn: 'В\'етнам',
-    country_ws: 'Самаа',
-    country_xk: 'Косава',
-    country_ye: 'Емен',
-    country_yu: 'Югаславія',
-    country_za: 'ПАР',
-    country_zm: 'Замбія',
-    country_zw: 'Зімбабвэ',
-    filter_clarify: 'Удакладніць',
-    filter_clarify_two: 'Удакладніць пошук',
-    filter_set_name: 'Указаць назву',
-    filter_sorted: 'Сартаваць',
-    filter_filtred: 'Фільтр',
-    filter_any: 'Любы',
-    filter_combinations: 'Камбінацыі',
-    filter_alt_names: 'Іншыя назвы',
-    filter_rating_from: 'ад',
-    filter_rating_to: 'да',
-    filter_lang_af: 'Афрыкаанс',
-    filter_lang_ar: 'Арабская',
-    filter_lang_az: 'Азербайджанская',
-    filter_lang_ba: 'Башкірская',
-    filter_lang_be: 'Беларуская',
-    filter_lang_bg: 'Балгарская',
-    filter_lang_bn: 'Бенгальская',
-    filter_lang_bs: 'Баснійская',
-    filter_lang_ca: 'Каталанская',
-    filter_lang_ce: 'Чачэнская',
-    filter_lang_cs: 'Чэшская',
-    filter_lang_da: 'Дацкая',
-    filter_lang_de: 'Нямецкая',
-    filter_lang_el: 'Грэчаская',
-    filter_lang_en: 'Англійская',
-    filter_lang_es: 'Іспанская',
-    filter_lang_et: 'Эстонская',
-    filter_lang_fa: 'Персідская',
-    filter_lang_fi: 'Фінская',
-    filter_lang_fr: 'Французская',
-    filter_lang_ga: 'Ірландская',
-    filter_lang_gl: 'Галісійская',
-    filter_lang_gn: 'Гуарані',
-    filter_lang_he: 'Іўрыт',
-    filter_lang_hi: 'Хіндзі',
-    filter_lang_hr: 'Харвацкая',
-    filter_lang_hu: 'Венгерская',
-    filter_lang_hy: 'Армянская',
-    filter_lang_id: 'Інданезійская',
-    filter_lang_is: 'Ісландская',
-    filter_lang_it: 'Італьянская',
-    filter_lang_ja: 'Японская',
-    filter_lang_ka: 'Грузінская',
-    filter_lang_kk: 'Казахская',
-    filter_lang_ko: 'Карэйская',
-    filter_lang_ks: 'Кашміры',
-    filter_lang_ku: 'Курдская',
-    filter_lang_ky: 'Кіргізская',
-    filter_lang_lt: 'Літоўская',
-    filter_lang_lv: 'Латышская',
-    filter_lang_mi: 'Маоры',
-    filter_lang_mk: 'Македонская',
-    filter_lang_mn: 'Мангольская',
-    filter_lang_mo: 'Малдаўская',
-    filter_lang_mt: 'Мальтыйская',
-    filter_lang_ne: 'Непальская',
-    filter_lang_nl: 'Нідэрландская',
-    filter_lang_no: 'Нарвежская',
-    filter_lang_pa: 'Панджабі',
-    filter_lang_pl: 'Польская',
-    filter_lang_ps: 'Пушту',
-    filter_lang_pt: 'Партугальская',
-    filter_lang_ro: 'Румынская',
-    filter_lang_ru: 'Руская',
-    filter_lang_si: 'Сінгальская',
-    filter_lang_sk: 'Славацкі',
-    filter_lang_sl: 'Славенская',
-    filter_lang_sm: 'Самаанская',
-    filter_lang_so: 'Самалійская',
-    filter_lang_sq: 'Албанская',
-    filter_lang_sr: 'Сербская',
-    filter_lang_sv: 'Шведская',
-    filter_lang_sw: 'Суахілі',
-    filter_lang_ta: 'Тамільская',
-    filter_lang_tg: 'Таджыкская',
-    filter_lang_th: 'Тайская',
-    filter_lang_tk: 'Туркменская',
-    filter_lang_tr: 'Турэцкая',
-    filter_lang_tt: 'Татарская',
-    filter_lang_ur: 'Урду',
-    filter_lang_uk: 'Украінская',
-    filter_lang_uz: 'Узбекская',
-    filter_lang_vi: 'В\'етнамская',
-    filter_lang_yi: 'Ідыш',
-    filter_lang_zh: 'Кітайская',
-    filter_genre_ac: 'Баявік',
-    filter_genre_ad: 'Прыгоды',
-    filter_genre_mv: 'Мультфільм',
-    filter_genre_cm: 'Камедыя',
-    filter_genre_cr: 'Крымінал',
-    filter_genre_dc: 'Дакументальны',
-    filter_genre_dr: 'Драма',
-    filter_genre_fm: 'Сямейны',
-    filter_genre_fe: 'Фэнтэзі',
-    filter_genre_hi: 'Гісторыя',
-    filter_genre_ho: 'Жахі',
-    filter_genre_mu: 'Музыка',
-    filter_genre_de: 'Дэтэктыў',
-    filter_genre_md: 'Меладрама',
-    filter_genre_fa: 'Фантастыка',
-    filter_genre_tv: 'Тэлевізійны фільм',
-    filter_genre_tr: 'Трылер',
-    filter_genre_mi: 'Ваенны',
-    filter_genre_ve: 'Вэстэрн',
-    filter_genre_aa: 'Баявік і Прыгоды',
-    filter_genre_ch: 'Дзіцячы',
-    filter_genre_nw: 'Навіны',
-    filter_genre_rs: 'Рэаліці-шоў',
-    filter_genre_hf: 'НФ і Фэнтэзі',
-    filter_genre_op: 'Мыльная опера',
-    filter_genre_tc: 'Ток-шоу',
-    filter_genre_mp: 'Вайна і Палітыка',
-    empty_title: 'Пуста',
-    empty_text: 'Па вашым фільтры нічога не знайшлося, удакладніце фільтр.',
-    empty_title_two: 'Тут пуста',
-    empty_text_two: 'На дадзены момант спіс пусты',
-    menu_main: 'Галоўная',
-    menu_movies: 'Фільмы',
-    menu_tv: 'Серыялы',
-    menu_catalog: 'Каталог',
-    menu_filter: 'Фільтр',
-    menu_collections: 'Падборкі',
-    menu_relises: 'Рэлізы',
-    menu_anime: 'Анімэ',
-    menu_bookmark: 'Закладкі',
-    menu_like: 'Падабаецца',
-    menu_time: 'Пазней',
-    menu_history: 'Гісторыя',
-    menu_timeline: 'Расклад',
-    menu_torrents: 'Торэнты',
-    menu_settings: 'Налады',
-    menu_about: 'Інфармацыя',
-    menu_console: 'Кансоль',
-    menu_multmovie: 'Мультфільмы',
-    menu_multtv: 'Мультсерыялы',
-    menu_feed: 'Стужка',
-    lampa_movie_title: 'Лямпавае кіно',
-    lampa_movie_descr: 'Сачыце за навінкамі на сваім смартфоне. <br>Тэлеграм: <b>@lampa_movie</b>',
-    plugins_catalog_work: 'Працаздольныя плагіны',
-    plugins_catalog_work_descr: 'Плагіны, якія сапраўды працуюць у лямпе.',
-    plugins_catalog_popular: 'Папулярныя плагіны сярод карыстальнікаў',
-    plugins_catalog_popular_descr: 'Усталяванне з невядомых крыніц можа прывесці да некарэктнай працы прыкладання.',
-    plugins_online: 'Прагляд анлайн',
-    plugins_check_fail: 'Немагчыма праверыць працаздольнасць плагіна. Аднак гэта не азначае, што плягін не працуе. Перазагрузіце прыкладанне для высвятлення, ці загружаецца плягін.',
-    plugins_need_reload: 'Для прымянення плагіна неабходна перазагрузіць дадатак',
-    plugins_install: 'Усталяваць',
-    plugins_install_ready: 'Гэты плагін ужо ўсталяваны.',
-    plugins_installed: 'Усталёвак',
-    plugins_load_from: 'Загружана з CUB',
-    plugins_ok_for_check: 'Націсніце (OK) для праверкі плагіна',
-    plugins_no_loaded: 'Пры загрузцы прыкладання, частка плагінаў не атрымалася загрузіць',
-    time_viewed: 'Прагледжана',
-    time_from: 'з',
-    time_reset: 'Скінуць тайм-код',
-    settings_clear_cache: 'Кэш і дадзеныя ачышчаны',
-    settings_user_links: 'Карыстацкая спасылка',
-    settings_for_local: 'Для лакальнага TorrServer',
-    settings_add: 'Дадаць',
-    settings_remove: 'Выдаліць',
-    settings_this_value: 'бягучае значэнне',
-    settings_added: 'Дададзена',
-    settings_removed: 'Выдалена',
-    settings_param_player_inner: 'Убудаваны',
-    settings_param_player_outside: 'Вонкавы',
-    settings_param_yes: 'Так',
-    settings_param_no: 'Не',
-    settings_param_interface_size_small: 'Менш',
-    settings_param_interface_size_normal: 'Нармальны',
-    settings_param_interface_size_bigger: 'Больш',
-    settings_param_poster_quality_low: 'Нізкае',
-    settings_param_poster_quality_average: 'Сярэдняе',
-    settings_param_poster_quality_high: 'Высокае',
-    settings_param_parse_directly: 'Напрамую',
-    settings_param_parse_api: 'Праз API сайта',
-    settings_param_background_complex: 'Складаны',
-    settings_param_background_simple: 'Просты',
-    settings_param_background_image: 'Малюнак',
-    settings_param_link_use_one: 'Асноўную',
-    settings_param_link_use_two: 'Дадатковую',
-    settings_param_subtitles_size_small: 'Маленькія',
-    settings_param_subtitles_size_normal: 'Звычайныя',
-    settings_param_subtitles_size_bigger: 'Вялікія',
-    settings_param_screensaver_nature: 'Прырода',
-    settings_param_torrent_lang_orig: 'Арыгінал',
-    settings_param_torrent_lang_ru: 'Рускі',
-    settings_param_player_timecode_again: 'Пачаць з пачатку',
-    settings_param_player_timecode_continue: 'Працягнуць',
-    settings_param_player_timecode_ask: 'Пытаць',
-    settings_param_player_scale_method: 'Разлічыць',
-    settings_param_player_hls_app: 'Сістэмны',
-    settings_param_player_hls_js: 'Праграмны',
-    settings_param_card_view_load: 'Падгружаць',
-    settings_param_card_view_all: 'Паказаць усё',
-    settings_param_navigation_remote: 'Пульт',
-    settings_param_navigation_mouse: 'Пульт з мышкай',
-    settings_param_keyboard_lampa: 'Убудаваная',
-    settings_param_keyboard_system: 'Сістэмная',
-    helper_keyboard: 'Пасля ўводу значэння націсніце кнопку "Назад" для захавання',
-    helper_torrents: 'Утрымлівайце клавішу (ОК) для выкліку кантэкстнага меню',
-    helper_cleared: 'Паспяхова, падказкі будуць паказаны нанава.',
-    helper_torrents_view: 'Для скіду тайм-кода і выкліку меню ўтрымлівайце клавішу (ОК)',
-    fav_sync_title: 'Сінхранізацыя закладак',
-    fav_sync_text: 'Вашыя любімыя закладкі разам з Вамі. Падлучыце сінхранізацыю і праглядайце на любой прыладзе. <br><br>Для гэтага зарэгіструйцеся на сайце www.cub.watch, стварыце профіль і аўтарызуйцеся ў дадатак.',
-    fav_sync_site: 'Сайт',
-    fav_remove_title: 'Выдаліць з гісторыі',
-    fav_remove_descr: 'Выдаліць выдзеленую картку',
-    fav_clear_title: 'Ачысціць гісторыю',
-    fav_clear_descr: 'Выдаліць усе карткі з гісторыі',
-    fav_clear_label_title: 'Ачысціць пазнакі',
-    fav_clear_label_descr: 'Ачысціць пазнакі аб праглядах',
-    fav_clear_time_title: 'Ачысціць тайм-коды',
-    fav_clear_time_descr: 'Ачысціць усе тайм-коды',
-    fav_label_cleared: 'Пазнакі ачышчаны',
-    fav_time_cleared: 'Тайм-коды ачышчаны',
-    timetable_empty: 'У гэтым раздзеле будуць адлюстроўвацца даты выхаду новых серый',
-    player_quality: 'Якасць',
-    player_tracks: 'Аўдыёдарожкі',
-    player_disabled: 'Адключана',
-    player_unknown: 'Невядома',
-    player_subs: 'Субтытры',
-    player_size_default_title: 'Па змаўчанні',
-    player_size_default_descr: 'Памер відэа па змаўчанні',
-    player_size_cover_title: 'Пашырыць',
-    player_size_cover_descr: 'Пашырае відэа на ўвесь экран',
-    player_size_fill_title: 'Запоўніць',
-    player_size_fill_descr: 'Змясціць відэа на ўвесь экран',
-    player_size_s115_title: 'Павялічыць 115%',
-    player_size_s115_descr: 'Павялічыць відэа на 115%',
-    player_size_s130_title: 'Павялічыць 130%',
-    player_size_s130_descr: 'Павялічыць відэа на 130%',
-    player_size_v115_title: 'Па вертыкалі 115%',
-    player_size_v115_descr: 'Павялічыць відэа на 115%',
-    player_size_v130_title: 'Па вертыкалі 130%',
-    player_size_v130_descr: 'Павялічыць відэа на 130%',
-    player_video_size: 'Памер відэа',
-    player_playlist: 'Плэйліст',
-    player_error_one: 'Не атрымалася дэкадаваць відэа',
-    player_error_two: 'Відэа не знойдзена ці пашкоджана',
-    player_start_from: 'Працягнуць прагляд з',
-    player_not_found: 'Плэер не знойдзены',
-    player_lauch: 'Запусціць плэер',
-    player_speed_default_title: 'Звычайная',
-    player_speed_two_descr: 'Прайграваць без гуку',
-    player_video_speed: 'Хуткасць прайгравання',
-    player_share_title: 'Падзеліцца',
-    player_share_descr: 'Запусціць гэтае відэа на іншай прыладзе',
-    player_normalization_power_title: 'Сіла нармалізацыі',
-    player_normalization_smooth_title: 'Хуткасць нармалізацыі',
-    player_normalization_step_low: 'Нізкае',
-    player_normalization_step_medium: 'Сярэдняе',
-    player_normalization_step_hight: 'Высокае',
-    player_youtube_no_played: 'Нажаль, гэта відэа не даступна ў вашым рэгіёне, магчыма, яно было заблакавана ці выдаленае.',
-    player_youtube_start_play: 'Для пачатку прайгравання відэа, націсніце кнопку "Плэй"',
-    broadcast_open: 'Адкрыць картку на іншай прыладзе',
-    broadcast_play: 'Абярыце прыладу на якой глядзець',
-    card_new_episode: 'Новая серыя',
-    card_book_remove: 'Прыбраць з закладак',
-    card_book_add: 'У закладкі',
-    card_book_descr: 'Глядзіце ў меню (Закладкі)',
-    card_like_remove: 'Прыбраць з упадабаных',
-    card_like_add: 'Падабаецца',
-    card_like_descr: 'Глядзіце ў меню (Падабаецца)',
-    card_wath_remove: 'Прыбраць з чаканых',
-    card_wath_add: 'Глядзець пазней',
-    card_wath_descr: 'Глядзіце ў меню (Пазней)',
-    card_history_remove: 'Прыбраць з гісторыі',
-    card_history_add: 'У гісторыю',
-    card_history_descr: 'Глядзіце ў меню (Гісторыя)',
-    keyboard_listen: 'Гаварыце, я слухаю...',
-    keyboard_nomic: 'Няма доступу да мікрафона',
-    notice_new_quality: 'Даступна новая якасць',
-    notice_quality: 'Якасць',
-    notice_new_episode: 'Новая серыя',
-    notice_none: 'У вас яшчэ няма ніякіх апавяшчэнняў, зарэгіструйцеся на сайце <b>www.cub.watch</b>, каб сачыць за новымі серыямі і рэлізамі.',
-    notice_in_quality: 'У якасці',
-    copy_link: 'Капіяваць спасылку на відэа',
-    copy_secuses: 'Спасылка скапіявана ў буфер абмену',
-    copy_error: 'Памылка пры капіраванні спасылкі',
-    account_sync_to_profile: 'Усе закладкі будуць перанесеныя ў профіль',
-    account_sync_secuses: 'Усе закладкі паспяхова перанесены',
-    account_profiles: 'Профілі',
-    account_profiles_empty: 'Немагчыма атрымаць спіс профіляў',
-    account_authorized: 'Аўтарызаваны',
-    account_logged_in: 'Вы ўвайшлі пад акаўнтам',
-    account_login_failed: 'Уваход не выкананы',
-    account_login_wait: 'Чакаем уваходу ў акаўнт',
-    account_profile_main: 'агульны',
-    account_export_secuses: 'Экспарт паспяхова завершаны',
-    account_export_fail: 'Памылка пры экспарце',
-    account_import_secuses: 'Імпарт паспяхова завершаны',
-    account_import_fail: 'Памылка пры імпарце',
-    account_imported: 'імпартавана',
-    account_reload_after: 'перазагрузка праз 5 сек.',
-    account_create: 'Адкрыйце больш магчымасцяў з акаўнтам CUB. Зарэгіструйцеся на сайце <span class="account-modal__site">www.cub.watch</span> і атрымайце доступ да сінхранізацыі вашых закладак, тайм-кодаў і іншых магчымасцяў акаўнта CUB.',
-    account_premium: 'Раскрыйце новыя гарызонты з акаўнтам CUB Premium! Атрымлівайце асалоду ад павялічанымі лімітамі і ўзбагачаным функцыяналам сэрвісу. Дадатковыя магчымасці чакаюць вас ужо сёння!',
-    account_premium_more: 'Больш падрабязна пра CUB Premium',
-    account_limited: 'Вы дасягнулі максімальнага ліміту. Павялічце ліміт з акаўнтам CUB Premium. Падрабязней на сайце <span class="account-modal__site">www.cub.watch/premium</span>',
-    account_premium_include_1: 'Павелічэнне колькасць закладак',
-    account_premium_include_2: 'Павелічэнне гісторыі праглядаў',
-    account_premium_include_3: 'Павелічэнне колькасць тайм-кодаў',
-    account_premium_include_4: 'Колькасць профіляў на рахунак',
-    account_premium_include_5: 'Апавяшчэнні',
-    account_premium_include_6: 'Сінхранізацыя дадзеных',
-    account_premium_include_text_1: 'Больш закладак - больш магчымасцяў! Захоўвайце свае любімыя фільмы і серыялы, стварайце спісы прагляду і атрымлівайце асалоду ад прагляду ў любы зручны час.',
-    account_premium_include_text_2: 'Павялічце гісторыю праглядаў у дадатку і сачыце за тым, што ўжо паглядзелі. Лёгка знаходзіце і пераглядайце свае любімыя фільмы і серыялы.',
-    account_premium_include_text_3: 'Не бойцеся прапусціць ніводнай важнай сцэны! Павялічце колькасць тайм-кодаў у дадатку і лёгка адсочвайце, дзе спыніліся ў праглядзе любімых фільмаў і серыялаў.',
-    account_premium_include_text_4: 'Атрымайце больш свабоды з нашым прэміум доступам! Павялічце колькасць профіляў на акаўнце і дазвольце сваім сябрам і блізкім атрымліваць асалоду ад фільмамі і серыяламі разам з вамі. Ніякіх абмежаванняў - атрымлівайце асалоду ад прагляду з каханымі людзьмі.',
-    account_premium_include_text_5: 'Не прапусціце ніводнай новай серыі або перакладу! Атрымлівайце апавяшчэння своечасова і будзьце ў курсе ўсіх абнаўленняў. Павялічце свой кінаструмень разам з намі і атрымлівайце апавяшчэння аб выхадзе новых серый і перакладаў прама на свой смартфон.',
-    account_premium_include_text_6: 'Сінхранізуйце свае дадзеныя паміж прыладамі з прэміум доступам! Больш не трэба марнаваць час на пошук апошняга эпізоду, на якім вы спыніліся. З нашым прэміум доступам вы можаце сінхранізаваць свае дадзеныя паміж прыладамі, каб працягваць прагляд з месца, дзе вы спыніліся, на любой прыладзе, дзе ўстаноўлена прыкладанне.',
-    account_code_enter: 'Калі ласка, увядзіце шэсцізначны код',
-    account_code_error: 'Магчыма, вы ўвялі няправільны ці старэлы код',
-    account_code_wrong: 'Магчыма, вы ўказалі няправільны фармат',
-    account_code_where: 'Перайдзіце на сайт <span class="account-add-device__site">cub.watch/add</span> і ўвядзіце там указаны код.',
-    account_code_input: 'Увесці код',
-    settings_cub_signin_button: 'Увайсці',
-    network_noconnect: 'Няма падлучэння да сеткі',
-    network_404: 'Запытаная старонка не знойдзена. [404]',
-    network_401: 'Аўтарызацыя не ўдалася',
-    network_500: 'Унутраная памылка сервера. [500]',
-    network_parsererror: 'Запытаны сінтаксічны аналіз JSON завяршыўся няўдала.',
-    network_timeout: 'Час запыту скончыўся.',
-    network_abort: 'Запыт быў перарваны.',
-    network_error: 'Невядомая памылка',
-    size_zero: '0 Байт',
-    size_byte: 'Байт',
-    size_kb: 'КБ',
-    size_mb: 'МБ',
-    size_gb: 'ГБ',
-    size_tb: 'ТБ',
-    size_pp: 'ПБ',
-    speed_bit: 'біт/c',
-    speed_kb: 'Кбіт/c',
-    speed_mb: 'Мбіт/c',
-    speed_gb: 'Гбіт/c',
-    speed_tb: 'Тбіт/c',
-    speed_pp: 'Пбіт/c',
-    month_1: 'Студзень',
-    month_2: 'Люты',
-    month_3: 'Сакавік',
-    month_4: 'Красавік',
-    month_5: 'Май',
-    month_6: 'Чэрвень',
-    month_7: 'Ліпень',
-    month_8: 'Жнівень',
-    month_9: 'Верасень',
-    month_10: 'Кастрычнік',
-    month_11: 'Лістапад',
-    month_12: 'Снежань',
-    day_1: 'Панядзелак',
-    day_2: 'Аўторак',
-    day_3: 'Серада',
-    day_4: 'Чацвер',
-    day_5: 'Пятніца',
-    day_6: 'Субота',
-    day_7: 'Нядзеля',
-    month_1_e: 'Студзеня',
-    month_2_e: 'Лютага',
-    month_3_e: 'Сакавіка',
-    month_4_e: 'Красавіка',
-    month_5_e: 'Мая',
-    month_6_e: 'Чэрвеня',
-    month_7_e: 'Ліпеня',
-    month_8_e: 'Жніўня',
-    month_9_e: 'Верасня',
-    month_10_e: 'Кастрычніка',
-    month_11_e: 'Лістапада',
-    month_12_e: 'Снежня',
-    week_1: 'Пн',
-    week_2: 'Аў',
-    week_3: 'Ср',
-    week_4: 'Чц',
-    week_5: 'Пт',
-    week_6: 'Сб',
-    week_7: 'Нд',
-    notice_none_account: 'У вас яшчэ няма ніякіх апавяшчэнняў, дадайце серыялы ў закладкі і чакайце апавяшчэння аб новых серыях.',
-    notice_none_system: 'На дадзены момант у вас адсутнічаюць апавяшчэння. Мы абавязкова апавясцім вас, калі з\'явяцца новыя апавяшчэнні.',
-    extensions_enable: 'Уключыць',
-    extensions_disable: 'Адключыць',
-    extensions_check: 'Праверыць статус',
-    extensions_install: 'Усталяваць',
-    extensions_info: 'Інфармацыя',
-    extensions_edit: 'рэдагаваць',
-    extensions_change_name: 'Змяніць назву',
-    extensions_change_link: 'Змяніць спасылку',
-    extensions_remove: 'Выдаліць',
-    extensions_set_name: 'Увядзіце назву плагіна',
-    extensions_set_url: 'Увядзіце адрас плагіна',
-    extensions_ready: 'Гэты плагін ужо ўсталяваны',
-    extensions_no_info: 'Без інфармацыі',
-    extensions_no_name: 'Без назвы',
-    extensions_worked: 'Працаздольны',
-    extensions_no_plugin: 'Плагін не пацверджаны ',
-    extensions_add: 'Дадаць плагін',
-    extensions_from_memory: 'Устаноўленыя ў памяць ',
-    extensions_from_cub: 'Устаноўленыя з CUB',
-    extensions_from_popular: 'Папулярныя плагіны',
-    extensions_from_lib: 'Бібліятэка плагінаў',
-    extensions_from_connected: 'Падлучаныя плагіны',
-    settings_webos_launcher: 'Запуск прыкладання',
-    settings_webos_launcher_add_device: 'Усталяваць як стартавае',
-    settings_webos_launcher_remove_device: 'Прыбраць са стартавых прыкладанняў',
-    player_normalization: 'Нармалізацыя',
-    change_source_on_cub: 'Змяніць крыніцу на CUB',
-    settings_param_jackett_interview_all: 'Усё',
-    settings_param_jackett_interview_healthy: 'Толькі даступныя',
-    settings_parser_jackett_interview: 'Апытваць трэкеры',
-    title_ongoing: 'Ангоінгі',
-    title_pgrating: 'Узроставае абмежаванне',
-    settings_interface_card_interfice: 'Інтэрфейс картак',
-    settings_interface_card_poster: 'Паказаць постэр',
-    title_card: 'Картка',
-    settings_param_card_interface_old: 'Стары',
-    settings_param_card_interface_new: 'Новы',
-    title_seasons: 'Сезоны',
-    title_episodes: 'Серыі',
-    title_rewiews: 'Водгукі',
-    settings_interface_glass: 'Шкло',
-    settings_interface_glass_descr: 'Паказваць інтэрфейс у шклопадобным стылі',
-    settings_interface_black_style: 'Чорны стыль',
-    plugins_remove: 'Выдаліць плагіны',
-    plugins_add_success: 'Убудова паспяхова падлучаны',
-    settings_reset: 'Скід налад',
-    title_channel: 'Канал',
-    input_detection_touch: 'Жадаеце пераключыць на сэнсарнае кіраванне?',
-    input_detection_mouse: 'Жадаеце пераключыць на кіраванне мышшу?',
-    input_detection_remote: 'Жадаеце пераключыць на кіраванне пультам?',
-    settings_interface_hide_outside_the_screen: 'Хаваць карткі за межамі экрана',
-    settings_interface_hide_outside_the_screen_descr: 'Гэта паскорыць рэндэр інтэрфейсу і палепшыць прадукцыйнасць',
-    https_text: 'Вы выкарыстоўвайце HTTPS пратакол, у гэтым пратаколе лямпа працуе некарэктна. Для карэктнай працы лямпы, выкарыстоўвайце адрас з пратаколам HTTP',
-    extensions_hpu_best: 'Папулярныя',
-    extensions_hpu_recomend: 'Рэкамендуем',
-    extensions_hpu_theme: 'Тэмы',
-    extensions_hpu_screensaver: 'Скрынсэйвер',
-    extensions_hpu_video: 'Відэа',
-    extensions_hpu_control: 'Упраўленне',
-    extensions_hpu_other: 'Рознае',
-    extensions_hpu_: 'Астатняе',
-    title_author: 'Аўтар',
-    title_buffer: 'Буфер',
-    settings_rest_screensaver_time: 'Праз колькі хвілін запусціць скрынсэйвер',
-    time_h: 'г.',
-    time_m: 'х.',
-    time_s: 'с.',
-    settings_param_glass_easy: 'Празрыстая',
-    settings_param_glass_medium: 'Напаўпразрыстая',
-    settings_param_glass_blacked: 'Зацемненая',
-    settings_interface_glass_opacity: 'Празрыстасць шкла',
-    torrent_error_check_no_auth: 'Сервер адказаў на запыт, але не ўдалося прайсці аўтарызацыю',
-    settings_interface_card_cover: 'Паказаць вокладку',
-    title_upcoming_episodes: 'Бліжэйшыя выхады эпізодаў',
-    settings_rest_cache_images: 'Кэш малюнкаў',
-    settings_rest_cache_images_descr: 'Кэшаваць постэры і фоны ў лакальнае сховішча',
-    settings_player_rewind_title: 'Перамотка',
-    settings_player_rewind_descr: 'Інтэрвал перамоткі ў секундах',
-    settings_interface_card_reactions: 'Паказаць рэакцыі',
-    title_look: 'Гляджу',
-    title_scheduled: 'Запланавана',
-    title_viewed: 'Прагледжана',
-    title_thrown: 'Выбрасена',
-    title_reactions: 'Рэакцыі',
-    reactions_none: 'Няма рэакцый',
-    reactions_fire: 'Выдатна',
-    reactions_nice: 'Добра',
-    reactions_think: 'Цікава',
-    reactions_bore: 'Нудна',
-    reactions_shit: 'Пагана',
-    reactions_ready: 'Вы ўжо пакінулі рэакцыю',
-    settings_player_launch_trailers: 'Плэер для трэйлераў',
-    title_continued: 'Працяг будзе',
-    title_language_short: 'Мова'
-  };
-
-  var zh = {
-    lang_choice_title: '欢迎',
-    lang_choice_subtitle: '选择你的语言',
-    close_app_modal: '您确定要离开该应用程序吗？',
-    back: '后退',
-    more: '更多',
-    ready: '准备好',
-    show_more: '显示更多',
-    more_results: '显示更多结果',
-    loading: '加载中',
-    nofind_movie: '找不到电影。',
-    noname: '无标题',
-    nochoice: '未选择',
-    cancel: '取消',
-    confirm: '我确认',
-    sure: '你确定吗？',
-    nodata: '无数据',
-    search: '搜索',
-    search_input: '输入文本',
-    search_empty: '搜索历史为空。',
-    search_delete: '左 - 删除',
-    search_start_typing: '开始输入搜索文本。',
-    search_searching: '搜索中...',
-    search_start: '开始搜索',
-    search_nofound: '根据您的要求没有找到相关内容。',
-    full_genre: '类型',
-    full_production: '出品公司',
-    full_date_of_release: '发布日期',
-    full_budget: '预算',
-    full_countries: '国家',
-    full_like: '喜欢',
-    full_torrents: '种子',
-    full_trailers: '预告片',
-    full_detail: '详细',
-    full_notext: '无描述。',
-    full_series_release: '系列发布',
-    full_next_episode: '下一集',
-    full_episode_days_left: '剩余天数',
-    full_trailer_official: '官方',
-    full_trailer_no_official: '非正式',
-    full_season: '季',
-    full_episode: '剧集',
-    full_directing: '导演',
-    settings_cub_sync: '同步',
-    settings_cub_sync_descr: '与 CUB 服务同步：同步您的书签、浏览历史、标签和时间码。网站：www.cub.watch',
-    settings_cub_account: '帐户',
-    settings_cub_logged_in_as: '登录身份',
-    settings_cub_profile: '个人资料',
-    settings_cub_sync_btn: '同步',
-    settings_cub_sync_btn_descr: '将本地书签保存到 CUB 帐户',
-    settings_cub_backup: '备份',
-    settings_cub_backup_descr: '保存或加载备份数据',
-    settings_cub_logout: '注销',
-    settings_cub_signin: '授权',
-    settings_cub_not_specified: '未指定',
-    settings_cub_password: '密码',
-    settings_cub_status: '状态',
-    settings_cub_backup_import: '导入',
-    settings_cub_backup_export: '导出',
-    settings_cub_sync_filters: '筛选同步',
-    settings_cub_sync_calendar: '日历同步',
-    settings_cub_sync_quality: '标记同步（质量）',
-    settings_cub_sync_search: '检索历史同步',
-    settings_cub_sync_recomends: '推荐同步',
-    settings_cub_sync_timecodes: '时间码同步',
-    settings_input_links: '收藏夹',
-    settings_interface_type: '精简版',
-    settings_interface_size: '界面大小',
-    settings_interface_background: '背景',
-    settings_interface_background_use: '显示背景',
-    settings_interface_background_type: '背景类型',
-    settings_interface_performance: '性能',
-    settings_interface_animation: '动画',
-    settings_interface_animation_descr: '卡片和内容的动画',
-    settings_interface_attenuation: '淡入淡出',
-    settings_interface_attenuation_descr: '从下方和上方平滑淡入卡片',
-    settings_interface_scroll: '滚动类型',
-    settings_interface_view_card: '卡片视图类型',
-    settings_interface_view_card_descr: '当您滚动时，卡片将逐渐加载或全部加载',
-    settings_interface_lang: '界面语言',
-    settings_interface_lang_reload: '需要重启应用，点击“确定”重启。',
-    settings_main_account: '帐户',
-    settings_main_interface: '界面',
-    settings_main_player: '播放器',
-    settings_main_parser: '解析器',
-    settings_main_torrserver: 'TorrServer',
-    settings_main_plugins: '扩展',
-    settings_main_rest: '其他',
-    settings_rest_start: '起始页',
-    settings_rest_start_descr: '启动时要启动的页面',
-    settings_rest_source: '源',
-    settings_rest_source_use: '主要来源',
-    settings_rest_source_descr: '从何处获取有关电影的信息',
-    settings_rest_tmdb_lang: '从 TMDB 显示数据的语言',
-    settings_rest_tmdb_prox: '代理 TMDB',
-    settings_rest_tmdb_prox_auto: '自动启用代理',
-    settings_rest_tmdb_posters: 'TMDB 海报的分辨率',
-    settings_rest_screensaver: '屏幕保护程序',
-    settings_rest_screensaver_use: '空闲时启动屏保',
-    settings_rest_screensaver_type: '屏幕保护类型',
-    settings_rest_helper: '提示',
-    settings_rest_helper_use: '显示提示',
-    settings_rest_helper_reset: '再次显示提示',
-    settings_rest_pages: '要在内存中保留多少页',
-    settings_rest_pages_descr: '将页面保持在您离开它们的状态',
-    settings_rest_time: '移位时间',
-    settings_rest_navigation: '导航类型',
-    settings_rest_keyboard: '键盘类型',
-    settings_rest_device: '设备名称',
-    settings_rest_device_placeholder: '例如：我的Lampa',
-    settings_rest_cache: '清除缓存',
-    settings_rest_cache_descr: '所有设置和数据将被清除',
-    settings_rest_tmdb_example: '例如：',
-    settings_rest_tmdb_api_descr: '获取数据',
-    settings_rest_tmdb_image_descr: '获取图像',
-    settings_rest_card_quality: '质量标志',
-    settings_rest_card_quality_descr: '在卡片上显示质量标记',
-    settings_rest_card_episodes: '剧集标记',
-    settings_rest_card_episodes_descr: '在卡片上显示剧集标记',
-    settings_parser_use: '使用解析器',
-    settings_parser_use_descr: '在此，您同意接受所有使用责任用于查看 种子和在线内容的公共链接。',
-    settings_parser_type: '种子的解析器类型',
-    settings_parser_jackett_placeholder: '例如：192.168.x',
-    settings_parser_jackett_link: '链接',
-    settings_parser_jackett_link_descr: '提供Jackett脚本的链接',
-    settings_parser_jackett_key_placeholder: '例如：sa0sk83d..',
-    settings_parser_jackett_key: 'Api key',
-    settings_parser_jackett_key_descr: '位于Jackett',
-    settings_parser_torlook_type: 'TorLook网站解析方法',
-    settings_parser_scraperapi_placeholder: '例如：scraperapi.com',
-    settings_parser_scraperapi_link: '链接到站点解析器',
-    settings_parser_scraperapi_descr: '在网站 scraperapi.com 上注册，输入链接 api.scraperapi.com?api_key=...&url={q}<br>W41.torlook.info 将发送到 {q}',
-    settings_parser_search: '搜索',
-    settings_parser_search_descr: '用什么语言搜索？',
-    settings_parser_in_search: '在搜索中显示种子结果',
-    settings_parser_in_search_descr: '显示搜索结果？',
-    settings_parser_timeout_title: '解析器超时',
-    settings_parser_timeout_descr: '等待服务器响应的时间（以秒为单位）',
-    settings_player_type: '播放器类型',
-    settings_player_type_descr: '用哪个播放器',
-    settings_player_iptv_type: 'IPTV播放器类型',
-    settings_player_iptv_type_descr: '哪个播放器播放IPTV频道',
-    settings_player_reset: '重置默认播放器',
-    settings_player_reset_descr: '重置应用程序中选定的Android播放器',
-    settings_player_path: '播放器路径',
-    settings_player_path_descr: '指定播放器.exe的路径',
-    settings_player_normalization: '声音标准化',
-    settings_player_normalization_descr: '将声音标准化为一级，降低响亮的声音并增强安静的',
-    settings_player_next_episode: '下一集',
-    settings_player_next_episode_descr: '当前一集结束后自动切换到下一个系列',
-    settings_player_timecode: '时间码',
-    settings_player_timecode_descr: '从上次播放的位置继续',
-    settings_player_scale: '缩放方法',
-    settings_player_scale_descr: '如何计算视频缩放',
-    settings_player_subs: '字幕',
-    settings_player_subs_use: '启用',
-    settings_player_subs_use_descr: '开始视频后总是打开字幕',
-    settings_player_subs_size: '大小',
-    settings_player_subs_size_descr: '字幕屏幕大小',
-    settings_player_subs_stroke_use: '使用边缘',
-    settings_player_subs_stroke_use_descr: '字幕将用黑色勾勒以提高可读性',
-    settings_player_subs_backdrop_use: '使用底衬',
-    settings_player_subs_backdrop_use_descr: '字幕将显示在半透明背景上以提高可读性',
-    settings_player_quality: '默认视频质量',
-    settings_player_quality_descr: '首选视频质量观看',
-    settings_player_hls_title: '处理.m3u8流媒体',
-    settings_player_hls_descr: '如果您不知道为什么，请不要修改此参数。',
-    settings_plugins_notice: '要应用插件，你需要重新启动应用程序',
-    settings_plugins_add: '添加插件',
-    settings_plugins_add_descr: '要删除添加的插件，请按住或双击其上的（确定）键',
-    settings_plugins_install: '安装插件',
-    settings_plugins_install_descr: '从可用列表中安装插件',
-    settings_server_link: '使用链接',
-    settings_server_links: '链接',
-    settings_server_placeholder: '例如：192.168.X',
-    settings_server_link_one: '主链接',
-    settings_server_link_one_descr: '指定TorrServer脚本的主链接',
-    settings_server_link_two: '额外链接',
-    settings_server_link_two_descr: '提供TorrServer脚本的额外链接',
-    settings_server_additionally: '高级',
-    settings_server_client: '内置客户端',
-    settings_server_client_descr: '使用内置的TorrServe JS客户端，否则系统启动。',
-    settings_server_base: '保存到数据库',
-    settings_server_base_descr: 'torrent 将被添加到 TorrServer 数据库',
-    settings_server_preload: '使用预取缓冲区',
-    settings_server_preload_descr: '播放前等待TorrServer的预加载缓冲区填满',
-    settings_server_auth: '授权',
-    settings_server_password_use: '密码登录',
-    settings_server_login: '登录',
-    settings_server_password: '密码',
-    settings_server_not_specified: '未指定',
-    torent_nohash_reasons: '原因',
-    torent_nohash_reason_one: 'TorServer 无法下载 torrent 文件',
-    torent_nohash_reason_two: '来自 TorServer 的回复',
-    torent_nohash_reason_three: '链接',
-    torent_nohash_do: '怎么办？',
-    torent_nohash_do_one: '检查是否正确配置了 Jackett',
-    torent_nohash_do_two: '私人来源可能没有提供文件的链接',
-    torent_nohash_do_three: '确保 Jackett 可以下载文件也是',
-    torent_nohash_do_four: '写信给我们的电报群组：@lampa_group',
-    torent_nohash_do_five: '指定哪部电影，哪个发行版，如果可能，请注明发行版的照片',
-    torrent_error_text: '无法连接到 TorrServe。让我们快速浏览可能的问题列表并检查所有内容。',
-    torrent_error_step_1: 'TorrServe 是否正在运行',
-    torrent_error_step_2: '动态 IP',
-    torrent_error_step_3: '协议和端口',
-    torrent_error_step_4: '防病毒阻止',
-    torrent_error_step_5: '检查可用性',
-    torrent_error_step_6: '仍然无法工作',
-    torrent_error_info_1: '确保您已在安装 TorrServe 的设备上启动。',
-    torrent_error_info_2: '一个常见的错误，带有 TorrServe 的设备的 IP 地址已更改。确保您输入的 IP 地址 - {ip} - 与安装了 TorrServe 的设备的地址匹配。',
-    torrent_error_info_3: '要连接到 TorrServe,地址开头必须指定协议http://，结尾指定端口：8090。确保IP地址后面有一个端口，你当前的地址是{ip}',
-    torrent_error_info_4: '频繁出现，杀毒或防火墙可以通过 IP 地址阻止访问，尝试禁用防病毒和防火墙。',
-    torrent_error_info_5: '在同一网络上的任何其他设备上，在浏览器中打开 {ip} 地址并检查 TorrServe Web 界面是否可用。',
-    torrent_error_info_6: '如果在所有检查后仍然出现连接错误，请尝试重新启动 TorrServe 和 Internet 适配器。',
-    torrent_error_info_7: '如果问题仍然存在，请使用文本写入 Telegram 组@lampa_group（Lampa 在所有检查后未连接到 TorrServe ,当前地址是{ip})',
-    torrent_error_start: '开始验证',
-    torrent_error_nomatrix: '验证Matrix版本失败',
-    torrent_error_made: '执行',
-    torrent_error_from: '片长',
-    torrent_error_next: '进一步',
-    torrent_error_complite: '要完成',
-    torrent_error_connect: '连接错误',
-    torrent_install_need: '需要 TorrServe',
-    torrent_install_text: 'TorrServe 是一个允许您在线查看 torrent 文件内容的应用程序。<br><br>有关安装的更多详细信息可以在下面的电报组中找到。',
-    torrent_install_contact: '电报组',
-    torrent_item_bitrate: '比特率',
-    torrent_item_seeds: '种子',
-    torrent_item_grabs: 'Leechers',
-    torrent_item_mb: 'Mbps',
-    torrent_serial_episode: '剧集',
-    torrent_serial_season: '季',
-    torrent_serial_date: '退出',
-    torrent_get_magnet: '请求磁力链接',
-    torrent_remove_title: '删除',
-    torrent_remove_descr: '种子将从您的列表中删除',
-    torrent_parser_any_one: '任何',
-    torrent_parser_any_two: '任何',
-    torrent_parser_no_choice: '未选择',
-    torrent_parser_yes: '是',
-    torrent_parser_no: '否',
-    torrent_parser_quality: '质量',
-    torrent_parser_subs: '字幕',
-    torrent_parser_voice: '翻译',
-    torrent_parser_tracker: '跟踪器',
-    torrent_parser_year: '年份',
-    torrent_parser_season: '季',
-    torrent_parser_sort_by_seeders: '按种子数',
-    torrent_parser_sort_by_size: '按大小',
-    torrent_parser_sort_by_name: '按名称',
-    torrent_parser_sort_by_tracker: '按来源',
-    torrent_parser_sort_by_date: '按日期',
-    torrent_parser_sort_by_viewed: '已查看',
-    torrent_parser_voice_dubbing: '配音',
-    torrent_parser_voice_polyphonic: '复音',
-    torrent_parser_voice_two: '双声部',
-    torrent_parser_voice_amateur: '业余',
-    torrent_parser_reset: '重置筛选',
-    torrent_parser_empty: '获取结果失败',
-    torrent_parser_no_hash: '获取HASH失败',
-    torrent_parser_added_to_mytorrents: '添加到“我的种子”',
-    torrent_parser_add_to_mytorrents: '添加到“我的种子”',
-    torrent_parser_label_title: '标记',
-    torrent_parser_label_descr: '用旗帜标记（查看)',
-    torrent_parser_label_cancel_title: '取消选中',
-    torrent_parser_label_cancel_descr: '从分发中删除标记（已查看）',
-    torrent_parser_timeout: '超时',
-    torrent_parser_nofiles: '提取合适文件失败',
-    torrent_parser_set_link: '指定解析链接',
-    torrent_parser_request_error: '请求错误',
-    torrent_parser_magnet_error: '获取磁力链接失败',
-    torrent_parser_torlook_fallback_search_notification: 'Jackett 解析器不可用或连接设置不正确。 正在搜索 Torlook...',
-    torrent_parser_no_responce: '解析器没有响应请求',
-    about_text: '应用完全免费，使用公共链接获取有关视频、新版本、热门电影等的信息。所有可用信息仅用于教育目的，该应用程序不使用自己的服务器分发信息。',
-    about_channel: '我们的频道',
-    about_group: '组',
-    about_version: '版本',
-    about_donate: '捐赠',
-    title_language: '原始语言',
-    title_watched: '你看过',
-    title_settings: '设置',
-    title_collections: '合集',
-    title_company: '公司',
-    title_actors: '演员',
-    title_actor: '演员',
-    title_actress: '女演员',
-    title_person: '个人',
-    title_comments: '评论',
-    title_torrents: '种子',
-    title_trailers: '预告片',
-    title_watch: '观看',
-    title_error: '错误',
-    title_links: '链接',
-    title_choice: '选择',
-    title_main: '首页',
-    title_book: '书签',
-    title_like: '喜欢',
-    title_wath: '稍后',
-    title_history: '浏览历史',
-    title_mytorrents: '我的种子',
-    title_last: '最后',
-    title_action: '动作',
-    title_producer: '制片人',
-    title_collection: '合集',
-    title_recomendations: '推荐',
-    title_similar: '类似',
-    title_about: '关于应用程序',
-    title_timetable: '日历',
-    title_relises: '数字版本',
-    title_catalog: '目录',
-    title_category: '类别',
-    title_parser: '解析器',
-    title_type: '类型',
-    title_rating: '评级',
-    title_country: '国家',
-    title_year: '年份',
-    title_genre: '类型',
-    title_filter: '筛选',
-    title_notice: '通知',
-    title_files: '文件',
-    title_now_watch: '正在观看',
-    title_latest: '最后添加',
-    title_continue: '继续浏览',
-    title_recomend_watch: '我们推荐看',
-    title_new_episodes: '新剧集',
-    title_popular: '热门',
-    title_popular_movie: '热门电影',
-    title_popular_tv: '热门电视节目',
-    title_new_this_year: '今年新',
-    title_hight_voite: '高度评价',
-    title_new: '新',
-    title_trend_day: '今日趋势',
-    title_trend_week: '本周趋势',
-    title_upcoming: '在电影院观看',
-    title_top_movie: '热门电影',
-    title_top_tv: '热门系列',
-    title_tv_today: '今天播出',
-    title_this_week: '本周',
-    title_in_top: '热门',
-    title_out: '退出',
-    title_out_confirm: '是的，退出',
-    title_continue_two: '继续',
-    title_choice_language: '选择一种语言',
-    title_subscribe: '订阅',
-    title_subscribes: '订阅',
-    title_unsubscribe: '退订',
-    subscribe_success: '您已成功订阅',
-    subscribe_error: '订阅时出错，请稍后重试',
-    subscribe_noinfo: '检索信息失败，请稍后重试',
-    company_headquarters: '总部',
-    company_homepage: '网站',
-    company_country: '国家',
-    country_ad: '安道尔',
-    country_ae: '阿联酋',
-    country_af: '阿富汗',
-    country_al: '阿尔巴尼亚',
-    country_am: '亚美尼亚',
-    country_ao: '安哥拉',
-    country_ar: '阿根廷',
-    country_at: '奥地利',
-    country_au: '澳大利亚',
-    country_aw: '阿鲁巴',
-    country_az: '阿塞拜疆',
-    country_bа: '波黑',
-    country_bd: '孟加拉国',
-    country_be: '比利时',
-    country_bg: '保加利亚',
-    country_bh: '巴林',
-    country_bi: '布隆迪',
-    country_bj: '贝宁',
-    country_bo: '玻利维亚',
-    country_br: '巴西',
-    country_bs: '巴哈马',
-    country_bt: '不丹',
-    country_bw: '博茨瓦纳',
-    country_by: '白俄罗斯',
-    country_ca: '加拿大',
-    country_ch: '瑞士',
-    country_cl: '智利',
-    country_cm: '喀麦隆',
-    country_cn: '中国',
-    country_co: '哥伦比亚',
-    country_cr: '哥斯达黎加',
-    country_cu: '古巴',
-    country_cv: '佛得角',
-    country_cy: '塞浦路斯',
-    country_cz: '捷克',
-    country_de: '德国',
-    country_dj: '吉布提',
-    country_dk: '丹麦',
-    country_do: '多米尼加',
-    country_dz: '阿尔及利亚',
-    country_ec: '厄瓜多尔',
-    country_ee: '爱沙尼亚',
-    country_eg: '埃及',
-    country_es: '西班牙',
-    country_et: '埃塞俄比亚',
-    country_fi: '芬兰',
-    country_fo: '法罗群岛',
-    country_fr: '法国',
-    country_ga: '加蓬',
-    country_gb: '英国',
-    country_ge: '格鲁吉亚',
-    country_gh: '加纳',
-    country_gl: '格陵兰',
-    country_gp: '瓜德罗普',
-    country_gr: '希腊',
-    country_gt: '危地马拉',
-    country_hk: '香港',
-    country_hr: '克罗地亚',
-    country_ht: '海地',
-    country_hu: '匈牙利',
-    country_id: '印度尼西亚',
-    country_ie: '爱尔兰',
-    country_il: '以色列',
-    country_in: '印度',
-    country_iq: '伊拉克',
-    country_ir: '伊朗',
-    country_is: '冰岛',
-    country_it: '意大利',
-    country_jm: '牙买加',
-    country_jo: '约旦',
-    country_jp: '日本',
-    country_ke: '肯尼亚',
-    country_kg: '吉尔吉斯斯坦',
-    country_kh: '柬埔寨',
-    country_kp: '朝鲜',
-    country_kr: '韩国',
-    country_kz: '哈萨克斯坦',
-    country_kw: '科威特',
-    country_la: '老挝',
-    country_lb: '黎巴嫩',
-    country_li: '列支敦士登',
-    country_lk: '斯里兰卡',
-    country_lr: '利比里亚',
-    country_lt: '立陶宛',
-    country_lu: '卢森堡',
-    country_lv: '拉脱维亚',
-    country_ly: '利比亚',
-    country_ma: '摩洛哥',
-    country_mc: '摩纳哥',
-    country_md: '摩尔多瓦',
-    country_me: '黑山',
-    country_mk: '北马其顿',
-    country_mm: '缅甸',
-    country_mn: '蒙古',
-    country_mo: '澳门',
-    country_mt: '马耳他',
-    country_mu: '毛里求斯',
-    country_mv: '马尔代夫',
-    country_mw: '马拉维',
-    country_mx: '墨西哥',
-    country_my: '马来西亚',
-    country_mz: '莫桑比克',
-    country_na: '纳米比亚',
-    country_ne: '尼日尔',
-    country_ng: '尼日利亚',
-    country_ni: '尼加拉瓜',
-    country_nl: '荷兰',
-    country_no: '挪威',
-    country_np: '尼泊尔',
-    country_nz: '新西兰',
-    country_om: '阿曼',
-    country_pa: '巴拿马',
-    country_pe: '秘鲁',
-    country_pg: '巴布亚新几内亚',
-    country_ph: '菲律宾',
-    country_pk: '巴基斯坦',
-    country_pl: '波兰',
-    country_pr: '波多黎各',
-    country_ps: '巴勒斯坦',
-    country_pt: '葡萄牙',
-    country_py: '巴拉圭',
-    country_qa: '卡塔尔',
-    country_ro: '罗马尼亚',
-    country_rs: '塞尔维亚',
-    country_ru: '俄罗斯',
-    country_rw: '卢旺达',
-    country_sa: '沙特阿拉伯',
-    country_sd: '苏丹',
-    country_se: '瑞典',
-    country_sg: '新加坡',
-    country_si: '斯洛文尼亚',
-    country_sk: '斯洛伐克',
-    country_sn: '塞内加尔',
-    country_su: '苏联',
-    country_sv: '萨尔瓦多',
-    country_sy: '叙利亚',
-    country_th: '泰国',
-    country_tj: '塔吉克斯坦',
-    country_tm: '土库曼斯坦',
-    country_tn: '突尼斯',
-    country_tr: '土耳其',
-    country_tw: '台湾',
-    country_tz: '坦桑尼亚',
-    country_ua: '乌克兰',
-    country_ug: '乌干达',
-    country_us: '美国',
-    country_uy: '乌拉圭',
-    country_uz: '乌兹别克斯坦',
-    country_ve: '委内瑞拉',
-    country_vn: '越南',
-    country_ws: '萨摩亚',
-    country_xk: '科索沃',
-    country_ye: '也门',
-    country_yu: '南斯拉夫',
-    country_za: '南非',
-    country_zm: '赞比亚',
-    country_zw: '津巴布韦',
-    filter_clarify: '优化',
-    filter_clarify_two: '优化搜索',
-    filter_set_name: '指定标题',
-    filter_sorted: '排序',
-    filter_filtred: '筛选',
-    filter_any: '任何',
-    filter_combinations: '组合',
-    filter_alt_names: '其他名称',
-    filter_rating_from: '从',
-    filter_rating_to: '到',
-    filter_genre_ac: '动作',
-    filter_genre_ad: '冒险',
-    filter_genre_mv: '卡通',
-    filter_genre_cm: '喜剧',
-    filter_genre_cr: '犯罪',
-    filter_genre_dc: '纪录片',
-    filter_genre_dr: '戏剧',
-    filter_genre_fm: '首页',
-    filter_genre_fe: '奇幻',
-    filter_genre_hi: '故事',
-    filter_genre_ho: '恐怖',
-    filter_genre_mu: '音乐',
-    filter_genre_de: '侦探',
-    filter_genre_md: '情节剧',
-    filter_genre_fa: '小说',
-    filter_genre_tv: '电视电影',
-    filter_genre_tr: '惊悚片',
-    filter_genre_mi: '军事',
-    filter_genre_ve: '西部',
-    filter_genre_aa: '动作与冒险',
-    filter_genre_ch: '儿童',
-    filter_genre_nw: '新闻',
-    filter_genre_rs: '真人秀',
-    filter_genre_hf: '科幻与奇幻',
-    filter_genre_op: '肥皂剧',
-    filter_genre_tc: '脱口秀',
-    filter_genre_mp: '战争与政治',
-    filter_lang_af: '南非荷兰语',
-    filter_lang_ar: '阿拉伯语',
-    filter_lang_az: '阿塞拜疆语',
-    filter_lang_ba: '巴什基尔语',
-    filter_lang_be: '白俄罗斯语',
-    filter_lang_bg: '保加利亚语',
-    filter_lang_bn: '孟加拉语',
-    filter_lang_bs: '波斯尼亚语',
-    filter_lang_ca: '加泰罗尼亚语',
-    filter_lang_ce: '车臣语',
-    filter_lang_cs: '捷克语',
-    filter_lang_da: '丹麦语',
-    filter_lang_de: '德语',
-    filter_lang_el: '希腊语',
-    filter_lang_en: '英语',
-    filter_lang_es: '西班牙语',
-    filter_lang_et: '爱沙尼亚语',
-    filter_lang_fa: '波斯语',
-    filter_lang_fi: '芬兰语',
-    filter_lang_fr: '法语',
-    filter_lang_ga: '爱尔兰语',
-    filter_lang_gl: '加利西亚语',
-    filter_lang_gn: '瓜拉尼语',
-    filter_lang_he: '希伯来语',
-    filter_lang_hi: '印地语',
-    filter_lang_hr: '克罗地亚语',
-    filter_lang_hu: '匈牙利语',
-    filter_lang_hy: '亚美尼亚语',
-    filter_lang_id: '印度尼西亚语',
-    filter_lang_is: '冰岛语',
-    filter_lang_it: '意大利语',
-    filter_lang_ja: '日语',
-    filter_lang_ka: '格鲁吉亚语',
-    filter_lang_kk: '哈萨克语',
-    filter_lang_ko: '韩语',
-    filter_lang_ks: '克什米尔语',
-    filter_lang_ku: '库尔德语',
-    filter_lang_ky: '吉尔吉斯语',
-    filter_lang_lt: '立陶宛语',
-    filter_lang_lv: '拉脱维亚语',
-    filter_lang_mi: '毛利语',
-    filter_lang_mk: '马其顿语',
-    filter_lang_mn: '蒙古语',
-    filter_lang_mo: '摩尔多瓦语',
-    filter_lang_mt: '马耳他语',
-    filter_lang_ne: '尼泊尔语',
-    filter_lang_nl: '荷兰语',
-    filter_lang_no: '挪威语',
-    filter_lang_pa: '旁遮普语',
-    filter_lang_pl: '波兰语',
-    filter_lang_ps: '普什图语',
-    filter_lang_pt: '葡萄牙语',
-    filter_lang_ro: '罗马尼亚语',
-    filter_lang_ru: '俄语',
-    filter_lang_si: '僧伽罗语',
-    filter_lang_sk: '斯洛伐克语',
-    filter_lang_sl: '斯洛文尼亚语',
-    filter_lang_sm: '萨摩亚语',
-    filter_lang_so: '索马里语',
-    filter_lang_sq: '阿尔巴尼亚语',
-    filter_lang_sr: '塞尔维亚语',
-    filter_lang_sv: '瑞典语',
-    filter_lang_sw: '斯瓦希里语',
-    filter_lang_ta: '泰米尔语',
-    filter_lang_tg: '塔吉克语',
-    filter_lang_th: '泰语',
-    filter_lang_tk: '土库曼语',
-    filter_lang_tr: '土耳其语',
-    filter_lang_tt: '鞑靼语',
-    filter_lang_ur: '乌尔都语',
-    filter_lang_uk: '乌克兰语',
-    filter_lang_uz: '乌兹别克语',
-    filter_lang_vi: '越南语',
-    filter_lang_yi: '意第绪语',
-    filter_lang_zh: '中文',
-    empty_title: '空',
-    empty_text: '没有找到适合您的筛选，请优化您的筛选。',
-    empty_title_two: '此处为空',
-    empty_text_two: '列表当前为空。',
-    menu_main: '首页',
-    menu_movies: '电影',
-    menu_tv: '剧集',
-    menu_catalog: '目录',
-    menu_filter: '筛选',
-    menu_collections: '合集',
-    menu_relises: '发布',
-    menu_anime: '动漫',
-    menu_bookmark: '书签',
-    menu_like: '喜欢',
-    menu_time: '稍后',
-    menu_history: '历史',
-    menu_timeline: '日历',
-    menu_torrents: '种子',
-    menu_settings: '设置',
-    menu_about: '关于',
-    menu_console: '日志',
-    menu_multmovie: '卡通',
-    menu_multtv: '动画系列',
-    plugins_catalog_work: '工作插件',
-    plugins_catalog_work_descr: '完全在Lampa中工作的插件。',
-    plugins_catalog_popular: '用户中流行的插件',
-    plugins_catalog_popular_descr: '从未知来源安装可能导致应用程序无法正常工作。',
-    plugins_online: '在线查看',
-    plugins_check_fail: '插件功能测试失败。但这并不代表插件不起作用。重新加载应用看看插件是否在加载中。',
-    plugins_need_reload: '要应用插件，需要重新启动应用程序',
-    plugins_install: '安装',
-    plugins_install_ready: '这个插件已经安装了。',
-    plugins_installed: '安装ations',
-    plugins_load_from: '从CUB中加载',
-    plugins_ok_for_check: '点击(OK)测试插件',
-    plugins_no_loaded: '加载应用时，有些插件无法安装已加载',
-    time_viewed: '看至',
-    time_from: '片长',
-    time_reset: '重置时间码',
-    settings_clear_cache: '缓存和数据清除',
-    settings_user_links: '自定义链接',
-    settings_for_local: '对于本地 TorrServer',
-    settings_add: '添加',
-    settings_remove: '删除',
-    settings_this_value: '当前值',
-    settings_added: '添加',
-    settings_removed: '已删除',
-    settings_param_player_inner: 'Lampa',
-    settings_param_player_outside: '外部',
-    settings_param_yes: '是',
-    settings_param_no: '否',
-    settings_param_interface_size_small: '较小',
-    settings_param_interface_size_normal: '正常',
-    settings_param_interface_size_bigger: '更多的',
-    settings_param_poster_quality_low: '低',
-    settings_param_poster_quality_average: '中',
-    settings_param_poster_quality_high: '高',
-    settings_param_parse_directly: '直接',
-    settings_param_parse_api: '通过网站 API',
-    settings_param_background_complex: '复杂',
-    settings_param_background_simple: '简单',
-    settings_param_background_image: '图片',
-    settings_param_link_use_one: '主要',
-    settings_param_link_use_two: '额外',
-    settings_param_subtitles_size_small: '小',
-    settings_param_subtitles_size_normal: '普通',
-    settings_param_subtitles_size_bigger: '大',
-    settings_param_screensaver_nature: '自然',
-    settings_param_torrent_lang_orig: '原始',
-    settings_param_torrent_lang_ru: '俄语',
-    settings_param_player_timecode_again: '重新开始',
-    settings_param_player_timecode_continue: '继续',
-    settings_param_player_timecode_ask: '询问',
-    settings_param_player_scale_method: '计算',
-    settings_param_player_hls_app: 'Systemic',
-    settings_param_player_hls_js: 'Program',
-    settings_param_card_view_load: '预加载',
-    settings_param_card_view_all: '显示全部',
-    settings_param_navigation_remote: '遥控器',
-    settings_param_navigation_mouse: '用鼠标遥控',
-    settings_param_keyboard_lampa: 'Lampa',
-    settings_param_keyboard_system: '系统',
-    helper_keyboard: '输入数值后按"返回"键保存',
-    helper_torrents: '按住(OK)键调出上下文菜单',
-    helper_cleared: '成功，将再次显示工具提示。',
-    helper_torrents_view: '按住（OK）键重置时间码并显示菜单',
-    fav_sync_title: '书签同步',
-    fav_sync_text: '您最喜欢的书签。连接同步并在任何设备上查看。<br><br>为此，请在网站 www.cub.watch 上注册，创建个人资料并登录应用程序.',
-    fav_sync_site: '网站',
-    fav_remove_title: '从历史记录中删除',
-    fav_remove_descr: '删除所选卡片',
-    fav_clear_title: '清除历史记录',
-    fav_clear_descr: '从历史记录中删除所有卡片',
-    fav_clear_label_title: '清除标签',
-    fav_clear_label_descr: '清除查看标签',
-    fav_clear_time_title: '清除时间码',
-    fav_clear_time_descr: '清除所有时间码',
-    fav_label_cleared: '清除标记',
-    fav_time_cleared: '清除时间码',
-    timetable_empty: '此部分将显示新剧集的发布日期。',
-    player_quality: '质量',
-    player_tracks: '音轨',
-    player_disabled: '已禁用',
-    player_unknown: '未知',
-    player_subs: '字幕',
-    player_size_default_title: '默认',
-    player_size_default_descr: '默认视频大小',
-    player_size_cover_title: '扩展',
-    player_size_cover_descr: '将视频扩展到全屏',
-    player_size_fill_title: '填充',
-    player_size_fill_descr: '使视频适合全屏',
-    player_size_s115_title: '缩放 115%',
-    player_size_s115_descr: '将视频放大 115%',
-    player_size_s130_title: '缩放 130%',
-    player_size_s130_descr: '将视频放大 130%',
-    player_size_v115_title: '垂直 115%',
-    player_size_v115_descr: '放大视频 115%',
-    player_size_v130_title: '垂直 130%',
-    player_size_v130_descr: '将视频放大 130%',
-    player_video_size: '视频大小',
-    player_playlist: '播放列表',
-    player_error_one: '视频解码失败',
-    player_error_two: '视频未找到或损坏',
-    player_start_from: '继续浏览',
-    player_not_found: '找不到播放器',
-    player_lauch: '启动播放器',
-    player_speed_default_title: '普通',
-    player_speed_two_descr: '无声播放',
-    player_video_speed: '播放速度',
-    player_share_title: '分享',
-    player_share_descr: '在另一台设备上播放此视频',
-    player_normalization_power_title: '标准化功率',
-    player_normalization_smooth_title: '标准化速度',
-    player_normalization_step_low: '低的',
-    player_normalization_step_medium: '平均',
-    player_normalization_step_hight: '高',
-    player_youtube_no_played: '抱歉，该视频在您所在的地区不可用，可能已被屏蔽或删除。',
-    player_youtube_start_play: '要开始播放视频，请单击“播放”按钮',
-    broadcast_open: '在另一台设备上打开卡片',
-    broadcast_play: '选择要观看的设备',
-    card_new_episode: '新系列',
-    card_book_remove: '从书签中删除',
-    card_book_add: '到书签',
-    card_book_descr: '查看菜单（书签）',
-    card_like_remove: '从收藏夹中删除',
-    card_like_add: '喜欢',
-    card_like_descr: '查看菜单（喜欢）',
-    card_wath_remove: '从预期中删除',
-    card_wath_add: '稍后观看',
-    card_wath_descr: '查看菜单（稍后）',
-    card_history_remove: '从历史记录中删除',
-    card_history_add: '走进历史',
-    card_history_descr: '查看在菜单（历史）中',
-    keyboard_listen: '说话，我在听...',
-    keyboard_nomic: '没有麦克风访问权限',
-    notice_new_quality: '新质量可用',
-    notice_quality: '质量',
-    notice_new_episode: '新系列',
-    notice_none: '您还没有任何通知，请在 <b>www.cub.watch</b> 注册关注新剧集和发布。',
-    notice_in_quality: 'As',
-    notice_none_account: '你还没有任何通知，收藏该系列并等待新剧集的通知。',
-    notice_none_system: '您目前没有任何通知。 当有新通知可用时，我们一定会通知您。',
-    copy_link: '复制视频链接',
-    copy_secuses: '链接复制到剪贴板',
-    copy_error: '复制链接时出错',
-    account_sync_to_profile: '所有书签将被移动到个人资料',
-    account_sync_secuses: '所有书签已成功转移',
-    account_profiles: '个人资料',
-    account_profiles_empty: '无法获取个人资料列表',
-    account_authorized: '已授权',
-    account_logged_in: '您已登录',
-    account_login_failed: '登录失败',
-    account_login_wait: '等待登录',
-    account_profile_main: '常规',
-    account_export_secuses: '导出成功',
-    account_export_fail: '导出错误',
-    account_import_secuses: '导入成功',
-    account_import_fail: '导入错误',
-    account_imported: '导入',
-    account_reload_after: '5 秒后重启',
-    account_create: '使用 CUB 帐户发现更多机会。 在 <span class="account-modal__site">www.cub.watch</span> 注册并获得同步您的书签、时间码和其他 CUB 帐户功能的权限。',
-    account_premium: '使用 CUB Premium 帐户发现更多功能。 增加对服务附加功能的限制和访问权限。',
-    account_premium_more: '了解有关 CUB 高级版的更多信息',
-    account_code_enter: '请输入六位验证码',
-    account_code_error: '可能您输入了错误或已过期的验证码',
-    account_code_wrong: '可能您输入了错误的格式',
-    account_code_where: '请前往<span class="account-add-device__site">cub.watch/add</span>网站，并输入该网站上提供的验证码。',
-    account_code_input: '输入验证码',
-    settings_cub_signin_button: '登录',
-    account_limited: '您已达到最大限制。 使用 CUB Premium 帐户提高限制。 在 <span class="account-modal__site">www.cub.watch/premium</span> 了解更多信息',
-    network_noconnect: '没有网络连接',
-    network_404: '未找到请求的页面。[404]',
-    network_401: '授权失败',
-    network_500: '内部服务器错误。[500]',
-    network_parsererror: '请求的 JSON 解析失败。',
-    network_timeout: '请求超时。',
-    network_abort: '请求已中止。',
-    network_error: '未知错误',
-    size_zero: '0 字节',
-    size_byte: '字节',
-    size_kb: 'KB',
-    size_mb: 'MB',
-    size_gb: 'GB',
-    size_tb: 'TB',
-    size_pp: 'PB',
-    speed_bit: 'bps',
-    speed_kb: 'Kbps',
-    speed_mb: 'Mbps',
-    speed_gb: 'Gbps',
-    speed_tb: 'Tbps',
-    speed_pp: 'Pbps',
-    month_1: '一月',
-    month_2: '二月',
-    month_3: '三月',
-    month_4: '四月',
-    month_5: '五月',
-    month_6: '六月',
-    month_7: '七月',
-    month_8: '八月',
-    month_9: '九月',
-    month_10: '十月',
-    month_11: '十一月',
-    month_12: '十二月',
-    day_1: '星期一',
-    day_2: '星期二',
-    day_3: '星期三',
-    day_4: '星期四',
-    day_5: '星期五',
-    day_6: '星期六',
-    day_7: '星期日',
-    month_1_e: '一月',
-    month_2_e: '二月',
-    month_3_e: '三月',
-    month_4_e: '四月',
-    month_5_e: '五月',
-    month_6_e: '六月',
-    month_7_e: '七月',
-    month_8_e: '八月',
-    month_9_e: '九月',
-    month_10_e: '十月',
-    month_11_e: '十一月',
-    month_12_e: '十二月',
-    week_1: '星期一',
-    week_2: '星期二',
-    week_3: '星期三',
-    week_4: '星期四',
-    week_5: '星期五',
-    week_6: '星期六',
-    week_7: '星期天',
-    extensions_enable: '启用',
-    extensions_disable: '禁用',
-    extensions_check: '检查状态',
-    extensions_install: '安装',
-    extensions_info: '关于',
-    extensions_edit: '编辑',
-    extensions_change_name: '更改名称',
-    extensions_change_link: '更改链接',
-    extensions_remove: '删除',
-    extensions_set_name: '输入插件名称',
-    extensions_set_url: '输入插件网址',
-    extensions_ready: '此插件已安装',
-    extensions_no_info: '无信息',
-    extensions_no_name: '无标题',
-    extensions_worked: '工作中',
-    extensions_no_plugin: '插件未验证',
-    extensions_add: '添加插件',
-    extensions_from_memory: '安装在内存中',
-    extensions_from_cub: '从 CUB 安装',
-    extensions_from_popular: '流行插件',
-    extensions_from_lib: '插件库',
-    extensions_from_connected: '已连接插件',
-    settings_webos_launcher: '应用程序启动',
-    settings_webos_launcher_add_device: '设置为开始',
-    settings_webos_launcher_remove_device: '从入门应用程序中删除',
-    player_normalization: '正常化',
-    change_source_on_cub: '将源更改为 CUB',
-    settings_param_jackett_interview_all: '全部',
-    settings_param_jackett_interview_healthy: '仅提供',
-    settings_parser_jackett_interview: '投票跟踪器',
-    title_ongoing: '进行中',
-    title_pgrating: '年龄限制',
-    settings_interface_card_interfice: '卡片界面',
-    settings_interface_card_poster: '展示海报',
-    title_card: '卡片',
-    settings_param_card_interface_old: '老界面',
-    settings_param_card_interface_new: '新界面',
-    title_seasons: '季',
-    title_episodes: '集',
-    title_rewiews: '评论',
-    settings_interface_glass: '玻璃',
-    settings_interface_glass_descr: '以玻璃风格显示界面',
-    settings_interface_black_style: '黑色风格',
-    plugins_remove: '删除插件',
-    plugins_add_success: '插件连接成功',
-    settings_reset: '重置',
-    title_channel: '渠道',
-    input_detection_touch: '想切换到触摸控制？',
-    input_detection_mouse: '想切换到鼠标控制？',
-    input_detection_remote: '想切换到遥控器控制？',
-    settings_interface_hide_outside_the_screen: '在屏幕外隐藏卡片',
-    settings_interface_hide_outside_the_screen_descr: '这将加快 UI 渲染并提高性能。',
-    https_text: '您使用的是 HTTPS 协议，在此协议下灯无法正常工作。 为了灯的正确操作，请使用具有 HTTP 协议的地址',
-    extensions_hpu_best: '受欢迎的',
-    extensions_hpu_recomend: '受到推崇的',
-    extensions_hpu_theme: '主题',
-    extensions_hpu_screensaver: '屏幕保护程序',
-    extensions_hpu_video: '视频',
-    extensions_hpu_control: '控制',
-    extensions_hpu_other: '各种各样的',
-    extensions_hpu_: '休息',
-    title_author: '作者',
-    title_buffer: '缓冲',
-    settings_rest_screensaver_time: '多少分钟后启动屏保',
-    time_h: 'h.',
-    time_m: 'm.',
-    time_s: 's.',
-    settings_param_glass_easy: '透明的',
-    settings_param_glass_medium: '半透明',
-    settings_param_glass_blacked: '黑屏了',
-    settings_interface_glass_opacity: '玻璃透明度',
-    torrent_error_check_no_auth: '服务器响应请求，但授权失败。',
-    settings_interface_card_cover: '显示封面',
-    title_upcoming_episodes: '即将发布的剧集',
-    settings_rest_cache_images: '图片缓存',
-    settings_rest_cache_images_descr: '将海报和背景缓存到本地存储',
-    settings_player_rewind_title: '倒带',
-    settings_player_rewind_descr: '以秒为单位的倒带间隔',
-    settings_interface_card_reactions: '显示反应',
-    title_look: '正在观看',
-    title_scheduled: '计划',
-    title_viewed: '已查看',
-    title_thrown: '丢弃',
-    title_reactions: '反馈',
-    reactions_none: '无反馈',
-    reactions_fire: '棒极了',
-    reactions_nice: '不错',
-    reactions_think: '值得一看',
-    reactions_bore: '无聊',
-    reactions_shit: '糟糕',
-    reactions_ready: '您已经留下了反馈',
-    settings_player_launch_trailers: '预告片播放器',
-    title_continued: '待续',
-    title_language_short: '语言',
-    termsofuse_t_01: '使用条款',
-    termsofuse_t_02: 'Lampa是一个方便的工具，用于了解电影行业的最新动态，包括电影、电视剧、动画片和其他信息。获取电影信息使用的是一个开放的来源- themoviedb.org 网站。',
-    termsofuse_t_03: '内容',
-    termsofuse_t_04: 'Lampa使用themoviedb.org目录的API（应用程序编程接口）来获取有关电影和电视剧的信息，并查看与其相关的媒体文件，如海报、预告片等。',
-    termsofuse_t_05: 'themoviedb.org的API允许Lampa应用程序访问电影和电视剧的数据库，提供搜索和查看媒体文件信息的功能。',
-    termsofuse_t_06: 'Lampa应用程序与themoviedb.org之间的交互是通过API请求进行的，这些请求从Lampa应用程序发送到themoviedb.org服务器以获取信息和媒体文件。themoviedb.org处理请求并将请求的数据发送回Lampa应用程序。',
-    termsofuse_t_07: '因此，通过使用themoviedb.org的API，Lampa应用程序为用户提供了访问广泛的电影和电视剧数据库的能力，并遵守权利持有人设定的使用条款和限制。',
-    termsofuse_t_08: '扩展',
-    termsofuse_t_09: '扩展是为Lampa应用程序提供的强大工具，允许用户扩展其功能，添加附加功能，并根据其需求修改内容。',
-    termsofuse_t_10: '然而，值得注意的是，用户自行承担安装扩展的风险。使用扩展带来的所有后果由用户承担。建议用户在安装和使用扩展时要谨慎，仔细评估其可靠性和安全性。',
-    termsofuse_t_11: '侵犯版权',
-    termsofuse_t_12: '如果您在Lampa应用程序中发现任何侵犯版权的行为，您应该联系Lampa应用程序的开发人员。您可以使用Lampa应用程序中提供的联系方式进行联系。然而，重要的是要注意，Lampa应用程序使用的是themoviedb.org目录的API，该API提供了有关电影和电视剧的开放访问。这意味着在Lampa应用程序中显示的信息是公开可访问的，并且不侵犯版权。',
-    termsofuse_t_13: '如果您认为Lampa应用程序仍然包含侵犯您版权的内容，您可以联系该内容的权利持有人，并要求他们从themoviedb.org网站上删除该内容。与此同时，Lampa应用程序在收到相应的侵权通知后可以删除该内容。'
-  };
-
-  var pt = {
-    lang_choice_title: 'Bem-vindo',
-    lang_choice_subtitle: 'Escolhe o teu idioma',
-    more: 'Mais',
-    show_more: 'Mostrar mais',
-    more_results: 'Mostrar mais resultados',
-    loading: 'Carregando',
-    nofind_movie: 'Não foi possível encontrar o filme.',
-    noname: 'Sem título',
-    nochoice: 'Não escolhido',
-    cancel: 'Cancelar',
-    confirm: 'Confirmar',
-    sure: 'Tem a certeza?',
-    nodata: 'Sem resultados',
-    back: 'Voltar',
-    ready: 'Preparar',
-    close_app_modal: 'Tem certeza de que deseja sair do aplicativo?',
-    search: 'Procurar',
-    search_input: 'Inserir texto',
-    search_empty: 'Histórico de procura está vazio.',
-    search_delete: 'Esquerda - apagar',
-    search_start_typing: 'Comece a inserir o texto de pesquisa.',
-    search_searching: 'Procura em progresso...',
-    search_start: 'Começar a pesquisar',
-    search_nofound: 'Não encontrámos nada relacionado com a sua pesquisa.',
-    full_genre: 'Gênero',
-    full_production: 'Produção',
-    full_date_of_release: 'Data de lançamento',
-    full_budget: 'Orçamento',
-    full_countries: 'Países',
-    full_like: 'Gostos',
-    full_torrents: 'Torrents',
-    full_trailers: 'Trailers',
-    full_detail: 'Detalhes',
-    full_notext: 'Sem descrição.',
-    full_series_release: 'Lançamento da série',
-    full_next_episode: 'Seguinte',
-    full_episode_days_left: 'Dias restantes',
-    full_trailer_official: 'Oficial',
-    full_trailer_no_official: 'Não oficial',
-    full_season: 'Temporada',
-    full_episode: 'Episódio',
-    full_directing: 'Dirigir',
-    settings_cub_sync: 'Sincronização',
-    settings_cub_sync_descr: 'Sincronização com serviço CUB: favoritos, histórico de navegação, tags e retomar reprodução. Website: www.cub.watch',
-    settings_cub_account: 'Conta',
-    settings_cub_logged_in_as: 'Logado como',
-    settings_cub_profile: 'Perfil',
-    settings_cub_sync_btn: 'Sincronizar',
-    settings_cub_sync_btn_descr: 'Guardar favoritos na conta CUB',
-    settings_cub_backup: 'Backup',
-    settings_cub_backup_descr: 'Guardar ou importar backup',
-    settings_cub_logout: 'Sair',
-    settings_cub_signin: 'Autorização',
-    settings_cub_not_specified: 'Não específicado',
-    settings_cub_password: 'Password',
-    settings_cub_status: 'Estado',
-    settings_cub_backup_import: 'Importar',
-    settings_cub_backup_export: 'Exportar',
-    settings_cub_sync_filters: 'Sincronizar filtros',
-    settings_cub_sync_calendar: 'Sincronizar calendário',
-    settings_cub_sync_quality: 'Sincronizar qualidade',
-    settings_cub_sync_search: 'Sincronizar histórico de pesquisa',
-    settings_cub_sync_recomends: 'Sincronizar recomendações',
-    settings_cub_sync_timecodes: 'Sincronização de código de tempo',
-    settings_input_links: 'Favoritos',
-    settings_interface_type: 'Versão Lite',
-    settings_interface_size: 'Tamanho interface',
-    settings_interface_background: 'Fundo',
-    settings_interface_background_use: 'Mostar fundo',
-    settings_interface_background_type: 'Tipo de fundo',
-    settings_interface_performance: 'Performance',
-    settings_interface_animation: 'Animação',
-    settings_interface_animation_descr: 'Animação de cartões e conteúdo',
-    settings_interface_attenuation: 'Atenuação',
-    settings_interface_attenuation_descr: 'Desvanecimento suave dos cartões de baixo e de cima',
-    settings_interface_scroll: 'Tipo de rolagem (scroll)',
-    settings_interface_view_card: 'Tipo de visualização do cartão',
-    settings_interface_view_card_descr: 'Conforme rola o feed, os cartões serão carregados gradualmente ou carregarão todos',
-    settings_interface_lang: 'Idioma da interface',
-    settings_interface_lang_reload: 'É necessário reiniciar a aplicação, clique "OK" para reiniciar.',
-    settings_main_account: 'Conta',
-    settings_main_interface: 'Interface',
-    settings_main_player: 'Videoplayer',
-    settings_main_parser: 'Analisador',
-    settings_main_torrserver: 'TorrServer',
-    settings_main_plugins: 'Extensões',
-    settings_main_rest: 'Outros',
-    settings_rest_start: 'Página inicial',
-    settings_rest_start_descr: 'Qual página iniciar na inicialização',
-    settings_rest_source: 'Fonte',
-    settings_rest_source_use: 'Fonte principal',
-    settings_rest_source_descr: 'Onde obter a informação sobre os filmes',
-    settings_rest_tmdb_lang: 'Qual o idioma para mostrar os dados do TMDB',
-    settings_rest_tmdb_prox: 'Proxy TMDB',
-    settings_rest_tmdb_prox_auto: 'Ativar proxy automaticamente',
-    settings_rest_tmdb_posters: 'Resolução dos posters do TMDB',
-    settings_rest_screensaver: 'Protetor de ecrã',
-    settings_rest_screensaver_use: 'Mostrar quando ocupado',
-    settings_rest_screensaver_type: 'Tipo protetor de ecrã',
-    settings_rest_helper: 'Dicas',
-    settings_rest_helper_use: 'Mostrar dicas',
-    settings_rest_helper_reset: 'Mostrar dicas novamente',
-    settings_rest_pages: 'Quantas páginas manter na memória',
-    settings_rest_pages_descr: 'Manter as páginas no estado em as deixei',
-    settings_rest_time: 'Shift time',
-    settings_rest_navigation: 'Tipo de navegação',
-    settings_rest_keyboard: 'Teclado',
-    settings_rest_device: 'Nome do dispositivo',
-    settings_rest_device_placeholder: 'Examplo: Meu Lamp',
-    settings_rest_cache: 'Limpar cache',
-    settings_rest_cache_descr: 'Todas as configurações e dados serão apagados',
-    settings_rest_tmdb_example: 'Por examplo:',
-    settings_rest_tmdb_api_descr: 'Para obter dados',
-    settings_rest_tmdb_image_descr: 'Para obter imagens',
-    settings_rest_card_quality: 'Marcas da qualidade',
-    settings_rest_card_quality_descr: 'Mostrar marcas da qualidade nos cartões',
-    settings_rest_card_episodes: 'Marcas do episódio',
-    settings_rest_card_episodes_descr: 'Mostrar marcas do episódio nos cartões',
-    settings_parser_use: 'Usar analisador',
-    settings_parser_use_descr: 'Por meio deste, você concorda em aceitar toda a responsabilidade pelo uso de links públicos para visualizar torrents e conteúdo online.',
-    settings_parser_type: 'Tipo de analisador para torrents',
-    settings_parser_jackett_placeholder: 'Por exemplo: 192.168.x',
-    settings_parser_jackett_link: 'Endereço',
-    settings_parser_jackett_link_descr: 'Fornecer um endereço para a aplicação Jackett',
-    settings_parser_jackett_key_placeholder: 'Por exemplo: sa0sk83d..',
-    settings_parser_jackett_key: 'Chave da API',
-    settings_parser_jackett_key_descr: 'Localizado em Jackett',
-    settings_parser_torlook_type: 'Método de análise do site TorLook',
-    settings_parser_scraperapi_placeholder: 'Por exemplo: scraperapi.com',
-    settings_parser_scraperapi_link: 'Endereço para o analisador do site',
-    settings_parser_scraperapi_descr: 'Registar-se no site scraperapi.com, digite o endereço api.scraperapi.com?api_key=...&url={q}<br>W41.torlook.info será entregue em {q}',
-    settings_parser_search: 'Pesquisar',
-    settings_parser_search_descr: 'Pesquisar em que idioma?',
-    settings_parser_in_search: 'Analisador na pesquisa',
-    settings_parser_in_search_descr: 'Mostrar resultados de pesquisa?',
-    settings_parser_timeout_title: 'Tempo limite do analisador',
-    settings_parser_timeout_descr: 'Tempo em segundos para aguardar uma resposta do servidor',
-    settings_player_type: 'Tipo player',
-    settings_player_type_descr: 'Qual o player a utilizar',
-    settings_player_iptv_type: 'Tipo de player para IPTV',
-    settings_player_iptv_type_descr: 'Qual player reproduzir canais de IPTV',
-    settings_player_reset: 'Redefinir player padrão',
-    settings_player_reset_descr: 'Reinicia o player Android selecionado no aplicativo',
-    settings_player_path: 'Caminho para o player',
-    settings_player_path_descr: 'Especifique o caminho para o player .exe',
-    settings_player_normalization: 'Normalização de som',
-    settings_player_normalization_descr: 'Normaliza o som para um nível, diminui os sons altos e aumenta os silenciosos.',
-    settings_player_next_episode: 'Próximo episódio',
-    settings_player_next_episode_descr: 'Passar automaticamente para o próximo episódio após o final do atual',
-    settings_player_timecode: 'Tempo visualizado',
-    settings_player_timecode_descr: 'Retomar reprodução na última localização visualizada',
-    settings_player_scale: 'Método de dimensionamento',
-    settings_player_scale_descr: 'Como calcular o dimensionamento de vídeo',
-    settings_player_subs: 'Legendas',
-    settings_player_subs_use: 'Ativar',
-    settings_player_subs_use_descr: 'Ativar sempre as legendas depois de iniciar um vídeo',
-    settings_player_subs_size: 'Tamanho',
-    settings_player_subs_size_descr: 'Tamanho das legendas',
-    settings_player_subs_stroke_use: 'Usar borda',
-    settings_player_subs_stroke_use_descr: 'As legendas serão contornadas em preto para melhor legibilidade',
-    settings_player_subs_backdrop_use: 'Usar fundo',
-    settings_player_subs_backdrop_use_descr: 'As legendas serão mostradas em um fundo translúcido para melhorar a legibilidade',
-    settings_player_quality: 'Qualidade de vídeo padrão',
-    settings_player_quality_descr: 'Qualidade de vídeo preferida para visualização',
-    settings_player_hls_title: 'Processando o stream .m3u8',
-    settings_player_hls_descr: 'Não toque neste parâmetro se você não sabe o motivo.',
-    settings_plugins_notice: 'Para aplicar o plugin, você precisa reiniciar a aplicação',
-    settings_plugins_add: 'Adicionar plugin',
-    settings_plugins_add_descr: 'Para remover um plugin, segure ou clique duas vezes na tecla (OK) nele',
-    settings_plugins_install: 'Instalar Plugin',
-    settings_plugins_install_descr: 'Instalar um plugin da lista de disponíveis',
-    settings_server_link: 'Usar endereço',
-    settings_server_links: 'Endereços',
-    settings_server_placeholder: 'Por exemplo: 192.168.X',
-    settings_server_link_one: 'Endereço principal',
-    settings_server_link_one_descr: 'Especifique o link principal para a aplicação TorrServer',
-    settings_server_link_two: 'Endereço secundário',
-    settings_server_link_two_descr: 'Fornecer um link adicional para a aplicação TorrServer',
-    settings_server_additionally: 'Adicionalmente',
-    settings_server_client: 'Cliente incorporado',
-    settings_server_client_descr: 'Use o cliente TorrServe JS embutido, caso contrário o sistema será iniciado.',
-    settings_server_base: 'Guardar na base de dados',
-    settings_server_base_descr: 'O torrent será adicionado na base de dados do TorrServer',
-    settings_server_preload: 'Usar buffer de pré-busca',
-    settings_server_preload_descr: 'Aguardar que o buffer de pré-carregamento do TorrServer seja preenchido antes de iniciar',
-    settings_server_auth: 'Autorização',
-    settings_server_password_use: 'Login com password',
-    settings_server_login: 'Login',
-    settings_server_password: 'Password',
-    settings_server_not_specified: 'Não especificado',
-    torent_nohash_reasons: 'Motivos',
-    torent_nohash_reason_one: 'TorrServe não conseguiu fazer o download do ficheiro torrent',
-    torent_nohash_reason_two: 'Resposta do TorrServe',
-    torent_nohash_reason_three: 'Endereço',
-    torent_nohash_do: 'O que fazer?',
-    torent_nohash_do_one: 'Verifique se configurou o Jackett corretamente',
-    torent_nohash_do_two: 'Fontes privadas podem não fornecer um endereço para o ficheiro',
-    torent_nohash_do_three: 'Certifique-se de que o Jackett também pode fazer o download do ficheiro',
-    torent_nohash_do_four: 'Escreva para nosso grupo do Telegram: @lampa_group',
-    torent_nohash_do_five: 'Especifique qual o filme, qual distribuição e, se possível, uma foto desta distribuição',
-    torrent_error_text: 'Falha ao conectar ao TorrServe. Vamos passar rapidamente pela lista de possíveis problemas e verificar tudo.',
-    torrent_error_step_1: 'O TorrServe está a correr',
-    torrent_error_step_2: 'IP dinâmico',
-    torrent_error_step_3: 'Protocolo e Porta',
-    torrent_error_step_4: 'Bloqueio de antivírus',
-    torrent_error_step_5: 'Verificar disponibilidade',
-    torrent_error_step_6: 'Ainda não funciona',
-    torrent_error_info_1: 'Certifique-se de ter iniciado o TorrServe no dispositivo onde está instalado.',
-    torrent_error_info_2: 'Um erro comum, o endereço IP do dispositivo com TorrServe mudou. Certifique-se de que o endereço IP que você digitou - {ip} - corresponde ao endereço do dispositivo no qual o TorrServe está instalado.',
-    torrent_error_info_3: 'Para se conectar ao TorrServe, você deve especificar o protocolo http:// no início e a porta :8090 no final do endereço. Verifique se há uma porta após o endereço IP, seu endereço atual é {ip}',
-    torrent_error_info_4: 'Ocorrência frequente, antivírus ou firewall pode bloquear o acesso por endereço IP, tente desabilitar antivírus e firewall.',
-    torrent_error_info_5: 'Em qualquer outro dispositivo na mesma rede, abra o endereço {ip} em um navegador e verifique se a interface web do TorrServe está disponível.',
-    torrent_error_info_6: 'Se, após todas as verificações, ainda ocorrer um erro de conexão, tente reiniciar o TorrServe e o adaptador de Internet.',
-    torrent_error_info_7: 'Se o problema persistir, escreva para o grupo do Telegram @lampa_group.',
-    torrent_error_start: 'Iniciar verificação',
-    torrent_error_nomatrix: 'Falha ao verificar a versão Matrix',
-    torrent_error_made: 'Executado',
-    torrent_error_from: 'de',
-    torrent_error_next: 'Seguinte',
-    torrent_error_complite: 'Para completar',
-    torrent_error_connect: 'Erro de conexão',
-    torrent_install_need: 'Requer TorrServe',
-    torrent_install_text: 'TorrServe é uma aplicação que permite visualizar conteúdo de ficheiros torrent online.<br><br>Informações mais detalhadas sobre instalação podem ser encontradas nos grupos do Telegram abaixo.',
-    torrent_install_contact: 'Grupos do Telegram',
-    torrent_item_bitrate: 'Bitrate',
-    torrent_item_seeds: 'Seeds',
-    torrent_item_grabs: 'Leechers',
-    torrent_item_mb: 'Mbps',
-    torrent_serial_episode: 'Episódio',
-    torrent_serial_season: 'Temporada',
-    torrent_serial_date: 'Data',
-    torrent_get_magnet: 'Solicitando um link magnético',
-    torrent_remove_title: 'Remover',
-    torrent_remove_descr: 'O torrent será removido da sua lista',
-    torrent_parser_any_one: 'Qualquer',
-    torrent_parser_any_two: 'Qualquer',
-    torrent_parser_no_choice: 'Não escolhido',
-    torrent_parser_yes: 'Sim',
-    torrent_parser_no: 'Não',
-    torrent_parser_quality: 'Qualidade',
-    torrent_parser_subs: 'Legendas',
-    torrent_parser_voice: 'Tradução',
-    torrent_parser_tracker: 'Tracker',
-    torrent_parser_year: 'Ano',
-    torrent_parser_season: 'Temporada',
-    torrent_parser_sort_by_seeders: 'Por seeders',
-    torrent_parser_sort_by_size: 'Por tamanho',
-    torrent_parser_sort_by_name: 'Por nome',
-    torrent_parser_sort_by_tracker: 'Por tracker',
-    torrent_parser_sort_by_date: 'Por data',
-    torrent_parser_sort_by_viewed: 'Por vistos',
-    torrent_parser_voice_dubbing: 'Dobrados',
-    torrent_parser_voice_polyphonic: 'Polifônico',
-    torrent_parser_voice_two: 'Duas vozes',
-    torrent_parser_voice_amateur: 'Amador',
-    torrent_parser_reset: 'Redefinir filtro',
-    torrent_parser_empty: 'Falha ao obter resultados',
-    torrent_parser_no_hash: 'Falha ao obter HASH',
-    torrent_parser_added_to_mytorrents: 'Adicionado a "Meus torrents"',
-    torrent_parser_add_to_mytorrents: 'Adicionar a "Meus torrents"',
-    torrent_parser_label_title: 'Sinalizador',
-    torrent_parser_label_descr: 'Sinalize uma mão com uma bandeira (visualizada)',
-    torrent_parser_label_cancel_title: 'Desmarcar',
-    torrent_parser_label_cancel_descr: 'Remover a marca da distribuição (visualizada)',
-    torrent_parser_timeout: 'Tempo limite expirado',
-    torrent_parser_nofiles: 'Falha ao extrair ficheiros',
-    torrent_parser_set_link: 'Especifique um endereço para análise',
-    torrent_parser_request_error: 'Erro na solicitação',
-    torrent_parser_magnet_error: 'Falha ao obter o endereço magnético',
-    torrent_parser_no_responce: 'O analisador não está respondendo à solicitação',
-    torrent_parser_torlook_fallback_search_notification: 'O analisador Jackett não está disponível ou as configurações de conexão estão incorretas. Procurando Torlook...',
-    about_text: 'A aplicação é totalmente gratuita e usa endereços públicos para obter informações sobre vídeos, novos lançamentos, filmes populares, etc. Todas as informações disponíveis são usadas exclusivamente para fins educacionais, a aplicação não usa servidores próprios para distribuir informações.',
-    about_channel: 'Nosso canal',
-    about_group: 'Grupo',
-    about_version: 'Versão',
-    about_donate: 'Donativos',
-    title_watched: 'Você assistiu',
-    title_settings: 'Configurações',
-    title_collections: 'Coleções',
-    title_company: 'Empresa',
-    title_actors: 'Atores',
-    title_actor: 'Ator',
-    title_actress: 'Atriz',
-    title_person: 'Pessoa',
-    title_comments: 'Comentários',
-    title_torrents: 'Torrents',
-    title_trailers: 'Trailers',
-    title_watch: 'Assistir',
-    title_error: 'Erro',
-    title_links: 'Endereços',
-    title_choice: 'Escolher',
-    title_main: 'Início',
-    title_book: 'Favoritos',
-    title_like: 'Gosto',
-    title_wath: 'Ver mais tarde',
-    title_history: 'Histórico de navegação',
-    title_mytorrents: 'Meus torrents',
-    title_last: 'Último',
-    title_action: 'Ação',
-    title_producer: 'Produtor',
-    title_collection: 'Coleção',
-    title_recomendations: 'Recomendações',
-    title_similar: 'Semelhantes',
-    title_about: 'Sobre a aplicação',
-    title_timetable: 'Programação',
-    title_relises: 'Lançamentos digitais',
-    title_catalog: 'Catálogo',
-    title_category: 'Categoria',
-    title_parser: 'Analisador',
-    title_type: 'Tipo de',
-    title_rating: 'Classificação',
-    title_country: 'País',
-    title_year: 'Ano',
-    title_genre: 'Gênero',
-    title_filter: 'Filtro',
-    title_notice: 'Notificações',
-    title_files: 'Ficheiros',
-    title_now_watch: 'Assistindo agora',
-    title_latest: 'Última adição',
-    title_continue: 'Continuar navegando',
-    title_recomend_watch: 'Recomendamos ver',
-    title_new_episodes: 'Novos episódios',
-    title_popular: 'Popular',
-    title_popular_movie: 'Filmes populares',
-    title_popular_tv: 'Séries populares',
-    title_new_this_year: 'Novo este ano',
-    title_hight_voite: 'Altamente avaliado',
-    title_new: 'Novo',
-    title_trend_day: 'Tendências de hoje',
-    title_trend_week: 'Tendências da semana',
-    title_upcoming: 'Assista nos cinemas',
-    title_top_movie: 'Principais filmes',
-    title_top_tv: 'Melhor série',
-    title_tv_today: 'No ar hoje',
-    title_this_week: 'Esta semana',
-    title_in_top: 'Top',
-    title_out: 'Sair',
-    title_out_confirm: 'Sim, quero sair',
-    title_continue_two: 'Continuar',
-    title_choice_language: 'Escolha um idioma',
-    title_subscribe: 'Inscrever-se',
-    title_subscribes: 'Subscrições',
-    title_unsubscribe: 'Cancelar inscrição',
-    title_language: 'Idioma original',
-    subscribe_success: 'Inscreveu-se com sucesso',
-    subscribe_error: 'Ocorreu um erro ao inscrever, por favor tente novamente mais tarde',
-    subscribe_noinfo: 'Falha ao recuperar informações, tente novamente mais tarde',
-    company_headquarters: 'Sede',
-    company_homepage: 'Website',
-    company_country: 'País',
-    country_ad: 'Andorra',
-    country_ae: 'Emirados Árabes Unidos',
-    country_af: 'Afeganistão',
-    country_al: 'Albânia',
-    country_am: 'Armênia',
-    country_ao: 'Angola',
-    country_ar: 'Argentina',
-    country_at: 'Áustria',
-    country_au: 'Austrália',
-    country_aw: 'Aruba',
-    country_az: 'Azerbaijão',
-    country_bа: 'Bósnia e Herzegovina',
-    country_bd: 'Bangladesh',
-    country_be: 'Bélgica',
-    country_bg: 'Bulgária',
-    country_bh: 'Bahrein',
-    country_bi: 'Burundi',
-    country_bj: 'Benin',
-    country_bo: 'Bolívia',
-    country_br: 'Brasil',
-    country_bs: 'Bahamas',
-    country_bt: 'Butão',
-    country_bw: 'Botsuana',
-    country_by: 'Bielorrússia',
-    country_ca: 'Canadá',
-    country_ch: 'Suíça',
-    country_cl: 'Chile',
-    country_cm: 'Camarões',
-    country_cn: 'China',
-    country_co: 'Colômbia',
-    country_cr: 'Costa Rica',
-    country_cu: 'Cuba',
-    country_cv: 'Cabo Verde',
-    country_cy: 'Chipre',
-    country_cz: 'República Tcheca',
-    country_de: 'Alemanha',
-    country_dj: 'Djibuti',
-    country_dk: 'Dinamarca',
-    country_do: 'República Dominicana',
-    country_dz: 'Argélia',
-    country_ec: 'Equador',
-    country_ee: 'Estônia',
-    country_eg: 'Egito',
-    country_es: 'Espanha',
-    country_et: 'Etiópia',
-    country_fi: 'Finlândia',
-    country_fo: 'Ilhas Faroé',
-    country_fr: 'França',
-    country_ga: 'Gabão',
-    country_gb: 'Reino Unido',
-    country_ge: 'Geórgia',
-    country_gh: 'Gana',
-    country_gl: 'Gronelândia',
-    country_gp: 'Guadalupe',
-    country_gr: 'Grécia',
-    country_gt: 'Guatemala',
-    country_hk: 'Hong Kong',
-    country_hr: 'Croácia',
-    country_ht: 'Haiti',
-    country_hu: 'Hungria',
-    country_id: 'Indonésia',
-    country_ie: 'Irlanda',
-    country_il: 'Israel',
-    country_in: 'Índia',
-    country_iq: 'Iraque',
-    country_ir: 'Irã',
-    country_is: 'Islândia',
-    country_it: 'Itália',
-    country_jm: 'Jamaica',
-    country_jo: 'Jordânia',
-    country_jp: 'Japão',
-    country_ke: 'Quênia',
-    country_kg: 'Quirguistão',
-    country_kh: 'Camboja',
-    country_kp: 'Coreia do Norte',
-    country_kr: 'Coreia do Sul',
-    country_kz: 'Cazaquistão',
-    country_kw: 'Kuwait',
-    country_la: 'Laos',
-    country_lb: 'Líbano',
-    country_li: 'Liechtenstein',
-    country_lk: 'Sri Lanka',
-    country_lr: 'Libéria',
-    country_lt: 'Lituânia',
-    country_lu: 'Luxemburgo',
-    country_lv: 'Letônia',
-    country_ly: 'Líbia',
-    country_ma: 'Marrocos',
-    country_mc: 'Mônaco',
-    country_md: 'Moldávia',
-    country_me: 'Montenegro',
-    country_mk: 'Macedônia',
-    country_mm: 'Mianmar',
-    country_mn: 'Mongólia',
-    country_mo: 'Macau',
-    country_mt: 'Malta',
-    country_mu: 'Maurício',
-    country_mv: 'Maldivas',
-    country_mw: 'Malawi',
-    country_mx: 'México',
-    country_my: 'Malásia',
-    country_mz: 'Moçambique',
-    country_na: 'Namíbia',
-    country_ne: 'Níger',
-    country_ng: 'Nigéria',
-    country_ni: 'Nicarágua',
-    country_nl: 'Holanda',
-    country_no: 'Noruega',
-    country_np: 'Nepal',
-    country_nz: 'Nova Zelândia',
-    country_om: 'Omã',
-    country_pa: 'Panamá',
-    country_pe: 'Peru',
-    country_pg: 'Papua Nova Guiné',
-    country_ph: 'Filipinas',
-    country_pk: 'Paquistão',
-    country_pl: 'Polônia',
-    country_pr: 'Porto Rico',
-    country_ps: 'Território Palestino',
-    country_pt: 'Portugal',
-    country_py: 'Paraguai',
-    country_qa: 'Catar',
-    country_ro: 'Romênia',
-    country_rs: 'Sérvia',
-    country_ru: 'Rússia',
-    country_rw: 'Ruanda',
-    country_sa: 'Arábia Saudita',
-    country_sd: 'Sudão',
-    country_se: 'Suécia',
-    country_sg: 'Singapura',
-    country_si: 'Eslovênia',
-    country_sk: 'Eslováquia',
-    country_sn: 'Senegal',
-    country_su: 'URSS',
-    country_sv: 'El Salvador',
-    country_sy: 'Síria',
-    country_th: 'Tailândia',
-    country_tj: 'Tajiquistão',
-    country_tm: 'Turquemenistão',
-    country_tn: 'Tunísia',
-    country_tr: 'Turquia',
-    country_tw: 'Taiwan',
-    country_tz: 'Tanzânia',
-    country_ua: 'Ucrânia',
-    country_ug: 'Uganda',
-    country_us: 'EUA',
-    country_uy: 'Uruguai',
-    country_uz: 'Uzbequistão',
-    country_ve: 'Venezuela',
-    country_vn: 'Viet Nam',
-    country_xk: 'Kosovo',
-    country_ws: 'Samoa',
-    country_ye: 'Iêmen',
-    country_yu: 'Iugoslávia',
-    country_za: 'África do Sul',
-    country_zm: 'Zâmbia',
-    country_zw: 'Zimbábue',
-    filter_clarify: 'Clarificar',
-    filter_clarify_two: 'Refinir pesquisa',
-    filter_set_name: 'Especificar título',
-    filter_sorted: 'Ordenar',
-    filter_filtred: 'Filtrar',
-    filter_any: 'Qualquer',
-    filter_combinations: 'Combinações',
-    filter_alt_names: 'Outros nomes',
-    filter_rating_from: 'desde',
-    filter_rating_to: 'até',
-    filter_lang_af: 'Africâner',
-    filter_lang_ar: 'Árabe',
-    filter_lang_az: 'Azerbaijano',
-    filter_lang_ba: 'Bashkir',
-    filter_lang_be: 'Bielorrusso',
-    filter_lang_bg: 'Búlgaro',
-    filter_lang_bn: 'Bengali',
-    filter_lang_bs: 'Bósnio',
-    filter_lang_ca: 'Catalão',
-    filter_lang_ce: 'Checheno',
-    filter_lang_cs: 'Tcheco',
-    filter_lang_da: 'Dinamarquês',
-    filter_lang_de: 'Alemão',
-    filter_lang_el: 'Grego',
-    filter_lang_en: 'Inglês',
-    filter_lang_es: 'Espanhol',
-    filter_lang_et: 'Estoniano',
-    filter_lang_fa: 'Persa',
-    filter_lang_fi: 'Finlandês',
-    filter_lang_fr: 'Francês',
-    filter_lang_ga: 'Irlandês',
-    filter_lang_gl: 'Galego',
-    filter_lang_gn: 'Guarani',
-    filter_lang_he: 'Hebraico',
-    filter_lang_hi: 'Hindi',
-    filter_lang_hr: 'Croata',
-    filter_lang_hu: 'Húngaro',
-    filter_lang_hy: 'Armênio',
-    filter_lang_id: 'Indonésio',
-    filter_lang_is: 'Islandês',
-    filter_lang_it: 'Italiano',
-    filter_lang_ja: 'Japonês',
-    filter_lang_ka: 'Georgiano',
-    filter_lang_kk: 'Cazaque',
-    filter_lang_ko: 'Coreano',
-    filter_lang_ks: 'Caxemira',
-    filter_lang_ku: 'Curdo',
-    filter_lang_ky: 'Kirghiz',
-    filter_lang_lt: 'Lituano',
-    filter_lang_lv: 'Letão',
-    filter_lang_mi: 'Maori',
-    filter_lang_mk: 'Macedônio',
-    filter_lang_mn: 'Mongol',
-    filter_lang_mo: 'Moldávio',
-    filter_lang_mt: 'Maltês',
-    filter_lang_ne: 'Nepalês',
-    filter_lang_nl: 'Holandês',
-    filter_lang_no: 'Norueguês',
-    filter_lang_pa: 'Punjabi',
-    filter_lang_pl: 'Poláco',
-    filter_lang_ps: 'Pushto',
-    filter_lang_pt: 'Português',
-    filter_lang_ro: 'Romeno',
-    filter_lang_ru: 'Russo',
-    filter_lang_si: 'Cingalês',
-    filter_lang_sk: 'Eslovaco',
-    filter_lang_sl: 'Esloveno',
-    filter_lang_sm: 'Samoano',
-    filter_lang_so: 'Somali',
-    filter_lang_sq: 'Albanês',
-    filter_lang_sr: 'Sérvio',
-    filter_lang_sv: 'Sueco',
-    filter_lang_sw: 'Suaíli',
-    filter_lang_ta: 'Tâmil',
-    filter_lang_tg: 'Tajique',
-    filter_lang_th: 'Tailandês',
-    filter_lang_tk: 'Turkmen',
-    filter_lang_tr: 'Turco',
-    filter_lang_tt: 'Tártaro',
-    filter_lang_ur: 'Urdu',
-    filter_lang_uk: 'Ucraniano',
-    filter_lang_uz: 'Uzbeque',
-    filter_lang_vi: 'Vietnamita',
-    filter_lang_yi: 'Iídiche',
-    filter_lang_zh: 'Chinês',
-    filter_genre_ac: 'Ação',
-    filter_genre_ad: 'Aventura',
-    filter_genre_mv: 'Desenhos animados',
-    filter_genre_cm: 'Comédia',
-    filter_genre_cr: 'Crime',
-    filter_genre_dc: 'Documentário',
-    filter_genre_dr: 'Drama',
-    filter_genre_fm: 'Família',
-    filter_genre_fe: 'Fantasia',
-    filter_genre_hi: 'História',
-    filter_genre_ho: 'Terror',
-    filter_genre_mu: 'Música',
-    filter_genre_de: 'Detetive',
-    filter_genre_md: 'Melodrama',
-    filter_genre_fa: 'Ficção',
-    filter_genre_tv: 'Telefilme',
-    filter_genre_tr: 'Thriller',
-    filter_genre_mi: 'Militar',
-    filter_genre_ve: 'Ocidental',
-    filter_genre_aa: 'Ação e Aventura',
-    filter_genre_ch: 'Crianças',
-    filter_genre_nw: 'Notícias',
-    filter_genre_rs: 'Reality show',
-    filter_genre_hf: 'Ficção Científica e Fantasia',
-    filter_genre_op: 'Telenovela',
-    filter_genre_tc: 'Talk show',
-    filter_genre_mp: 'Guerra e Política',
-    empty_title: 'Vazio',
-    empty_text: 'Nada encontrado para seu filtro, por favor refine seu filtro.',
-    empty_title_two: 'Está vazio aqui',
-    empty_text_two: 'A lista está vazia no momento.',
-    menu_main: 'Início',
-    menu_movies: 'Filmes',
-    menu_tv: 'Séries',
-    menu_catalog: 'Catálogo',
-    menu_filter: 'Filtro',
-    menu_collections: 'Coleções',
-    menu_relises: 'Lançamentos',
-    menu_anime: 'Anime',
-    menu_bookmark: 'Favoritos',
-    menu_like: 'Gostos',
-    menu_time: 'Ver mais tarde',
-    menu_history: 'Histórico',
-    menu_timeline: 'Calendário',
-    menu_torrents: 'Torrents',
-    menu_settings: 'Configurações',
-    menu_about: 'Informações',
-    menu_console: 'Logs',
-    menu_multmovie: 'Desenhos animados',
-    menu_multtv: 'Séries animada',
-    plugins_catalog_work: 'Plugins funcionando',
-    plugins_catalog_work_descr: 'Plugins que funcionam corretamente na aplicação.',
-    plugins_catalog_popular: 'Plugins populares entre utilizadores',
-    plugins_catalog_popular_descr: 'Instalação de fontes desconhecidas pode fazer com que a aplicação não funcione corretamente.',
-    plugins_online: 'Ver online',
-    plugins_check_fail: 'Falha ao testar a funcionalidade do plugin. No entanto, isso não significa que o plugin não funcione. Reinicie a aplicação para ver se o plugin está funcionando.',
-    plugins_need_reload: 'Para aplicar o plugin, você precisa reiniciar a aplicação',
-    plugins_install: 'Instalar',
-    plugins_install_ready: 'Este plugin já está instalado.',
-    plugins_installed: 'Instalações',
-    plugins_load_from: 'Carregado do CUB',
-    plugins_ok_for_check: 'Clique em (OK) para testar o plugin',
-    plugins_no_loaded: 'Ao iniciar a aplicação alguns plugins não puderam ser carregados',
-    time_viewed: 'Visualizado',
-    time_from: 'Desde',
-    time_reset: 'Reset tempo visualizado',
-    settings_clear_cache: 'Cache e dados limpos',
-    settings_user_links: 'Endereço personalizado',
-    settings_for_local: 'Para TorrServer local',
-    settings_add: 'Adicionar',
-    settings_remove: 'Eliminar',
-    settings_this_value: 'Valor atual',
-    settings_added: 'Adicionado',
-    settings_removed: 'Eliminado',
-    settings_param_player_inner: 'Lampa',
-    settings_param_player_outside: 'Externo',
-    settings_param_yes: 'Sim',
-    settings_param_no: 'Não',
-    settings_param_interface_size_small: 'Menor',
-    settings_param_interface_size_normal: 'Normal',
-    settings_param_interface_size_bigger: 'Mais',
-    settings_param_poster_quality_low: 'Baixo',
-    settings_param_poster_quality_average: 'Médio',
-    settings_param_poster_quality_high: 'Alto',
-    settings_param_parse_directly: 'Diretamente',
-    settings_param_parse_api: 'Através da API do site',
-    settings_param_background_complex: 'Complexo',
-    settings_param_background_simple: 'Simples',
-    settings_param_background_image: 'Imagem',
-    settings_param_link_use_one: 'Principal',
-    settings_param_link_use_two: 'Secundário',
-    settings_param_subtitles_size_small: 'Pequeno',
-    settings_param_subtitles_size_normal: 'Normal',
-    settings_param_subtitles_size_bigger: 'Grande',
-    settings_param_screensaver_nature: 'Natureza',
-    settings_param_torrent_lang_orig: 'Original',
-    settings_param_torrent_lang_ru: 'Russo',
-    settings_param_player_timecode_again: 'Começar de novo',
-    settings_param_player_timecode_continue: 'Continuar',
-    settings_param_player_timecode_ask: 'Perguntar',
-    settings_param_player_scale_method: 'Calcular',
-    settings_param_player_hls_app: 'Sistema',
-    settings_param_player_hls_js: 'Programa',
-    settings_param_card_view_load: 'Carregar',
-    settings_param_card_view_all: 'Mostrar tudo',
-    settings_param_navigation_remote: 'Comando',
-    settings_param_navigation_mouse: 'Comando com rato',
-    settings_param_keyboard_lampa: 'Lampa',
-    settings_param_keyboard_system: 'Sistema',
-    helper_keyboard: 'Depois de inserir o valor, pressione o botão "Voltar" para guardar',
-    helper_torrents: 'Mantenha pressionada a tecla (OK) para abrir o menu de contexto',
-    helper_cleared: 'Sucesso, dicas serão mostradas novamente.',
-    helper_torrents_view: 'Mantenha pressionada a tecla (OK) para redefinir o tempo de visualizado e exibir o menu',
-    fav_sync_title: 'Sincronização dos favoritos',
-    fav_sync_text: 'Conecte a sincronização e visualize em qualquer dispositivo os seus favoritos. <br><br>Para isso, registe-se no site www.cub.watch, crie um perfil e faça login na aplicação.',
-    fav_sync_site: 'Site',
-    fav_remove_title: 'Remover do histórico',
-    fav_remove_descr: 'Eliminar cartão selecionado',
-    fav_clear_title: 'Limpar o histórico',
-    fav_clear_descr: 'Eliminar todos os cartões do histórico',
-    fav_clear_label_title: 'Limpar rótulos',
-    fav_clear_label_descr: 'Limpar rótulos visualizados',
-    fav_clear_time_title: 'Limpar tempo visualizado',
-    fav_clear_time_descr: 'Limpar todos os tempos visualizados',
-    fav_label_cleared: 'Marcas apagadas',
-    fav_time_cleared: 'Tempos visualizados apagados',
-    timetable_empty: 'Esta secção exibirá as datas de lançamento dos novos episódios.',
-    player_quality: 'Qualidade',
-    player_tracks: 'Faixas de áudio',
-    player_disabled: 'Desativado',
-    player_unknown: 'Desconhecido',
-    player_subs: 'Legendas',
-    player_size_default_title: 'Padrão',
-    player_size_default_descr: 'Tamanho de vídeo padrão',
-    player_size_cover_title: 'Expandir',
-    player_size_cover_descr: 'Expande o vídeo para tela cheia',
-    player_size_fill_title: 'Preencher',
-    player_size_fill_descr: 'Ajustar vídeo para tela cheia',
-    player_size_s115_title: 'Zoom 115%',
-    player_size_s115_descr: 'Ampliar vídeo em 115%',
-    player_size_s130_title: 'Zoom 130%',
-    player_size_s130_descr: 'Aumente o vídeo em 130%',
-    player_size_v115_title: 'Vertical 115%',
-    player_size_v115_descr: 'Aumente o vídeo em 115%',
-    player_size_v130_title: 'Vertical 130%',
-    player_size_v130_descr: 'Aumente o vídeo em 130%',
-    player_video_size: 'Tamanho do vídeo',
-    player_playlist: 'Lista de reprodução',
-    player_error_one: 'Falha ao descodificar vídeo',
-    player_error_two: 'Vídeo não encontrado ou corrompido',
-    player_start_from: 'Continuar navegando de',
-    player_not_found: 'Videoplayer não encontrado',
-    player_lauch: 'Iniciar videoplayer',
-    player_speed_default_title: 'Simples',
-    player_speed_two_descr: 'Tocar sem som',
-    player_video_speed: 'Velocidade de reprodução',
-    player_share_title: 'Partilhar',
-    player_share_descr: 'Reproduzir este vídeo em outro dispositivo',
-    player_normalization_power_title: 'Normalização',
-    player_normalization_smooth_title: 'Velocidade de normalização',
-    player_normalization_step_low: 'Baixo',
-    player_normalization_step_medium: 'Médio',
-    player_normalization_step_hight: 'Alto',
-    player_youtube_no_played: 'Desculpe, este vídeo não está disponível em sua região e pode ter sido bloqueado ou removido.',
-    player_youtube_start_play: 'Para começar a reproduzir o vídeo, clique no botão "Reproduzir"',
-    broadcast_open: 'Abrir o cartão em outro dispositivo',
-    broadcast_play: 'Escolha o dispositivo para assistir',
-    card_new_episode: 'Novo episódio',
-    card_book_remove: 'Remover dos favoritos',
-    card_book_add: 'Adicionar aos favoritos',
-    card_book_descr: 'Procure no menu (Favoritos)',
-    card_like_remove: 'Remover dos favoritos',
-    card_like_add: 'Gosto',
-    card_like_descr: 'Veja o menu (Gostos)',
-    card_wath_remove: 'Remover do ver mais tarde',
-    card_wath_add: 'Adicionar ao ver mais tarde',
-    card_wath_descr: 'Veja o menu (ver mais tarde)',
-    card_history_remove: 'Remover do histórico',
-    card_history_add: 'Na história',
-    card_history_descr: 'Procure no menu (Histórico)',
-    keyboard_listen: 'Fale, estou ouvindo...',
-    keyboard_nomic: 'Sem acesso ao microfone',
-    notice_new_quality: 'Nova qualidade disponível',
-    notice_quality: 'Qualidade',
-    notice_new_episode: 'Novo episódio',
-    notice_none: 'Ainda não tem notificações, registe-se em <b>www.cub.watch</b> para acompanhar novos episódios e lançamentos.',
-    notice_in_quality: 'Como',
-    notice_none_account: 'Você ainda não tem notificações, marque a série e aguarde as notificações de novos episódios.',
-    notice_none_system: 'Você não tem nenhuma notificação. Nós iremos notificá-lo quando novas notificações estiverem disponíveis.',
-    copy_link: 'Copiar endereço do vídeo',
-    copy_secuses: 'Endereço copiado para a área de transferência',
-    copy_error: 'Erro ao copiar o endereço',
-    account_sync_to_profile: 'Todos os favoritos serão movidos para o perfil',
-    account_sync_secuses: 'Todos os favoritos foram transferidos com sucesso',
-    account_profiles: 'Perfis',
-    account_profiles_empty: 'Falha ao obter lista de perfis',
-    account_authorized: 'Autorizado',
-    account_logged_in: 'Você está logado',
-    account_login_failed: 'Falha no login',
-    account_login_wait: 'Aguardando login',
-    account_profile_main: 'Geral',
-    account_export_secuses: 'Exportação concluída com sucesso',
-    account_export_fail: 'Erro de exportação',
-    account_import_secuses: 'Importação concluída com sucesso',
-    account_import_fail: 'Erro de importação',
-    account_imported: 'Importado',
-    account_reload_after: 'Reinicializar após 5 segundos.',
-    account_create: 'Descubra mais oportunidades com uma conta CUB. Registe-se em <span class="account-modal__site">www.cub.watch</span> e tenha acesso para sincronizar seus favoritos, tempos visualizados e outros recursos da conta CUB.',
-    account_premium: 'Descubra mais recursos com uma conta CUB Premium. Aumentando limites e acesso a recursos adicionais do serviço.',
-    account_premium_more: 'Saiba mais sobre CUB Premium',
-    account_limited: 'Você atingiu o limite máximo. Aumente o limite com uma conta CUB Premium. Saiba mais em <span class="account-modal__site">www.cub.watch/premium</span>',
-    account_code_enter: 'Digite um código de seis dígitos',
-    account_code_error: 'Você inseriu um código incorreto ou desatualizado',
-    account_code_wrong: 'Você especificou um formato incorreto',
-    account_code_where: 'Acesse o site <span class="account-add-device__site">cub.watch/add</span> e insira o código fornecido lá.',
-    account_code_input: 'Inserir código',
-    settings_cub_signin_button: 'Fazer login',
-    network_noconnect: 'Sem conexão de rede',
-    network_404: 'A página solicitada não foi encontrada. [404]',
-    network_401: 'Falha na autorização',
-    network_500: 'Erro do servidor interno. [500]',
-    network_parsererror: 'Falha na análise JSON solicitada.',
-    network_timeout: 'A solicitação expirou.',
-    network_abort: 'A solicitação foi abortada.',
-    network_error: 'Erro desconhecido',
-    size_zero: '0 Byte',
-    size_byte: 'Byte',
-    size_kb: 'KB',
-    size_mb: 'MB',
-    size_gb: 'GB',
-    size_tb: 'TB',
-    size_pp: 'PB',
-    speed_bit: 'bps',
-    speed_kb: 'Kbps',
-    speed_mb: 'Mbps',
-    speed_gb: 'Gbps',
-    speed_tb: 'Tbps',
-    speed_pp: 'Pbps',
-    month_1: 'Janeiro',
-    month_2: 'Fevereiro',
-    month_3: 'Março',
-    month_4: 'Abril',
-    month_5: 'Maio',
-    month_6: 'Junho',
-    month_7: 'Julho',
-    month_8: 'Agosto',
-    month_9: 'Setembro',
-    month_10: 'Outubro',
-    month_11: 'Novembro',
-    month_12: 'Dezembro',
-    day_1: 'Segunda',
-    day_2: 'Terça',
-    day_3: 'Quarta',
-    day_4: 'Quinta',
-    day_5: 'Sexta',
-    day_6: 'Sábado',
-    day_7: 'Domingo',
-    month_1_e: 'Jan',
-    month_2_e: 'Fevereiro',
-    month_3_e: 'Março',
-    month_4_e: 'Abril',
-    month_5_e: 'Maio',
-    month_6_e: 'Junho',
-    month_7_e: 'Julho',
-    month_8_e: 'Agosto',
-    month_9_e: 'Setembro',
-    month_10_e: 'Outubro',
-    month_11_e: 'Novembro',
-    month_12_e: 'Dezembro',
-    week_1: 'Seg',
-    week_2: 'Ter',
-    week_3: 'Qua',
-    week_4: 'Qui',
-    week_5: 'Sex',
-    week_6: 'Sáb',
-    week_7: 'Dom',
-    extensions_enable: 'Ativar',
-    extensions_disable: 'Desativar',
-    extensions_check: 'Verificar estado',
-    extensions_install: 'Instalar',
-    extensions_info: 'Informações',
-    extensions_edit: 'Editar',
-    extensions_change_name: 'Alterar nome',
-    extensions_change_link: 'Alterar endereço',
-    extensions_remove: 'Eliminar',
-    extensions_set_name: 'Digite o nome do plugin',
-    extensions_set_url: 'Digite o URL do plugin',
-    extensions_ready: 'Este plugin já está instalado',
-    extensions_no_info: 'Sem informação',
-    extensions_no_name: 'Sem título',
-    extensions_worked: 'Verificado',
-    extensions_no_plugin: 'Plugin não verificado',
-    extensions_add: 'Adicionar Plugin',
-    extensions_from_memory: 'Instalado na memória',
-    extensions_from_cub: 'Instalado do CUB',
-    extensions_from_popular: 'Plugins populares',
-    extensions_from_lib: 'Biblioteca de plugins',
-    extensions_from_connected: 'Plugins conectados',
-    settings_webos_launcher: 'Lançamento do aplicativo',
-    settings_webos_launcher_add_device: 'Definir como início',
-    settings_webos_launcher_remove_device: 'Remover dos aplicativos iniciais',
-    player_normalization: 'Normalização',
-    change_source_on_cub: 'Alterar fonte para CUB',
-    settings_param_jackett_interview_all: 'Tudo',
-    settings_param_jackett_interview_healthy: 'Disponível apenas',
-    settings_parser_jackett_interview: 'Rastreadores de enquetes',
-    title_ongoing: 'Em andamento',
-    title_pgrating: 'Limite de idade',
-    settings_interface_card_interfice: 'Interface do cartão',
-    settings_interface_card_poster: 'Mostrar cartaz',
-    title_card: 'Cartão',
-    settings_param_card_interface_old: 'Velho',
-    settings_param_card_interface_new: 'Novo',
-    title_seasons: 'Temporadas',
-    title_episodes: 'Series',
-    title_rewiews: 'Avaliações',
-    settings_interface_glass: 'Vidro',
-    settings_interface_glass_descr: 'Mostrar interface em estilo vítreo',
-    settings_interface_black_style: 'Estilo preto',
-    plugins_remove: 'Remover plug-ins',
-    plugins_add_success: 'Plug-in conectado com sucesso',
-    settings_reset: 'Redefinir',
-    title_channel: 'Canal',
-    input_detection_touch: 'Quer mudar para o controle de toque?',
-    input_detection_mouse: 'Deseja alternar para o controle do mouse?',
-    input_detection_remote: 'Quer mudar para controle remoto?',
-    settings_interface_hide_outside_the_screen: 'Ocultar cartões fora da tela',
-    settings_interface_hide_outside_the_screen_descr: 'Isso acelerará a interface renderizar e melhorar o desempenho',
-    https_text: 'Você está usando o protocolo HTTPS, neste protocolo a lâmpada não funciona corretamente. Para o correto funcionamento da lâmpada, utilize o endereço com o protocolo HTTP',
-    extensions_hpu_best: 'Popular',
-    extensions_hpu_recomend: 'Recomendado',
-    extensions_hpu_theme: 'Temas',
-    extensions_hpu_screensaver: 'Protetor de tela',
-    extensions_hpu_video: 'Vídeo',
-    extensions_hpu_control: 'Ao controle',
-    extensions_hpu_other: 'Diversos',
-    extensions_hpu_: 'Descansar',
-    title_author: 'Autor',
-    title_buffer: 'Amortecedor',
-    settings_rest_screensaver_time: 'Depois de quantos minutos para iniciar o protetor de tela',
-    time_h: 'h.',
-    time_m: 'm.',
-    time_s: 's.',
-    settings_param_glass_easy: 'Transparente',
-    settings_param_glass_medium: 'Translúcido',
-    settings_param_glass_blacked: 'Apagado',
-    settings_interface_glass_opacity: 'Transparência de vidro',
-    torrent_error_check_no_auth: 'O servidor respondeu à solicitação, mas a autorização falhou',
-    settings_interface_card_cover: 'Mostrar capa',
-    title_upcoming_episodes: 'Próximos lançamentos de episódios',
-    settings_rest_cache_images: 'Cache de imagens',
-    settings_rest_cache_images_descr: 'Armazene pôsteres e planos de fundo no armazenamento local',
-    settings_player_rewind_title: 'Rebobinar',
-    settings_player_rewind_descr: 'Intervalo de retrocesso em segundos',
-    settings_interface_card_reactions: 'Mostrar reações',
-    title_look: 'A assistir',
-    title_scheduled: 'Agendado',
-    title_viewed: 'Visualizado',
-    title_thrown: 'Descartado',
-    title_reactions: 'Reações',
-    reactions_none: 'Sem reações',
-    reactions_fire: 'Ótimo',
-    reactions_nice: 'Bom',
-    reactions_think: 'Interessante',
-    reactions_bore: 'Entediante',
-    reactions_shit: 'Ruim',
-    reactions_ready: 'Você já deixou uma reação',
-    settings_player_launch_trailers: 'Reprodutor do trailer',
-    title_continued: 'Continua',
-    title_language_short: 'Linguagem'
+    termsofuse_t_13: 'If you believe that the Lampa application still contains content that violates your copyright, you can contact the rights holder of that content and request its removal from the themoviedb.org website. In turn, the Lampa application can remove content upon receiving a proper copyright infringement notification.',
+    settings_rest_protocol_use: 'Secure connection',
+    settings_rest_protocol_descr: 'Use HTTPS protocol',
+    install_app_apk_text: 'We noticed that you are using MediaStationX to run Lampa on Android. We recommend that you install Lampa as an APK application. You can download the latest version of the application here:',
+    tv_status_returning_series: 'Returning series',
+    tv_status_planned: 'Planned',
+    tv_status_in_production: 'In Production',
+    tv_status_ended: 'Ended',
+    tv_status_canceled: 'Canceled',
+    tv_status_pilot: 'Pilot',
+    tv_status_released: 'Released',
+    tv_status_rumored: 'Rumored',
+    tv_status_post_production: 'Post Production',
+    title_last_year: 'Last year',
+    title_reset: 'Reboot',
+    back_to_card: 'Return to card',
+    premiere_author_recomend_1: 'Order pizza and get ready for some excitement.',
+    premiere_author_recomend_2: 'The party is just getting started.',
+    premiere_author_recomend_3: 'Get ready for some adrenaline.',
+    premiere_author_recomend_4: 'Ready for an unforgettable evening?',
+    premiere_author_recomend_5: 'I recommend watching it.',
+    premiere_title: 'Premiere',
+    settings_clear_cache_only: 'Cache Cleared',
+    settings_rest_cache_only: 'Only Cache',
+    settings_rest_cache_only_descr: 'Basic settings will be preserved',
+    settings_rest_cache_all: 'Cache and Data',
+    settings_rest_cache_all_descr: 'All settings and data will be cleared',
+    settings_rest_cache_calculate: 'How much memory is left',
+    title_left: 'Left',
+    account_export_fail_500: 'Unknown error',
+    account_export_fail_610: 'You have exceeded the limit for today',
+    account_export_fail_200: 'Database error, please try again later',
+    account_export_fail_600: 'Error, failed to upload the file',
+    account_export_fail_620: 'Error, file not transmitted',
+    title_parental_control: 'Parental Control',
+    settings_parental_control_param_time_always: 'Always',
+    settings_parental_control_param_time_once: 'Once',
+    settings_parental_control_param_time_10: 'In 10 minutes',
+    settings_parental_control_param_time_20: 'In 20 minutes',
+    settings_parental_control_param_time_30: 'In 30 minutes',
+    settings_parental_control_param_time_60: 'In 1 hour',
+    settings_parental_control_param_time_120: 'In 2 hours',
+    settings_parental_control_change_pin: 'Change PIN',
+    settings_parental_control_demand_title: 'When to Prompt',
+    settings_parental_control_demand_descr: 'After how much time to prompt for the PIN',
+    settings_parental_control_enabled: 'Enabled',
+    settings_parental_control_disabled: 'Disabled',
+    parental_control_input_new_code: 'Enter new PIN code',
+    parental_control_confirm_new_code: 'Confirm PIN code',
+    parental_control_no_match_code: 'PIN code does not match the previous code',
+    parental_control_input_code: 'Enter PIN code',
+    parental_control_input_error: 'You entered an incorrect PIN code',
+    title_worth_rewatch: 'Worth a rewatch'
   };
 
   var langs = {};
@@ -31187,61 +28442,17 @@
       return ru;
     }
   });
-  Object.defineProperty(langs, 'uk', {
-    get: function get() {
-      return uk;
-    }
-  });
   Object.defineProperty(langs, 'en', {
     get: function get() {
       return en;
     }
   });
-  Object.defineProperty(langs, 'be', {
-    get: function get() {
-      return be;
-    }
-  });
-  Object.defineProperty(langs, 'zh', {
-    get: function get() {
-      return zh;
-    }
-  });
-  Object.defineProperty(langs, 'pt', {
-    get: function get() {
-      return pt;
-    }
-  });
-  Object.defineProperty(keys, 'ru', {
-    get: function get() {
-      return 'Русский';
-    }
-  });
-  Object.defineProperty(keys, 'uk', {
-    get: function get() {
-      return 'Українська';
-    }
-  });
-  Object.defineProperty(keys, 'en', {
-    get: function get() {
-      return 'English';
-    }
-  });
-  Object.defineProperty(keys, 'be', {
-    get: function get() {
-      return 'Беларуская';
-    }
-  });
-  Object.defineProperty(keys, 'zh', {
-    get: function get() {
-      return '简体中文';
-    }
-  });
-  Object.defineProperty(keys, 'pt', {
-    get: function get() {
-      return 'Português';
-    }
-  });
+  for (var code$1 in meta.languages) {
+    keys[code$1] = meta.languages[code$1].name;
+    if (!langs[code$1]) langs[code$1] = {};
+    langs[code$1].lang_choice_title = meta.languages[code$1].lang_choice_title;
+    langs[code$1].lang_choice_subtitle = meta.languages[code$1].lang_choice_subtitle;
+  }
 
   /**
    * Перевести
@@ -31268,9 +28479,9 @@
    */
   function add$2(data) {
     for (var name in data) {
-      for (var code in data[name]) {
-        if (langs[code]) {
-          langs[code][name] = data[name][code];
+      for (var _code in data[name]) {
+        if (langs[_code]) {
+          langs[_code][name] = data[name][_code];
         }
       }
     }
@@ -31304,18 +28515,7 @@
    * @returns {{ru:string,en:string}}
    */
   function codes() {
-    var all = {
-      ru: keys.ru,
-      uk: keys.uk,
-      en: keys.en,
-      be: keys.be,
-      zh: keys.zh,
-      pt: keys.pt
-    };
-    for (var i in keys) {
-      all[i] = keys[i];
-    }
-    return all;
+    return Arrays.clone(keys);
   }
   function selected$1(check_codes) {
     return check_codes.indexOf(Storage.get('language', 'ru')) >= 0 ? true : false;
@@ -31892,12 +29092,12 @@
     });
     data.year.items.forEach(function (a) {
       if (a.selected && !a.any) {
-        var need = type == 'movie' ? 'release_date' : 'air_date';
+        var need = type == 'movie' ? 'primary_release_date' : 'first_air_date';
         if (a.title.indexOf('-') >= 0) {
-          query.push(need + '.lte=' + a.title.split('-')[0] + '-01-01');
+          query.push(need + '.lte=' + a.title.split('-')[0] + '-12-31');
           query.push(need + '.gte=' + a.title.split('-')[1] + '-01-01');
         } else {
-          query.push(need + '.gte=' + a.title + '-01-01');
+          query.push((type == 'movie' ? 'primary_release_year' : 'first_air_date_year') + '=' + a.title);
         }
       }
     });
@@ -31988,7 +29188,7 @@
       page: 1
     };
     var object = Activity$1.active();
-    if (object.component == 'category_full' && (object.url.indexOf('discover') == 0 || object.url.indexOf('?cat=') == 0)) Activity$1.replace(activity);else Activity$1.push(activity);
+    if (object.component == 'category_full' && (object.url.indexOf('discover') == 0 || object.url.indexOf('?cat=') == 0)) Activity$1.replace(activity, true);else Activity$1.push(activity);
   }
   function submenu(item) {
     Select.show({
@@ -32008,26 +29208,26 @@
     show: show$3
   };
 
-  var html$3;
+  var html$4;
   var last;
   var scroll;
   var edit_mode;
   var sort_item;
   var sort_timer;
   var visible_timer;
-  function init$b() {
-    html$3 = Template$1.get('menu');
-    scroll = new create$p({
+  function init$d() {
+    html$4 = Template$1.get('menu');
+    scroll = new create$q({
       mask: true,
       over: true
     });
-    if (!window.lampa_settings.torrents_use) html$3.find('[data-action="mytorrents"]').remove();
+    if (!window.lampa_settings.torrents_use) html$4.find('[data-action="mytorrents"]').remove();
     if (!Lang.selected(['ru', 'uk', 'be'])) {
-      html$3.find('[data-action="relise"],[data-action="anime"],[data-action="feed"]').remove();
+      html$4.find('[data-action="relise"],[data-action="anime"],[data-action="feed"]').remove();
     }
     Lampa.Listener.send('menu', {
       type: 'start',
-      body: html$3
+      body: html$4
     });
     updateSort();
     observe();
@@ -32040,7 +29240,7 @@
       }
     });
     scroll.minus();
-    scroll.append(html$3);
+    scroll.append(html$4);
     Lampa.Listener.send('menu', {
       type: 'end'
     });
@@ -32069,7 +29269,7 @@
         }
       }
     });
-    observer.observe(html$3[0], {
+    observer.observe(html$4[0], {
       childList: true,
       subtree: true
     });
@@ -32077,8 +29277,8 @@
   function controller() {
     Controller.add('menu', {
       toggle: function toggle() {
-        Controller.collectionSet(html$3);
-        Controller.collectionFocus(last, html$3);
+        Controller.collectionSet(html$4);
+        Controller.collectionFocus(last, html$4, true);
         clearTimeout(visible_timer);
         $('.wrap__left').removeClass('wrap__left--hidden');
         $('body').toggleClass('menu--open', true);
@@ -32110,7 +29310,7 @@
             var name = $(last).text().trim();
             var hide = Storage.get('menu_hide', '[]');
             if (hide.indexOf(name) == -1) {
-              if ($('.menu__list:eq(0) .menu__item:not(.hidden)', html$3).length > 3) hide.push(name);
+              if ($('.menu__list:eq(0) .menu__item:not(.hidden)', html$4).length > 3) hide.push(name);
             } else hide.splice(hide.indexOf(name), 1);
             Storage.set('menu_hide', hide);
             hideItems();
@@ -32154,7 +29354,7 @@
   }
   function getSort() {
     var items = [];
-    $('.menu__list:eq(0) .menu__item', html$3).each(function () {
+    $('.menu__list:eq(0) .menu__item', html$4).each(function () {
       items.push($(this).text().trim());
     });
     return items;
@@ -32165,7 +29365,7 @@
   function orderSort() {
     var items = Storage.get('menu_sort', '[]');
     if (items.length) {
-      var list = $('.menu__list:eq(0)', html$3);
+      var list = $('.menu__list:eq(0)', html$4);
       items.forEach(function (item) {
         var el = $('.menu__item:contains("' + item + '")', list);
         if (el.length) el.appendTo(list);
@@ -32174,9 +29374,9 @@
   }
   function hideItems() {
     var items = Storage.get('menu_hide', '[]');
-    $('.menu__item', html$3).removeClass('hidden');
+    $('.menu__item', html$4).removeClass('hidden');
     if (items.length) {
-      var list = $('.menu__list:eq(0)', html$3);
+      var list = $('.menu__list:eq(0)', html$4);
       items.forEach(function (item) {
         var el = $('.menu__item:contains("' + item + '")', list);
         if (el.length) el.addClass('hidden');
@@ -32184,29 +29384,29 @@
     }
   }
   function enableEditMode() {
-    html$3.addClass('editable');
+    html$4.addClass('editable');
     edit_mode = true;
     scroll.update($(last), true);
   }
   function disableEditMode() {
-    html$3.removeClass('editable');
+    html$4.removeClass('editable');
     edit_mode = false;
     if (sort_item) {
       sort_item.removeClass('traverse');
       sort_item = false;
     }
     if ($(last).hasClass('hidden')) {
-      var list = $('.menu__list:eq(0)', html$3);
+      var list = $('.menu__list:eq(0)', html$4);
       var items = $('.menu__item', list);
       var inx = items.index($(last));
       var nohide = items.not('.hidden');
       if (nohide.eq(inx).length) last = nohide.eq(inx)[0];else if (nohide.eq(inx - 1).length) last = nohide.eq(inx - 1)[0];else last = nohide.eq(0)[0];
-      Controller.collectionFocus(last, html$3);
+      Controller.collectionFocus(last, html$4);
       scroll.update($(last), true);
     }
   }
   function bindItems() {
-    var list = $('.menu__list:eq(0)', html$3);
+    var list = $('.menu__list:eq(0)', html$4);
     $('.menu__item', list).not('.binded').each(function () {
       var item = $(this);
       item.on('hover:long', function () {
@@ -32222,7 +29422,7 @@
     }
   }
   function ready() {
-    html$3.find('.selector').data('binded_events', true).on('hover:enter', function (e) {
+    html$4.find('.selector').data('binded_events', true).on('hover:enter', function (e) {
       var action = $(e.target).data('action');
       var type = $(e.target).data('type');
       if (action == 'catalog') catalog();
@@ -32334,7 +29534,7 @@
         onSelect: function onSelect(a) {
           var tmdb = Storage.field('source') == 'tmdb' || Storage.field('source') == 'cub';
           Activity$1.push({
-            url: Storage.field('source') == 'tmdb' ? 'movie' : '',
+            url: Storage.field('source') == 'tmdb' ? 'movie' : 'movie',
             title: (a.title || Lang.translate('title_catalog')) + ' - ' + Storage.field('source').toUpperCase(),
             component: tmdb ? 'category' : 'category_full',
             genres: a.id,
@@ -32355,7 +29555,7 @@
   }
   var Menu = {
     render: render$2,
-    init: init$b,
+    init: init$d,
     ready: ready
   };
 
@@ -32369,56 +29569,55 @@
     app.append(wrap);
     app.append(Settings.render());
     app.append(Search.render());
-    app.append(Noty.render());
   }
   var Render = {
     app: app
   };
 
-  var html$2;
+  var html$3;
   var object;
-  function init$a() {
-    html$2 = Template$1.get('iframe');
+  function init$c() {
+    html$3 = Template$1.get('iframe');
   }
   function show$2() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     object = params;
-    html$2.find('iframe').attr('src', params.url)[0].onload = function () {
-      html$2.addClass('iframe--loaded');
+    html$3.find('iframe').attr('src', params.url)[0].onload = function () {
+      html$3.addClass('iframe--loaded');
     };
-    $('body').append(html$2);
-    toggle();
+    $('body').append(html$3);
+    toggle$1();
   }
-  function toggle() {
+  function toggle$1() {
     Controller.add('iframe', {
       toggle: function toggle() {},
-      back: close
+      back: close$1
     });
     Controller.toggle('iframe');
   }
-  function close() {
-    html$2.removeClass('iframe--loaded');
-    html$2.detach();
-    html$2.find('iframe').attr('src', '');
+  function close$1() {
+    html$3.removeClass('iframe--loaded');
+    html$3.detach();
+    html$3.find('iframe').attr('src', '');
     if (object.onBack) object.onBack();
   }
   function render$1() {
-    return html$2;
+    return html$3;
   }
   var Iframe = {
-    init: init$a,
+    init: init$c,
     show: show$2,
-    close: close,
+    close: close$1,
     render: render$1
   };
 
   var items = {};
   var times = 0;
-  var html$1;
+  var html$2;
   var scroll_tabs;
   var scroll_body;
   var last_tab;
-  function init$9() {
+  function init$b() {
     Keypad.listener.follow('keydown', function (e) {
       if (e.code == 38 || e.code == 29460) {
         var enable = Controller.enabled();
@@ -32461,7 +29660,7 @@
     times = 0;
     scroll_tabs.destroy();
     scroll_body.destroy();
-    html$1.remove();
+    html$2.remove();
     Controller.toggle('head');
   }
   function show$1(name) {
@@ -32518,19 +29717,19 @@
     if (last_tab == name) show$1(name);
   }
   function build() {
-    html$1 = Template$1.get('console');
-    scroll_body = new create$p({
+    html$2 = Template$1.get('console');
+    scroll_body = new create$q({
       over: true,
       mask: true
     });
-    scroll_tabs = new create$p({
+    scroll_tabs = new create$q({
       horizontal: true
     });
     for (var i in items) tab(i, items[i]);
-    html$1.find('.console__tabs').append(HeadBackward(Lang.translate('menu_console'))).append(scroll_tabs.render());
-    html$1.find('.console__body').append(scroll_body.render());
-    scroll_body.height(html$1.find('.console__tabs'));
-    $('body').append(html$1);
+    html$2.find('.console__tabs').append(HeadBackward(Lang.translate('menu_console'))).append(scroll_tabs.render());
+    html$2.find('.console__body').append(scroll_body.render());
+    scroll_body.height(html$2.find('.console__tabs'));
+    $('body').append(html$2);
   }
   function add$1(name, message) {
     if (!items[name]) items[name] = [];
@@ -32585,13 +29784,24 @@
       log.apply(console, mcon);
     };
     window.addEventListener("error", function (e) {
+      var welcome = $('.welcome');
+      if (welcome.length) {
+        welcome.fadeOut(500, function () {
+          Noty.show('Error: ' + (e.error || e).message + '<br><br>' + stack, {
+            time: 8000
+          });
+        });
+      }
       var stack = (e.error && e.error.stack ? e.error.stack : e.stack || '').split("\n").join('<br>');
-      add$1('Script', (e.error || e).message + '<br><br>' + stack);
-      if (stack.indexOf('resetTopStyle') == -1) Noty.show('Error: ' + (e.error || e).message + '<br><br>' + stack);
+      var message = typeof e.error == 'string' ? e.error : (e.error || e).message;
+      add$1('Script', message + '<br><br>' + stack);
+      if (!(stack.indexOf('resetTopStyle') >= 0 || stack.indexOf('Blocked a frame') >= 0)) Noty.show('Error: ' + message + '<br><br>' + stack, {
+        time: 8000
+      });
     });
   }
   var Console = {
-    init: init$9
+    init: init$b
   };
 
   function create$1() {
@@ -32633,7 +29843,7 @@
 
   var body;
   var code = 0;
-  var network$1 = new create$q();
+  var network$1 = new create$p();
   var fields = ['torrents_view', 'plugins', 'favorite', 'file_view'];
   var timer;
   var readed;
@@ -32641,7 +29851,7 @@
   /**
    * Запуск
    */
-  function init$8() {
+  function init$a() {
     if (Storage.field('cloud_use')) status(1);
     Settings.listener.follow('open', function (e) {
       body = null;
@@ -32652,15 +29862,15 @@
     });
     Storage.listener.follow('change', function (e) {
       if (e.name == 'cloud_token') {
-        login(start);
+        login(start$1);
       } else if (e.name == 'cloud_use') {
-        if (e.value == 'true') login(start);else status(0);
+        if (e.value == 'true') login(start$1);else status(0);
       } else if (fields.indexOf(e.name) >= 0) {
         clearTimeout(timer);
         timer = setTimeout(update$1, 500);
       }
     });
-    login(start);
+    login(start$1);
   }
 
   /**
@@ -32775,7 +29985,7 @@
   /**
    * Получаем список файлов
    */
-  function start(call) {
+  function start$1(call) {
     if (Storage.get('cloud_token') && Storage.field('cloud_use')) {
       network$1.silent('https://api.github.com/gists', function (data) {
         var file;
@@ -32847,7 +30057,7 @@
     }
   }
   var Cloud = {
-    init: init$8
+    init: init$a
   };
 
   function create() {
@@ -32903,9 +30113,18 @@
     }, {
       key: "update",
       value: function update() {
+        var url = (this.data.url || this.data.link) + '';
+        var loc = url.slice(0, 6) == 'https:' || window.location.protocol == 'https:';
+        var hts = url.slice(0, 6) == 'https:' || url.slice(0, 5) == 'http:';
+        if (window.location.protocol == 'https:' && hts) url = url.replace(/(http:\/\/|https:\/\/)/g, 'https://');
         this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
         this.html.querySelector('.extensions__item-author').innerText = this.data.author || (this.params.type == 'plugins' ? '@cub' : '@lampa');
-        this.html.querySelector('.extensions__item-descr').innerText = (this.data.descr || this.data.url || this.data.link).replace(/\n|\t|\r/g, ' ');
+        this.html.querySelector('.extensions__item-descr').innerText = (this.data.descr || url).replace(/\n|\t|\r/g, ' ');
+        var proto = this.html.querySelector('.extensions__item-proto');
+        if (proto && hts) {
+          proto.toggleClass('hide', !Boolean(this.params.type == 'plugins' || this.params.type == 'installs'));
+          proto.addClass('protocol-' + (loc ? 'https' : 'http'));
+        }
         var status = this.html.querySelector('.extensions__item-disabled');
         status.innerText = Lang.translate('player_disabled');
         if (this.data.status || !this.params.autocheck) status.classList.add('hide');else status.classList.remove('hide');
@@ -32997,12 +30216,11 @@
 
   var Extension = /*#__PURE__*/function (_Item) {
     _inherits(Extension, _Item);
-    var _super = _createSuper(Extension);
     function Extension(data, params) {
       var _this;
       _classCallCheck(this, Extension);
-      _this = _super.call(this, data, params);
-      _this.network = new create$q();
+      _this = _callSuper(this, Extension, [data, params]);
+      _this.network = new create$p();
       _this.template = 'extensions_item';
       return _this;
     }
@@ -33036,7 +30254,7 @@
           title: Lang.translate('extensions_check'),
           status: true
         });
-        if (this.params.cub) {
+        if (this.params.cub || this.params.noedit) {
           if (this.params.type == 'extensions') {
             menu.push({
               title: Lang.translate('extensions_install'),
@@ -33148,8 +30366,9 @@
           stat.classList.remove('hide');
           check.classList.add('hide');
         };
+        var url = Utils$2.rewriteIfHTTPS(this.data.url || this.data.link);
         this.network.timeout(5000);
-        this.network["native"](this.data.url || this.data.link, function (str) {
+        this.network["native"](url, function (str) {
           if (/Lampa\./.test(str)) {
             display('success', 200, Lang.translate('extensions_worked'));
           } else {
@@ -33167,11 +30386,10 @@
 
   var Recomend = /*#__PURE__*/function (_Extension) {
     _inherits(Recomend, _Extension);
-    var _super = _createSuper(Recomend);
     function Recomend(data, params) {
       var _this;
       _classCallCheck(this, Recomend);
-      _this = _super.call(this, data, params);
+      _this = _callSuper(this, Recomend, [data, params]);
       _this.template = 'extensions_recomend';
       return _this;
     }
@@ -33184,7 +30402,7 @@
         this.img.onload = function () {
           _this2.img.classList.add('loaded');
         };
-        this.img.src = this.data.image;
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
       }
     }, {
       key: "destroy",
@@ -33228,7 +30446,7 @@
       key: "set",
       value: function set(url) {
         $('#cub-theme').remove();
-        var href = Utils$2.addUrlComponent(url, 'token=' + encodeURIComponent(Storage.get('account', '{}').token));
+        var href = Utils$2.rewriteIfHTTPS(Utils$2.addUrlComponent(url, 'token=' + encodeURIComponent(Storage.get('account', '{}').token)));
         var css = $('<link rel="stylesheet" href="' + href + '" id="cub-theme">');
         $('body').append(css);
       }
@@ -33239,13 +30457,12 @@
 
   var Theme = /*#__PURE__*/function (_Item) {
     _inherits(Theme, _Item);
-    var _super = _createSuper(Theme);
     function Theme(data, params) {
       var _this;
       _classCallCheck(this, Theme);
-      _this = _super.call(this, data, params);
+      _this = _callSuper(this, Theme, [data, params]);
       _this.template = 'extensions_theme';
-      _this.link = Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id;
+      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
       return _this;
     }
     _createClass(Theme, [{
@@ -33269,7 +30486,7 @@
         this.img.onload = function () {
           _this2.img.classList.add('loaded');
         };
-        this.img.src = this.data.image;
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
         this.html.addEventListener('hover:enter', this.menu.bind(this));
       }
     }, {
@@ -33313,13 +30530,12 @@
 
   var Screensaver = /*#__PURE__*/function (_Item) {
     _inherits(Screensaver, _Item);
-    var _super = _createSuper(Screensaver);
     function Screensaver(data, params) {
       var _this;
       _classCallCheck(this, Screensaver);
-      _this = _super.call(this, data, params);
+      _this = _callSuper(this, Screensaver, [data, params]);
       _this.template = 'extensions_screensaver';
-      _this.link = Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id;
+      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
       return _this;
     }
     _createClass(Screensaver, [{
@@ -33344,7 +30560,7 @@
         this.img.onload = function () {
           _this2.img.classList.add('loaded');
         };
-        this.img.src = this.data.image;
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
         this.html.addEventListener('hover:enter', this.menu.bind(this));
       }
     }, {
@@ -33411,7 +30627,7 @@
       key: "create",
       value: function create() {
         var _this = this;
-        this.scroll = new create$p({
+        this.scroll = new create$q({
           horizontal: true,
           step: window.innerWidth / 4
         });
@@ -33545,17 +30761,18 @@
   }();
 
   var Main = /*#__PURE__*/function () {
-    function Main() {
+    function Main(params) {
       _classCallCheck(this, Main);
       this.items = [];
       this.active = 0;
+      this.params = params;
     }
     _createClass(Main, [{
       key: "create",
       value: function create() {
         var _this = this;
         this.html = Template$1.js('extensions');
-        this.scroll = new create$p({
+        this.scroll = new create$q({
           mask: true
         });
         this.scroll.onWheel = function (step) {
@@ -33564,7 +30781,7 @@
         this.scroll.append(HeadBackward(Lang.translate('settings_main_plugins'), true));
         this.scroll.height();
         this.html.querySelector('.extensions__body').appendChild(this.scroll.render(true));
-        this.load();
+        if (this.params.store) this.loadCustomStore();else this.load();
       }
     }, {
       key: "add",
@@ -33594,32 +30811,72 @@
         line.scroll.body(true).appendChild(add.render());
       }
     }, {
+      key: "loadCustomStore",
+      value: function loadCustomStore() {
+        var _this2 = this;
+        this.appendLoader();
+        var net = new create$p();
+        net.silent(this.params.store, function (data) {
+          _this2.loader.remove();
+          net = null;
+          if (data.results && data.results.length) {
+            if (_this2.params.with_installed) {
+              _this2.appendLine(Plugins.get().reverse(), {
+                title: Lang.translate('extensions_from_memory'),
+                type: 'installs',
+                autocheck: true
+              });
+            }
+            data.results.forEach(function (a) {
+              _this2.appendLine(a.results, {
+                title: a.title || Lang.translate('player_unknown'),
+                type: 'extensions',
+                hpu: a.hpu,
+                noedit: true
+              });
+            });
+            if (_this2.params.with_installed) _this2.add();
+            _this2.items.slice(0, 3).forEach(function (i) {
+              return i.display();
+            });
+            Layer.visible(_this2.html);
+            _this2.toggle();
+          } else {
+            _this2.error();
+          }
+        }, function () {
+          _this2.loader.remove();
+          net = null;
+          _this2.error();
+        });
+      }
+    }, {
       key: "load",
       value: function load() {
-        var _this2 = this;
+        var _this3 = this;
         this.appendLoader();
         var need = 2;
         if (window.lampa_settings.plugins_store) need += 2;
         var status = new status$1(need);
         status.onComplite = function () {
-          _this2.loader.remove();
-          _this2.appendLine(status.data.installs, {
+          _this3.loader.remove();
+          _this3.appendLine(status.data.installs, {
             title: Lang.translate('extensions_from_memory'),
             type: 'installs',
             autocheck: true
           });
-          if (status.data.plugins.length) _this2.appendLine(status.data.plugins, {
+          if (status.data.plugins.length) _this3.appendLine(status.data.plugins, {
             title: Lang.translate('extensions_from_cub'),
             cub: true,
             type: 'plugins',
             autocheck: true
           });
-          if (status.data.best && status.data.best.length) _this2.appendLine(status.data.best, {
+          if (status.data.best && status.data.best.length) _this3.appendLine(status.data.best, {
             title: Lang.translate('extensions_from_popular'),
             cub: true,
             type: 'extensions'
           });
-          if (status.data.all && status.data.all.length) _this2.appendLine(status.data.all.reverse(), {
+          if (status.data.all && status.data.all.length) _this3.appendLine(status.data.all.reverse(), {
             title: Lang.translate('extensions_from_lib'),
             cub: true,
             type: 'extensions'
@@ -33627,7 +30884,7 @@
           if (status.data.list) {
             status.data.list.forEach(function (data) {
               if (data.results.length) {
-                _this2.appendLine(data.results, {
+                _this3.appendLine(data.results, {
                   title: Lang.translate('extensions_hpu_' + data.hpu),
                   cub: true,
                   type: 'extensions',
@@ -33636,12 +30893,12 @@
               }
             });
           }
-          _this2.add();
-          _this2.items.slice(0, 3).forEach(function (i) {
+          _this3.add();
+          _this3.items.slice(0, 3).forEach(function (i) {
             return i.display();
           });
-          Layer.visible(_this2.html);
-          _this2.toggle();
+          Layer.visible(_this3.html);
+          _this3.toggle();
         };
         status.append('installs', Plugins.get().reverse());
         Account.plugins(function (plugins) {
@@ -33668,16 +30925,22 @@
         this.scroll.body(true).appendChild(this.loader);
       }
     }, {
+      key: "error",
+      value: function error() {
+        var empty = new Lampa.Empty();
+        this.scroll.body(true).appendChild(empty.render(true));
+      }
+    }, {
       key: "appendLine",
       value: function appendLine(data, params) {
-        var _this3 = this;
+        var _this4 = this;
         var line = new Line(data, params);
         line.onBack = this.onBack.bind(this);
         line.onUp = this.up.bind(this);
         line.onDown = this.down.bind(this);
         line.onToggle = function () {
-          _this3.active = _this3.items.indexOf(line);
-          _this3.scroll.update(line.render(), true);
+          _this4.active = _this4.items.indexOf(line);
+          _this4.scroll.update(line.render(), true);
         };
         line.create();
         this.scroll.body(true).appendChild(line.render());
@@ -33705,12 +30968,12 @@
     }, {
       key: "toggle",
       value: function toggle() {
-        var _this4 = this;
+        var _this5 = this;
         Controller.add('extensions', {
           toggle: function toggle() {
-            Controller.collectionSet(_this4.html);
-            if (_this4.items.length) {
-              _this4.items[_this4.active].toggle();
+            Controller.collectionSet(_this5.html);
+            if (_this5.items.length) {
+              _this5.items[_this5.active].toggle();
             }
           },
           back: this.onBack
@@ -33729,22 +30992,26 @@
   }();
 
   var extensions;
-  var listener = start$5();
-  function init$7() {}
+  var listener = start$6();
+  function init$9() {}
   function show() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     if (extensions) return;
     var controller = Controller.enabled().name;
-    extensions = new Main();
+    extensions = new Main(params);
     extensions.onBack = function () {
       extensions.destroy();
       extensions = null;
+      document.body.toggleClass('ambience--enable', false);
       Controller.toggle(controller);
-      listener.send('close', {});
+      if (params.onClose) params.onClose();
+      if (!params.store) listener.send('close', {});
     };
     extensions.create();
+    document.body.toggleClass('ambience--enable', true);
     document.body.appendChild(extensions.render(true));
     extensions.toggle();
-    listener.send('open', {
+    if (!params.store) listener.send('open', {
       extensions: extensions
     });
   }
@@ -33753,7 +31020,7 @@
     return js ? html : $(html);
   }
   var Extensions = {
-    init: init$7,
+    init: init$9,
     listener: listener,
     show: show,
     render: render
@@ -33761,12 +31028,12 @@
 
   var _created = [];
   var _loaded = [];
-  var _network = new create$q();
+  var _network = new create$p();
 
   /**
    * Запуск
    */
-  function init$6() {
+  function init$8() {
     _loaded = Storage.get('plugins', '[]');
     Settings.main().render().find('[data-component="plugins"]').unbind('hover:enter').on('hover:enter', function () {
       Extensions.show();
@@ -33784,6 +31051,9 @@
         url: a,
         status: 1
       } : a;
+    });
+    list.forEach(function (a) {
+      a.url = (a.url + '').replace('cub.watch', object$2.cub_domain);
     });
     console.log('Plugins', 'modify:', list);
     Storage.set('plugins', list);
@@ -33855,6 +31125,7 @@
   }
   function addPluginParams(url) {
     var encode = url;
+    encode = encode.replace('cub.watch', object$2.cub_domain);
     if (!/[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}/.test(encode)) {
       encode = encode.replace(/\{storage_(\w+|\d+|_|-)\}/g, function (match, key) {
         return encodeURIComponent(Base64.encode(localStorage.getItem(key) || ''));
@@ -33863,8 +31134,16 @@
       if (Account.logged() && email) encode = Utils$2.addUrlComponent(encode, 'email=' + encodeURIComponent(Base64.encode(email)));
       encode = Utils$2.addUrlComponent(encode, 'logged=' + encodeURIComponent(Account.logged() ? 'true' : 'false'));
       encode = Utils$2.addUrlComponent(encode, 'reset=' + Math.random());
+      encode = Utils$2.rewriteIfHTTPS(encode);
     }
     return encode;
+  }
+  function loadBlackList(call) {
+    _network.silent('./plugins_black_list.json', function (list) {
+      call(list);
+    }, function () {
+      call([]);
+    });
   }
 
   /**
@@ -33873,53 +31152,65 @@
   function load(call) {
     console.log('Plugins', 'start load');
     modify();
-    Account.plugins(function (plugins) {
-      var puts = window.lampa_settings.plugins_use ? plugins.filter(function (plugin) {
-        return plugin.status;
-      }).map(function (plugin) {
-        return plugin.url;
-      }).concat(Storage.get('plugins', '[]').filter(function (plugin) {
-        return plugin.status;
-      }).map(function (plugin) {
-        return plugin.url;
-      })) : [];
-      puts.push('./plugins/modification.js');
-      puts = puts.filter(function (element, index) {
-        return puts.indexOf(element) === index;
+    loadBlackList(function (black_list) {
+      Account.plugins(function (plugins) {
+        var puts = window.lampa_settings.plugins_use ? plugins.filter(function (plugin) {
+          return plugin.status;
+        }).map(function (plugin) {
+          return plugin.url;
+        }).concat(Storage.get('plugins', '[]').filter(function (plugin) {
+          return plugin.status;
+        }).map(function (plugin) {
+          return plugin.url;
+        })) : [];
+        puts.push('./plugins/modification.js');
+        puts = puts.filter(function (element, index) {
+          return puts.indexOf(element) === index;
+        });
+        console.log('Plugins', 'load list:', puts);
+        black_list.push('lipp.xyz');
+        black_list.push('llpp.xyz');
+        black_list.push('scabrum.github.io');
+        console.log('Plugins', 'black list:', black_list);
+        black_list.forEach(function (b) {
+          puts = puts.filter(function (p) {
+            return p.indexOf(b) == -1;
+          });
+        });
+        console.log('Plugins', 'clear list:', puts);
+        var errors = [];
+        var original = {};
+        var include = [];
+        puts.forEach(function (url) {
+          var encode = addPluginParams(url);
+          include.push(encode);
+          original[encode] = url;
+        });
+        Utils$2.putScriptAsync(include, function () {
+          call();
+          if (errors.length) {
+            setTimeout(function () {
+              Noty.show(Lang.translate('plugins_no_loaded') + ' (' + errors.join(', ') + ')', {
+                time: 6000
+              });
+            }, 2000);
+          }
+        }, function (u) {
+          if (u.indexOf('modification.js') == -1) {
+            console.log('Plugins', 'error:', original[u]);
+            errors.push(original[u]);
+            createPluginDB(original[u]);
+          }
+        }, function (u) {
+          console.log('Plugins', 'include:', original[u]);
+          _created.push(original[u]);
+          updatePluginDB(original[u], u);
+        }, false);
       });
-      console.log('Plugins', 'list:', puts);
-      var errors = [];
-      var original = {};
-      var include = [];
-      puts.forEach(function (url) {
-        var encode = addPluginParams(url);
-        include.push(encode);
-        original[encode] = url;
-      });
-      Utils$2.putScriptAsync(include, function () {
-        call();
-        if (errors.length) {
-          setTimeout(function () {
-            Noty.show(Lang.translate('plugins_no_loaded') + ' (' + errors.join(', ') + ')', {
-              time: 6000
-            });
-          }, 2000);
-        }
-      }, function (u) {
-        if (u.indexOf('modification.js') == -1) {
-          console.log('Plugins', 'error:', original[u]);
-          errors.push(original[u]);
-          createPluginDB(original[u]);
-        }
-      }, function (u) {
-        console.log('Plugins', 'include:', original[u]);
-        _created.push(original[u]);
-        updatePluginDB(original[u], u);
-      }, false);
     });
   }
   var Plugins = {
-    init: init$6,
+    init: init$8,
     load: load,
     remove: remove,
     loaded: function loaded() {
@@ -33953,7 +31244,7 @@
   /**
    * Запуск
    */
-  function init$5() {
+  function init$7() {
     if (typeof tizen !== 'undefined') {
       setInterval(lauchPick, 1000 * 60 * 10);
       lauchPick();
@@ -34085,11 +31376,11 @@
     }
   }
   var Tizen = {
-    init: init$5
+    init: init$7
   };
 
   function component(object) {
-    var scroll = new create$p({
+    var scroll = new create$q({
       mask: true,
       over: true,
       scroll_by_item: true,
@@ -34236,7 +31527,7 @@
 
   function open$1(callSelected, callCancel) {
     var html = Template$1.get('lang_choice', {});
-    var scroll = new create$p({
+    var scroll = new create$q({
       mask: true,
       over: true
     });
@@ -34291,19 +31582,22 @@
     open: open$1
   };
 
-  function init$4() {
+  function init$6() {
     if (!Platform.is('webos')) return;
     var field = $("<div class=\"settings-folder selector\" data-component=\"webos_launcher\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <g transform=\"matrix(1.06,0,0,1.06,-0.9600000000000009,-0.9600000000000009)\">\n                    <path d=\"m26.59 31h-21.18c-2.431 0-4.41-1.979-4.41-4.41v-21.18c0-2.431 1.979-4.41 4.41-4.41h21.18c2.431 0 4.41 1.979 4.41 4.41v21.18c0 2.431-1.979 4.41-4.41 4.41zm-21.18-28c-1.329 0-2.41 1.081-2.41 2.41v21.18c0 1.329 1.081 2.41 2.41 2.41h21.18c1.329 0 2.41-1.081 2.41-2.41v-21.18c0-1.329-1.081-2.41-2.41-2.41z\" fill=\"#fff\"></path>\n                    <path d=\"m21.129 24h-10.258c-1.583 0-2.871-1.288-2.871-2.871v-6.167c0-.925.449-1.798 1.202-2.336l5.129-3.664c.998-.712 2.339-.712 3.337 0l5.129 3.665c.754.537 1.203 1.41 1.203 2.335v6.167c0 1.583-1.288 2.871-2.871 2.871zm-5.635-13.41-5.129 3.664c-.229.163-.365.428-.365.708v6.167c0 .48.391.871.871.871h10.259c.479 0 .87-.391.87-.871v-6.167c0-.281-.136-.545-.364-.708l-5.129-3.665c-.303-.215-.71-.215-1.013.001z\" fill=\"#fff\"></path>\n                </g>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">".concat(Lang.translate('settings_webos_launcher'), "</div>\n    </div>"));
     Settings.main().render().find('[data-component="more"]').after(field);
     Settings.main().update();
     Lampa.Template.add('settings_webos_launcher', "<div>\n        <div class=\"settings-param selector\" data-name=\"add\" data-static=\"true\">\n            <div class=\"settings-param__name\">#{settings_webos_launcher_add_device}</div>\n        </div>\n        <div class=\"settings-param selector\" data-name=\"remove\" data-static=\"true\">\n            <div class=\"settings-param__name\">#{settings_webos_launcher_remove_device}</div>\n        </div>\n    </div>");
     Settings.listener.follow('open', function (e) {
+      var appid = webOS.fetchAppId();
+      console.log('WebOS', 'current appid:', appid);
+      if (appid.length == 0) appid = window.lampa_settings.iptv ? 'icva' : 'com.lampa.tv';
       if (e.name == 'webos_launcher') {
         e.body.find('[data-name="add"]').unbind('hover:enter').on('hover:enter', function () {
           webOS.service.request("luna://com.webos.service.eim", {
             method: "addDevice",
             parameters: {
-              "appId": "com.lampa.tv",
+              "appId": appid,
               "pigImage": "/pigImage.jpg",
               "type": "MVPD_IP",
               "showPopup": true,
@@ -34322,7 +31616,7 @@
           webOS.service.request("luna://com.webos.service.eim", {
             method: "deleteDevice",
             parameters: {
-              "appId": "com.lampa.tv",
+              "appId": appid,
               "showPopup": true
             },
             onSuccess: function onSuccess(res) {
@@ -34337,12 +31631,12 @@
     });
   }
   var WebOSLauncher = {
-    init: init$4
+    init: init$6
   };
 
   function open(callSelected) {
     var html = Template$1.get('lang_choice', {});
-    var scroll = new create$p({
+    var scroll = new create$q({
       mask: true,
       over: true
     });
@@ -34518,64 +31812,17 @@
   }();
 
   var network;
-  var translates = {
-    premiere_author_recomend_1: {
-      ru: 'Закажите пиццу и готовьтесь к драйву.',
-      en: 'Order pizza and get ready for some excitement.',
-      uk: 'Замовте піцу та підготуйтеся до драйву.',
-      be: 'Замовіце піцу і падрыхтуйцеся да драйву.',
-      pt: 'Peça pizza e prepare-se para a emoção.',
-      zh: '订披萨，准备好迎接刺激。'
-    },
-    premiere_author_recomend_2: {
-      ru: 'Вечеринка только начинается.',
-      en: 'The party is just getting started.',
-      uk: 'Вечірка тільки починається.',
-      be: 'Вечарынка толькі пачынаецца.',
-      pt: 'A festa está apenas começando.',
-      zh: '派对刚刚开始。'
-    },
-    premiere_author_recomend_3: {
-      ru: 'Подготовьтесь к адреналину.',
-      en: 'Get ready for some adrenaline.',
-      uk: 'Підготуйтесь до адреналіну.',
-      be: 'Прыгатуйцеся да адрэналіну.',
-      pt: 'Prepare-se para a adrenalina.',
-      zh: '准备迎接肾上腺素。'
-    },
-    premiere_author_recomend_4: {
-      ru: 'Готовы к незабываемому вечеру?',
-      en: 'Ready for an unforgettable evening?',
-      uk: 'Готові до незабутнього вечора?',
-      be: 'Гатовыя да нязабыўнага вечара?',
-      pt: 'Pronto para uma noite inesquecível?',
-      zh: '准备好度过难忘的夜晚了吗？'
-    },
-    premiere_author_recomend_5: {
-      ru: 'Рекомендую к просмотру.',
-      en: 'I recommend watching it.',
-      uk: 'Я рекомендую його подивитися.',
-      be: 'Я рэкамендую гэта праглядзець.',
-      pt: 'Eu recomendo assistir.',
-      zh: '我推荐观看它。'
-    },
-    premiere_title: {
-      ru: 'Премьера',
-      en: 'Premiere',
-      uk: 'Прем\'єра',
-      be: 'Прем’ера',
-      pt: 'Estréia',
-      zh: '首映'
-    }
-  };
-  function init$3() {
-    network = new create$q();
+  function init$5() {
+    network = new create$p();
     Socket.listener.follow('message', function (e) {
       if (e.method == 'premiere') update(e.data);
     });
   }
   function update(data) {
     var id = data.type + '/' + data.id;
+    console.log('Premiere', 'load:', data, 'exist:', Boolean(Notice$1.classes.lampa.notices.find(function (n) {
+      return n.id == id;
+    })));
     if (Notice$1.classes.lampa.notices.find(function (n) {
       return n.id == id;
     })) return;
@@ -34583,6 +31830,7 @@
     network.silent(TMDB$1.api(id + '?append_to_response=translations,credits&language=' + Storage.get('language', 'ru') + '&api_key=' + TMDB$1.key()), function (movie) {
       network.silent(TMDB$1.api(id + '/images?include_image_language=' + codes.join(',') + '&language=' + Storage.get('language', 'ru') + '&api_key=' + TMDB$1.key()), function (images) {
         var card = Arrays.clone(movie);
+        console.log('Premiere', 'card loaded', card);
         delete card.translations;
         delete card.credits;
         delete card.credits;
@@ -34601,7 +31849,7 @@
         movie.translations.translations.filter(function (t) {
           return codes.indexOf(t.iso_639_1) >= 0;
         }).forEach(function (t) {
-          notice.title[t.iso_639_1] = translates.premiere_title[t.iso_639_1] + ': ' + (t.data.title || t.data.name || movie.title || movie.name);
+          notice.title[t.iso_639_1] = Lang.translate('premiere_title') + ': ' + (t.data.title || t.data.name || movie.title || movie.name);
           notice.text[t.iso_639_1] = (t.data.overview || movie.overview || '').slice(0, 130) + '...';
         });
         images.posters.forEach(function (i) {
@@ -34613,55 +31861,64 @@
           });
           if (casts.length) {
             notice.author = {};
-            var recomend = translates['premiere_author_recomend_' + (Math.floor(Math.random() * 5) + 1)];
             codes.forEach(function (c) {
               notice.author[c] = {
-                name: casts[0].character,
+                name: casts[0].name || casts[0].character,
                 img: casts[0].profile_path,
-                text: recomend[c] || recomend.en
+                text: Lang.translate('premiere_author_recomend_' + (Math.floor(Math.random() * 5) + 1))
               };
             });
           }
         }
-        Notice$1.pushNotice('lampa', notice);
+        Notice$1.pushNotice('lampa', notice, function () {
+          console.log('Premiere', 'card added');
+        }, function (er) {
+          console.log('Premiere', 'card added error:', er);
+        });
       });
     });
   }
   var Premiere = {
-    init: init$3
+    init: init$5
   };
 
-  function init$2() {
+  function init$4() {
     Lang.add({
       ad_notice_tv_text_1: {
         ru: 'Будьте в курсе новых серий - получайте уведомления о переводах на свой смартфон!',
         ua: 'Будьте в курсі нових серій - отримуйте сповіщення про переклади на свій смартфон!',
-        be: 'Будзьце ў курсе новых серый - атрымлівайце апавяшчэння аб перакладах на свой смартфон!'
+        be: 'Будзьце ў курсе новых серый - атрымлівайце апавяшчэння аб перакладах на свой смартфон!',
+        bg: 'Бъдете в час с новите серии - получавайте уведомление за преводите на своят смартфон!'
       },
       ad_notice_tv_text_2: {
         ru: 'Никогда не пропускайте новую серию - получайте уведомления о переводах на свой смартфон!',
         ua: 'Ніколи не пропускайте нову серію - отримуйте сповіщення про переклади на свій смартфон!',
-        be: 'Ніколі не прапускайце новую серыю - атрымлівайце апавяшчэння аб перакладах на свой смартфон!'
+        be: 'Ніколі не прапускайце новую серыю - атрымлівайце апавяшчэння аб перакладах на свой смартфон!',
+        bg: 'Бъдете в час с новите серии - получавайте уведомление за преводите на своят смартфон!'
       },
       ad_notice_tv_text_3: {
         ru: 'Оставайтесь в центре событий - получайте уведомления о переводах новых серий на свой смартфон!',
         ua: 'Залишайтесь у центрі подій - отримуйте повідомлення про переведення нових серій на свій смартфон!',
-        be: 'Заставайцеся ў цэнтры падзей - атрымлівайце апавяшчэння аб перакладах новых серый на свой смартфон!'
+        be: 'Заставайцеся ў цэнтры падзей - атрымлівайце апавяшчэння аб перакладах новых серый на свой смартфон!',
+        bg: 'Бъдете в центъра на събитията - получавайте уведомление за преводите на новите серии на своят смартфон!'
       },
       ad_notice_tv_text_4: {
         ru: 'Будьте первыми, кто узнает о переводах новых серий - получайте уведомления на свой смартфон!',
         ua: 'Будьте першими, хто дізнається про переклади нових серій – отримуйте повідомлення на свій смартфон!',
-        be: 'Будзьце першымі, хто даведаецца аб перакладах новых серый - атрымлівайце апавяшчэння на свой смартфон!'
+        be: 'Будзьце першымі, хто даведаецца аб перакладах новых серый - атрымлівайце апавяшчэння на свой смартфон!',
+        bg: 'Бъдете първи, за да узнаете за превода на нови серии - получавайте уведомление на своят смартфон!'
       },
       ad_notice_tv_text_5: {
         ru: 'Не пропустите ни одной новой серии - получайте уведомления о переводах на свой смартфон и смотрите сериалы в любимом переводе!',
         ua: 'Не пропустіть жодної нової серії – отримуйте повідомлення про переклади на свій смартфон та дивіться серіали у улюбленому перекладі!',
-        be: 'Не прапусціце ніводнай новай серыі - атрымлівайце апавяшчэнні аб перакладах на свой смартфон і глядзіце серыялы ў любімым перакладзе!'
+        be: 'Не прапусціце ніводнай новай серыі - атрымлівайце апавяшчэнні аб перакладах на свой смартфон і глядзіце серыялы ў любімым перакладзе!',
+        bg: 'Не пропускайте нито една серия - получавайте уведомление за преводите на своят смартфон и гледайте сериалите с желаният превод!'
       },
       ad_notice_tv: {
         ru: 'Получение уведомлений о переводе сериала на свой смартфон - это удобный способ всегда оставаться в курсе и не пропустить ни одной серии. Вы больше не будете терять время на поиски новых серий и следить за релизами вручную. Просто подпишитесь на перевод и получайте уведомления о выходе новых серий на свой смартфон. Это сэкономит вам время и сделает просмотр сериалов еще более комфортным.',
         ua: 'Отримання повідомлень про переведення серіалу на свій смартфон – це зручний спосіб завжди залишатися в курсі та не пропустити жодної серії. Ви більше не будете гаяти час на пошуки нових серій і стежити за релізами вручну. Просто підпишіться на переклад та отримуйте повідомлення про вихід нових серій на свій смартфон. Це заощадить вам час і зробить перегляд серіалів ще комфортнішим.',
-        be: 'Атрыманне апавяшчэнняў аб пераводзе серыяла на свой смартфон - гэта зручны спосаб заўсёды заставацца ў курсе і не прапусціць ніводнай серыі. Вы больш не будзеце марнаваць час на пошукі новых серый і сачыць за рэлізамі ўручную. Проста падпішыцеся на пераклад і атрымлівайце апавяшчэнні аб выхадзе новых серый на свой смартфон. Гэта зэканоміць вам час і зробіць прагляд серыялаў яшчэ камфортнейшым.'
+        be: 'Атрыманне апавяшчэнняў аб пераводзе серыяла на свой смартфон - гэта зручны спосаб заўсёды заставацца ў курсе і не прапусціць ніводнай серыі. Вы больш не будзеце марнаваць час на пошукі новых серый і сачыць за рэлізамі ўручную. Проста падпішыцеся на пераклад і атрымлівайце апавяшчэнні аб выхадзе новых серый на свой смартфон. Гэта зэканоміць вам час і зробіць прагляд серыялаў яшчэ камфортнейшым.',
+        bg: 'Получавайте уведомление за преведени сериали на своят смартфон - това е удобен начин винаги да си в час и да не пропуснеш нито една серия. Повече няма да губите време в търсене на нови излъчени серии. Това ще спести времето ви и ще направи прегледа на сериали още по-комфортно'
       }
     });
     Lampa.Listener.follow('line', function (event) {
@@ -34680,10 +31937,10 @@
     Premiere.init();
   }
   var AdManager = {
-    init: init$2
+    init: init$4
   };
 
-  function init$1() {
+  function init$3() {
     if (Platform.screen('mobile')) {
       var bar = Template$1.get('navigation_bar', {});
       bar.find('.navigation-bar__item').on('click', function () {
@@ -34705,7 +31962,7 @@
     }
   }
   var NavigationBar = {
-    init: init$1
+    init: init$3
   };
 
   function Endless(onRender) {
@@ -34808,7 +32065,7 @@
       }
     });
   }
-  function init() {
+  function init$2() {
     if (window.lampa_settings.demo) {
       Lampa.Listener.follow('app', function (e) {
         if (e.type == 'ready') hide();
@@ -34816,6 +32073,244 @@
     }
   }
   var Demo = {
+    init: init$2
+  };
+
+  var html$1;
+  var tout;
+  var xmlHTTP;
+  var controll;
+  var active = {};
+  var graph = [];
+  function init$1() {
+    Settings.listener.follow('open', function (e) {
+      if (e.name == 'server') {
+        var btn = $("<div class=\"settings-param selector\" data-type=\"button\">\n                <div class=\"settings-param__name\">".concat(Lang.translate('speedtest_button'), "</div>\n            </div>"));
+        btn.on('hover:enter', function () {
+          if (Torserver.ip()) {
+            var params = {
+              url: Torserver.url() + '/download/300'
+            };
+            if (Storage.field('torrserver_auth')) {
+              params.login = Storage.get('torrserver_login');
+              params.password = Storage.get('torrserver_password');
+            }
+            start(params);
+          }
+        });
+        $('[data-name="torrserver_url_two"]', e.body).after(btn);
+      }
+    });
+  }
+  function start(params) {
+    if (html$1) html$1.remove();
+    active = params;
+    controll = Controller.enabled().name;
+    html$1 = Template$1.js('speedtest');
+    html$1.append(HeadBackward('', true));
+    document.body.append(html$1);
+    var textpath = Array.from(html$1.querySelectorAll('textpath'));
+    textpath.forEach(function (element) {
+      element.html(element.getAttribute('data-text'));
+    });
+    html$1.find('#speedtest_num-text').html('Mbps');
+    toggle();
+    if (active.url) testUrl(active.url);
+  }
+  function speed2deg(v) {
+    v = parseFloat(v);
+    return v >= 1000 ? 200 : v < 20 ? v * 4 : v < 30 ? (v - 20) * 2 + 80 : v < 60 ? (v - 30) / 1.5 + 100 : v < 100 ? (v - 60) / 2 + 120 : v < 200 ? (v - 100) / 5 + 140 : v < 500 ? (v - 200) / 15 + 160 : (v - 500) / 25 + 180;
+  }
+  function hslToRgb(hue, sat, light) {
+    hue = hue % 360, hue += hue < 0 ? hue += 360 : 0, sat /= 100, light /= 100;
+    function f(n) {
+      var k = (n + hue / 30) % 12;
+      var a = sat * Math.min(light, 1 - light);
+      return parseInt((light - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))) * 255);
+    }
+    return "#" + ((1 << 24) + (f(0) << 16) + (f(8) << 8) + f(4)).toString(16).slice(1);
+  }
+  function setSpeed(v) {
+    v = parseFloat(v);
+    html$1.find('#speedtest_num').innerHTML = v < 1 ? v.toFixed(3) : v < 10 ? v.toFixed(2) : v < 100 ? v.toFixed(1) : Math.round(v);
+    var r = speed2deg(v);
+    var b = html$1.find('#speedtest_progress');
+    var l = 1256.8;
+    b.style['stroke-dasharray'] = l * r / 360 + ',' + l;
+    b.style.stroke = hslToRgb(330 + r, 80, 45);
+    html$1.find('#speedtest_graph').setAttribute('points', graph.map(function (pt) {
+      return pt.join(',');
+    }).join(' '));
+  }
+  function normalizeUrl(base, link) {
+    if (link[0] === '/') return base.replace(/^(https?:\/\/[^\/]+).*$/i, '$1') + link;
+    if (/^https?:?\/\//i.test(link)) return link;
+    base = base.replace(/\/[^\/]*(\?.*)?$/, '') + '/';
+    return base + link;
+  }
+  function testUrl(url) {
+    if (!/\.m3u8?(\?.*)?$/i.test(url)) return testSpeed(url);
+    var errorFn = function errorFn(e) {
+      html$1.find('#speedtest_status').html(Lang.translate('network_error'));
+    };
+    xmlHTTP = new XMLHttpRequest();
+    $.ajax({
+      url: url,
+      cache: false,
+      dataType: 'text',
+      xhr: function xhr() {
+        return xmlHTTP;
+      },
+      success: function success(data) {
+        if (data.substr(0, 7) !== '#EXTM3U') return errorFn();
+        var i = 0,
+          links = [],
+          bandwidth = 0,
+          setLink = false,
+          m,
+          l = data.split(/\r?\n/);
+        data = null;
+        for (; links.length < 100 && i < l.length; i++) {
+          if (!!(m = l[i].match(/^#EXTINF:\s*(-?\d+(\.\d*)?)\s*,.*$/))) {
+            setLink = true;
+          } else if (!!(m = l[i].match(/^#EXT-X-STREAM-INF:(.+,)?\s*BANDWIDTH=(\d+)\s*(,.+)?$/))) {
+            if (bandwidth < parseInt(m[2])) {
+              bandwidth = parseInt(m[2]);
+              setLink = true;
+            } else setLink = false;
+          } else if (setLink && !!(m = l[i].match(/^[^#].+$/i))) {
+            links.push(normalizeUrl(xmlHTTP.responseURL, m[0].trim()));
+            setLink = false;
+          }
+        }
+        if (links.length === 0) return errorFn();
+        if (bandwidth > 0) return testUrl(links.pop());
+        testSpeed(links[0]);
+      },
+      error: errorFn
+    });
+  }
+  function testSpeed(url) {
+    var context = this;
+    var status = html$1.find('#speedtest_status');
+    var time;
+    status.innerHTML = Lang.translate('speedtest_connect');
+    graph = [[-250, -250]];
+    var speed = 0,
+      speedMbps = 0;
+    setSpeed(0);
+    xmlHTTP = new XMLHttpRequest();
+    xmlHTTP.open('GET', Utils$2.addUrlComponent(url, 'vr=' + new Date() * 1), true);
+    if (active.login && active.password) xmlHTTP.setRequestHeader("Authorization", "Basic " + Base64.encode(active.login + ":" + active.password));
+    xmlHTTP.responseType = 'arraybuffer';
+    xmlHTTP.onprogress = function (e) {
+      if (!time || time === true) return;
+      var load = e.timeStamp - time;
+      speed = Math.ceil(e.loaded * 8000 / load); // Бит в секунду
+
+      speedMbps = speed / 1000 / 1000;
+      var x = Math.max(Math.min(load, 1e4) * 500 / 1e4, Math.min(e.loaded, 3e8) * 500 / 3e8) - 250,
+        y = -(speed2deg(speedMbps) / 4 + 250);
+      graph.push([x.toFixed(1), y.toFixed(1)]);
+      setSpeed(speedMbps);
+      if (load >= 1e4 || e.loaded > 3e8) xmlHTTP.abort();
+    };
+    xmlHTTP.onreadystatechange = function (e) {
+      if (xmlHTTP.readyState === 2) {
+        time = e.timeStamp;
+        status.innerHTML = Lang.translate('speedtest_test');
+        tout = setTimeout(function () {
+          xmlHTTP.abort();
+        }, 15e3);
+      }
+    };
+    var endTest = function endTest(e) {
+      clearTimeout(tout);
+      setSpeed(speedMbps);
+      status.innerHTML = Lang.translate('speedtest_ready');
+      time = false;
+      if (typeof active.onEnd === 'function') active.onEnd.apply(context, [speedMbps, xmlHTTP]);
+    };
+    xmlHTTP.onload = endTest;
+    xmlHTTP.onabort = endTest;
+    xmlHTTP.onerror = endTest;
+    xmlHTTP.send();
+  }
+  function toggle() {
+    Controller.add('speedtest', {
+      toggle: function toggle() {
+        Controller.clear();
+      },
+      back: close
+    });
+    Controller.toggle('speedtest');
+  }
+  function close() {
+    if (xmlHTTP) xmlHTTP.abort();
+    clearTimeout(tout);
+    html$1.remove();
+    html$1 = false;
+    xmlHTTP = false;
+    if (active.onBack) active.onBack();else Controller.toggle(controll);
+    active = {};
+  }
+  var Speedtest = {
+    init: init$1,
+    close: close,
+    start: start
+  };
+
+  /**
+   * Короче, постоянно пишут (почему нет картинок?)
+   * Решил сделать автоматическую установку TMDB Proxy если регион RU
+   */
+  function init() {
+    if (Storage.get('vpn_checked_ready', 'false') || Storage.get('tmdb_proxy_api', '') || Storage.get('tmdb_proxy_image', '')) return;
+    var network = new create$p();
+    var extract = function extract(proto, call, error) {
+      network.silent(proto + '://geo.' + object$2.cub_domain, call, error, false, {
+        dataType: 'text'
+      });
+    };
+    var install = function install(country) {
+      console.log('VPN', 'country ' + country);
+      if (country.trim() == 'RU') {
+        //ну это наш клиент
+
+        var ready = Plugins.get().find(function (a) {
+          return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
+        });
+        if (!ready) {
+          console.log('VPN', 'install TMDB Proxy');
+          Plugins.add({
+            url: 'http://' + object$2.cub_domain + '/plugin/tmdb-proxy',
+            status: 1,
+            name: 'TMDB Proxy',
+            author: '@lampa'
+          });
+        }
+      }
+    };
+    var installed = Plugins.get().find(function (a) {
+      return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
+    });
+    if (!installed) {
+      console.log('VPN', 'start install TMDB Proxy');
+      extract('https', install, function () {
+        //может не работает https
+
+        Storage.set('protocol', 'http');
+        console.log('VPN', 'disable HTTPS');
+        extract('http', install, function () {
+          console.log('VPN', 'domain not responding');
+
+          //хммм...., наверно к домену не подключается
+        });
+      });
+    }
+    Storage.set('vpn_checked_ready', true);
+  }
+  var VPN = {
     init: init
   };
 
@@ -34825,18 +32320,20 @@
   if (typeof window.lampa_settings == 'undefined') {
     window.lampa_settings = {};
   }
+  var appletv = navigator.userAgent.toLowerCase().indexOf("ipad") > -1 && window.innerWidth == 1920 && window.innerHeight == 1080;
   Arrays.extend(window.lampa_settings, {
     socket_use: true,
-    socket_url: 'wss://cub.watch:8020',
+    socket_url: 'wss://cub.red:8010',
     socket_methods: true,
     account_use: true,
     account_sync: true,
     plugins_use: true,
     plugins_store: true,
-    torrents_use: true,
+    torrents_use: appletv ? false : true,
     white_use: false,
     lang_use: true,
-    read_only: false
+    read_only: false,
+    dcma: false
   });
 
   /**
@@ -34850,9 +32347,9 @@
     window.lampa_settings.white_use = false;
   }
   window.Lampa = {
-    Listener: start$5(),
+    Listener: start$6(),
     Lang: Lang,
-    Subscribe: start$5,
+    Subscribe: start$6,
     Storage: Storage,
     Platform: Platform,
     Utils: Utils$2,
@@ -34870,11 +32367,11 @@
     Keypad: Keypad,
     Template: Template$1,
     Component: Component,
-    Reguest: create$q,
+    Reguest: create$p,
     Filter: create$5,
     Files: create$1,
     Explorer: Explorer,
-    Scroll: create$p,
+    Scroll: create$q,
     Empty: create$a,
     Arrays: Arrays,
     Noty: Noty,
@@ -34882,6 +32379,7 @@
     PlayerVideo: PlayerVideo,
     PlayerInfo: PlayerInfo,
     PlayerPanel: PlayerPanel,
+    PlayerIPTV: PlayerIPTV,
     PlayerPlaylist: PlayerPlaylist,
     Timeline: Timeline,
     Modal: Modal,
@@ -34902,7 +32400,7 @@
     Broadcast: Broadcast,
     Helper: Helper,
     InteractionMain: component,
-    InteractionCategory: component$g,
+    InteractionCategory: component$h,
     InteractionLine: create$j,
     Status: status$1,
     Plugins: Plugins,
@@ -34928,11 +32426,15 @@
     Color: Color,
     Cache: Cache,
     Torrent: Torrent,
-    Torserver: Torserver
+    Torserver: Torserver,
+    Speedtest: Speedtest,
+    Processing: Processing,
+    ParentalControl: ParentalControl
   };
   function closeApp() {
+    if (Platform.is('apple_tv')) window.location.assign('exit://exit');
     if (Platform.is('tizen')) tizen.application.getCurrentApplication().exit();
-    if (Platform.is('webos')) window.close();
+    if (Platform.is('webos') && typeof window.close == 'function') window.close();
     if (Platform.is('android')) Android.exit();
     if (Platform.is('orsay')) Orsay.exit();
     if (Platform.is('netcast')) window.NetCastBack();
@@ -34962,6 +32464,7 @@
   }
   function prepareApp() {
     if (window.prepared_app) return;
+    $('body').append(Noty.render());
     DeviceInput.init();
     Platform.init();
     Params.init();
@@ -35051,6 +32554,7 @@
     window.addEventListener("keydown", keydown);
   }
   function startApp() {
+    var _this = this;
     if (window.appready) return;
     var start_time = 0;
 
@@ -35088,6 +32592,10 @@
     AdManager.init();
     NavigationBar.init();
     Demo.init();
+    Speedtest.init();
+    VPN.init();
+    Processing.init();
+    ParentalControl.init();
 
     /** Надо зачиcтить, не хорошо светить пароль ;) */
 
@@ -35161,7 +32669,9 @@
     setTimeout(function () {
       Keypad.enable();
       Screensaver$2.enable();
-      $('.welcome').fadeOut(500);
+      $('.welcome').fadeOut(500, function () {
+        $(_this).remove();
+      });
     }, 1000);
 
     /** End */
@@ -35185,7 +32695,7 @@
 
     Favorite.listener.follow('add,added', function (e) {
       if (e.where == 'history' && e.card.id) {
-        $.get(Utils$2.protocol() + 'tmdb.cub.watch/watch?id=' + e.card.id + '&cat=' + (e.card.original_name ? 'tv' : 'movie'));
+        $.get(Utils$2.protocol() + 'tmdb.' + object$2.cub_domain + '/watch?id=' + e.card.id + '&cat=' + (e.card.original_name ? 'tv' : 'movie'));
       }
     });
 
@@ -35207,8 +32717,9 @@
 
     /** Start - проверка статуса для торрента */
 
-    var torrent_net = new create$q();
+    var torrent_net = new create$p();
     function check(name) {
+      if (Platform.is('android') && !Storage.field('internal_torrclient')) return;
       var item = $('[data-name="' + name + '"]').find('.settings-param__status').removeClass('active error wait').addClass('wait');
       var url = Storage.get(name);
       if (url) {
@@ -35222,7 +32733,7 @@
             Authorization: "Basic " + Base64.encode(Storage.get('torrserver_login') + ':' + Storage.get('torrserver_password'))
           };
         }
-        torrent_net["native"](Utils$2.checkHttp(Storage.get(name)), function () {
+        torrent_net["native"](Utils$2.checkEmptyUrl(Storage.get(name)), function () {
           item.removeClass('wait').addClass('active');
         }, function (a, c) {
           if (a.status == 401) {
@@ -35245,6 +32756,9 @@
       if (e.name == 'torrserver_use_link') check(e.value == 'one' ? 'torrserver_url' : 'torrserver_url_two');
     });
     Settings.listener.follow('open', function (e) {
+      if (e.name == 'more' && window.location.protocol == 'https:') {
+        $('[data-name="protocol"]', e.body).remove();
+      }
       if (e.name == 'server') {
         check(Storage.field('torrserver_use_link') == 'one' ? 'torrserver_url' : 'torrserver_url_two');
       } else torrent_net.clear();
@@ -35330,9 +32844,27 @@
       if (psdg_full >= 0 && mask_full[psdg_full] == e.code) psdg_full++;else psdg_full = -1;
       if (psdg_full == 8) {
         psdg_full = -1;
-        Noty.show('Full enabled, restart.');
+        Noty.show('Full enabled');
         window.localStorage.setItem('remove_white_and_demo', 'true');
-        window.location.reload();
+        var controller = Controller.enabled().name;
+        Modal.open({
+          title: '',
+          align: 'center',
+          zIndex: 300,
+          html: $('<div class="about">' + Lang.translate('settings_interface_lang_reload') + '</div>'),
+          buttons: [{
+            name: Lang.translate('settings_param_no'),
+            onSelect: function onSelect() {
+              Modal.close();
+              Controller.toggle(controller);
+            }
+          }, {
+            name: Lang.translate('settings_param_yes'),
+            onSelect: function onSelect() {
+              window.location.reload();
+            }
+          }]
+        });
       }
     });
 
@@ -35390,41 +32922,42 @@
 
     /** End */
   }
+  function loadLang() {
+    var code = window.localStorage.getItem('language') || 'ru';
+    var call = function call() {
+      /** Принудительно стартовать */
+      setTimeout(startApp, 1000 * 5);
 
-  function checkProtocol() {
-    /*
-    if(window.location.protocol == 'https:'){
-        Modal.open({
-            title: '',
-            size: 'full',
-            html: Template.get('https',{}),
-            onBack: ()=>{
-              }
-        })
-          $('.welcome').fadeOut(500)
+      /** Загружаем плагины и стартуем лампу */
+      Plugins.load(startApp);
+    };
+    if (['ru', 'en'].indexOf(code) >= 0) call();else {
+      $.ajax({
+        url: (location.protocol == 'file:' ? 'https://yumata.github.io/lampa/' : './') + 'lang/' + code + '.js',
+        dataType: 'text',
+        timeout: 10000,
+        success: function success(data) {
+          var translate = {};
+          try {
+            eval((data + '').replace(/export default/g, 'translate = ').trim());
+          } catch (e) {}
+          Lang.AddTranslation(code, translate);
+          call();
+        },
+        error: call
+      });
     }
-    else{
-    */
-    /** Принудительно стартовать */
-
-    setTimeout(startApp, 1000 * 5);
-
-    /** Загружаем плагины и стартуем лампу */
-
-    Plugins.load(startApp);
-    //}
   }
-
   function loadApp() {
     prepareApp();
     if (window.localStorage.getItem('language') || !window.lampa_settings.lang_use) {
-      developerApp(checkProtocol);
+      developerApp(loadLang);
     } else {
       LangChoice.open(function (code) {
         Storage.set('language', code, true);
         Storage.set('tmdb_lang', code, true);
         Keypad.disable();
-        checkProtocol();
+        loadLang();
       });
       Keypad.enable();
     }

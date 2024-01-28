@@ -277,8 +277,21 @@
           codec_video.slice(0, 1).forEach(function (v) {
             var line = {};
             if (v.width && v.height) line.video = v.width + 'х' + v.height;
+            if (v.duration) {
+              line.duration = new Date(v.duration * 1000).toISOString().slice(11, 19);
+            } else if (v.tags) {
+              if (v.tags.DURATION) {
+                line.duration = v.tags.DURATION ? v.tags.DURATION.split(".") : '';
+                line.duration.pop();
+              } else if (v.tags["DURATION-eng"]) {
+                line.duration = v.tags["DURATION-eng"] ? v.tags["DURATION-eng"].split(".") : '';
+                line.duration.pop();
+              }
+            }
             if (v.codec_name) line.codec = v.codec_name.toUpperCase();
             if (Boolean(v.is_avc)) line.avc = 'AVC';
+            var bit = v.bit_rate ? v.bit_rate : v.tags && (v.tags.BPS || v.tags["BPS-eng"]) ? v.tags.BPS || v.tags["BPS-eng"] : '--';
+            line.rate = bit == '--' ? bit : Math.round(bit / 1000000) + ' ' + Lampa.Lang.translate('speed_mb');
             if (Lampa.Arrays.getKeys(line).length) video.push(line);
           });
           codec_audio.forEach(function (a, i) {
@@ -290,7 +303,7 @@
             }
             line.name = a.tags ? a.tags.title || a.tags.handler_name : '';
             if (a.codec_name) line.codec = a.codec_name.toUpperCase();
-            if (a.channel_layout) line.channels = a.channel_layout.replace('(side)', '').replace('stereo', '2.0');
+            if (a.channel_layout) line.channels = a.channel_layout.replace('(side)', '').replace('stereo', '2.0').replace('8 channels (FL+FR+FC+LFE+SL+SR+TFL+TFR)', '7.1');
             var bit = a.bit_rate ? a.bit_rate : a.tags && (a.tags.BPS || a.tags["BPS-eng"]) ? a.tags.BPS || a.tags["BPS-eng"] : '--';
             line.rate = bit == '--' ? bit : Math.round(bit / 1000) + ' ' + Lampa.Lang.translate('speed_kb');
             if (Lampa.Arrays.getKeys(line).length) audio.push(line);
@@ -303,6 +316,7 @@
               line.lang = (a.tags.language || '').toUpperCase();
             }
             line.name = a.tags ? a.tags.title || a.tags.handler_name : '';
+            if (a.codec_name) line.codec = a.codec_name.toUpperCase().replace('SUBRIP', 'SRT').replace('HDMV_PGS_SUBTITLE', 'HDMV PGS').replace('MOV_TEXT', 'MOV TEXT');
             if (Lampa.Arrays.getKeys(line).length) subs.push(line);
           });
           var html = Lampa.Template.get('tracks_metainfo', {});
@@ -330,7 +344,7 @@
     Lampa.Template.add('tracks_loading', "\n    <div class=\"tracks-loading\">\n        <span>#{loading}...</span>\n    </div>\n");
     Lampa.Template.add('tracks_metainfo', "\n    <div class=\"tracks-metainfo\"></div>\n");
     Lampa.Template.add('tracks_metainfo_block', "\n    <div class=\"tracks-metainfo__line\">\n        <div class=\"tracks-metainfo__label\"></div>\n        <div class=\"tracks-metainfo__info\"></div>\n    </div>\n");
-    Lampa.Template.add('tracks_css', "\n    <style>\n    .tracks-loading{margin-top:1em;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-moz-box-align:start;-ms-flex-align:start;align-items:flex-start}.tracks-loading:before{content:'';display:inline-block;width:1.3em;height:1.3em;background:url('./img/loader.svg') no-repeat 50% 50%;-webkit-background-size:contain;-o-background-size:contain;background-size:contain;margin-right:.4em}.tracks-loading>span{font-size:1.1em;line-height:1.1}.tracks-metainfo{margin-top:1em}.tracks-metainfo__line+.tracks-metainfo__line{margin-top:2em}.tracks-metainfo__label{opacity:.5;font-weight:600}.tracks-metainfo__info{padding-top:1em;line-height:1.2}.tracks-metainfo__info>div{background-color:rgba(0,0,0,0.22);display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-border-radius:.3em;border-radius:.3em;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}.tracks-metainfo__info>div.focus{background-color:rgba(255,255,255,0.06)}.tracks-metainfo__info>div>div{padding:1em;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0}.tracks-metainfo__info>div>div:not(:last-child){padding-right:1.5em}.tracks-metainfo__info>div+div{margin-top:1em}.tracks-metainfo__column--video,.tracks-metainfo__column--name{margin-right:auto}.tracks-metainfo__column--num{min-width:3em;padding-right:0}.tracks-metainfo__column--rate{min-width:7em;text-align:right}.tracks-metainfo__column--channels{min-width:5em;text-align:right}\n    </style>\n");
+    Lampa.Template.add('tracks_css', "\n    <style>\n    \n    </style>\n");
     $('body').append(Lampa.Template.get('tracks_css', {}, true));
 
 })();

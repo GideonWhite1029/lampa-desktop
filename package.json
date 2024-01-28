@@ -15,8 +15,8 @@
   },
   "permissions": ["net", "net-connect", "browser-window", "fullscreen", "pictureInPicture"],
   "devDependencies": {
-    "electron": "25.7.0",
-    "electron-builder": "^24.6.3"
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1"
   },
   "build": {
     "appId": "com.lampa.mx",
