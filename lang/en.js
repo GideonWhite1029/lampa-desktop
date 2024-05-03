@@ -1111,4 +1111,18 @@ export default {
     parental_control_input_code: 'Enter PIN code',
     parental_control_input_error: 'You entered an incorrect PIN code',
     title_worth_rewatch: 'Worth a rewatch',
+
+    ad_disable: 'By subscribing to CUB Premium, you will forget about advertising.',
+    ad_after: 'Advertising via',
+    ad: 'Advertising',
+    ad_skip: 'Skip',
+    ad_continue_after: 'Viewing will start in',
+    settings_parser_prowlarr_link_descr: 'Provide a link to the Prowlarr server',
+    settings_parser_prowlarr_key_descr: 'Located in the Prowlarr settings tab in the general category',
+    settings_player_torrent_type: 'Player type for torrents',
+    settings_player_torrent_type_descr: 'Which player to play torrents',
+
+    full_crew: 'More',
+    full_editing: 'Editing',
+    full_creator: 'Creator',
 }

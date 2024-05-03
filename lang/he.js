@@ -1009,4 +1009,18 @@ export default {
     parental_control_input_code: 'הזן קוד PIN',
     parental_control_input_error: 'הזנת קוד PIN שגוי',
     title_worth_rewatch: 'שווה צפייה חוזרת',
+
+    ad_disable: 'על ידי הרשמה ל-CUB Premium, תשכח מפרסום.',
+    ad_after: 'פרסום באמצעות',
+    ad: 'פִּרסוּם',
+    ad_skip: 'לדלג',
+    ad_continue_after: 'הצפייה תתחיל בעוד',
+    settings_parser_prowlarr_link_descr: 'ספק קישור לשרת Prowlarr',
+    settings_parser_prowlarr_key_descr: 'ממוקם בלשונית הגדרות Prowlarr בקטגוריה הכללית',
+    settings_player_torrent_type: 'סוג נגן עבור טורנטים',
+    settings_player_torrent_type_descr: 'באיזה שחקן לשחק טורנטים',
+
+    full_crew: 'עוד',
+    full_editing: 'עריכה',
+    full_creator: 'יוצר'
 }

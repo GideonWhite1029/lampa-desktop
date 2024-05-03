@@ -1110,4 +1110,18 @@ export default {
     parental_control_input_code: 'Въведете PIN-код',
     parental_control_input_error: 'Въвели сте неправилен PIN-код',
     title_worth_rewatch: 'Заслужава си повторно гледане',
+
+    ad_disable: 'Като се абонирате за CUB Premium, ще забравите за рекламата.',
+    ad_after: 'Реклама чрез',
+    ad: 'Реклама',
+    ad_skip: 'Пропускане',
+    ad_continue_after: 'Гледането ще започне в',
+    settings_parser_prowlarr_link_descr: 'Предоставете връзка към сървъра Prowlarr',
+    settings_parser_prowlarr_key_descr: 'Намира се в раздела с настройки на Prowlarr в общата категория',
+    settings_player_torrent_type: 'Тип плеър за торенти',
+    settings_player_torrent_type_descr: 'На кой плеър да пускате торенти',
+
+    full_crew: 'Още',
+    full_editing: 'Редакция',
+    full_creator: 'Създател',
 }

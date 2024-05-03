@@ -13,7 +13,7 @@
   }
   function _toPropertyKey(t) {
     var i = _toPrimitive(t, "string");
-    return "symbol" == typeof i ? i : String(i);
+    return "symbol" == typeof i ? i : i + "";
   }
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -56,7 +56,7 @@
     function Api() {
       _classCallCheck(this, Api);
     }
-    _createClass(Api, null, [{
+    return _createClass(Api, null, [{
       key: "list",
       value: function list() {
         var _this = this;
@@ -69,7 +69,6 @@
         });
       }
     }]);
-    return Api;
   }();
   _defineProperty(Api, "network", new Lampa.Reguest());
   _defineProperty(Api, "api_url", 'https://www.radiorecord.ru/api/stations/');
@@ -78,7 +77,7 @@
     function Favorites() {
       _classCallCheck(this, Favorites);
     }
-    _createClass(Favorites, null, [{
+    return _createClass(Favorites, null, [{
       key: "get",
       value: function get() {
         var all = Lampa.Storage.get('radio_favorite_stations', '[]');
@@ -133,7 +132,6 @@
         return this.find(favorite) ? this.remove(favorite) : this.add(favorite);
       }
     }]);
-    return Favorites;
   }();
 
   function Player(station) {

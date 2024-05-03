@@ -47,6 +47,9 @@ export default {
     full_directing: 'Режиссура',
     full_writing: 'Сценарий',
     full_keywords: 'Теги',
+    full_crew: 'Еще',
+    full_editing: 'Редактирование',
+    full_creator: 'Создатель',
 
     settings_cub_sync: 'Синхронизация',
     settings_cub_sync_descr: 'Синхронизация с сервисом CUB: синхронизация ваших закладок, истории просмотров, меток и тайм-кодов. Сайт: www.cub.red',
@@ -155,9 +158,11 @@ export default {
     settings_parser_jackett_placeholder: 'Например: 192.168.х',
     settings_parser_jackett_link: 'Ссылка',
     settings_parser_jackett_link_descr: 'Укажите ссылку на скрипт Jackett',
+    settings_parser_prowlarr_link_descr: 'Укажите ссылку на сервер Prowlarr',
     settings_parser_jackett_key_placeholder: 'Например: sa0sk83d..',
     settings_parser_jackett_key: 'Api-ключ',
     settings_parser_jackett_key_descr: 'Находится в Jackett',
+    settings_parser_prowlarr_key_descr: 'Находится во вкладке настроек Prowlarr в категории основное',
     settings_parser_torlook_type: 'Метод парсинга сайта TorLook',
     settings_parser_scraperapi_placeholder: 'Например: scraperapi.com',
     settings_parser_scraperapi_link: 'Ссылка на парсер сайтов',
@@ -173,6 +178,8 @@ export default {
     settings_player_type_descr: 'Каким плеером воспроизводить',
     settings_player_iptv_type: 'Тип плеера для IPTV',
     settings_player_iptv_type_descr: 'Каким плеером воспроизводить IPTV каналы',
+    settings_player_torrent_type: 'Тип плеера для торрентов',
+    settings_player_torrent_type_descr: 'Каким плеером воспроизводить торренты',
     settings_player_reset: 'Сбросить плеер по умолчанию',
     settings_player_reset_descr: 'Сбрасывает выбранный Android плеер в приложении',
     settings_player_path: 'Путь к плееру',
@@ -250,7 +257,7 @@ export default {
     parental_control_no_match_code: 'PIN-код не совпадает с прошлым кодом',
     parental_control_input_code: 'Введите PIN-код',
     parental_control_input_error: 'Вы ввели неправильный PIN-код',
-    
+
 
     torent_nohash_reasons: 'Причины',
     torent_nohash_reason_one: 'TorServer не смог скачать торрент файл',
@@ -1017,17 +1024,17 @@ export default {
     day_7: 'Воскресенье',
 
     month_1_e: 'Января',
-    month_2_e: 'Февраля', 
-    month_3_e: 'Марта', 
-    month_4_e: 'Апреля', 
-    month_5_e: 'Мая', 
-    month_6_e: 'Июня', 
-    month_7_e: 'Июля', 
-    month_8_e: 'Августа', 
-    month_9_e: 'Сентября', 
-    month_10_e: 'Октября', 
-    month_11_e: 'Ноября', 
-    month_12_e: 'Декабря', 
+    month_2_e: 'Февраля',
+    month_3_e: 'Марта',
+    month_4_e: 'Апреля',
+    month_5_e: 'Мая',
+    month_6_e: 'Июня',
+    month_7_e: 'Июля',
+    month_8_e: 'Августа',
+    month_9_e: 'Сентября',
+    month_10_e: 'Октября',
+    month_11_e: 'Ноября',
+    month_12_e: 'Декабря',
 
     week_1: 'Пн',
     week_2: 'Вт',
@@ -1116,5 +1123,11 @@ export default {
     termsofuse_t_12: 'Если вы обнаружили нарушение авторских прав в приложении Lampa - свяжитесь с разработчиками, используя раздел Контакты приложения. Однако, важно учесть, что приложение Lampa использует API от каталога themoviedb.org, который предоставляет открытый доступ к информации о фильмах и сериалах. Это означает, что информация, которая отображается в приложении Lampa, является общедоступной и не нарушает авторских прав.',
     termsofuse_t_13: 'Если вы считаете, что в приложении Lampa все же есть контент, нарушающий авторские права - обратитесь к правообладателю этого контента с просьбой удалить его со страниц сайта themoviedb.org. В свою очередь, приложение Lampa может удалить контент при получении соответствующего уведомления о нарушении авторских прав.',
 
-    install_app_apk_text: 'Мы заметили, что для запуска Lampa на Android вы используете MediaStationX. Мы рекомендуем вам установить Lampa в виде APK-приложения. Вы можете скачать последнюю версию приложения здесь:'
+    install_app_apk_text: 'Мы заметили, что для запуска Lampa на Android вы используете MediaStationX. Мы рекомендуем вам установить Lampa в виде APK-приложения. Вы можете скачать последнюю версию приложения здесь:',
+
+    ad: 'Реклама',
+    ad_disable: 'Подписавшись на CUB Premium, вы забудете о рекламе.',
+    ad_after: 'Реклама через',
+    ad_skip: 'Пропустить',
+    ad_continue_after: 'Просмотр начнется через'
 }

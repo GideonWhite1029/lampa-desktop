@@ -1233,7 +1233,7 @@
   }
   function _toPropertyKey(t) {
     var i = _toPrimitive(t, "string");
-    return "symbol" == typeof i ? i : String(i);
+    return "symbol" == typeof i ? i : i + "";
   }
   function _typeof(o) {
     "@babel/helpers - typeof";
@@ -1713,8 +1713,8 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '2.6.9',
-    app_version: '2.0.4',
+    css_version: '2.7.9',
+    app_version: '2.1.0',
     cub_domain: 'cub.red'
   };
   var plugins$1 = [];
@@ -1899,308 +1899,314 @@
       this._listeners = {};
     };
   }
-  function start$6() {
+  function start$7() {
     return new Subscribe();
   }
 
-  var html$1S = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\" style=\"width: 2.1em; height: 2.1em;\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1U = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\" style=\"width: 2.1em; height: 2.1em;\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1R = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
+  var html$1T = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
 
-  var html$1Q = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"feed\">\n                <div class=\"menu__ico\">\n                    <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_feed}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{settings_input_links}</div>\n            </li>\n\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
+  var html$1S = "<div class=\"menu\">\n\n    <div class=\"menu__case\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"main\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" id=\"Capa_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                        c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                        v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                        C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                        c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"/>\n                    </svg>\n           \n                </div>\n                <div class=\"menu__text\">#{menu_main}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"feed\">\n                <div class=\"menu__ico\">\n                    <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_feed}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"movie\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                            <path fill=\"currentColor\" d=\"M256,81.077C159.55,81.077,81.077,159.55,81.077,256c0,10.578,8.574,19.152,19.152,19.152s19.152-8.574,19.152-19.158\n                                c0-75.325,61.287-136.612,136.618-136.612c10.572,0,19.152-8.574,19.152-19.152S266.578,81.077,256,81.077z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M411.771,236.848c-10.578,0-19.152,8.574-19.152,19.152c0,75.325-61.287,136.618-136.618,136.618\n                                c-10.578,0-19.152,8.574-19.152,19.152c0,10.578,8.574,19.152,19.152,19.152c96.45,0,174.923-78.473,174.923-174.923\n                                C430.923,245.422,422.349,236.848,411.771,236.848z\"/>\n                       \n                            <path fill=\"currentColor\" d=\"M256,0C114.843,0,0,114.843,0,256s114.843,256,256,256s256-114.842,256-256S397.158,0,256,0z M256,473.696\n                                c-120.039,0-217.696-97.657-217.696-217.696S135.961,38.304,256,38.304s217.696,97.65,217.696,217.689\n                                S376.039,473.696,256,473.696z\"/>\n                        \n                            <path fill=\"currentColor\" d=\"M256,158.318c-53.856,0-97.676,43.814-97.676,97.676s43.814,97.682,97.676,97.682c53.862,0,97.676-43.82,97.676-97.682\n                                S309.862,158.318,256,158.318z M256,315.378c-32.737,0-59.372-26.634-59.372-59.378c0-32.737,26.634-59.372,59.372-59.372\n                                c32.744,0,59.372,26.634,59.372,59.372C315.372,288.744,288.737,315.378,256,315.378z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_movies}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"tv\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M503.17,240.148L289.423,107.799c-5.735-3.548-12.98-3.722-18.883-0.435c-5.909,3.293-9.569,9.525-9.569,16.286v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.411,0,6.816-0.932,9.811-2.79L503.17,271.85\n                        c5.493-3.399,8.83-9.395,8.83-15.851C512,249.543,508.663,243.547,503.17,240.148z M298.252,354.888V157.122l159.695,98.877\n                        L298.252,354.888z\"/>\n                        <path fill=\"currentColor\" d=\"M242.2,240.148L28.452,107.799c-5.754-3.554-12.98-3.722-18.883-0.435C3.66,110.657,0,116.889,0,123.649v264.699\n                        c0,6.76,3.66,12.993,9.569,16.286c2.827,1.572,5.953,2.355,9.072,2.355c3.405,0,6.81-0.932,9.811-2.79L242.2,271.85\n                        c5.487-3.399,8.83-9.395,8.83-15.851C251.029,249.543,247.686,243.547,242.2,240.148z M37.282,354.888V157.122l159.696,98.877\n                        L37.282,354.888z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_tv}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"myperson\">\n                <div class=\"menu__ico\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 20 20\" style=\"enable-background:new 0 0 512 512\" xml:space=\"preserve\" class=\"\"><g><clipPath id=\"a\"><path d=\"M0 0h20v20H0z\" fill=\"currentColor\" opacity=\"1\" data-original=\"#000000\" class=\"\"></path></clipPath><g clip-path=\"url(#a)\"><path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M10 10c-2.216 0-4.019-1.794-4.019-4S7.783 2 10 2s4.019 1.794 4.019 4-1.802 4-4.019 4zm3.776.673a5.978 5.978 0 0 0 2.182-5.603C15.561 2.447 13.37.348 10.722.042 7.07-.381 3.972 2.449 3.972 6c0 1.89.88 3.574 2.252 4.673C2.852 11.934.39 14.895.004 18.891A1.012 1.012 0 0 0 1.009 20a.99.99 0 0 0 .993-.891C2.404 14.646 5.837 12 10 12s7.596 2.646 7.999 7.109a.99.99 0 0 0 .993.891c.596 0 1.06-.518 1.003-1.109-.386-3.996-2.847-6.957-6.22-8.218z\" clip-rule=\"evenodd\" opacity=\"1\" data-original=\"#000000\" class=\"\"></path></g></g></svg>\n                </div>\n                <div class=\"menu__text\">#{title_person}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"catalog\">\n                <div class=\"menu__ico\">\n                    <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path fill=\"currentColor\" d=\"M478.354,146.286H33.646c-12.12,0-21.943,9.823-21.943,21.943v321.829c0,12.12,9.823,21.943,21.943,21.943h444.709\n                            c12.12,0,21.943-9.823,21.943-21.943V168.229C500.297,156.109,490.474,146.286,478.354,146.286z M456.411,468.114H55.589V190.171\n                            h400.823V468.114z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M441.783,73.143H70.217c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h371.566\n                            c12.12,0,21.943-9.823,21.943-21.943C463.726,82.966,453.903,73.143,441.783,73.143z\"/>\n                    \n                        <path fill=\"currentColor\" d=\"M405.211,0H106.789c-12.12,0-21.943,9.823-21.943,21.943c0,12.12,9.823,21.943,21.943,21.943h298.423\n                            c12.12,0,21.943-9.823,21.943-21.943C427.154,9.823,417.331,0,405.211,0z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_catalog}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"filter\">\n                <div class=\"menu__ico\">\n                    <svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"33\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"7\" y=\"8\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"16\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"7\" y=\"25\" width=\"24\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"13.5\" cy=\"17.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"23.5\" cy=\"26.5\" r=\"3.5\" fill=\"currentColor\"/>\n                        <circle cx=\"21.5\" cy=\"9.5\" r=\"3.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_filter}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"relise\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <path d=\"M18.105 22H15.2936V16H9.8114V22H7V8H9.8114V13.6731H15.2936V8H18.105V22Z\" fill=\"currentColor\"/>\n                        <path d=\"M20.5697 22V8H24.7681C25.9676 8 27.039 8.27885 27.9824 8.83654C28.9321 9.38782 29.6724 10.1763 30.2034 11.2019C30.7345 12.2212 31 13.3814 31 14.6827V15.3269C31 16.6282 30.7376 17.7853 30.2128 18.7981C29.6943 19.8109 28.9602 20.5962 28.0105 21.1538C27.0609 21.7115 25.9895 21.9936 24.7962 22H20.5697ZM23.3811 10.3365V19.6827H24.7399C25.8395 19.6827 26.6798 19.3141 27.2608 18.5769C27.8419 17.8397 28.1386 16.7853 28.1511 15.4135V14.6731C28.1511 13.25 27.8637 12.1731 27.289 11.4423C26.7142 10.7051 25.8739 10.3365 24.7681 10.3365H23.3811Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_relises}</div>\n            </li>\n            <li class=\"menu__item selector\" data-action=\"anime\">\n                <div class=\"menu__ico\">\n                    <svg height=\"173\" viewBox=\"0 0 180 173\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M126 3C126 18.464 109.435 31 89 31C68.5655 31 52 18.464 52 3C52 2.4505 52.0209 1.90466 52.0622 1.36298C21.3146 15.6761 0 46.8489 0 83C0 132.706 40.2944 173 90 173C139.706 173 180 132.706 180 83C180 46.0344 157.714 14.2739 125.845 0.421326C125.948 1.27051 126 2.13062 126 3ZM88.5 169C125.779 169 156 141.466 156 107.5C156 84.6425 142.314 64.6974 122 54.0966C116.6 51.2787 110.733 55.1047 104.529 59.1496C99.3914 62.4998 94.0231 66 88.5 66C82.9769 66 77.6086 62.4998 72.4707 59.1496C66.2673 55.1047 60.3995 51.2787 55 54.0966C34.6864 64.6974 21 84.6425 21 107.5C21 141.466 51.2208 169 88.5 169Z\" fill=\"currentColor\"/>\n                        <path d=\"M133 121.5C133 143.315 114.196 161 91 161C67.804 161 49 143.315 49 121.5C49 99.6848 67.804 116.5 91 116.5C114.196 116.5 133 99.6848 133 121.5Z\" fill=\"currentColor\"/>\n                        <path d=\"M72 81C72 89.8366 66.1797 97 59 97C51.8203 97 46 89.8366 46 81C46 72.1634 51.8203 65 59 65C66.1797 65 72 72.1634 72 81Z\" fill=\"currentColor\"/>\n                        <path d=\"M131 81C131 89.8366 125.18 97 118 97C110.82 97 105 89.8366 105 81C105 72.1634 110.82 65 118 65C125.18 65 131 72.1634 131 81Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_anime}</div>\n            </li>\n        \n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"book\">\n                <div class=\"menu__ico\">\n                <svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                   <path fill=\"currentColor\" d=\"M391.416,0H120.584c-17.778,0-32.242,14.464-32.242,32.242v460.413c0,7.016,3.798,13.477,9.924,16.895\n                       c2.934,1.638,6.178,2.45,9.421,2.45c3.534,0,7.055-0.961,10.169-2.882l138.182-85.312l138.163,84.693\n                       c5.971,3.669,13.458,3.817,19.564,0.387c6.107-3.418,9.892-9.872,9.892-16.875V32.242C423.657,14.464,409.194,0,391.416,0z\n                        M384.967,457.453l-118.85-72.86c-6.229-3.817-14.07-3.798-20.28,0.032l-118.805,73.35V38.69h257.935V457.453z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{settings_input_links}</div>\n            </li>\n\n\n            <li class=\"menu__item selector\" data-action=\"favorite\" data-type=\"history\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"9\" height=\"9\" rx=\"1\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"25\" width=\"11\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"17\" y=\"7\" width=\"5\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_history}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"subscribes\">\n                <div class=\"menu__ico\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"512\" viewBox=\"0 0 59 59.5\" xml:space=\"preserve\">\n                        <path d=\"m48.5 20.5h-38a10.51 10.51 0 0 0 -10.5 10.5v18a10.51 10.51 0 0 0 10.5 10.5h38a10.51 10.51 0 0 0 10.5-10.5v-18a10.51 10.51 0 0 0 -10.5-10.5zm-9.23 16.06-10.42 10.44a2.51 2.51 0 0 1 -3.54 0l-5.58-5.6a2.5 2.5 0 1 1 3.54-3.54l3.81 3.82 8.65-8.68a2.5 2.5 0 0 1 3.54 3.53z\" fill=\"currentColor\"></path>\n                        <path d=\"m49.5 16h-40a3 3 0 0 1 0-6h40a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                        <path d=\"m45.5 6h-32a3 3 0 0 1 0-6h32a3 3 0 0 1 0 6z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{title_subscribes}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"timetable\">\n                <div class=\"menu__ico\">\n                    <svg height=\"28\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect x=\"1.5\" y=\"3.5\" width=\"25\" height=\"23\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                        <rect x=\"6\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <rect x=\"19\" width=\"3\" height=\"7\" rx=\"1.5\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"7\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"14\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"12\" r=\"2\" fill=\"currentColor\"/>\n                        <circle cx=\"21\" cy=\"19\" r=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_timeline}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"mytorrents\">\n                <div class=\"menu__ico\">\n                    <svg height=\"34\" viewBox=\"0 0 28 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"25\" height=\"31\" rx=\"2.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"16\" height=\"3\" rx=\"1.5\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_torrents}</div>\n            </li>\n        </ul>\n    </div>\n\n    <div class=\"menu__split\"></div>\n\n    <div class=\"menu__case nosort\">\n        <ul class=\"menu__list\">\n            <li class=\"menu__item selector\" data-action=\"settings\">\n                <div class=\"menu__ico\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_settings}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"about\">\n                <div class=\"menu__ico\">\n                    <svg height=\"512\" viewBox=\"0 0 512 512\" width=\"512\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_about}</div>\n            </li>\n\n            <li class=\"menu__item selector\" data-action=\"console\">\n                <div class=\"menu__ico\">\n                    <svg height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"menu__text\">#{menu_console}</div>\n            </li>\n        </ul>\n    </div>\n</div>";
 
-  var html$1P = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
+  var html$1R = "<div class=\"activitys layer--width\">\n    <div class=\"activitys__slides\"></div>\n</div>";
 
-  var html$1O = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
+  var html$1Q = "<div class=\"activity layer--width\">\n    <div class=\"activity__body\"></div>\n    <div class=\"activity__loader\"></div>\n</div>";
 
-  var html$1N = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
+  var html$1P = "<div class=\"activity-wait-refresh\">\n    <div class=\"activity-wait-refresh__title\">\u041E\u0436\u0438\u0434\u0430\u044E</div>\n    <div class=\"activity-wait-refresh__text\">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 (\u0432\u043D\u0438\u0437) \u0434\u043B\u044F \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u044F \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u0438.</div>\n\n    <div class=\"activity-wait-refresh__items\">\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n        <div>\n            <div></div>\n            <div></div>\n            <div></div>\n        </div>\n    </div>\n</div>";
 
-  var html$1M = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$1O = "<div class=\"scroll\">\n    <div class=\"scroll__content\">\n        <div class=\"scroll__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$1L = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
+  var html$1N = "<div class=\"settings\">\n    <div class=\"settings__layer\"></div>\n    <div class=\"settings__content layer--height\">\n        <div class=\"settings__head\">\n            <div class=\"settings__title\">#{title_settings}</div>\n        </div>\n        <div class=\"settings__body\"></div>\n    </div>\n</div>";
 
-  var html$1K = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_cub_sync}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parental_control\">\n        <div class=\"settings-folder__icon\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"white\"></path></svg>\n        </div>\n        <div class=\"settings-folder__name\">#{title_parental_control}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
+  var html$1M = "<div>\n    <div class=\"settings-folder selector\" data-component=\"account\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"169\" viewBox=\"0 0 172 169\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"85.765\" cy=\"47.5683\" r=\"15.5683\" stroke=\"white\" stroke-width=\"12\"/>\n                <path d=\"M121.53 112C121.53 92.2474 105.518 76.2349 85.7651 76.2349C66.0126 76.2349 50 92.2474 50 112\" stroke=\"white\" stroke-width=\"12\"/>\n                <rect x=\"44\" y=\"125\" width=\"84\" height=\"16\" rx=\"8\" fill=\"white\"/>\n                <rect x=\"6\" y=\"6\" width=\"160\" height=\"157\" rx=\"21\" stroke=\"white\" stroke-width=\"12\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_cub_sync}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"interface\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/panel.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_interface}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"player\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/player.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_player}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parser\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/parser.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_parser}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"server\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/server.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_torrserver}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"tmdb\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" height=\"32\" viewBox=\"0 0 32 32\">\n                <path fill=\"white\" d=\"M25.99 29.198c2.807 0 4.708-1.896 4.708-4.708v-19.781c0-2.807-1.901-4.708-4.708-4.708h-19.979c-2.807 0-4.708 1.901-4.708 4.708v27.292l2.411-2.802v-24.49c0.005-1.266 1.031-2.292 2.297-2.292h19.974c1.266 0 2.292 1.026 2.292 2.292v19.781c0 1.266-1.026 2.292-2.292 2.292h-16.755l-2.417 2.417-0.016-0.016zM11.714 15.286h-2.26v7.599h2.26c5.057 0 5.057-7.599 0-7.599zM11.714 21.365h-0.734v-4.557h0.734c2.958 0 2.958 4.557 0 4.557zM11.276 13.854h1.516v-6.083h1.891v-1.505h-5.302v1.505h1.896zM18.75 9.599l-2.625-3.333h-0.49v7.714h1.542v-4.24l1.573 2.042 1.578-2.042-0.010 4.24h1.542v-7.714h-0.479zM21.313 19.089c0.474-0.333 0.677-0.922 0.698-1.5 0.031-1.339-0.807-2.307-2.156-2.307h-3.005v7.609h3.005c1.24-0.010 2.245-1.021 2.245-2.26v-0.036c0-0.62-0.307-1.172-0.781-1.5zM18.37 16.802h1.354c0.432 0 0.698 0.339 0.698 0.766 0.031 0.406-0.286 0.76-0.698 0.76h-1.354zM19.724 21.37h-1.354v-1.516h1.37c0.411 0 0.745 0.333 0.745 0.745v0.016c0 0.417-0.333 0.755-0.75 0.755z\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">TMDB</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"plugins\" data-static=\"true\">\n        <div class=\"settings-folder__icon\">\n            <svg height=\"44\" viewBox=\"0 0 44 44\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"21\" height=\"21\" rx=\"2\" fill=\"white\"/>\n            <mask id=\"path-2-inside-1_154:24\" fill=\"white\">\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\"/>\n            </mask>\n            <rect x=\"2\" y=\"27\" width=\"17\" height=\"17\" rx=\"2\" stroke=\"white\" stroke-width=\"6\" mask=\"url(#path-2-inside-1_154:24)\"/>\n            <rect x=\"27\" y=\"2\" width=\"17\" height=\"17\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"27\" y=\"34\" width=\"17\" height=\"3\" fill=\"white\"/>\n            <rect x=\"34\" y=\"44\" width=\"17\" height=\"3\" transform=\"rotate(-90 34 44)\" fill=\"white\"/>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_plugins}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"parental_control\">\n        <div class=\"settings-folder__icon\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"white\"></path></svg>\n        </div>\n        <div class=\"settings-folder__name\">#{title_parental_control}</div>\n    </div>\n    <div class=\"settings-folder selector\" data-component=\"more\">\n        <div class=\"settings-folder__icon\">\n            <img src=\"./img/icons/settings/more.svg\" />\n        </div>\n        <div class=\"settings-folder__name\">#{settings_main_rest}</div>\n    </div>\n    \n</div>";
 
-  var html$1J = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_reactions\">\n        <div class=\"settings-param__name\">#{settings_interface_card_reactions}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
+  var html$1L = "<div>\n    <div class=\"settings-param selector\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_interface_lang}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"light_version\">\n        <div class=\"settings-param__name\">#{settings_interface_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"interface_size\">\n        <div class=\"settings-param__name\">#{settings_interface_size}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_background}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"background\">\n        <div class=\"settings-param__name\">#{settings_interface_background_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"background_type\">\n        <div class=\"settings-param__name\">#{settings_interface_background_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"black_style\">\n        <div class=\"settings-param__name\">#{settings_interface_black_style}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{title_card}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"card_interfice_type\">\n        <div class=\"settings-param__name\">#{settings_interface_card_interfice}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_poster\">\n        <div class=\"settings-param__name\">#{settings_interface_card_poster}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_cover\">\n        <div class=\"settings-param__name\">#{settings_interface_card_cover}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_interfice_reactions\">\n        <div class=\"settings-param__name\">#{settings_interface_card_reactions}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_glass}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"glass_style\">\n        <div class=\"settings-param__name\">#{settings_interface_glass}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_glass_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"glass_opacity\">\n        <div class=\"settings-param__name\">#{settings_interface_glass_opacity}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_interface_performance}</span></div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"animation\">\n        <div class=\"settings-param__name\">#{settings_interface_animation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_animation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"mask\">\n        <div class=\"settings-param__name\">#{settings_interface_attenuation}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_attenuation_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"scroll_type\">\n        <div class=\"settings-param__name\">#{settings_interface_scroll}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_views_type\">\n        <div class=\"settings-param__name\">#{settings_interface_view_card}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_view_card_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"hide_outside_the_screen\">\n        <div class=\"settings-param__name\">#{settings_interface_hide_outside_the_screen}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_interface_hide_outside_the_screen_descr}</div>\n    </div>\n</div>";
 
-  var html$1I = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector hide\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\" data-children-value=\"jackett\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div class=\"settings-param-title\" data-parent=\"type\"><span>Jackett</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\" data-parent=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
+  var html$1K = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_use\" data-children=\"parser\">\n        <div class=\"settings-param__name\">#{settings_parser_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_parser_use_descr}</div>\n    </div>\n    <div data-parent=\"parser\">\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parser_torrent_type\" data-children=\"type\">\n            <div class=\"settings-param__name\">#{settings_parser_type}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div data-parent=\"type\" data-visible-value=\"jackett\" class=\"hide\">\n            <div class=\"settings-param-title\"><span>Jackett</span></div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_url\" placeholder=\"#{settings_parser_jackett_placeholder}\">\n                <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n                <div class=\"settings-param__value\"></div>\n                <div class=\"settings-param__descr\">#{settings_parser_jackett_link_descr}</div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"jackett_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\">\n                <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n                <div class=\"settings-param__value\"></div>\n                <div class=\"settings-param__descr\">#{settings_parser_jackett_key_descr}</div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"jackett_interview\">\n                <div class=\"settings-param__name\">#{settings_parser_jackett_interview}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n        </div>\n        \n        <div data-parent=\"type\" data-visible-value=\"prowlarr\" class=\"hide\">\n            <div class=\"settings-param-title\"><span>Prowlarr</span></div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"prowlarr_url\" placeholder=\"#{settings_parser_jackett_placeholder}\">\n                <div class=\"settings-param__name\">#{settings_parser_jackett_link}</div>\n                <div class=\"settings-param__value\"></div>\n                <div class=\"settings-param__descr\">#{settings_parser_prowlarr_link_descr}</div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"prowlarr_key\" data-string=\"true\" placeholder=\"#{settings_parser_jackett_key_placeholder}\">\n                <div class=\"settings-param__name\">#{settings_parser_jackett_key}</div>\n                <div class=\"settings-param__value\"></div>\n                <div class=\"settings-param__descr\">#{settings_parser_prowlarr_key_descr}</div>\n            </div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"parse_lang\">\n            <div class=\"settings-param__name\">#{settings_parser_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_search_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_timeout\">\n            <div class=\"settings-param__name\">#{settings_parser_timeout_title}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_timeout_descr}</div>\n        </div>\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"parse_in_search\">\n            <div class=\"settings-param__name\">#{settings_parser_in_search}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_parser_in_search_descr}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1H = "<div>\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\" data-children=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div data-parent=\"internal_torrclient\">\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n            <div class=\"settings-param__name\">#{settings_server_link}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n    \n    \n        <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n            <div class=\"settings-param__name\">#{settings_server_base}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n            <div class=\"settings-param__name\">#{settings_server_preload}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n            <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div data-parent=\"login\">\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_login}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_password}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1J = "<div>\n    <div class=\"settings-param selector is--android\" data-type=\"toggle\" data-name=\"internal_torrclient\" data-children=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div data-parent=\"internal_torrclient\">\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_use_link\">\n            <div class=\"settings-param__name\">#{settings_server_link}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n    \n    \n        <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n            <div class=\"settings-param__name\">#{settings_server_base}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n            <div class=\"settings-param__name\">#{settings_server_preload}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n            <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div data-parent=\"login\">\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_login}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_password}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1G = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
+  var html$1I = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_torrent\">\n        <div class=\"settings-param__name\">#{settings_player_torrent_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_torrent_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_size\">\n            <div class=\"settings-param__name\">#{settings_player_subs_size}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_size_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_stroke\">\n            <div class=\"settings-param__name\">#{settings_player_subs_stroke_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_stroke_use_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_backdrop\">\n            <div class=\"settings-param__name\">#{settings_player_subs_backdrop_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_backdrop_use_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
 
-  var html$1F = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"protocol\">\n        <div class=\"settings-param__name\">#{settings_rest_protocol_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_protocol_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param settings-param--button layer--visible selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__descr\">#{title_left} - #{player_unknown}</div>\n    </div>\n</div>";
+  var html$1H = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"protocol\">\n        <div class=\"settings-param__name\">#{settings_rest_protocol_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_protocol_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cache_images\">\n        <div class=\"settings-param__name\">#{settings_rest_cache_images}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_cache_images_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_helper}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"helper\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector helper--start-again\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_helper_reset}</div>\n    </div>\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param settings-param--button layer--visible selector clear-storage\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_rest_cache}</div>\n        <div class=\"settings-param__descr\">#{title_left} - #{player_unknown}</div>\n    </div>\n</div>";
 
-  var html$1E = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
+  var html$1G = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"tmdb_lang\">\n        <div class=\"settings-param__name\">TMDB</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_lang}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"poster_size\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_posters}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb_auto\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox_auto}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"proxy_tmdb\" data-children=\"proxy\">\n        <div class=\"settings-param__name\">#{settings_rest_tmdb_prox}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_api\" placeholder=\"#{settings_rest_tmdb_example} api.proxy.com\">\n        <div class=\"settings-param__name\">Api</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_api_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-parent=\"proxy\" data-type=\"input\" data-name=\"tmdb_proxy_image\" placeholder=\"#{settings_rest_tmdb_example} image.proxy.com\">\n        <div class=\"settings-param__name\">Image</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_tmdb_image_descr}</div>\n    </div>\n</div>";
 
-  var html$1D = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
+  var html$1F = "<div>\n    <div class=\"settings-param selector\" data-name=\"plugins\" data-static=\"true\" data-notice=\"#{settings_plugins_notice}\">\n        <div class=\"settings-param__name\">#{settings_plugins_add}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_add_descr}</div>\n    </div>\n    <div class=\"settings-param selector\" data-name=\"install\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_plugins_install}</div>\n        <div class=\"settings-param__descr\">#{settings_plugins_install_descr}</div>\n    </div>\n</div>";
 
-  var html$1C = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
+  var html$1E = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"cloud_use\">\n        <div class=\"settings-param__name\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">\u0421\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0434\u0430\u0451\u0442 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u0441\u0438\u043D\u0445\u0440\u043E\u043D\u0438\u0437\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0430\u0448\u0438 \u0437\u0430\u043A\u043B\u0430\u0434\u043A\u0438, \u0438\u0441\u0442\u043E\u0440\u0438\u044E \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u043E\u0432, \u043C\u0435\u0442\u043A\u0438 \u0438 \u0442\u0430\u0439\u043C-\u043A\u043E\u0434\u044B. \u0418\u043D\u0441\u0442\u0440\u0443\u043A\u0446\u0438\u044F \u043F\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044E https://github.com/yumata/lampa/wiki</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"cloud_token\" placeholder=\"\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\">\n        <div class=\"settings-param__name\">Token</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>\u0421\u0442\u0430\u0442\u0443\u0441</span></div>\n\n    <div class=\"settings-param selector settings--cloud-status\" data-static=\"true\">\n        <div class=\"settings-param__name\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n</div>";
 
-  var html$1B = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
+  var html$1D = "<div>\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"account_use\">\n        <div class=\"settings-param__name\">#{settings_cub_sync}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_cub_sync_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{settings_cub_account}</span> <span class=\"settings-param__label hide\">Premium</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-info hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logged_in_as}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-profile hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_profile}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-out hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_logout}</div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-signin\"><span>#{settings_cub_signin}</span></div>\n\n    <div class=\"settings-param selector settings--account-signin settings--account-device-add\" data-type=\"button\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_signin_button}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_cub_status}</span></div>\n\n    <div class=\"settings-param selector settings--account-status\" data-static=\"true\">\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\"></div>\n    </div>\n\n    <div class=\"settings-param-title settings--account-user hide\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-sync hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_sync_btn}</div>\n        <div class=\"settings-param__value\">#{settings_cub_sync_btn_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector settings--account-user settings--account-user-backup hide\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_cub_backup}</div>\n        <div class=\"settings-param__value\">#{settings_cub_backup_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>CUB Premium</span></div>\n\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_filters}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_calendar}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_timecodes}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n    <div class=\"selectbox-item selector selectbox-item--checkbox settings--account-premium\" data-static=\"true\">\n        <div class=\"selectbox-item__title\">#{settings_cub_sync_search}</div>\n        <div class=\"selectbox-item__checkbox\"></div>\n    </div>\n</div>";
 
-  var html$1A = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
+  var html$1C = "<div class=\"items-line layer--visible layer--render\">\n    <div class=\"items-line__head\">\n        <div class=\"items-line__title\">{title}</div>\n    </div>\n    <div class=\"items-line__body\"></div>\n</div>";
 
-  var html$1z = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
+  var html$1B = "<div class=\"card selector layer--visible layer--render\">\n    <div class=\"card__view\">\n        <img src=\"./img/img_load.svg\" class=\"card__img\" />\n\n        <div class=\"card__icons\">\n            <div class=\"card__icons-inner\">\n                \n            </div>\n        </div>\n    </div>\n\n    <div class=\"card__title\">{title}</div>\n    <div class=\"card__age\">{release_year}</div>\n</div>";
 
-  var html$1y = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
+  var html$1A = "<div class=\"card-parser selector layer--visible layer--render\">\n    <div class=\"card-parser__title\">{Title}</div>\n\n    <div class=\"card-parser__footer\">\n        <div class=\"card-parser__details\">\n            <div>#{torrent_item_seeds}: <span>{Seeders}</span></div>\n            <div>#{torrent_item_grabs}: <span>{Peers}</span></div>\n        </div>\n        <div class=\"card-parser__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$1x = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
+  var html$1z = "<div class=\"card-watched\">\n    <div class=\"card-watched__inner\">\n        <div class=\"card-watched__body\"></div>\n    </div>\n</div>";
 
-  var html$1w = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
+  var html$1y = "<div class=\"card-episode selector layer--visible layer--render\">\n    <div class=\"card-episode__body\">\n        <div class=\"full-episode\">\n            <div class=\"full-episode__img\">\n                <img />\n            </div>\n\n            <div class=\"full-episode__body\">\n                <div class=\"full-episode__num\">{num}</div>\n                <div class=\"full-episode__name\">{name}</div>\n                <div class=\"full-episode__date\">{date}</div>\n            </div>\n        </div>\n    </div>\n    <div class=\"card-episode__footer\">\n        <div class=\"card__imgbox\">\n            <div class=\"card__view\">\n                <img class=\"card__img\" />\n            </div>\n        </div>\n\n        <div class=\"card__left\">\n            <div class=\"card__title\">{title}</div>\n            <div class=\"card__age\">{release_year}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1v = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <!--\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n            -->\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n            </div>\n    </div>\n</div>";
+  var html$1x = "<div class=\"full-start\">\n\n    <div class=\"full-start__body\">\n        <div class=\"full-start__right\">\n            <div class=\"full-start__poster\">\n                <img class=\"full-start__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start__left\">\n            <div class=\"full-start__deta\">\n                <div class=\"info__rate\"><span>{rating}</span><div class=\"source--name\">TMDB</div></div>\n\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n            </div>\n\n            <div class=\"full-start__title\">{title}</div>\n            <div class=\"full-start__title-original\">{original_title}</div>\n\n            <div class=\"full-start__tags\">\n                <div class=\"full-start__tag tag--quality hide\">\n                    <div></div>\n                </div>\n                <div class=\"full-start__tag tag--year hide\">\n                    <img src=\"./img/icons/add.svg\" /> <div></div>\n                </div>\n                <div class=\"full-start__tag tag--countries\">\n                    <div>{countries}</div>\n                </div>\n                <div class=\"full-start__tag tag--genres\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{genres}</div>\n                </div>\n                <div class=\"full-start__tag tag--time\">\n                    <img src=\"./img/icons/time.svg\" /> <div>{time}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/catalog.svg\" /> <div>{seasons}</div>\n                </div>\n                <div class=\"full-start__tag hide is--serial\">\n                    <img src=\"./img/icons/menu/movie.svg\" /> <div>{episodes}</div>\n                </div>\n                <div class=\"full-start__tag tag--episode hide\">\n                    <img src=\"./img/icons/time.svg\" /> <div></div>\n                </div>\n            </div>\n\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <!--\n            <div class=\"full-start__icons\">\n                <div class=\"info__icon icon--book selector\" data-type=\"book\"></div>\n                <div class=\"info__icon icon--like selector\" data-type=\"like\"></div>\n                <div class=\"info__icon icon--wath selector\" data-type=\"wath\"></div>\n                <div class=\"info__icon button--subscribe selector hide\" data-type=\"subscribe\">\n                    <svg enable-background=\"new 0 0 512 512\" height=\"512\" viewBox=\"0 0 512 512\" xmlns=\"http://www.w3.org/2000/svg\"><g><path fill=\"currentColor\" d=\"m411 262.862v-47.862c0-69.822-46.411-129.001-110-148.33v-21.67c0-24.813-20.187-45-45-45s-45 20.187-45 45v21.67c-63.59 19.329-110 78.507-110 148.33v47.862c0 61.332-23.378 119.488-65.827 163.756-4.16 4.338-5.329 10.739-2.971 16.267s7.788 9.115 13.798 9.115h136.509c6.968 34.192 37.272 60 73.491 60 36.22 0 66.522-25.808 73.491-60h136.509c6.01 0 11.439-3.587 13.797-9.115s1.189-11.929-2.97-16.267c-42.449-44.268-65.827-102.425-65.827-163.756zm-170-217.862c0-8.271 6.729-15 15-15s15 6.729 15 15v15.728c-4.937-.476-9.94-.728-15-.728s-10.063.252-15 .728zm15 437c-19.555 0-36.228-12.541-42.42-30h84.84c-6.192 17.459-22.865 30-42.42 30zm-177.67-60c34.161-45.792 52.67-101.208 52.67-159.138v-47.862c0-68.925 56.075-125 125-125s125 56.075 125 125v47.862c0 57.93 18.509 113.346 52.671 159.138z\"></path><path fill=\"currentColor\" d=\"m451 215c0 8.284 6.716 15 15 15s15-6.716 15-15c0-60.1-23.404-116.603-65.901-159.1-5.857-5.857-15.355-5.858-21.213 0s-5.858 15.355 0 21.213c36.831 36.831 57.114 85.8 57.114 137.887z\"></path><path fill=\"currentColor\" d=\"m46 230c8.284 0 15-6.716 15-15 0-52.086 20.284-101.055 57.114-137.886 5.858-5.858 5.858-15.355 0-21.213-5.857-5.858-15.355-5.858-21.213 0-42.497 42.497-65.901 98.999-65.901 159.099 0 8.284 6.716 15 15 15z\"></path></g></svg>\n                </div>\n            </div>\n            -->\n        </div>\n    </div>\n\n    <div class=\"full-start__footer\">\n            <div class=\"full-start__buttons-scroll\"></div>\n\n            <div class=\"full-start__buttons\">\n                <div class=\"full-start__button view--torrent hide\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                        <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{full_torrents}</span>\n                </div>\n\n                <div class=\"full-start__button selector view--trailer\">\n                    <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n                    </svg>\n\n                    <span>#{full_trailers}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                </div>\n            </div>\n    </div>\n</div>";
 
-  var html$1u = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate rate--tmdb\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n                <div class=\"full-start__status hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{settings_input_links}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                    <span>#{title_reactions}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
+  var html$1w = "<div class=\"full-start-new\">\n\n    <div class=\"full-start-new__body\">\n        <div class=\"full-start-new__left\">\n            <div class=\"full-start-new__poster\">\n                <img class=\"full-start-new__img full--poster\" />\n            </div>\n        </div>\n\n        <div class=\"full-start-new__right\">\n            <div class=\"full-start-new__head\"></div>\n            <div class=\"full-start-new__title\">{title}</div>\n            <div class=\"full-start-new__tagline full--tagline\">{tagline}</div>\n            <div class=\"full-start-new__rate-line\">\n                <div class=\"full-start__rate rate--tmdb\"><div>{rating}</div><div class=\"source--name\">TMDB</div></div>\n                <div class=\"full-start__rate rate--imdb hide\"><div></div><div>IMDB</div></div>\n                <div class=\"full-start__rate rate--kp hide\"><div></div><div>KP</div></div>\n\n                <div class=\"full-start__pg hide\"></div>\n                <div class=\"full-start__status hide\"></div>\n            </div>\n            <div class=\"full-start-new__details\"></div>\n            <div class=\"full-start-new__reactions\">\n                <div>#{reactions_none}</div>\n            </div>\n\n            <div class=\"full-start-new__buttons\">\n                <div class=\"full-start__button selector button--play\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"/>\n                        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"/>\n                    </svg>\n\n                    <span>#{title_watch}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--book\">\n                    <svg width=\"21\" height=\"32\" viewBox=\"0 0 21 32\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2 1.5H19C19.2761 1.5 19.5 1.72386 19.5 2V27.9618C19.5 28.3756 19.0261 28.6103 18.697 28.3595L12.6212 23.7303C11.3682 22.7757 9.63183 22.7757 8.37885 23.7303L2.30302 28.3595C1.9739 28.6103 1.5 28.3756 1.5 27.9618V2C1.5 1.72386 1.72386 1.5 2 1.5Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{settings_input_links}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--reaction\">\n                    <svg width=\"38\" height=\"34\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n                        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n                    </svg>                \n\n                    <span>#{title_reactions}</span>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe hide\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                    <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span>#{title_subscribe}</span>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"hide buttons--container\">\n        <div class=\"full-start__button view--torrent hide\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 50 50\" width=\"50px\" height=\"50px\">\n                <path d=\"M25,2C12.317,2,2,12.317,2,25s10.317,23,23,23s23-10.317,23-23S37.683,2,25,2z M40.5,30.963c-3.1,0-4.9-2.4-4.9-2.4 S34.1,35,27,35c-1.4,0-3.6-0.837-3.6-0.837l4.17,9.643C26.727,43.92,25.874,44,25,44c-2.157,0-4.222-0.377-6.155-1.039L9.237,16.851 c0,0-0.7-1.2,0.4-1.5c1.1-0.3,5.4-1.2,5.4-1.2s1.475-0.494,1.8,0.5c0.5,1.3,4.063,11.112,4.063,11.112S22.6,29,27.4,29 c4.7,0,5.9-3.437,5.7-3.937c-1.2-3-4.993-11.862-4.993-11.862s-0.6-1.1,0.8-1.4c1.4-0.3,3.8-0.7,3.8-0.7s1.105-0.163,1.6,0.8 c0.738,1.437,5.193,11.262,5.193,11.262s1.1,2.9,3.3,2.9c0.464,0,0.834-0.046,1.152-0.104c-0.082,1.635-0.348,3.221-0.817,4.722 C42.541,30.867,41.756,30.963,40.5,30.963z\" fill=\"currentColor\"/>\n            </svg>\n\n            <span>#{full_torrents}</span>\n        </div>\n\n        <div class=\"full-start__button selector view--trailer\">\n            <svg height=\"70\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n            </svg>\n\n            <span>#{full_trailers}</span>\n        </div>\n    </div>\n</div>";
 
-  var html$1t = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text selector\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n\n        <div class=\"full-descr__line full--keywords\">\n            <div class=\"full-descr__line-name\">#{full_keywords}</div>\n            <div class=\"full-descr__line-body\">{keywords}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
+  var html$1v = "<div class=\"full-descr\">\n    <div class=\"full-descr__left\">\n        <div class=\"full-descr__text selector\">{text}</div>\n\n        <div class=\"full-descr__line full--genres\">\n            <div class=\"full-descr__line-name\">#{full_genre}</div>\n            <div class=\"full-descr__line-body\">{genres}</div>\n        </div>\n\n        <div class=\"full-descr__line full--companies\">\n            <div class=\"full-descr__line-name\">#{full_production}</div>\n            <div class=\"full-descr__line-body\">{companies}</div>\n        </div>\n\n        <div class=\"full-descr__line full--keywords\">\n            <div class=\"full-descr__line-name\">#{full_keywords}</div>\n            <div class=\"full-descr__line-body\">{keywords}</div>\n        </div>\n    </div>\n\n    <div class=\"full-descr__right\">\n        <div class=\"full-descr__info\">\n            <div class=\"full-descr__info-name\">#{full_date_of_release}</div>\n            <div class=\"full-descr__info-body\">{relise}</div>\n        </div>\n\n        <div class=\"full-descr__info full--budget\">\n            <div class=\"full-descr__info-name\">#{full_budget}</div>\n            <div class=\"full-descr__info-body\">{budget}</div>\n        </div>\n\n        <div class=\"full-descr__info full--countries\">\n            <div class=\"full-descr__info-name\">#{full_countries}</div>\n            <div class=\"full-descr__info-body\">{countries}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$1s = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
+  var html$1u = "<div class=\"full-person selector layer--visible\">\n    <div class=\"full-person__photo\">\n        <img />\n    </div>\n\n    <div class=\"full-person__body\">\n        <div class=\"full-person__name\">{name}</div>\n        <div class=\"full-person__role\">{role}</div>\n    </div>\n</div>";
 
-  var html$1r = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
+  var html$1t = "<div class=\"full-review selector\">\n    <div class=\"full-review__text\">{text}</div>\n\n    <div class=\"full-review__footer\">#{full_like}: {like_count}</div>\n</div>";
 
-  var html$1q = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
+  var html$1s = "<div class=\"full-episode selector layer--visible\">\n    <div class=\"full-episode__img\">\n        <img />\n    </div>\n\n    <div class=\"full-episode__body\">\n        <div class=\"full-episode__num\">{num}</div>\n        <div class=\"full-episode__name\">{name}</div>\n        <div class=\"full-episode__date\">{date}</div>\n    </div>\n</div>";
 
-  var html$1p = "<div class=\"player\">\n    \n</div>";
+  var html$1r = "<div class=\"player\">\n    \n</div>";
 
-  var html$1o = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-one\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-two\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1q = "<div class=\"player-panel\">\n\n    <div class=\"player-panel__body\">\n        <div class=\"player-panel__timeline selector\">\n            <div class=\"player-panel__peding\"></div>\n            <div class=\"player-panel__position\"><div></div></div>\n            <div class=\"player-panel__time hide\"></div>\n            <div class=\"player-panel__time-touch-zone hide\"></div>\n        </div>\n\n        <div class=\"player-panel__iptv\">\n            <div class=\"player-panel-iptv\">\n                <div class=\"player-panel-iptv__channel\"></div>\n                <div class=\"player-panel-iptv__arrow-up\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 17.4122L15.9606 3.62323L29.7496 17.4122\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n                <div class=\"player-panel-iptv__position\">001</div>\n                <div class=\"player-panel-iptv__arrow-down\">\n                    <svg width=\"32\" height=\"19\" viewBox=\"0 0 32 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.17163 1.98059L15.9606 15.7696L29.7496 1.98059\" stroke=\"white\" stroke-width=\"4\"/>\n                    </svg>                \n                </div>\n            </div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-one\">\n            <div class=\"player-panel__timenow\"></div>\n            <div class=\"player-panel__timeend\"></div>\n        </div>\n\n        <div class=\"player-panel__line player-panel__line-two\">\n            <div class=\"player-panel__left\">\n                <div class=\"player-panel__prev button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n\n                <div class=\"player-panel__next-episode-name hide\"></div>\n            </div>\n            <div class=\"player-panel__center\">\n                <div class=\"player-panel__prev button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.75 13.7698C1.41666 13 1.41667 11.0755 2.75 10.3057L20 0.34638C21.3333 -0.42342 23 0.538831 23 2.07843L23 21.997C23 23.5366 21.3333 24.4989 20 23.7291L2.75 13.7698Z\" fill=\"currentColor\"/>\n                    <rect x=\"6\" y=\"24\" width=\"6\" height=\"24\" rx=\"2\" transform=\"rotate(180 6 24)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tstart button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14.75 10.2302C13.4167 11 13.4167 12.9245 14.75 13.6943L32 23.6536C33.3333 24.4234 35 23.4612 35 21.9216L35 2.00298C35 0.463381 33.3333 -0.498867 32 0.270933L14.75 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M1.75 10.2302C0.416665 11 0.416667 12.9245 1.75 13.6943L19 23.6536C20.3333 24.4234 22 23.4612 22 21.9216L22 2.00298C22 0.463381 20.3333 -0.498867 19 0.270933L1.75 10.2302Z\" fill=\"currentColor\"/>\n                    <rect width=\"6\" height=\"24\" rx=\"2\" transform=\"matrix(-1 0 0 1 6 0)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__rprev button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M14 10.7679C12.6667 11.5377 12.6667 13.4622 14 14.232L31.25 24.1913C32.5833 24.9611 34.25 23.9989 34.25 22.4593L34.25 2.5407C34.25 1.0011 32.5833 0.0388526 31.25 0.808653L14 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M0.999998 10.7679C-0.333335 11.5377 -0.333333 13.4622 1 14.232L18.25 24.1913C19.5833 24.9611 21.25 23.9989 21.25 22.4593L21.25 2.5407C21.25 1.0011 19.5833 0.0388526 18.25 0.808653L0.999998 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__playpause button selector\">\n                    <div>\n                        <svg width=\"22\" height=\"25\" viewBox=\"0 0 22 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M21 10.7679C22.3333 11.5377 22.3333 13.4622 21 14.232L3.75 24.1913C2.41666 24.9611 0.75 23.9989 0.75 22.4593L0.750001 2.5407C0.750001 1.0011 2.41667 0.0388526 3.75 0.808653L21 10.7679Z\" fill=\"currentColor\"/>\n                        </svg>\n                    </div>\n                    <div>\n                        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"currentColor\"/>\n                        </svg>                    \n                    </div>\n                </div>\n                <div class=\"player-panel__rnext button selector\">\n                    <svg width=\"35\" height=\"25\" viewBox=\"0 0 35 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.7679C21.5833 11.5377 21.5833 13.4622 20.25 14.232L3 24.1913C1.66666 24.9611 -6.72981e-08 23.9989 0 22.4593L8.70669e-07 2.5407C9.37967e-07 1.0011 1.66667 0.0388526 3 0.808653L20.25 10.7679Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.7679C34.5833 11.5377 34.5833 13.4622 33.25 14.232L16 24.1913C14.6667 24.9611 13 23.9989 13 22.4593L13 2.5407C13 1.0011 14.6667 0.0388526 16 0.808653L33.25 10.7679Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tend button selector\">\n                    <svg width=\"35\" height=\"24\" viewBox=\"0 0 35 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <path d=\"M33.25 10.2302C34.5833 11 34.5833 12.9245 33.25 13.6943L16 23.6536C14.6667 24.4234 13 23.4612 13 21.9216L13 2.00298C13 0.463381 14.6667 -0.498867 16 0.270933L33.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"29\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__next button selector hide\">\n                    <svg width=\"23\" height=\"24\" viewBox=\"0 0 23 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.25 10.2302C21.5833 11 21.5833 12.9245 20.25 13.6943L3 23.6536C1.66666 24.4234 -6.72981e-08 23.4612 0 21.9216L8.70669e-07 2.00298C9.37967e-07 0.463381 1.66667 -0.498867 3 0.270933L20.25 10.2302Z\" fill=\"currentColor\"/>\n                    <rect x=\"17\" width=\"6\" height=\"24\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n            </div>\n            <div class=\"player-panel__right\">\n                <div class=\"player-panel__quality button selector\">auto</div>\n                <div class=\"player-panel__playlist button selector\">\n                    <svg width=\"25\" height=\"25\" viewBox=\"0 0 25 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"5\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 5)\" fill=\"currentColor\"/>\n                    <rect y=\"15\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 15)\" fill=\"currentColor\"/>\n                    <rect y=\"25\" width=\"5\" height=\"25\" rx=\"2\" transform=\"rotate(-90 0 25)\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__subs button selector hide\">\n                    <svg width=\"23\" height=\"25\" viewBox=\"0 0 23 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M22.4357 20.0861C20.1515 23.0732 16.5508 25 12.5 25C5.59644 25 0 19.4036 0 12.5C0 5.59644 5.59644 0 12.5 0C16.5508 0 20.1515 1.9268 22.4357 4.9139L18.8439 7.84254C17.2872 6.09824 15.0219 5 12.5 5C7.80558 5 5 7.80558 5 12.5C5 17.1944 7.80558 20 12.5 20C15.0219 20 17.2872 18.9018 18.8439 17.1575L22.4357 20.0861Z\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__tracks button selector hide\">\n                    <svg width=\"24\" height=\"31\" viewBox=\"0 0 24 31\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect x=\"5\" width=\"14\" height=\"23\" rx=\"7\" fill=\"currentColor\"/>\n                    <path d=\"M3.39272 18.4429C3.08504 17.6737 2.21209 17.2996 1.44291 17.6073C0.673739 17.915 0.299615 18.7879 0.607285 19.5571L3.39272 18.4429ZM23.3927 19.5571C23.7004 18.7879 23.3263 17.915 22.5571 17.6073C21.7879 17.2996 20.915 17.6737 20.6073 18.4429L23.3927 19.5571ZM0.607285 19.5571C2.85606 25.179 7.44515 27.5 12 27.5V24.5C8.55485 24.5 5.14394 22.821 3.39272 18.4429L0.607285 19.5571ZM12 27.5C16.5549 27.5 21.1439 25.179 23.3927 19.5571L20.6073 18.4429C18.8561 22.821 15.4451 24.5 12 24.5V27.5Z\" fill=\"currentColor\"/>\n                    <rect x=\"10\" y=\"25\" width=\"4\" height=\"6\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__pip button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M4 2H21C22.1046 2 23 2.89543 23 4V11H25V4C25 1.79086 23.2091 0 21 0H4C1.79086 0 0 1.79086 0 4V19C0 21.2091 1.79086 23 4 23H9V21H4C2.89543 21 2 20.1046 2 19V4C2 2.89543 2.89543 2 4 2Z\" fill=\"currentColor\"/>\n                    <path d=\"M11.0988 12.2064C11.7657 12.3811 12.3811 11.7657 12.2064 11.0988L11.2241 7.34718C11.0494 6.68023 10.2157 6.46192 9.72343 6.95423L6.95422 9.72344C6.46192 10.2157 6.68022 11.0494 7.34717 11.2241L11.0988 12.2064Z\" fill=\"currentColor\"/>\n                    <path d=\"M7.53735 9.45591C8.06025 9.97881 8.91363 9.97322 9.44343 9.44342C9.97322 8.91362 9.97882 8.06024 9.45592 7.53734L6.93114 5.01257C6.40824 4.48967 5.55486 4.49526 5.02506 5.02506C4.49527 5.55485 4.48967 6.40823 5.01257 6.93113L7.53735 9.45591Z\" fill=\"currentColor\"/>\n                    <rect x=\"12\" y=\"14\" width=\"13\" height=\"9\" rx=\"2\" fill=\"currentColor\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__volume button selector\">\n                    <svg width=\"360\" height=\"480\" viewBox=\"0 0 360 480\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M145 366.736V123.602L290.343 30.3787C309.644 17.9988 335 31.8587 335 54.789V425.73C335 448.023 310.894 461.98 291.561 450.88L145 366.736Z\" stroke=\"currentColor\" stroke-width=\"45\"/>\n                        <path d=\"M60 134H136V357H60C40.67 357 25 341.33 25 322V169C25 149.67 40.67 134 60 134Z\" stroke=\"currentColor\" stroke-width=\"45\"/>\n                    </svg>\n                    <div class=\"player-panel__volume-drop\">\n                        <input type=\"range\" orient=\"vertical\" class=\"player-panel__volume-range\" max=\"1\" min=\"0\" step=\"0.01\" />\n                    </div>\n                </div>\n                <div class=\"player-panel__settings button selector\">\n                    <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    </svg>\n                </div>\n                <div class=\"player-panel__fullscreen button selector\">\n                    <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    </svg>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$1n = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
+  var html$1p = "<div class=\"player-video\">\n    <div class=\"player-video__display\"></div>\n    <div class=\"player-video__loader\"></div>\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"/>\n        </svg>\n    </div>\n    <div class=\"player-video__backwork-icon\">\n        <i class=\"left-triangle triangle\">\u25C0\u25C0\u25C0</i><span></span>\n    </div>\n    <div class=\"player-video__forward-icon\">\n        <span></span><i class=\"right-triangle triangle\">\u25B6\u25B6\u25B6</i>\n    </div>\n    <div class=\"player-video__subtitles hide\">\n        <div class=\"player-video__subtitles-text\"></div>\n    </div>\n</div>";
 
-  var html$1m = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
+  var html$1o = "<div class=\"player-info\">\n    <div class=\"player-info__body\">\n        <div class=\"player-info__line\">\n            <div class=\"player-info__name\"></div>\n            <div class=\"player-info__time\"><span class=\"time--clock\"></span></div>\n        </div>\n\n        <div class=\"player-info__values\">\n            <div class=\"value--size\">\n                <span>#{loading}...</span>\n            </div>\n            <div class=\"value--stat\">\n                <span></span>\n            </div>\n            <div class=\"value--speed\">\n                <span></span>\n            </div>\n            <div class=\"value--pieces\"></div>\n        </div>\n\n        <div class=\"player-info__error hide\"></div>\n    </div>\n</div>";
 
-  var html$1l = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
+  var html$1n = "<div class=\"selectbox\">\n    <div class=\"selectbox__layer\"></div>\n    <div class=\"selectbox__content layer--height\">\n        <div class=\"selectbox__head\">\n            <div class=\"selectbox__title\"></div>\n        </div>\n        <div class=\"selectbox__body\"></div>\n    </div>\n</div>";
 
-  var html$1k = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
+  var html$1m = "<div class=\"selectbox-item selector\">\n    <div class=\"selectbox-item__title\">{title}</div>\n    <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n</div>";
 
-  var html$1j = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
+  var html$1l = "<div class=\"selectbox-item selectbox-item--icon selector\">\n    <div class=\"selectbox-item__icon\">{icon}</div>\n    <div>\n        <div class=\"selectbox-item__title\">{title}</div>\n        <div class=\"selectbox-item__subtitle\">{subtitle}</div>\n    </div>\n</div>";
 
-  var html$1i = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
+  var html$1k = "<div class=\"info layer--width\">\n    <div class=\"info__left\">\n        <div class=\"info__title\"></div>\n        <div class=\"info__footer\">\n            <div class=\"info__vote\">\n                <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"#fff\"/>\n                </svg>\n                <span></span>\n            </div>\n            <div class=\"info__title-original\"></div>\n        </div>\n    </div>\n    <div class=\"info__right\">\n        <div class=\"info__icon icon--book\"></div>\n        <div class=\"info__icon icon--like\"></div>\n        <div class=\"info__icon icon--wath\"></div>\n    </div>\n</div>";
 
-  var html$1h = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
+  var html$1j = "<div>\n    <div class=\"simple-button simple-button--filter selector filter--search\">\n        <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n            <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        </svg>\n        <div class=\"hide\"></div>\n    </div>\n    <div class=\"simple-button simple-button--filter selector filter--sort\">\n        <span>#{filter_sorted}</span><div class=\"hide\"></div>\n    </div>\n\n    <div class=\"simple-button simple-button--filter selector filter--filter\">\n        <span>#{filter_filtred}</span><div class=\"hide\"></div>\n    </div>\n</div>";
 
-  var html$1g = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
+  var html$1i = "<div class=\"card-more selector\">\n    <div class=\"card-more__box\">\n        <div class=\"card-more__title\">\n            #{more}\n        </div>\n    </div>\n</div>";
 
-  var html$1f = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
+  var html$1h = "<div class=\"search__body\">\n    <div class=\"search__input\">#{search_input}...</div>\n    <div class=\"search__keypad\"><div class=\"simple-keyboard\"></div></div>\n    <div class=\"search__history\" data-area=\"history\"></div>\n    <div class=\"search__sources\" data-area=\"sources\"></div>\n    <div class=\"search__results\"></div>\n</div>";
 
-  var html$1e = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
+  var html$1g = "<div class=\"settings-input\">\n    <div class=\"settings-input__content\">\n        <div class=\"settings-input__input\"></div>\n\n        <div class=\"simple-keyboard\"></div>\n\n        <div class=\"settings-input__links\">#{settings_input_links}</div>\n    </div>\n</div>";
 
-  var html$1d = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
+  var html$1f = "<div class=\"modal\">\n    <div class=\"modal__content\">\n        <div class=\"modal__head\">\n            <div class=\"modal__title\">{title}</div>\n        </div>\n        <div class=\"modal__body\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$1c = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
+  var html$1e = "<div class=\"company-start\">\n    <div class=\"company-start__left\">\n        <div class=\"company-start__icon\">\n            <img src=\"{img}\" class=\"company-start__img\" />\n        </div>\n    </div>\n\n    <div class=\"company-start__right\">\n        <div class=\"company-start__name\">{name}</div>\n        <div class=\"company-start__place\">{place}</div>\n    </div>\n</div>";
 
-  var html$1b = "<div class=\"modal-loading\">\n    \n</div>";
+  var html$1d = "<div class=\"modal-loading\">\n    \n</div>";
 
-  var html$1a = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
+  var html$1c = "<div class=\"modal-pending\">\n    <div class=\"modal-pending__loading\"></div>\n    <div class=\"modal-pending__text\">{text}</div>\n</div>";
 
-  var html$19 = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__descr\">{descr}</div>\n        </div>\n    </div>\n\n    <div class=\"person-start__descr-mobile\">{descr}</div>\n</div>";
+  var html$1b = "<div class=\"person-start\">\n\n    <div class=\"person-start__body\">\n        <div class=\"person-start__right\">\n            <div class=\"person-start__poster\">\n                <img src=\"{img}\" class=\"person-start__img\" />\n            </div>\n        </div>\n\n        <div class=\"person-start__left\">\n            <div class=\"person-start__tags\">\n                <div class=\"person-start__tag\">\n                    <img src=\"./img/icons/pulse.svg\" /> <div>{birthday}</div>\n                </div>\n            </div>\n            \n            <div class=\"person-start__name\">{name}</div>\n            <div class=\"person-start__place\">{place}</div>\n\n            <div class=\"person-start__bottom\">\n                <div class=\"full-start__button selector button--info\">\n                    <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"512\" height=\"512\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                        <path d=\"M459.027 144.337 319.377 4.687A16 16 0 0 0 308.063 0H99.509C71.265 0 48.287 22.978 48.287 51.222v409.556c0 28.244 22.978 51.222 51.222 51.222H412.49c28.244 0 51.222-22.978 51.222-51.222V155.65a15.995 15.995 0 0 0-4.685-11.313zM324.063 54.628l85.022 85.023h-85.022zM412.491 480H99.509c-10.599 0-19.222-8.623-19.222-19.222V51.222C80.287 40.623 88.91 32 99.509 32h192.554v123.65c0 8.836 7.164 16 16 16h123.65v289.128c0 10.599-8.623 19.222-19.222 19.222zM370.4 265.826c0 8.836-7.164 16-16 16H157.6c-8.836 0-16-7.164-16-16s7.164-16 16-16h196.8c8.837 0 16 7.163 16 16zm0 109.199c0 8.836-7.164 16-16 16H157.6c-8.836 0-16-7.164-16-16s7.164-16 16-16h196.8c8.837 0 16 7.164 16 16z\" fill=\"currentColor\"></path>\n                    </svg>\n                </div>\n\n                <div class=\"full-start__button selector button--subscribe\">\n                    <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                        <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                        <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.5\"/>\n                    </svg>\n\n                    <span></span>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$18 = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
+  var html$1a = "<div class=\"empty\">\n    <div class=\"empty__img selector\"></div>\n    <div class=\"empty__title\">{title}</div>\n    <div class=\"empty__descr\">{descr}</div>\n</div>";
 
-  var html$17 = "<div class=\"empty-filter\">\n    <div class=\"empty-filter__title\">#{empty_title}</div>\n    <div class=\"empty-filter__subtitle\">#{empty_text}</div>\n    <div class=\"empty-filter__buttons hide\"></div>\n    <div class=\"empty-filter__templates\">\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n    </div>\n</div>";
+  var html$19 = "<div class=\"empty-filter\">\n    <div class=\"empty-filter__title\">#{empty_title}</div>\n    <div class=\"empty-filter__subtitle\">#{empty_text}</div>\n    <div class=\"empty-filter__buttons hide\"></div>\n    <div class=\"empty-filter__templates\">\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n        <div class=\"empty-template\">\n            <div class=\"empty-template__ico\"></div>\n            <div class=\"empty-template__body\"></div>\n        </div>\n    </div>\n</div>";
 
-  var html$16 = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
+  var html$18 = "<div class=\"notice selector\">\n    <div class=\"notice__head\">\n        <div class=\"notice__title\">{title}</div>\n        <div class=\"notice__time\">{time}</div>\n    </div>\n    \n    <div class=\"notice__descr\">{descr}</div>\n</div>";
 
-  var html$15 = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
+  var html$17 = "<div class=\"notice notice--card selector layer--visible layer--render\">\n    <div class=\"notice__left\">\n        <div class=\"notice__img\">\n            <img />\n        </div>\n    </div>\n    <div class=\"notice__body\">\n        <div class=\"notice__head\">\n            <div class=\"notice__title\">{title}</div>\n            <div class=\"notice__time\">{time}</div>\n        </div>\n        \n        <div class=\"notice__descr\">{descr}</div>\n    </div>\n</div>";
 
-  var html$14 = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__ffprobe hide\"></div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
+  var html$16 = "<div class=\"torrent-item selector layer--visible layer--render\">\n    <div class=\"torrent-item__title\">{title}</div>\n    <div class=\"torrent-item__ffprobe hide\"></div>\n    <div class=\"torrent-item__details\">\n        <div class=\"torrent-item__date\">{date}</div>\n        <div class=\"torrent-item__tracker\">{tracker}</div>\n\n        <div class=\"torrent-item__bitrate bitrate\">#{torrent_item_bitrate}: <span>{bitrate} #{torrent_item_mb}</span></div>\n        <div class=\"torrent-item__seeds\">#{torrent_item_seeds}: <span>{seeds}</span></div>\n        <div class=\"torrent-item__grabs\">#{torrent_item_grabs}: <span>{grabs}</span></div>\n        \n        <div class=\"torrent-item__size\">{size}</div>\n    </div>\n</div>";
 
-  var html$13 = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}<span class=\"exe\">.{exe}</span></div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
+  var html$15 = "<div class=\"torrent-file selector\">\n    <div class=\"torrent-file__title\">{title}<span class=\"exe\">.{exe}</span></div>\n    <div class=\"torrent-file__size\">{size}</div>\n</div>";
 
-  var html$12 = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
+  var html$14 = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$11 = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$13 = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
-  var html$10 = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
+  var html$12 = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
-  var html$$ = "<div class=\"season-episode selector layer--visible\">\n    <div class=\"season-episode__img\">\n        <img alt=\"\">\n        <div class=\"season-episode__loader\"></div>\n    </div>\n    <div class=\"season-episode__body\">\n        <div class=\"season-episode__head\">\n            <div class=\"season-episode__title\">{title}</div>\n            <div class=\"season-episode__time\">{time}</div>\n        </div>\n\n        <div class=\"season-episode__timeline\"></div>\n\n        <div class=\"season-episode__footer\">\n            <div class=\"season-episode__info\">{info}</div>\n            <div class=\"season-episode__quality\">{quality}</div>\n        </div>\n    </div>\n</div>";
+  var html$11 = "<div class=\"season-episode selector layer--visible\">\n    <div class=\"season-episode__img\">\n        <img alt=\"\">\n        <div class=\"season-episode__loader\"></div>\n    </div>\n    <div class=\"season-episode__body\">\n        <div class=\"season-episode__head\">\n            <div class=\"season-episode__title\">{title}</div>\n            <div class=\"season-episode__time\">{time}</div>\n        </div>\n\n        <div class=\"season-episode__timeline\"></div>\n\n        <div class=\"season-episode__footer\">\n            <div class=\"season-episode__info\">{info}</div>\n            <div class=\"season-episode__quality\">{quality}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$_ = "<div class=\"season-episode-rate\">\n    <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"></path>\n    </svg>\n    <span>{rate}</span>\n</div>";
+  var html$10 = "<div class=\"season-episode-rate\">\n    <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"></path>\n    </svg>\n    <span>{rate}</span>\n</div>";
 
-  var html$Z = "<div class=\"season-info selector\">\n    <div class=\"season-info__title\">{name}</div>\n    <div class=\"season-info__head\">{head}</div>\n    <div class=\"season-info__overview\">{overview}</div>\n</div>";
+  var html$$ = "<div class=\"season-info selector\">\n    <div class=\"season-info__title\">{name}</div>\n    <div class=\"season-info__head\">{head}</div>\n    <div class=\"season-info__overview\">{overview}</div>\n</div>";
 
-  var html$Y = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$_ = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u0430\u0434\u0440\u0435\u0441: <code>{ip}</code></li>\n            <li class=\"nocorect\">\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u0430\u0434\u0440\u0435\u0441 <code>{ip}</code> \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u043C!</li>\n            <li>\u0422\u0435\u043A\u0443\u0449\u0438\u0439 \u043E\u0442\u0432\u0435\u0442: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E?</div>\n        <ul>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0430\u0434\u0440\u0435\u0441: <code>192.168.0.\u0445\u0445\u0445:8090</code></li>\n            <li>\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044E Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041D\u0430 \u044D\u0442\u043E\u043C \u0436\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435, \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u043E\u0442\u0432\u0435\u0442\u0438\u0442, \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0437\u0430\u043F\u0443\u0449\u0435\u043D \u043B\u0438 TorrServe, \u0438\u043B\u0438 \u043F\u0435\u0440\u0435\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0435\u0433\u043E.</li>\n            <li>\u0415\u0441\u043B\u0438 \u0436\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u043E\u0442\u0432\u0435\u0442\u0438\u043B, \u0443\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u0441\u0442\u0440\u043E\u043A\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$X = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
+  var html$Z = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>\u041F\u0440\u0438\u0447\u0438\u043D\u044B</div>\n        <ul>\n            <li>\u0417\u0430\u043F\u0440\u043E\u0441 \u043D\u0430 \u043F\u0438\u043D\u0433 \u0432\u0435\u0440\u043D\u0443\u043B \u043D\u0435\u0432\u0435\u0440\u043D\u044B\u0439 \u0444\u043E\u0440\u043C\u0430\u0442</li>\n            <li>\u041E\u0442\u0432\u0435\u0442 \u043E\u0442 TorServer: <code>{echo}</code></li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u0427\u0442\u043E \u0434\u0435\u043B\u0430\u0442\u044C?</div>\n        <ul>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0443 \u0432\u0430\u0441 \u0441\u0442\u043E\u0438\u0442 \u0432\u0435\u0440\u0441\u0438\u044F Matrix</li>\n        </ul>\n    </div>\n\n    <div>\n        <div>\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C?</div>\n        <ul>\n            <li>\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0431\u0440\u0430\u0443\u0437\u0435\u0440 \u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043F\u043E \u0430\u0434\u0440\u0435\u0441\u0443 <code>{ip}/echo</code></li>\n            <li>\u0423\u0431\u0435\u0434\u0438\u0442\u0435\u0441\u044C \u0447\u0442\u043E \u0432 \u043E\u0442\u0432\u0435\u0442\u0435 \u0435\u0441\u0442\u044C \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043A\u043E\u0434\u0430 <code>MatriX</code></li>\n        </ul>\n    </div>\n</div>";
 
-  var html$W = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
+  var html$Y = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>\n\n<div class=\"torrent-error noconnect\">\n    <div>\n        <div>#{torent_nohash_reasons}</div>\n        <ul>\n            <li>#{torent_nohash_reason_one}</li>\n            <li>#{torent_nohash_reason_two}: {echo}</li>\n            <li>#{torent_nohash_reason_three}: <code>{url}</code></li>\n        </ul>\n    </div>\n\n    <div class=\"is--jackett\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_one}</li>\n            <li>#{torent_nohash_do_two}</li>\n            <li>#{torent_nohash_do_three}</li>\n        </ul>\n    </div>\n\n    <div class=\"is--torlook\">\n        <div>#{torent_nohash_do}</div>\n        <ul>\n            <li>#{torent_nohash_do_four}</li>\n            <li>#{torent_nohash_do_five}</li>\n        </ul>\n    </div>\n</div>";
 
-  var html$V = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$X = "<div class=\"torrent-install\">\n    <div class=\"torrent-install__left\">\n        <img src=\"https://yumata.github.io/lampa/img/ili/tv.png\" class=\"torrent-install\"/>\n    </div>\n    <div class=\"torrent-install__details\">\n        <div class=\"torrent-install__title\">#{torrent_install_need}</div>\n        <div class=\"torrent-install__descr\">#{torrent_install_text}</div>\n        \n        <div class=\"torrent-install__label\">#{torrent_install_contact}</div>\n\n        <div class=\"torrent-install__links\">\n            <div class=\"torrent-install__link\">\n                <div>LG - Samsung</div>\n                <div>@lampa_group</div>\n            </div>\n\n            <div class=\"torrent-install__link\">\n                <div>Android</div>\n                <div>@lampa_android</div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$U = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
+  var html$W = "<div class=\"torrent-checklist\">\n    <div class=\"torrent-checklist__descr\">#{torrent_error_text}</div>\n\n    <div class=\"torrent-checklist__progress-steps\"></div>\n    <div class=\"torrent-checklist__progress-bar\">\n        <div style=\"width: 0\"></div>\n    </div>\n\n    <div class=\"torrent-checklist__content\">\n        <div class=\"torrent-checklist__steps\">\n            <ul class=\"torrent-checklist__list\">\n                <li>#{torrent_error_step_1}</li>\n                <li>#{torrent_error_step_2}</li>\n                <li>#{torrent_error_step_3}</li>\n                <li>#{torrent_error_step_4}</li>\n                <li>#{torrent_error_step_5}</li>\n                <li>#{torrent_error_step_6}</li>\n            </ul>\n        </div>\n\n        <div class=\"torrent-checklist__info\">\n            <div class=\"hide\">#{torrent_error_info_1}</div>\n            <div class=\"hide\">#{torrent_error_info_2}</div>\n            <div class=\"hide\">#{torrent_error_info_3}</div>\n            <div class=\"hide\">#{torrent_error_info_4}</div>\n            <div class=\"hide\">#{torrent_error_info_5}</div>\n            <div class=\"hide\">#{torrent_error_info_6}</div>\n            <div class=\"hide\">#{torrent_error_info_7}</div>\n        </div>\n    </div>\n\n    <div class=\"torrent-checklist__footer\">\n        <div class=\"simple-button selector\">#{torrent_error_start}</div><div class=\"torrent-checklist__next-step\"></div>\n    </div>\n</div>";
 
-  var html$T = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
+  var html$V = "<div class=\"torrent-serial selector layer--visible layer--render\">\n    <img data-src=\"{img}\" class=\"torrent-serial__img\" />\n    <div class=\"torrent-serial__content\">\n        <div class=\"torrent-serial__body\">\n            <div class=\"torrent-serial__title\">{fname}</div>\n            <div class=\"torrent-serial__line\"><span>#{torrent_serial_season} - <b>{season}</b></span><span>#{torrent_serial_date} - {air_date}</span></div>\n        </div>\n        <div class=\"torrent-serial__detail\">\n            <div class=\"torrent-serial__size\">{size}</div>\n            <div class=\"torrent-serial__exe\">.{exe}</div>\n        </div>\n        <div class=\"torrent-serial__clear\"></div>\n    </div>\n    <div class=\"torrent-serial__episode\">{episode}</div>\n</div>";
 
-  var html$S = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
+  var html$U = "<div class=\"search-box\">\n    <div class=\"search-box__input search__input\"></div>\n    <div class=\"search-box__keypad\"><div class=\"simple-keyboard\"></div></div>\n</div>";
 
-  var html$R = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
+  var html$T = "<div class=\"console\">\n    <div class=\"console__tabs\"></div>\n    <div class=\"console__body\"></div>\n</div>";
 
-  var html$Q = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$S = "\n<svg width=\"15\" height=\"14\" viewBox=\"0 0 15 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6.54893 0.927035C6.84828 0.00572455 8.15169 0.00572705 8.45104 0.927038L9.40835 3.87334C9.54223 4.28537 9.92618 4.56433 10.3594 4.56433H13.4573C14.4261 4.56433 14.8288 5.80394 14.0451 6.37334L11.5388 8.19426C11.1884 8.4489 11.0417 8.90027 11.1756 9.31229L12.1329 12.2586C12.4322 13.1799 11.3778 13.946 10.594 13.3766L8.08777 11.5557C7.73728 11.3011 7.26268 11.3011 6.9122 11.5557L4.40592 13.3766C3.6222 13.946 2.56773 13.1799 2.86708 12.2586L3.82439 9.31229C3.95827 8.90027 3.81161 8.4489 3.46112 8.19426L0.954841 6.37334C0.171128 5.80394 0.573906 4.56433 1.54263 4.56433H4.64056C5.07378 4.56433 5.45774 4.28536 5.59161 3.87334L6.54893 0.927035Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$P = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
+  var html$R = "\n<svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n<path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n</svg>\n";
 
-  var html$O = "\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path></svg>\n";
+  var html$Q = "\n<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" viewBox=\"0 0 401.998 401.998\" xml:space=\"preserve\"><path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path></svg>\n";
 
-  var html$N = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
+  var html$P = "<div class=\"time-line\" data-hash=\"{hash}\">\n    <div style=\"width: {percent}%\"></div>\n</div>";
 
-  var html$M = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
+  var html$O = "<span class=\"time-line-details\" data-hash=\"{hash}\">\n#{time_viewed} - <b a=\"t\">{time}</b> / <b a=\"p\">{percent}</b> #{time_from} <b a=\"d\">{duration}</b>\n</span>";
 
-  var html$L = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
+  var html$N = "<div class=\"empty empty--list\">\n    <div class=\"empty__title\">#{empty_title}</div>\n    <div class=\"empty__descr\">#{empty_text}</div>\n</div>";
 
-  var html$K = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
+  var html$M = "<div class=\"screensaver\">\n    <div class=\"screensaver__slides\">\n        <img class=\"screensaver__slides-one\" />\n        <img class=\"screensaver__slides-two\" />\n    </div>\n    <div class=\"screensaver__gradient\"></div>\n    <div class=\"screensaver__datetime\">\n        <div class=\"screensaver__datetime-time\"><span class=\"time--clock\"></span></div>\n        <div class=\"screensaver__datetime-date\"><span class=\"time--full\"></span></div>\n    </div>\n</div>";
 
-  var html$J = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
+  var html$L = "<div class=\"plugins-catalog\">\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title selector\">#{plugins_catalog_work}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_work_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n\n    <div class=\"plugins-catalog__block\">\n        <div class=\"plugins-catalog__title\">#{plugins_catalog_popular}</div>\n        <div class=\"plugins-catalog__descr\">#{plugins_catalog_popular_descr}</div>\n        <div class=\"plugins-catalog__list\">\n            \n        </div>\n    </div>\n</div>";
 
-  var html$I = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
+  var html$K = "<div class=\"broadcast\">\n    <div class=\"broadcast__text\">{text}</div>\n\n    <div class=\"broadcast__scan\"><div></div></div>\n\n    <div class=\"broadcast__devices\">\n    \n    </div>\n</div>";
 
-  var html$H = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
+  var html$J = "<div class=\"lang\">\n    <div class=\"lang__body\">\n        <div class=\"lang__logo\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n        <div class=\"lang__title\"></div>\n        <div class=\"lang__subtitle\"></div>\n        <div class=\"lang__selector\"></div>\n    </div>\n</div>";
 
-  var html$G = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
+  var html$I = "<div class=\"extensions\">\n    <div class=\"extensions__body\"></div>\n</div>";
 
-  var html$F = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
+  var html$H = "<div class=\"extensions__block layer--visible layer--render\">\n    <div class=\"extensions__block-head\">\n        <div class=\"extensions__block-title\">{title}</div>\n    </div>\n    <div class=\"extensions__block-body\"></div>\n</div>";
 
-  var html$E = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-proto hide\">\n            <svg width=\"21\" height=\"30\" viewBox=\"0 0 21 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"10.5\" cy=\"8.5\" r=\"7\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                <rect y=\"9\" width=\"21\" height=\"21\" rx=\"4\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
+  var html$G = "<div class=\"extensions__item selector layer--visible layer--render\">\n    <div class=\"extensions__item-author\"></div>\n    <div class=\"extensions__item-name\"></div>\n    <div class=\"extensions__item-descr\"></div>\n    <div class=\"extensions__item-footer\">\n        <div class=\"extensions__item-included hide\"></div>\n        <div class=\"extensions__item-check hide\"></div>\n        <div class=\"extensions__item-proto hide\">\n            <svg width=\"21\" height=\"30\" viewBox=\"0 0 21 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <circle cx=\"10.5\" cy=\"8.5\" r=\"7\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                <rect y=\"9\" width=\"21\" height=\"21\" rx=\"4\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"extensions__item-code hide success\"></div>\n        <div class=\"extensions__item-status hide\"></div>\n        <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n    </div>\n</div>";
 
-  var html$D = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
+  var html$F = "<div class=\"extensions__item extensions__item--recomend selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-author\"></div>\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-descr\"></div>\n        <div class=\"extensions__item-footer\">\n            <div class=\"extensions__item-included hide\"></div>\n            <div class=\"extensions__item-check hide\"></div>\n            <div class=\"extensions__item-code hide success\"></div>\n            <div class=\"extensions__item-status hide\"></div>\n            <div class=\"extensions__item-disabled hide\">#{player_disabled}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$C = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
+  var html$E = "<div class=\"extensions-info\">\n    <div class=\"extensions-info__descr\"></div>\n    <div class=\"extensions-info__instruction\"></div>\n\n    <div class=\"extensions-info__footer\"> </div>\n</div>";
 
-  var html$B = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
+  var html$D = "<div class=\"extensions__item extensions__item--theme selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-body\">\n        <div class=\"extensions__item-name\"></div>\n    </div>\n</div>";
 
-  var html$A = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
+  var html$C = "<div class=\"extensions__item extensions__item--screensaver selector layer--visible layer--render\">\n    <div class=\"extensions__item-imagebox\">\n        <img class=\"extensions__item-image\" />\n    </div>\n    <div class=\"extensions__item-overlay\">\n        <div class=\"extensions__item-name\"></div>\n        <div class=\"extensions__item-time\"></div>\n    </div>\n</div>";
 
-  var html$z = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
+  var html$B = "<div class=\"iframe\">\n    <div class=\"iframe__body\">\n        <iframe src=\"\" class=\"iframe__window\"></iframe>\n    </div>\n</div>";
 
-  var html$y = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
+  var html$A = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon\">\n        <svg width=\"86\" height=\"93\" viewBox=\"0 0 86 93\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"42.6763\" cy=\"23.3238\" r=\"19.3238\" stroke=\"white\" stroke-width=\"8\"/>\n            <path d=\"M81.3524 93C81.3524 71.6398 64.0365 54.3239 42.6762 54.3239C21.3159 54.3239 4 71.6398 4 93\" stroke=\"white\" stroke-width=\"8\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_create}\n    </div>\n</div>";
 
-  var html$x = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
+  var html$z = "<div class=\"account-modal\">\n    <div class=\"account-modal__icon-svg\">\n        <svg height=\"184\" viewBox=\"0 0 199 184\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <circle cx=\"100\" cy=\"92\" r=\"92\" fill=\"#D9D9D9\" fill-opacity=\"0.06\"/>\n            <path d=\"M161.917 23H78.1668C75.2052 23 72.365 24.1765 70.2708 26.2706C68.1767 28.3648 67.0002 31.2051 67.0002 34.1667V109.542H55.8335V115.125H89.3335C90.0739 115.125 90.784 114.831 91.3075 114.307C91.831 113.784 92.1252 113.074 92.1252 112.333V106.529L112.381 120.708L92.1252 134.887V129.083C92.1252 128.343 91.831 127.633 91.3075 127.109C90.784 126.586 90.0739 126.292 89.3335 126.292H55.8335V131.875H67.0002V145.833C67.0002 148.795 68.1767 151.635 70.2708 153.729C72.365 155.824 75.2052 157 78.1668 157H161.917C164.878 157 167.719 155.824 169.813 153.729C171.907 151.635 173.083 148.795 173.083 145.833V34.1667C173.083 31.2051 171.907 28.3648 169.813 26.2706C167.719 24.1765 164.878 23 161.917 23V23ZM78.1668 28.5833H161.917C163.398 28.5833 164.818 29.1716 165.865 30.2187C166.912 31.2657 167.5 32.6859 167.5 34.1667V38.7701L160.434 47.603C159.609 48.6389 158.561 49.4751 157.368 50.0489C156.174 50.6227 154.866 50.9194 153.542 50.9167H133.721C133.08 47.7613 131.368 44.9244 128.875 42.8868C126.382 40.8491 123.262 39.736 120.042 39.736C116.822 39.736 113.701 40.8491 111.208 42.8868C108.715 44.9244 107.003 47.7613 106.363 50.9167H86.5418C85.2175 50.9194 83.9097 50.6227 82.7162 50.0489C81.5226 49.4751 80.4742 48.6389 79.6492 47.603L72.5835 38.7701V34.1667C72.5835 32.6859 73.1717 31.2657 74.2188 30.2187C75.2659 29.1716 76.686 28.5833 78.1668 28.5833V28.5833ZM128.417 53.7083C128.417 55.3648 127.926 56.984 127.005 58.3612C126.085 59.7385 124.777 60.8119 123.247 61.4458C121.716 62.0797 120.033 62.2456 118.408 61.9224C116.783 61.5993 115.291 60.8016 114.12 59.6304C112.949 58.4591 112.151 56.9668 111.828 55.3422C111.505 53.7176 111.67 52.0337 112.304 50.5034C112.938 48.973 114.012 47.665 115.389 46.7448C116.766 45.8245 118.385 45.3333 120.042 45.3333C122.263 45.3333 124.393 46.2157 125.964 47.7863C127.534 49.3569 128.417 51.4871 128.417 53.7083ZM161.917 151.417H78.1668C76.686 151.417 75.2659 150.828 74.2188 149.781C73.1717 148.734 72.5835 147.314 72.5835 145.833V131.875H86.5418V140.25C86.5421 140.76 86.6823 141.261 86.9472 141.697C87.2121 142.134 87.5915 142.489 88.0443 142.725C88.497 142.96 89.0057 143.067 89.515 143.034C90.0243 143.001 90.5148 142.829 90.9331 142.536L118.85 122.995C119.217 122.737 119.517 122.395 119.724 121.997C119.931 121.599 120.04 121.157 120.04 120.708C120.04 120.26 119.931 119.818 119.724 119.42C119.517 119.022 119.217 118.679 118.85 118.422L90.9331 98.8803C90.5148 98.5878 90.0243 98.4156 89.515 98.3825C89.0057 98.3493 88.497 98.4564 88.0443 98.6921C87.5915 98.9278 87.2121 99.2831 86.9472 99.7194C86.6823 100.156 86.5421 100.656 86.5418 101.167V109.542H72.5835V47.709L75.2914 51.0925C76.6378 52.7836 78.3491 54.1484 80.2973 55.0848C82.2455 56.0212 84.3803 56.505 86.5418 56.5H106.363C107.003 59.6554 108.715 62.4922 111.208 64.5299C113.701 66.5675 116.822 67.6807 120.042 67.6807C123.262 67.6807 126.382 66.5675 128.875 64.5299C131.368 62.4922 133.08 59.6554 133.721 56.5H153.542C155.703 56.505 157.838 56.0212 159.786 55.0848C161.735 54.1484 163.446 52.7836 164.792 51.0925L167.5 47.709V145.833C167.5 147.314 166.912 148.734 165.865 149.781C164.818 150.828 163.398 151.417 161.917 151.417V151.417Z\" fill=\"white\"/>\n            <path d=\"M117.25 50.9166H122.833V56.5H117.25V50.9166Z\" fill=\"white\"/>\n            <path d=\"M22.3335 36.9584H55.8335V42.5417H22.3335V36.9584Z\" fill=\"white\"/>\n            <path d=\"M11.1665 36.9584H16.7498V42.5417H11.1665V36.9584Z\" fill=\"white\"/>\n            <path d=\"M0 56.5H33.5V62.0833H0V56.5Z\" fill=\"white\"/>\n            <path d=\"M30.7085 151.417H55.8335V157H30.7085V151.417Z\" fill=\"white\"/>\n            <path d=\"M19.5415 151.417H25.1248V157H19.5415V151.417Z\" fill=\"white\"/>\n            <path d=\"M0 137.458H47.4583V143.042H0V137.458Z\" fill=\"white\"/>\n            <path d=\"M44.6665 90H61.4165V95.5833H44.6665V90Z\" fill=\"white\"/>\n            <path d=\"M33.5 90H39.0833V95.5833H33.5V90Z\" fill=\"white\"/>\n            <path d=\"M145.167 129.083H161.917V134.667H145.167V129.083Z\" fill=\"white\"/>\n            <path d=\"M122.833 140.25H161.917V145.833H122.833V140.25Z\" fill=\"white\"/>\n            <circle cx=\"169\" cy=\"32\" r=\"30\" fill=\"white\"/>\n            <rect x=\"159.808\" y=\"18.5649\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(45 159.808 18.5649)\" fill=\"#0C0C0C\"/>\n            <rect x=\"155.565\" y=\"41.1924\" width=\"32\" height=\"6\" rx=\"3\" transform=\"rotate(-45 155.565 41.1924)\" fill=\"#0C0C0C\"/>\n        </svg>\n    </div>\n\n    <div class=\"account-modal__desc\">\n        #{account_limited}\n    </div>\n</div>";
 
-  var html$w = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.red/premium</div>\n</div>";
+  var html$y = "<div class=\"cub-premium\">\n    <div class=\"cub-premium__title\">CUB Premium</div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url\">www.cub.red/premium</div>\n</div>";
 
-  var html$v = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.red/premium</div>\n</div>";
+  var html$x = "<div class=\"cub-premium cub-premium--detail\">\n    <div class=\"cub-premium__icon selector\">\n        <svg height=\"187\" viewBox=\"0 0 316 187\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M88.4999 13C53.2999 22.9999 31.3598 46.5 21.4999 60C11.6399 73.5 -3.206 102.466 0.96966 127.865C5.14532 153.264 21.5725 177.152 46.8782 184.993C72.1839 192.834 91.4738 170.655 127.498 167.07C163.522 163.486 196.2 182.884 227 167.07C257.8 151.256 286.5 119.814 281.5 88.0003C276.5 56.1863 240.6 23.0003 202 8.00027C163.4 -6.99978 123.7 3.00007 88.4999 13Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M100.284 7.20609C66.0842 10.3061 33.4999 30 16.2843 54.7061C6.77178 68.3574 -10.7157 114.706 19.7843 139.706C50.2843 164.706 120.584 182.906 175.284 183.706C229.984 184.506 267.884 172.706 293.284 143.706C318.684 114.706 322.184 58.8061 302.284 38.7061C282.384 18.6061 234.184 49.5061 193.784 43.2061C153.384 36.9061 134.484 4.10609 100.284 7.20609Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <path d=\"M44.8938 12.0212C18.7938 24.6211 7.88042 62.3671 13.3938 97.5212C21.5109 149.278 76 165.788 122.894 175.021C164.5 183.214 224.394 177.121 257.894 160.521C291.394 143.921 293.594 117.221 290.394 92.0213C287.194 66.8214 271.194 46.0213 241.894 34.5213C212.594 23.0214 183.294 39.0215 143.894 34.5214C104.494 30.0214 70.9938 -0.578779 44.8938 12.0212Z\" fill=\"#D8C39A\" fill-opacity=\"0.07\"/>\n        <circle cx=\"52.9634\" cy=\"57.9635\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"45.9634\" cy=\"168.963\" r=\"4.96348\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <circle cx=\"280.005\" cy=\"111.937\" r=\"3.13098\" stroke=\"#D8C39A\" stroke-width=\"4\"/>\n        <rect x=\"200\" y=\"158.131\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" fill=\"#D8C39A\"/>\n        <rect x=\"205.131\" y=\"166.927\" width=\"13.927\" height=\"3.66499\" rx=\"1.83249\" transform=\"rotate(-90 205.131 166.927)\" fill=\"#D8C39A\"/>\n        <rect x=\"237\" y=\"39.5908\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" fill=\"#D8C39A\"/>\n        <rect x=\"241.591\" y=\"47.4609\" width=\"12.461\" height=\"3.2792\" rx=\"1.6396\" transform=\"rotate(-90 241.591 47.4609)\" fill=\"#D8C39A\"/>\n        <rect x=\"167\" y=\"28.7808\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"170.781\" y=\"35.2622\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 170.781 35.2622)\" fill=\"#D8C39A\"/>\n        <rect x=\"49.1107\" y=\"124.513\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" fill=\"#D8C39A\"/>\n        <rect x=\"52.8914\" y=\"130.995\" width=\"10.262\" height=\"2.70052\" rx=\"1.35026\" transform=\"rotate(-90 52.8914 130.995)\" fill=\"#D8C39A\"/>\n        </svg>\n\n        <span>CUB Premium</span>\n    </div>\n    <div class=\"cub-premium__descr\">\n        #{account_premium}\n    </div>\n    <div class=\"cub-premium__includes\">\n        <div class=\"selector\">\n            <div>#{account_premium_include_1}<span>#{account_premium_include_text_1}</span></div>\n            <div>#{filter_rating_from} 360 #{filter_rating_to} 5 040</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_2}<span>#{account_premium_include_text_2}</span></div>\n            <div>#{filter_rating_from} 100 #{filter_rating_to} 500</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_3}<span>#{account_premium_include_text_3}</span></div>\n            <div>#{filter_rating_from} 1 000 #{filter_rating_to} 10 000</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_4}<span>#{account_premium_include_text_4}</span></div>\n            <div>#{filter_rating_from} 3 #{filter_rating_to} 8</div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_5}<span>#{account_premium_include_text_5}</span></div>\n            <div></div>\n        </div>\n        <div class=\"selector\">\n            <div>#{account_premium_include_6}<span>#{account_premium_include_text_6}</span></div>\n            <div></div>\n        </div>\n    </div>\n    <div class=\"cub-premium__descr\">#{account_premium_more}</div>\n    <div class=\"cub-premium__url selector\">www.cub.red/premium</div>\n</div>";
 
-  var html$u = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
+  var html$w = "<div class=\"explorer layer--width\">\n    <div class=\"explorer__card\">\n        <div class=\"explorer-card\">\n            <div class=\"explorer-card__head\">\n                <div class=\"explorer-card__head-left\">\n                    <div class=\"explorer-card__head-img selector\">\n                        <img alt=\"\">\n                    </div>\n                </div>\n                <div class=\"explorer-card__head-body\">\n                    <div class=\"explorer-card__head-create\"></div>\n                    <div class=\"explorer-card__head-rate\">\n                        <svg width=\"17\" height=\"16\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                            <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"/>\n                        </svg>\n                        <span></span>\n                    </div>\n                </div>\n            </div>\n\n            <div class=\"explorer-card__body\">\n                <div class=\"explorer-card__title\"></div>\n                <div class=\"explorer-card__genres\"></div>\n                <div class=\"explorer-card__descr\"></div>\n            </div>\n        </div>\n    </div>\n    <div class=\"explorer__files\">\n        <div class=\"explorer__files-head\">\n            \n        </div>\n        <div class=\"explorer__files-body\"></div>\n    </div>\n</div>";
 
-  var html$t = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
+  var html$v = "<div class=\"simple-button selector filter--back\">\n    <svg width=\"38\" height=\"30\" viewBox=\"0 0 38 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.5\" y=\"1.5\" width=\"35\" height=\"27\" rx=\"1.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6\" y=\"7\" width=\"25\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"13\" width=\"13\" height=\"3\" fill=\"currentColor\"/>\n        <rect x=\"6\" y=\"19\" width=\"19\" height=\"3\" fill=\"currentColor\"/>\n    </svg>\n</div>";
 
-  var html$s = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
+  var html$u = "<div class=\"https\">\n    <div class=\"https__icon\">\n        <svg width=\"146\" height=\"61\" viewBox=\"0 0 146 61\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <path d=\"M72.3059 41.0263V46H76.3571V38.4905L72.3059 41.0263Z\" fill=\"currentColor\"/>\n            <path d=\"M93.1293 27.9919V46H97.1804V33.7812H104.499C107.101 33.7812 109.236 33.3075 110.902 32.3601C112.568 31.4017 113.799 30.1167 114.594 28.505C115.4 26.8932 115.803 25.1018 115.803 23.1307C115.803 21.1596 115.4 19.3736 114.594 17.7727C114.177 16.9454 113.644 16.2067 112.995 15.5568L109.612 17.6744C110.242 18.186 110.727 18.8068 111.065 19.5369C111.566 20.5933 111.817 21.7912 111.817 23.1307C111.817 24.4702 111.566 25.6735 111.065 26.7408C110.575 27.7971 109.786 28.6357 108.697 29.2564C107.608 29.8771 106.165 30.1875 104.368 30.1875H97.1804V25.4561L93.1293 27.9919Z\" fill=\"currentColor\"/>\n            <path d=\"M80.8456 12.5455L72.3059 17.8909V16.1392H61.7861V12.5455H80.8456Z\" fill=\"currentColor\"/>\n            <path d=\"M46.8434 33.8292V16.1392H57.3633V12.5455H32.2724V16.1392H42.7923V36.365L46.8434 33.8292Z\" fill=\"currentColor\"/>\n            <path d=\"M138.239 17.054C139.633 17.9687 140.428 19.2538 140.624 20.9091H144.544C144.49 19.2211 143.967 17.7128 142.976 16.3842C141.996 15.0556 140.667 14.0102 138.99 13.2479C137.313 12.4747 135.397 12.0881 133.24 12.0881C131.106 12.0881 129.173 12.4801 127.441 13.2642C125.721 14.0374 124.349 15.1264 123.325 16.5312C122.312 17.9252 121.806 19.5587 121.806 21.4318C121.806 23.6861 122.568 25.5102 124.093 26.9041C125.617 28.2981 127.686 29.3707 130.3 30.1222L134.417 31.2983C135.593 31.625 136.687 32.0062 137.7 32.4418C138.713 32.8774 139.529 33.4437 140.15 34.1406C140.771 34.8376 141.081 35.7415 141.081 36.8523C141.081 38.072 140.722 39.1392 140.003 40.054C139.284 40.9579 138.31 41.6657 137.079 42.1776C135.849 42.6785 134.46 42.929 132.914 42.929C131.585 42.929 130.344 42.733 129.189 42.3409C128.046 41.938 127.098 41.3281 126.347 40.5114C125.606 39.6837 125.182 38.6383 125.073 37.375H120.891C121.022 39.2045 121.583 40.8108 122.574 42.1939C123.575 43.5769 124.948 44.6551 126.69 45.4283C128.443 46.2015 130.518 46.5881 132.914 46.5881C135.484 46.5881 137.667 46.1579 139.464 45.2976C141.272 44.4373 142.644 43.2775 143.581 41.8182C144.528 40.3589 145.002 38.7254 145.002 36.9176C145.002 35.3494 144.681 34.0263 144.038 32.9482C143.395 31.87 142.579 30.9879 141.588 30.3018C140.608 29.6049 139.578 29.0549 138.5 28.652C137.433 28.2491 136.464 27.9332 135.593 27.7045L132.195 26.7898C131.574 26.6264 130.894 26.4141 130.153 26.1527C129.413 25.8804 128.705 25.5374 128.029 25.1236C127.354 24.6989 126.799 24.1707 126.363 23.5391C125.939 22.8965 125.726 22.1288 125.726 21.2358C125.726 20.1686 126.031 19.2157 126.641 18.3771C127.262 17.5386 128.122 16.8797 129.222 16.4006C130.333 15.9214 131.629 15.6818 133.11 15.6818C135.135 15.6818 136.845 16.1392 138.239 17.054Z\" fill=\"currentColor\"/>\n            <path d=\"M0.0511475 46V12.5455H4.10228V27.4432H21.9404V12.5455H25.9915V46H21.9404V31.0369H4.10228V46H0.0511475Z\" fill=\"currentColor\"/>\n            <rect x=\"25.9064\" y=\"54.3732\" width=\"102.368\" height=\"7\" transform=\"rotate(-32.0445 25.9064 54.3732)\" fill=\"currentColor\"/>\n        </svg>\n    </div>\n    <div class=\"https__text\">\n        #{https_text}\n    </div>\n</div>";
 
-  var html$r = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
+  var html$t = "<div class=\"navigation-bar\">\n    <div class=\"navigation-bar__body\">\n        <div class=\"navigation-bar__item\" data-action=\"back\">\n            <div class=\"navigation-bar__icon\">\n                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n                    <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{back}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"main\">\n            <div class=\"navigation-bar__icon\">\n                <svg version=\"1.1\"xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 512 512\" xml:space=\"preserve\">\n                    <path fill=\"currentColor\" d=\"M475.425,200.225L262.092,4.669c-6.951-6.359-17.641-6.204-24.397,0.35L36.213,200.574\n                    c-3.449,3.348-5.399,7.953-5.399,12.758v280.889c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.959,17.778-17.778\n                    v-130.37h82.963v130.37c0,9.819,7.958,17.778,17.778,17.778h148.148c9.819,0,17.778-7.953,17.778-17.778V213.333\n                    C481.185,208.349,479.099,203.597,475.425,200.225z M445.629,476.444H333.037v-130.37c0-9.819-7.959-17.778-17.778-17.778H196.741\n                    c-9.819,0-17.778,7.959-17.778,17.778v130.37H66.37V220.853L250.424,42.216l195.206,178.939V476.444z\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{title_main}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"search\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{search}</div>\n        </div>\n\n        <div class=\"navigation-bar__item\" data-action=\"settings\">\n            <div class=\"navigation-bar__icon\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"></path>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n                </svg>\n            </div>\n            <div class=\"navigation-bar__label\">#{menu_settings}</div>\n        </div>\n    </div>\n</div>";
 
-  var html$q = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
+  var html$s = "<div class=\"head-backward selector\">\n    <div class=\"head-backward__button\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 492 492\" xml:space=\"preserve\">\n            <path d=\"M198.608 246.104 382.664 62.04c5.068-5.056 7.856-11.816 7.856-19.024 0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12C361.476 2.792 354.712 0 347.504 0s-13.964 2.792-19.028 7.864L109.328 227.008c-5.084 5.08-7.868 11.868-7.848 19.084-.02 7.248 2.76 14.028 7.848 19.112l218.944 218.932c5.064 5.072 11.82 7.864 19.032 7.864 7.208 0 13.964-2.792 19.032-7.864l16.124-16.12c10.492-10.492 10.492-27.572 0-38.06L198.608 246.104z\" fill=\"currentColor\"></path>\n        </svg>\n    </div>\n    <div class=\"head-backward__title\">{title}</div>\n</div>";
 
-  var html$p = "<div class=\"account-add-device\">\n    <img src=\"https://cub.red/img/qr/qr_device.svg\" class=\"account-add-device__qr\" />\n\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
+  var html$r = "<div class=\"account-add-device\">\n    <img src=\"https://cub.red/img/qr/qr_device.svg\" class=\"account-add-device__qr\" />\n\n    <div class=\"about\">\n        #{account_code_where}\n    </div>\n\n    <div class=\"simple-button selector\">#{account_code_input}</div>\n</div>";
 
-  var html$o = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+  var html$q = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
 
-  var html$n = "<div class=\"feed-head selector layer--visible\">\n    <div class=\"feed-head__icon\">\n        <img src=\"http://cub.red/img/other/lampa_movie.jpg\" class=\"feed-head__img\" />\n    </div>\n\n    <div class=\"feed-head__body\">\n        <div class=\"feed-head__title\"></div>\n        <div class=\"feed-head__info\"></div>\n    </div>\n</div>";
+  var html$p = "<div class=\"feed-head selector layer--visible\">\n    <div class=\"feed-head__icon\">\n        <img src=\"http://cub.red/img/other/lampa_movie.jpg\" class=\"feed-head__img\" />\n    </div>\n\n    <div class=\"feed-head__body\">\n        <div class=\"feed-head__title\"></div>\n        <div class=\"feed-head__info\"></div>\n    </div>\n</div>";
 
-  var html$m = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__image-box\">\n            <img class=\"feed-item__image-img\" />\n        </div>\n        <div class=\"feed-item__minicard\">\n            <div>\n                <div class=\"feed-item__title\"></div>\n                <div class=\"feed-item__info\"></div>\n            </div>\n            <div class=\"feed-item__minicard-poster\">\n                <div class=\"feed-item__poster-box\">\n                    <img class=\"feed-item__poster-img\" />\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
+  var html$o = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__image-box\">\n            <img class=\"feed-item__image-img\" />\n        </div>\n        <div class=\"feed-item__minicard\">\n            <div>\n                <div class=\"feed-item__title\"></div>\n                <div class=\"feed-item__info\"></div>\n            </div>\n            <div class=\"feed-item__minicard-poster\">\n                <div class=\"feed-item__poster-box\">\n                    <img class=\"feed-item__poster-img\" />\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
 
-  var html$l = "<div class=\"register\">\n    <div class=\"register__name\"></div>\n    <div class=\"register__counter\"></div>\n</div>";
+  var html$n = "<div class=\"register\">\n    <div class=\"register__name\"></div>\n    <div class=\"register__counter\"></div>\n</div>";
 
-  var html$k = "<div class=\"speedtest\">\n    <div class=\"speedtest__body\">\n        <svg viewBox=\"-250 -250 500 305\" width=\"100%\">\n            <g class=\"scale\">\n                <circle r=\"200\" fill=\"none\" stroke-width=\"15\" class=\"speedtest__progress\" id=\"speedtest_progress\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"5\" stroke=\"currentColor\" class=\"speedtest__frequency\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"10\" class=\"speedtest__fill\"></circle>\n            </g>\n        \n            <path d=\"m-220 0 a120 -120 0 0 1 440 0\" fill=\"none\" stroke=\"blue\" stroke-width=\"0\" id=\"speedtest_path\"></path>\n\n            <text font-size=\"20px\" x=\"0\">\n                <textpath href=\"#speedtest_path\" data-text=\"0\">0</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"69\">\n                <textpath href=\"#speedtest_path\" data-text=\"5\">5</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"139\">\n                <textpath href=\"#speedtest_path\" data-text=\"10\">10</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"216\">\n                <textpath href=\"#speedtest_path\" data-text=\"15\">15</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"293\">\n                <textpath href=\"#speedtest_path\" data-text=\"20\">20</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"371\">\n                <textpath href=\"#speedtest_path\" data-text=\"30\">30</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"447\">\n                <textpath href=\"#speedtest_path\" data-text=\"60\">60</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"515\">\n                <textpath href=\"#speedtest_path\" data-text=\"100\">100</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"595\">\n                <textpath href=\"#speedtest_path\" data-text=\"200\">200</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"655\">\n                <textpath href=\"#speedtest_path\" data-text=\"500\">500</textpath>\n            </text>\n        \n            <text id=\"speedtest_num\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-80\" font-size=\"70\">0.000</text>\n            <text id=\"speedtest_num-text\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-20\" font-size=\"25\">Mbps</text>\n            <text id=\"speedtest_status\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"35\" font-size=\"20\"></text>\n        </svg>\n\n        <svg viewBox=\"-250 -300 500 55\" width=\"100%\">\n            <polyline id=\"speedtest_graph\" points=\"-250,-250\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></polyline>\n        </svg>\n    </div>\n</div>";
+  var html$m = "<div class=\"speedtest\">\n    <div class=\"speedtest__body\">\n        <svg viewBox=\"-250 -250 500 305\" width=\"100%\">\n            <g class=\"scale\">\n                <circle r=\"200\" fill=\"none\" stroke-width=\"15\" class=\"speedtest__progress\" id=\"speedtest_progress\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"5\" stroke=\"currentColor\" class=\"speedtest__frequency\"></circle>\n                <circle r=\"200\" fill=\"none\" stroke-width=\"10\" class=\"speedtest__fill\"></circle>\n            </g>\n        \n            <path d=\"m-220 0 a120 -120 0 0 1 440 0\" fill=\"none\" stroke=\"blue\" stroke-width=\"0\" id=\"speedtest_path\"></path>\n\n            <text font-size=\"20px\" x=\"0\">\n                <textpath href=\"#speedtest_path\" data-text=\"0\">0</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"69\">\n                <textpath href=\"#speedtest_path\" data-text=\"5\">5</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"139\">\n                <textpath href=\"#speedtest_path\" data-text=\"10\">10</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"216\">\n                <textpath href=\"#speedtest_path\" data-text=\"15\">15</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"293\">\n                <textpath href=\"#speedtest_path\" data-text=\"20\">20</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"371\">\n                <textpath href=\"#speedtest_path\" data-text=\"30\">30</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"447\">\n                <textpath href=\"#speedtest_path\" data-text=\"60\">60</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"515\">\n                <textpath href=\"#speedtest_path\" data-text=\"100\">100</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"595\">\n                <textpath href=\"#speedtest_path\" data-text=\"200\">200</textpath>\n            </text>\n            <text font-size=\"20px\" x=\"655\">\n                <textpath href=\"#speedtest_path\" data-text=\"500\">500</textpath>\n            </text>\n        \n            <text id=\"speedtest_num\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-80\" font-size=\"70\">0.000</text>\n            <text id=\"speedtest_num-text\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"-20\" font-size=\"25\">Mbps</text>\n            <text id=\"speedtest_status\" text-anchor=\"middle\" alignment-baseline=\"central\" y=\"35\" font-size=\"20\"></text>\n        </svg>\n\n        <svg viewBox=\"-250 -300 500 55\" width=\"100%\">\n            <polyline id=\"speedtest_graph\" points=\"-250,-250\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\"></polyline>\n        </svg>\n    </div>\n</div>";
+
+  var html$l = "<div class=\"ad-bot selector\">\n    <div class=\"ad-bot__content\">\n        <div class=\"ad-bot__body\">\n            <div class=\"ad-bot__left\">\n                <div class=\"smart\">\n                    <div class=\"smart__camera\"></div>\n                    <div class=\"smart__power\"></div>\n                    <div class=\"smart__body\">\n                        <div class=\"ad-bot__imgbox\">\n                            <img class=\"ad-bot__img\" />\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"ad-bot__right\">\n                <div class=\"ad-bot__title\"></div>\n                <div class=\"ad-bot__text\"></div>\n                <div class=\"ad-bot__more\"></div>\n            </div>\n        </div>\n\n        <div class=\"ad-bot__marker\"></div>\n    </div>\n    <div class=\"ad-bot__info\"></div>\n</div>";
+
+  var html$k = "<div class=\"ad-video-block\">\n    <video class=\"ad-video-block__video\" type=\"video/mp4\" poster=\"./img/video_poster.png\" crossorigin=\"anonymous\"></video>\n\n    <div class=\"player-video__paused hide\">\n        <svg width=\"19\" height=\"25\" viewBox=\"0 0 19 25\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n            <rect width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"></rect>\n            <rect x=\"13\" width=\"6\" height=\"25\" rx=\"2\" fill=\"white\"></rect>\n        </svg>\n    </div>\n\n    <div class=\"ad-video-block__footer\">\n        <div class=\"ad-video-block__text\"></div>\n        <div class=\"ad-video-block__progress\">\n            <div class=\"ad-video-block__progress-fill\"></div>\n        </div>\n    </div>\n\n    <div class=\"ad-video-block__info\"></div>\n\n    <div class=\"ad-video-block__skip\"><span></span></div>\n</div>";
 
   var templates = {
-    head: html$1S,
-    wrap: html$1R,
-    menu: html$1Q,
-    activitys: html$1P,
-    activity: html$1O,
-    activity_wait_refresh: html$1N,
-    settings: html$1L,
-    settings_main: html$1K,
-    settings_interface: html$1J,
-    settings_parser: html$1I,
-    settings_server: html$1H,
-    settings_player: html$1G,
-    settings_more: html$1F,
-    settings_tmdb: html$1E,
-    settings_plugins: html$1D,
-    settings_cloud: html$1C,
-    settings_account: html$1B,
-    scroll: html$1M,
-    items_line: html$1A,
-    card: html$1z,
-    card_parser: html$1y,
-    card_watched: html$1x,
-    card_episode: html$1w,
-    full_start: html$1v,
-    full_start_new: html$1u,
-    full_descr: html$1t,
-    full_person: html$1s,
-    full_review: html$1r,
-    full_episode: html$1q,
-    player: html$1p,
-    player_panel: html$1o,
-    player_video: html$1n,
-    player_info: html$1m,
-    selectbox: html$1l,
-    selectbox_item: html$1k,
-    info: html$1i,
-    more: html$1g,
-    search: html$1f,
-    settings_input: html$1e,
-    modal: html$1d,
-    company: html$1c,
-    modal_loading: html$1b,
-    modal_pending: html$1a,
-    person_start: html$19,
-    empty: html$18,
-    empty_filter: html$17,
-    notice: html$16,
-    notice_card: html$15,
-    torrent: html$14,
-    torrent_file: html$13,
-    files: html$12,
-    about: html$11,
-    error: html$10,
-    torrent_noconnect: html$Y,
-    torrent_file_serial: html$T,
-    torrent_nocheck: html$X,
-    torrent_nohash: html$W,
-    torrent_install: html$V,
-    torrent_error: html$U,
-    filter: html$1h,
-    search_box: html$S,
-    console: html$R,
-    icon_star: html$Q,
-    icon_viewed: html$P,
-    icon_lock: html$O,
-    timeline: html$N,
-    timeline_details: html$M,
-    list_empty: html$L,
-    screensaver: html$K,
-    plugins_catalog: html$J,
-    broadcast: html$I,
-    lang_choice: html$H,
-    extensions: html$G,
-    extensions_block: html$F,
-    extensions_item: html$E,
-    extensions_recomend: html$D,
-    extensions_info: html$C,
-    extensions_theme: html$B,
-    extensions_screensaver: html$A,
-    iframe: html$z,
-    account: html$y,
-    account_limited: html$x,
-    cub_premium: html$w,
-    cub_premium_modal: html$v,
-    selectbox_icon: html$1j,
-    explorer: html$u,
-    explorer_button_back: html$t,
-    https: html$s,
-    navigation_bar: html$r,
-    head_backward: html$q,
-    account_add_device: html$p,
-    feed_item: html$o,
-    feed_head: html$n,
-    feed_episode: html$m,
-    register: html$l,
-    speedtest: html$k,
-    season_episode: html$$,
-    season_episode_rate: html$_,
-    season_info: html$Z
+    head: html$1U,
+    wrap: html$1T,
+    menu: html$1S,
+    activitys: html$1R,
+    activity: html$1Q,
+    activity_wait_refresh: html$1P,
+    settings: html$1N,
+    settings_main: html$1M,
+    settings_interface: html$1L,
+    settings_parser: html$1K,
+    settings_server: html$1J,
+    settings_player: html$1I,
+    settings_more: html$1H,
+    settings_tmdb: html$1G,
+    settings_plugins: html$1F,
+    settings_cloud: html$1E,
+    settings_account: html$1D,
+    scroll: html$1O,
+    items_line: html$1C,
+    card: html$1B,
+    card_parser: html$1A,
+    card_watched: html$1z,
+    card_episode: html$1y,
+    full_start: html$1x,
+    full_start_new: html$1w,
+    full_descr: html$1v,
+    full_person: html$1u,
+    full_review: html$1t,
+    full_episode: html$1s,
+    player: html$1r,
+    player_panel: html$1q,
+    player_video: html$1p,
+    player_info: html$1o,
+    selectbox: html$1n,
+    selectbox_item: html$1m,
+    info: html$1k,
+    more: html$1i,
+    search: html$1h,
+    settings_input: html$1g,
+    modal: html$1f,
+    company: html$1e,
+    modal_loading: html$1d,
+    modal_pending: html$1c,
+    person_start: html$1b,
+    empty: html$1a,
+    empty_filter: html$19,
+    notice: html$18,
+    notice_card: html$17,
+    torrent: html$16,
+    torrent_file: html$15,
+    files: html$14,
+    about: html$13,
+    error: html$12,
+    torrent_noconnect: html$_,
+    torrent_file_serial: html$V,
+    torrent_nocheck: html$Z,
+    torrent_nohash: html$Y,
+    torrent_install: html$X,
+    torrent_error: html$W,
+    filter: html$1j,
+    search_box: html$U,
+    console: html$T,
+    icon_star: html$S,
+    icon_viewed: html$R,
+    icon_lock: html$Q,
+    timeline: html$P,
+    timeline_details: html$O,
+    list_empty: html$N,
+    screensaver: html$M,
+    plugins_catalog: html$L,
+    broadcast: html$K,
+    lang_choice: html$J,
+    extensions: html$I,
+    extensions_block: html$H,
+    extensions_item: html$G,
+    extensions_recomend: html$F,
+    extensions_info: html$E,
+    extensions_theme: html$D,
+    extensions_screensaver: html$C,
+    iframe: html$B,
+    account: html$A,
+    account_limited: html$z,
+    cub_premium: html$y,
+    cub_premium_modal: html$x,
+    selectbox_icon: html$1l,
+    explorer: html$w,
+    explorer_button_back: html$v,
+    https: html$u,
+    navigation_bar: html$t,
+    head_backward: html$s,
+    account_add_device: html$r,
+    feed_item: html$q,
+    feed_head: html$p,
+    feed_episode: html$o,
+    register: html$n,
+    speedtest: html$m,
+    season_episode: html$11,
+    season_episode_rate: html$10,
+    season_info: html$$,
+    ad_bot: html$l,
+    ad_video_block: html$k
   };
   var created = {};
   function get$e(name) {
@@ -2371,7 +2377,7 @@
   var html$j = $('<div class="noty"><div class="noty__body"><div class="noty__text"></div></div></div>'),
     body$4 = html$j.find('.noty__text'),
     time$4;
-  function show$9(text) {
+  function show$a(text) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     clearTimeout(time$4);
     time$4 = setTimeout(function () {
@@ -2384,7 +2390,7 @@
     return html$j;
   }
   var Noty = {
-    show: show$9,
+    show: show$a,
     render: render$g
   };
 
@@ -2450,23 +2456,25 @@
   }
   function httpReq(data, call) {
     var index = Math.floor(Math.random() * 5000);
-    reqCallback[index] = call;
+    reqCallback[index] = {
+      data: data,
+      call: call
+    };
     if (checkVersion(16)) AndroidJS.httpReq(JSON.stringify(data), index);else call.error({
       responseText: "No Native request"
     });
   }
   function httpCall(index, callback) {
     var req = reqCallback[index];
-    if (req[callback]) {
+    if (req && req.call[callback]) {
       var resp = AndroidJS.getResp(index);
-      try {
-        var json = JSON.parse(resp);
-        req[callback](json);
-      } catch (_unused) {
-        req[callback](resp);
-      } finally {
-        delete reqCallback[index];
+      if (!req.data.dataType || req.data.dataType && req.data.dataType.toLowerCase() == 'json') {
+        try {
+          resp = JSON.parse(resp);
+        } catch (e) {}
       }
+      delete reqCallback[index];
+      req.call[callback](resp);
     }
   }
   function timeCall(timeline) {
@@ -2786,12 +2794,12 @@
       if (Storage.field('background_type') == 'poster' && window.innerWidth > 790) {
         return card_data.backdrop_path ? Api.img(card_data.backdrop_path, 'w1280') : card_data.background_image ? card_data.background_image : '';
       }
-      return card_data.poster_path ? Api.img(card_data.poster_path) : card_data.poster || card_data.img || '';
+      return card_data.poster_path || card_data.profile_path ? Api.img(card_data.poster_path || card_data.profile_path) : card_data.poster || card_data.img || '';
     }
     return '';
   }
   function cardImgBackgroundBlur(card_data) {
-    var uri = card_data.poster_path ? Api.img(card_data.poster_path, 'w200') : card_data.poster || card_data.img || '';
+    var uri = card_data.poster_path || card_data.profile_path ? Api.img(card_data.poster_path || card_data.profile_path, 'w200') : card_data.poster || card_data.img || '';
     var pos = window.innerWidth > 400 && Storage.field('background_type') == 'poster';
     if (Storage.field('background')) {
       if (card_data.backdrop_path) uri = Api.img(card_data.backdrop_path, pos ? 'w1280' : 'w200');else if (card_data.background_image && pos) uri = card_data.background_image;
@@ -3022,7 +3030,7 @@
     loader$2,
     orsay_loaded,
     orsay_call = Date.now();
-  function init$C() {
+  function init$F() {
     $('body').append($("<div style=\"position: absolute; left: -1000px; top: -1000px;\">  \n    <object id=\"pluginObjectNNavi\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-NNAVI\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectTVMW\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-TVMW\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectScreen\" border=0 classid=\"clsid:SAMSUNG-INFOLINK-SCREEN\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n</div>"));
     Utils$2.putScript(['$MANAGER_WIDGET/Common/API/Widget.js', '$MANAGER_WIDGET/Common/API/TVKeyValue.js', '$MANAGER_WIDGET/Common/API/Plugin.js', '$MANAGER_WIDGET/Common/webapi/1.0/webapis.js', '$MANAGER_WIDGET/Common/IME_XT9/ime.js', '$MANAGER_WIDGET/Common/IME_XT9/inputCommon/ime_input.js'], function () {
       try {
@@ -3105,7 +3113,7 @@
     if (widgetAPI) widgetAPI.sendReturnEvent();
   }
   var Orsay = {
-    init: init$C,
+    init: init$F,
     isNewWidget: isNewWidget,
     getLoaderUrl: getLoaderUrl,
     setLoaderUrl: setLoaderUrl,
@@ -3117,7 +3125,7 @@
   var need_update = false;
   var need_visible = false;
   var canianimate$1 = typeof requestAnimationFrame !== 'undefined';
-  function init$B() {
+  function init$E() {
     $(window).on('resize', function () {
       clearTimeout(timer$8);
       timer$8 = setTimeout(function () {
@@ -3334,7 +3342,7 @@
   var Layer = {
     update: update$b,
     visible: visible,
-    init: init$B
+    init: init$E
   };
 
   function create$q() {
@@ -3522,7 +3530,7 @@
     play_pause: typeof VK_PLAY_PAUSE !== 'undefined' ? VK_PLAY_PAUSE : typeof KEYCODE_MEDIA_PLAY_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PLAY_PAUSE : -1
   };
   var enabled$2 = false;
-  var listener$j = start$6();
+  var listener$j = start$7();
   var time$2 = 0;
   var lastdown = 0;
   var timer$7;
@@ -3666,7 +3674,7 @@
     }
     e.preventDefault();
   }
-  function init$A() {
+  function init$D() {
     window.addEventListener("keydown", function (e) {
       lastdown = keyCode(e);
       if (!timer$7) {
@@ -3707,7 +3715,7 @@
   }
   var Keypad = {
     listener: listener$j,
-    init: init$A,
+    init: init$D,
     enable: enable$1,
     disable: disable
   };
@@ -3715,7 +3723,7 @@
   var keydown_time = 0;
   var move_time = 0;
   var touch = false;
-  function init$z() {
+  function init$C() {
     Keypad.listener.follow('keydown', function () {
       keydown_time = Date.now();
       move_time = 0;
@@ -3785,7 +3793,7 @@
     return Date.now() - keydown_time < 500 ? false : touch || Platform.is('browser') || Platform.tv() || Platform.desktop() || Date.now() - move_time < 500;
   }
   var DeviceInput = {
-    init: init$z,
+    init: init$C,
     canClick: canClick
   };
 
@@ -3951,7 +3959,7 @@
     }
   };
 
-  function init$y() {
+  function init$B() {
     var agent = navigator.userAgent.toLowerCase();
     if (typeof webOS !== 'undefined' && webOS.platform.tv === true) {
       Storage.set('platform', 'webos');
@@ -3984,7 +3992,7 @@
       Storage.set('platform', 'netcast');
     } else if (agent.indexOf("version/5.1.7 safari/534.57.2") > -1) {
       Storage.set('platform', 'orsay');
-    } else if (agent.indexOf("windows nt") > -1) {
+    } else if (agent.indexOf("windows nt") > -1 || agent.indexOf("macintosh") > -1 && !Utils$2.isTouchDevice()) {
       Storage.set('platform', 'browser');
     } else if (agent.indexOf("maple") > -1) {
       Storage.set('platform', 'orsay');
@@ -4073,7 +4081,7 @@
       $('.about__contacts', about).empty();
       $('.about__rules', about).remove();
       $('.about__contacts', about).append("\n            <div>\n                <small>Telegram</small><br>\n                @lampa_android\n            </div>\n        ");
-      $('.about__contacts', about).append("\n            <div>\n                <small>".concat(Lang.translate('settings_parser_jackett_link'), "</small><br>\n                <a href=\"https://").concat(object$2.cub_domain, "/download/lampa.apk\" target=\"_blank\" style=\"color: inherit; text-decoration: none;\">https://").concat(object$2.cub_domain, "/download/lampa.apk</a>\n            </div>\n        "));
+      $('.about__contacts', about).append("\n            <div>\n                <small>".concat(Lang.translate('settings_parser_jackett_link'), "</small><br>\n                <a href=\"https://").concat(object$2.cub_domain, "/lampa\" target=\"_blank\" style=\"color: inherit; text-decoration: none;\">https://").concat(object$2.cub_domain, "/lampa</a>\n            </div>\n        "));
       Modal.open({
         title: '',
         html: about,
@@ -4086,7 +4094,7 @@
     }
   }
   var Platform = {
-    init: init$y,
+    init: init$B,
     get: get$d,
     any: any,
     is: is,
@@ -4098,7 +4106,7 @@
   };
 
   function create$p() {
-    var listener = start$6();
+    var listener = start$7();
     var _calls = [];
     var _last;
     var last_reguest;
@@ -4309,6 +4317,8 @@
       var txt = jqXHR.responseText || jqXHR.message || jqXHR.status || '';
       if (jqXHR.status === 0 && exception !== 'timeout') {
         msg = Lang.translate('network_noconnect');
+      } else if (jqXHR.responseJSON && jqXHR.responseJSON.code) {
+        msg = Lang.translate('network_500').replace('500', jqXHR.responseJSON.code) + (jqXHR.responseJSON.text ? ' [' + jqXHR.responseJSON.text + ']' : '');
       } else if (jqXHR.status == 404) {
         msg = Lang.translate('network_404');
       } else if (jqXHR.status == 401) {
@@ -4513,7 +4523,7 @@
   var html$h;
   var scroll$2;
   var active$4;
-  function init$x() {
+  function init$A() {
     html$h = Template$1.get('selectbox');
     scroll$2 = new create$q({
       mask: true,
@@ -4544,6 +4554,10 @@
         if (element.checked) item.addClass('selectbox-item--checked');
       }
       if (element.ghost) item.css('opacity', 0.5);
+      item.on('hover:focus', function (e) {
+        scroll$2.update($(e.target), true);
+        if (active$4.onFocus) active$4.onFocus(element, e.target);
+      });
       if (!element.noenter) {
         var goclose = function goclose() {
           if (!active$4.nohide) hide$2();else {
@@ -4560,9 +4574,6 @@
           } else if (active$4.onBeforeClose) {
             if (active$4.onBeforeClose()) goclose();
           } else goclose();
-        }).on('hover:focus', function (e) {
-          scroll$2.update($(e.target), true);
-          if (active$4.onFocus) active$4.onFocus(element, e.target);
         }).on('hover:long', function (e) {
           if (active$4.onLong) active$4.onLong(element, e.target);
         });
@@ -4574,7 +4585,7 @@
       scroll$2.append(item);
     });
   }
-  function show$8(object) {
+  function show$9(object) {
     active$4 = object;
     bind$2();
     $('body').toggleClass('selectbox--open', true);
@@ -4610,8 +4621,8 @@
     return html$h;
   }
   var Select = {
-    init: init$x,
-    show: show$8,
+    init: init$A,
+    show: show$9,
     hide: hide$2,
     close: close$5,
     render: render$e
@@ -4622,14 +4633,14 @@
       var tables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
       var version = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
       _classCallCheck(this, IndexedDB);
-      this.listener = start$6();
+      this.listener = start$7();
       this.database_name = 'lampa_' + database_name;
       this.tables = tables;
       this.version = version;
       this.db = null;
       this.logs = true;
     }
-    _createClass(IndexedDB, [{
+    return _createClass(IndexedDB, [{
       key: "log",
       value: function log(err, store_name, key) {
         if (this.logs) console.log('DB', this.database_name + (store_name ? '_' + store_name : '') + (key ? ' -> [' + key + ']' : ''), err);
@@ -4826,7 +4837,6 @@
         });
       }
     }]);
-    return IndexedDB;
   }();
 
   var Cache = new IndexedDB('cache', ['screensavers', 'plugins', 'backgrounds', 'images', 'themes', 'other', 'timetable'], 5);
@@ -5063,14 +5073,14 @@
 
   var html$g;
   var body$3;
-  var listener$i = start$6();
+  var listener$i = start$7();
   var last$3 = '';
   var _main;
 
   /**
    * Запуск
    */
-  function init$w() {
+  function init$z() {
     html$g = Template$1.get('settings');
     body$3 = html$g.find('.settings__body');
     html$g.find('.settings__layer').on('click', function (e) {
@@ -5149,7 +5159,7 @@
   }
   var Settings = {
     listener: listener$i,
-    init: init$w,
+    init: init$z,
     render: render$d,
     update: update$9,
     create: create$o,
@@ -5160,9 +5170,10 @@
 
   function AVPlay$1(call_video) {
     var stream_url, loaded;
+    console.log('Player', 'run Tizen');
     var object = $('<object class="player-video_video" type="application/avplayer"</object>');
     var video = object[0];
-    var listener = start$6();
+    var listener = start$7();
     var change_scale_later;
     var change_speed_later;
     object.width(window.innerWidth);
@@ -5527,8 +5538,8 @@
     };
   }
 
-  var listener$h = start$6();
-  var status$2 = {
+  var listener$h = start$7();
+  var status$3 = {
     active: false,
     channel: false,
     select: false,
@@ -5538,7 +5549,7 @@
     timer: false,
     prev: ''
   };
-  function init$v() {
+  function init$y() {
     Keypad.listener.follow('keydown', function (e) {
       if (!playning()) return;
       PlayerPanel.rewind();
@@ -5567,53 +5578,53 @@
       }
     });
   }
-  function start$5(object) {
-    status$2.position_view = object.position;
-    status$2.position_channel = object.position;
-    status$2.active = object;
-    status$2.channel = channel$1();
+  function start$6(object) {
+    status$3.position_view = object.position;
+    status$3.position_channel = object.position;
+    status$3.active = object;
+    status$3.channel = channel$1();
     listener$h.send('channel', {
-      channel: status$2.channel,
+      channel: status$3.channel,
       dir: 0,
-      position: status$2.position_view
+      position: status$3.position_view
     });
-    if (status$2.active.onPlay) status$2.active.onPlay(status$2.channel);
+    if (status$3.active.onPlay) status$3.active.onPlay(status$3.channel);
     listener$h.send('play', {
-      channel: status$2.channel,
-      position: status$2.position_view
+      channel: status$3.channel,
+      position: status$3.position_view
     });
   }
   function playning() {
-    return status$2.active;
+    return status$3.active;
   }
   function channel$1(position) {
-    status$2.select = status$2.active.onGetChannel(position || status$2.position_view);
-    return status$2.select;
+    status$3.select = status$3.active.onGetChannel(position || status$3.position_view);
+    return status$3.select;
   }
   function play$3() {
-    if (status$2.select !== status$2.channel) {
-      status$2.channel = status$2.select;
-      status$2.position_channel = status$2.position_view;
-      if (status$2.active.onPlay) status$2.active.onPlay(status$2.channel);
+    if (status$3.select !== status$3.channel) {
+      status$3.channel = status$3.select;
+      status$3.position_channel = status$3.position_view;
+      if (status$3.active.onPlay) status$3.active.onPlay(status$3.channel);
       listener$h.send('play', {
-        channel: status$2.channel,
-        position: status$2.position_view
+        channel: status$3.channel,
+        position: status$3.position_view
       });
     }
   }
   function playDelay() {
-    clearTimeout(status$2.timer);
-    status$2.timer = setTimeout(play$3, 2000);
+    clearTimeout(status$3.timer);
+    status$3.timer = setTimeout(play$3, 2000);
   }
   function reset$1() {
-    status$2.position_view = status$2.position_channel;
+    status$3.position_view = status$3.position_channel;
     moveChannel(0);
   }
   function programReady(data) {
     setTimeout(function () {
-      if (status$2.select == data.channel) {
-        status$2.program = data;
-        status$2.position_program = data.position;
+      if (status$3.select == data.channel) {
+        status$3.program = data;
+        status$3.position_program = data.position;
         listener$h.send('draw-program', {
           dir: 0
         });
@@ -5621,32 +5632,32 @@
     }, 10);
   }
   function select$2() {
-    return status$2.select;
+    return status$3.select;
   }
   function moveChannel(dir) {
-    channel$1(status$2.position_view);
+    channel$1(status$3.position_view);
     listener$h.send('channel', {
-      channel: status$2.select,
+      channel: status$3.select,
       dir: dir,
-      position: status$2.position_view
+      position: status$3.position_view
     });
   }
   function nextChannel() {
-    if (status$2.position_view + 1 < status$2.active.total) {
-      status$2.position_view++;
+    if (status$3.position_view + 1 < status$3.active.total) {
+      status$3.position_view++;
       moveChannel(1);
     }
   }
   function prevChannel() {
-    if (status$2.position_view - 1 >= 0) {
-      status$2.position_view--;
+    if (status$3.position_view - 1 >= 0) {
+      status$3.position_view--;
       moveChannel(-1);
     }
   }
   function toChannel(num) {
     num = Math.max(1, num);
-    if (num <= status$2.active.total) {
-      status$2.position_view = num - 1;
+    if (num <= status$3.active.total) {
+      status$3.position_view = num - 1;
       moveChannel(1);
     }
   }
@@ -5654,9 +5665,9 @@
     moveChannel(0);
   }
   function moveProgram(dir) {
-    if (status$2.program) {
-      status$2.position_program += dir;
-      status$2.position_program = Math.max(0, Math.min(status$2.program.total, status$2.position_program));
+    if (status$3.program) {
+      status$3.position_program += dir;
+      status$3.position_program = Math.max(0, Math.min(status$3.program.total, status$3.position_program));
       listener$h.send('draw-program', {
         dir: dir
       });
@@ -5669,18 +5680,18 @@
     moveProgram(-1);
   }
   function drawProgram(container) {
-    status$2.active.onGetProgram(status$2.select, status$2.position_program, container);
+    status$3.active.onGetProgram(status$3.select, status$3.position_program, container);
   }
   function playlistProgram() {
-    if (status$2.active.onPlaylistProgram) status$2.active.onPlaylistProgram(status$2.select, status$2.position_program);
+    if (status$3.active.onPlaylistProgram) status$3.active.onPlaylistProgram(status$3.select, status$3.position_program);
   }
   function openMenu() {
-    if (status$2.active.onMenu) status$2.active.onMenu(status$2.select, status$2.position_program);else if (status$2.active.onPlaylistProgram) status$2.active.onPlaylistProgram(status$2.select, status$2.position_program);
+    if (status$3.active.onMenu) status$3.active.onMenu(status$3.select, status$3.position_program);else if (status$3.active.onPlaylistProgram) status$3.active.onPlaylistProgram(status$3.select, status$3.position_program);
   }
   function destroy$7() {
-    clearTimeout(status$2.timer);
+    clearTimeout(status$3.timer);
     clearTimeout(numpad.timer);
-    status$2 = {
+    status$3 = {
       active: false,
       channel: false,
       select: false,
@@ -5689,8 +5700,8 @@
   }
   var PlayerIPTV = {
     listener: listener$h,
-    init: init$v,
-    start: start$5,
+    init: init$y,
+    start: start$6,
     playning: playning,
     channel: channel$1,
     programReady: programReady,
@@ -5709,7 +5720,7 @@
   };
 
   var html$f;
-  var listener$g = start$6();
+  var listener$g = start$7();
   var state;
   var elems$1;
   var panel_visible = false;
@@ -5725,7 +5736,7 @@
   var translates = {};
   var last_settings_action;
   var last_panel_focus;
-  function init$u() {
+  function init$x() {
     html$f = Template$1.get('player_panel');
     elems$1 = {
       peding: $('.player-panel__peding', html$f),
@@ -5824,9 +5835,10 @@
       listener$g.send('fullscreen', {});
     });
     html$f.find('.player-panel__settings').on('hover:enter', settings);
+    html$f.find('.player-panel__pip,.player-panel__volume').toggleClass('hide', !Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA()));
     html$f.find('.player-panel__pip').on('hover:enter', function () {
       listener$g.send('pip', {});
-    }).toggleClass('hide', !Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA()));
+    });
     elems$1.timeline.attr('data-controller', 'player_rewind');
     elems$1.rewind_touch.toggleClass('hide', !Platform.screen('mobile'));
     elems$1.timeline.on('mousemove', function (e) {
@@ -5844,6 +5856,14 @@
         percent: percent(e)
       });
     });
+    if (!html$f.find('.player-panel__volume').hasClass('hide')) {
+      html$f.find('.player-panel__volume-range').val(Storage.get('player_volume', '1')).on('input', function () {
+        listener$g.send('change_volume', {
+          volume: $(this).val()
+        });
+        PlayerVideo.changeVolume($(this).val());
+      });
+    }
     var touch;
     var touchEnd = function touchEnd(e) {
       window.removeEventListener('touchend', touchEnd);
@@ -6512,7 +6532,7 @@
   /**
    * Показать панель
    */
-  function show$7() {
+  function show$8() {
     state.start();
     html$f.find('.player-panel__fullscreen').toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$2.canFullScreen());
     addController();
@@ -6643,11 +6663,11 @@
     return html$f;
   }
   var PlayerPanel = {
-    init: init$u,
+    init: init$x,
     listener: listener$g,
     render: render$c,
     toggle: toggle$8,
-    show: show$7,
+    show: show$8,
     destroy: destroy$6,
     hide: hide$1,
     canplay: canplay,
@@ -8304,7 +8324,7 @@
   function CustomSubs() {
     var parsed;
     var network = new create$p();
-    this.listener = start$6();
+    this.listener = start$7();
 
     /**
      * Загрузить
@@ -8468,7 +8488,7 @@
     var avplay, plugin, stream_url, loaded, current_time;
     var object = $('<object class="player-video_video"  style="visibility:hidden;"></object>');
     var video = object[0];
-    var listener = start$6();
+    var listener = start$7();
     var change_scale_later;
     var change_speed_later;
     var canGetVideoResolution = false;
@@ -9074,10 +9094,12 @@
 
     var object = $('<div class="player-video__youtube"><div class="player-video__youtube-player" id="youtube-player"></div><div class="player-video__youtube-line-top"></div><div class="player-video__youtube-line-bottom"></div><div class="player-video__youtube-noplayed hide">' + Lang.translate('player_youtube_no_played') + '</div></div>');
     var video = object[0];
-    var listener = start$6();
+    var listener = start$7();
+    var volume = 100;
     var youtube;
     var timeupdate;
     var timetapplay;
+    var screen_size = 2;
     function videoSize() {
       var size = {
         width: 0,
@@ -9088,9 +9110,12 @@
         try {
           str = youtube.getPlaybackQuality();
         } catch (e) {}
-        if (str == 'highres') {
+        if (str == 'highres' || str == 'hd2160') {
           size.width = 3840;
           size.height = 2160;
+        } else if (str == 'hd1440') {
+          size.width = 2560;
+          size.height = 1440;
         } else if (str == 'hd1080') {
           size.width = 1920;
           size.height = 1080;
@@ -9203,6 +9228,13 @@
         return videoSize().height;
       }
     });
+    Object.defineProperty(video, "volume", {
+      set: function set(num) {
+        volume = num * 100;
+        if (youtube) youtube.setVolume(volume);
+      },
+      get: function get() {}
+    });
 
     /**
      * Всегда говорим да, мы можем играть
@@ -9211,8 +9243,9 @@
       return true;
     };
     video.resize = function () {
-      object.find('.player-video__youtube-player').width(window.innerWidth);
-      object.find('.player-video__youtube-player').height(window.innerHeight + 600);
+      object.find('.player-video__youtube-player').width(window.innerWidth * screen_size);
+      object.find('.player-video__youtube-player').height((window.innerHeight + 600) * screen_size);
+      object.find('.player-video__youtube-player').addClass('minimize'); //.css({transform: 'scale(0.5)'})
     };
 
     /**
@@ -9234,11 +9267,12 @@
             PlayerPanel.update('pause');
           }, 10000);
         }
+        console.log('YouTube', 'create');
         youtube = new YT.Player('youtube-player', {
-          height: window.innerHeight,
-          width: window.innerWidth,
+          height: (window.innerHeight + 600) * screen_size,
+          width: window.innerWidth * screen_size,
           playerVars: {
-            'controls': 0,
+            'controls': 1,
             'showinfo': 0,
             'autohide': 1,
             'modestbranding': 1,
@@ -9255,9 +9289,7 @@
           events: {
             onReady: function onReady(event) {
               loaded = true;
-
-              //event.target.setPlaybackQuality('hd1080')
-
+              youtube.setVolume(volume);
               listener.send('canplay');
               listener.send('loadeddata');
               timeupdate = setInterval(function () {
@@ -9284,10 +9316,11 @@
               }
               if (state.data == YT.PlayerState.BUFFERING) {
                 listener.send('waiting');
+                state.target.setPlaybackQuality('hd1080');
               }
             },
             onPlaybackQualityChange: function onPlaybackQualityChange(state) {
-              //console.log('YouTube','quality',state.target.getPlaybackQuality())
+              console.log('YouTube', 'quality', youtube.getPlaybackQuality());
             },
             onError: function onError(e) {
               object.find('.player-video__youtube-noplayed').removeClass('hide');
@@ -9346,7 +9379,1830 @@
     return object;
   }
 
-  var listener$e = start$6();
+  var loaded_data = {
+    ad: [],
+    time: 0,
+    position: 0
+  };
+  var VideoBlock = /*#__PURE__*/function () {
+    function VideoBlock(number) {
+      var _this = this;
+      _classCallCheck(this, VideoBlock);
+      this.network = new create$p();
+      this.listener = start$7();
+      this.paused = false;
+      this.number = number || 1;
+      var domain = object$2.cub_domain;
+      if (loaded_data.time < Date.now() + 1000 * 60 * 60 * 5) {
+        this.network.silent(Utils$2.protocol() + domain + '/api/ad/all', function (data) {
+          loaded_data.time = Date.now();
+          var need_shuffle = !loaded_data.ad.length;
+          data.forEach(function (elem) {
+            var ad = loaded_data.ad.find(function (a) {
+              return a.url == elem.url;
+            });
+            if (!ad) {
+              ad = elem;
+              loaded_data.ad.push(elem);
+            }
+            ad.volume = elem.volume;
+            ad.duration = elem.duration;
+          });
+          if (need_shuffle) Arrays.shuffle(loaded_data.ad);
+          _this.start();
+        }, function () {
+          _this.listener.send('empty');
+        });
+      }
+    }
+    return _createClass(VideoBlock, [{
+      key: "start",
+      value: function start() {
+        var ad = loaded_data.ad[loaded_data.position];
+        if (!ad) {
+          loaded_data.position = 0;
+          Arrays.shuffle(loaded_data.ad);
+          ad = loaded_data.ad[0];
+        }
+        loaded_data.position++;
+        if (ad) {
+          this.time = Date.now();
+          this.create(ad);
+          this.load(ad);
+        }
+      }
+    }, {
+      key: "load",
+      value: function load(data) {
+        this.video.src = data.url;
+        this.video.load();
+      }
+    }, {
+      key: "create",
+      value: function create(data) {
+        var _this2 = this;
+        this.block = Template$1.js('ad_video_block');
+        this.last_controller = Controller.enabled().name;
+        this.block.find('.ad-video-block__text').text(Lang.translate('ad') + ' - ' + Lang.translate('ad_disable'));
+        this.block.find('.ad-video-block__info').text(data.info || '');
+        this.video = this.block.find('.ad-video-block__video');
+        var detention = 0;
+        var duration = data.duration;
+        var passed = 0;
+        var skip = this.block.find('.ad-video-block__skip');
+        var progressbar = this.block.find('.ad-video-block__progress-fill');
+        var pause = this.block.find('.player-video__paused');
+        var skip_sec = data.skip ? data.skip / 1000 : 10;
+        skip.find('span').text(skip_sec);
+        if (duration <= 1000 * skip_sec) skip.classList.add('hide');
+        this.video.addEventListener('loadeddata', function () {
+          _this2.video.play();
+          detention = Math.min(1000 * 2, Date.now() - _this2.time);
+          _this2.video.classList.add('loaded');
+        });
+        this.video.addEventListener('timeupdate', function () {
+          _this2.listener.send('timeupdate');
+        });
+        this.video.addEventListener('ended', function () {
+          _this2.destroy();
+        });
+        function enter() {
+          var left = Math.max(0, Math.round(skip_sec - passed / 1000));
+          if (left == 0) return this.destroy();
+          if (this.video.paused) {
+            this.video.play();
+            pause.classList.add('hide');
+            this.paused = false;
+          } else {
+            this.video.pause();
+            pause.classList.remove('hide');
+            this.paused = true;
+          }
+        }
+        this.block.on('click', enter.bind(this));
+        this.video.volume = (Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA()) ? parseFloat(Storage.get('player_volume', '1')) : 1) * data.volume;
+        this.video.muted = false;
+        document.body.append(this.block);
+        this.timer = setInterval(function () {
+          if (_this2.paused) return;
+          passed += 100;
+          var progress = Math.min(100, passed / (duration + detention) * 100);
+          var left = Math.max(0, Math.round(skip_sec - passed / 1000));
+          progressbar.style.width = progress + '%';
+          skip.find('span').text(Lang.translate(left == 0 ? 'ad_skip' : left));
+          if (progress == 100) _this2.destroy();
+        }, 100);
+        Controller.add('ad_video_block', {
+          toggle: function toggle() {
+            Controller.clear();
+          },
+          enter: enter.bind(this),
+          back: function back() {}
+        });
+        Controller.toggle('ad_video_block');
+        this.listener.send('launch');
+        if (data.stat) {
+          $.ajax({
+            dataType: 'text',
+            url: data.stat
+          });
+        }
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        clearInterval(this.timer);
+        this.video.pause();
+        this.video.src = '';
+        this.block.remove();
+        Controller.toggle(this.last_controller);
+        this.listener.send('ended');
+      }
+    }]);
+  }();
+
+  function status$2(need) {
+    this.data = {};
+    this.work = 0;
+    this.need = need;
+    this.complited = false;
+    this.check = function () {
+      if (this.work >= this.need && !this.complited) {
+        this.complited = true;
+        this.onComplite(this.data);
+      }
+    };
+    this.append = function (name, json) {
+      this.work++;
+      this.data[name] = json;
+      this.check();
+    };
+    this.error = function () {
+      this.work++;
+      this.check();
+    };
+  }
+
+  var Item = /*#__PURE__*/function () {
+    function Item(data, params) {
+      _classCallCheck(this, Item);
+      this.data = data;
+      this.params = params;
+    }
+    return _createClass(Item, [{
+      key: "create",
+      value: function create() {
+        this.html = Template$1.js(this.template, {});
+        this.html.addEventListener('visible', this.visible.bind(this));
+      }
+    }, {
+      key: "update",
+      value: function update() {
+        var url = (this.data.url || this.data.link) + '';
+        var loc = url.slice(0, 6) == 'https:' || window.location.protocol == 'https:';
+        var hts = url.slice(0, 6) == 'https:' || url.slice(0, 5) == 'http:';
+        if (window.location.protocol == 'https:' && hts) url = url.replace(/(http:\/\/|https:\/\/)/g, 'https://');
+        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
+        this.html.querySelector('.extensions__item-author').innerText = this.data.author || (this.params.type == 'plugins' ? '@cub' : '@lampa');
+        this.html.querySelector('.extensions__item-descr').innerText = (this.data.descr || url).replace(/\n|\t|\r/g, ' ');
+        var proto = this.html.querySelector('.extensions__item-proto');
+        if (proto && hts) {
+          proto.toggleClass('hide', !Boolean(this.params.type == 'plugins' || this.params.type == 'installs'));
+          proto.addClass('protocol-' + (loc ? 'https' : 'http'));
+        }
+        var status = this.html.querySelector('.extensions__item-disabled');
+        status.innerText = Lang.translate('player_disabled');
+        if (this.data.status || !this.params.autocheck) status.classList.add('hide');else status.classList.remove('hide');
+      }
+    }, {
+      key: "cub",
+      value: function cub() {
+        var cub = document.createElement('div');
+        cub.classList.add('extensions__cub');
+        cub.innerText = 'CUB';
+        this.html.appendChild(cub);
+      }
+    }, {
+      key: "premium",
+      value: function premium() {
+        var author = this.html.querySelector('.extensions__item-author');
+        var premium = document.createElement('span');
+        premium.classList.add('extensions__item-premium');
+        premium.innerText = 'CUB Premium';
+        var where = author || this.html;
+        where.appendChild(premium);
+      }
+    }, {
+      key: "visible",
+      value: function visible() {
+        this.update();
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        this.html.remove();
+      }
+    }]);
+  }();
+
+  function showReload(cancel) {
+    Modal.open({
+      title: '',
+      align: 'center',
+      zIndex: 300,
+      html: $('<div class="about">' + Lang.translate('plugins_need_reload') + '</div>'),
+      buttons: [{
+        name: Lang.translate('settings_param_no'),
+        onSelect: function onSelect() {
+          Modal.close();
+          cancel();
+        }
+      }, {
+        name: Lang.translate('settings_param_yes'),
+        onSelect: function onSelect() {
+          window.location.reload();
+        }
+      }]
+    });
+  }
+  function showInfo(plug, back) {
+    var modal = Template$1.get('extensions_info');
+    var footer = $('.extensions-info__footer', modal);
+    if (plug.image) modal.prepend($('<img class="extensions-info__image" src="' + plug.image + '"/>'));
+    $('.extensions-info__descr', modal).text(plug.descr);
+    $('.extensions-info__instruction', modal).html((plug.instruction || Lang.translate('extensions_no_info')).replace(/\n/g, '<br>').replace(/\s\s/g, '&nbsp;&nbsp;'));
+    function addLabel(name, value) {
+      var label = $("<div>\n            <div class=\"extensions-info__label\">".concat(name, "</div>\n            <div class=\"extensions-info__value\">").concat(value, "</div>\n        </div>"));
+      footer.append(label);
+    }
+    if (plug.link) addLabel(Lang.translate('settings_parser_jackett_link'), plug.link);
+    if (plug.author) addLabel(Lang.translate('title_author'), plug.author);
+    if (plug.time) addLabel(Lang.translate('settings_added'), Utils$2.parseTime(plug.time).full);
+    Modal.open({
+      title: plug.name || Lang.translate('extensions_info'),
+      html: modal,
+      size: 'large',
+      onBack: function onBack() {
+        Modal.close();
+        back();
+      }
+    });
+  }
+  var Utils$1 = {
+    showReload: showReload,
+    showInfo: showInfo
+  };
+
+  var Extension = /*#__PURE__*/function (_Item) {
+    function Extension(data, params) {
+      var _this;
+      _classCallCheck(this, Extension);
+      _this = _callSuper(this, Extension, [data, params]);
+      _this.network = new create$p();
+      _this.template = 'extensions_item';
+      return _this;
+    }
+    _inherits(Extension, _Item);
+    return _createClass(Extension, [{
+      key: "visible",
+      value: function visible() {
+        _get(_getPrototypeOf(Extension.prototype), "visible", this).call(this);
+        if (this.params.cub) this.cub();
+        if (this.data.premium) this.premium();
+        if (this.params.autocheck) this.check();
+        if (Plugins.loaded().indexOf(this.data.url || this.data.link) >= 0) this.html.querySelector('.extensions__item-included').classList.remove('hide');
+        this.html.addEventListener('hover:enter', this.menu.bind(this));
+      }
+    }, {
+      key: "menu",
+      value: function menu() {
+        var _this2 = this;
+        if (this.removed) return;
+        var menu = [];
+        var controller = Controller.enabled().name;
+        var back = function back() {
+          Controller.toggle(controller);
+        };
+        if (this.params.type == 'plugins' || this.params.type == 'installs') {
+          menu.push({
+            title: Lang.translate('extensions_' + (this.data.status ? 'disable' : 'enable')),
+            toggle: true
+          });
+        }
+        menu.push({
+          title: Lang.translate('extensions_check'),
+          status: true
+        });
+        if (this.params.cub || this.params.noedit) {
+          if (this.params.type == 'extensions') {
+            menu.push({
+              title: Lang.translate('extensions_install'),
+              install: true
+            });
+          }
+          menu.push({
+            title: Lang.translate('extensions_info'),
+            instruction: true
+          });
+        } else {
+          menu.push({
+            title: Lang.translate('extensions_edit'),
+            separator: true
+          });
+          menu.push({
+            title: Lang.translate('extensions_change_name'),
+            change: 'name'
+          });
+          menu.push({
+            title: Lang.translate('extensions_change_link'),
+            change: 'url'
+          });
+          menu.push({
+            title: Lang.translate('extensions_remove'),
+            remove: true
+          });
+        }
+        Select.show({
+          title: Lang.translate('title_action'),
+          items: menu,
+          onBack: back,
+          onSelect: function onSelect(a) {
+            if (a.toggle) {
+              _this2.data.status = _this2.data.status == 1 ? 0 : 1;
+              if (_this2.params.cub) Account.pluginsStatus(_this2.data, _this2.data.status);else Plugins.save(_this2.data);
+              _this2.update();
+              if (_this2.data.status == 1) {
+                back();
+                Plugins.push(_this2.data);
+              } else {
+                Utils$1.showReload(back);
+              }
+            } else if (a.change) {
+              Input.edit({
+                title: a.change == 'name' ? Lang.translate('extensions_set_name') : Lang.translate('extensions_set_url'),
+                value: _this2.data[a.change] || '',
+                free: true,
+                nosave: true
+              }, function (new_value) {
+                if (new_value) {
+                  _this2.data[a.change] = new_value;
+                  Plugins.save(_this2.data);
+                  _this2.update();
+                  if (a.change == 'url') {
+                    _this2.check();
+                    Plugins.push(_this2.data);
+                  }
+                }
+                back();
+              });
+            } else if (a.status) {
+              back();
+              _this2.check();
+            } else if (a.install) {
+              var ready = Plugins.get().find(function (b) {
+                return b.url == _this2.data.link;
+              });
+              if (ready) {
+                Noty.show(Lang.translate('extensions_ready'));
+                back();
+              } else {
+                back();
+                Plugins.add({
+                  url: _this2.data.link,
+                  status: 1,
+                  name: _this2.data.name,
+                  author: _this2.data.author
+                });
+                _this2.html.querySelector('.extensions__item-included').classList.remove('hide');
+              }
+            } else if (a.instruction) {
+              Utils$1.showInfo(_this2.data, back);
+            } else if (a.remove) {
+              Plugins.remove(_this2.data);
+              _this2.html.style.opacity = 0.5;
+              _this2.removed = true;
+              Utils$1.showReload(back);
+            }
+          }
+        });
+      }
+    }, {
+      key: "check",
+      value: function check() {
+        var check = this.html.querySelector('.extensions__item-check');
+        var code = this.html.querySelector('.extensions__item-code');
+        var stat = this.html.querySelector('.extensions__item-status');
+        check.classList.remove('hide');
+        code.classList.add('hide');
+        stat.classList.add('hide');
+        var display = function display(type, num, text) {
+          code.innerText = num;
+          code.classList.remove('hide');
+          code.classList.remove('success');
+          code.classList.remove('error');
+          code.classList.add(type);
+          stat.innerText = text;
+          stat.classList.remove('hide');
+          check.classList.add('hide');
+        };
+        var url = Utils$2.rewriteIfHTTPS(this.data.url || this.data.link);
+        this.network.timeout(5000);
+        this.network["native"](url, function (str) {
+          if (/Lampa\./.test(str)) {
+            display('success', 200, Lang.translate('extensions_worked'));
+          } else {
+            display('error', 500, Lang.translate('extensions_no_plugin'));
+          }
+        }, function (a, e) {
+          display('error', 404, Lang.translate('title_error'));
+        }, false, {
+          dataType: 'text'
+        });
+      }
+    }]);
+  }(Item);
+
+  var Recomend = /*#__PURE__*/function (_Extension) {
+    function Recomend(data, params) {
+      var _this;
+      _classCallCheck(this, Recomend);
+      _this = _callSuper(this, Recomend, [data, params]);
+      _this.template = 'extensions_recomend';
+      return _this;
+    }
+    _inherits(Recomend, _Extension);
+    return _createClass(Recomend, [{
+      key: "visible",
+      value: function visible() {
+        var _this2 = this;
+        _get(_getPrototypeOf(Recomend.prototype), "visible", this).call(this);
+        this.img = this.html.querySelector('.extensions__item-image');
+        this.img.onload = function () {
+          _this2.img.classList.add('loaded');
+        };
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        _get(_getPrototypeOf(Recomend.prototype), "destroy", this).call(this);
+        if (this.img) {
+          this.img.onload = false;
+          this.img.onerror = false;
+        }
+      }
+    }]);
+  }(Extension);
+
+  var Theme$1 = /*#__PURE__*/function () {
+    function Theme() {
+      _classCallCheck(this, Theme);
+    }
+    return _createClass(Theme, [{
+      key: "init",
+      value: function init() {
+        if (this.get()) this.set(this.get());
+      }
+    }, {
+      key: "toggle",
+      value: function toggle(url) {
+        if (url) {
+          Storage.set('cub_theme', url);
+          this.set(url);
+        } else {
+          Storage.set('cub_theme', '');
+          $('#cub-theme').remove();
+        }
+      }
+    }, {
+      key: "get",
+      value: function get() {
+        return Storage.get('cub_theme', '');
+      }
+    }, {
+      key: "set",
+      value: function set(url) {
+        $('#cub-theme').remove();
+        var href = Utils$2.rewriteIfHTTPS(Utils$2.addUrlComponent(url, 'token=' + encodeURIComponent(Storage.get('account', '{}').token)));
+        var css = $('<link rel="stylesheet" href="' + href + '" id="cub-theme">');
+        $('body').append(css);
+      }
+    }]);
+  }();
+  var Theme$2 = new Theme$1();
+
+  var Theme = /*#__PURE__*/function (_Item) {
+    function Theme(data, params) {
+      var _this;
+      _classCallCheck(this, Theme);
+      _this = _callSuper(this, Theme, [data, params]);
+      _this.template = 'extensions_theme';
+      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
+      return _this;
+    }
+    _inherits(Theme, _Item);
+    return _createClass(Theme, [{
+      key: "update",
+      value: function update() {
+        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
+        if (this.active()) this.html.classList.add('active');else this.html.classList.remove('active');
+      }
+    }, {
+      key: "active",
+      value: function active() {
+        return Storage.get('cub_theme', '') == this.link;
+      }
+    }, {
+      key: "visible",
+      value: function visible() {
+        var _this2 = this;
+        _get(_getPrototypeOf(Theme.prototype), "visible", this).call(this);
+        if (this.data.premium) this.premium();
+        this.img = this.html.querySelector('.extensions__item-image');
+        this.img.onload = function () {
+          _this2.img.classList.add('loaded');
+        };
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
+        this.html.addEventListener('hover:enter', this.menu.bind(this));
+      }
+    }, {
+      key: "menu",
+      value: function menu() {
+        var _this3 = this;
+        var menu = [];
+        var controller = Controller.enabled().name;
+        menu.push({
+          title: Lang.translate('extensions_' + (this.active() ? 'disable' : 'enable')),
+          toggle: true
+        });
+        Select.show({
+          title: Lang.translate('title_action'),
+          items: menu,
+          onBack: function onBack() {
+            Controller.toggle(controller);
+          },
+          onSelect: function onSelect(a) {
+            Controller.toggle(controller);
+            if (a.toggle) {
+              if (!_this3.active() && _this3.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium();
+              Theme$2.toggle(_this3.active() ? '' : _this3.link);
+              _this3.update();
+            }
+          }
+        });
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        _get(_getPrototypeOf(Theme.prototype), "destroy", this).call(this);
+        if (this.img) {
+          this.img.onload = false;
+          this.img.onerror = false;
+        }
+      }
+    }]);
+  }(Item);
+
+  var Nature = /*#__PURE__*/function () {
+    function Nature() {
+      _classCallCheck(this, Nature);
+      this.slide = 'one';
+      this.direct = ['lt', 'rt', 'br', 'lb', 'ct'];
+    }
+    return _createClass(Nature, [{
+      key: "create",
+      value: function create() {
+        this.html = Template$1.get('screensaver');
+        this.timer = setInterval(this.next.bind(this), 30000);
+        this.time = Utils$2.time(this.html);
+        this.time.tik();
+        this.next();
+      }
+    }, {
+      key: "next",
+      value: function next() {
+        var _this = this;
+        var image = 'https://source.unsplash.com/1600x900/?nature&order_by=relevant&v=' + Math.random();
+        var to_img = $('.screensaver__slides-' + (this.slide == 'one' ? 'two' : 'one'), this.html)[0];
+        to_img.onload = function () {
+          $(to_img).removeClass(_this.direct.join(' ') + ' animate').addClass(_this.direct[Math.floor(Math.random() * _this.direct.length)]);
+          setTimeout(function () {
+            $('.screensaver__slides-' + _this.slide, _this.html).removeClass('visible');
+            _this.slide = _this.slide == 'one' ? 'two' : 'one';
+            $(to_img).addClass('visible').addClass('animate');
+          }, 100);
+        };
+        to_img.onerror = this.next.bind(this);
+        to_img.src = image;
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        clearInterval(this.timer);
+        clearInterval(this.time.timer);
+        this.html.remove();
+      }
+    }]);
+  }();
+
+  var Chrome = /*#__PURE__*/function () {
+    function Chrome() {
+      _classCallCheck(this, Chrome);
+    }
+    return _createClass(Chrome, [{
+      key: "create",
+      value: function create() {
+        this.html = $('<div class="screensaver-chrome"><iframe src="https://clients3.google.com/cast/chromecast/home" class="screensaver-chrome__iframe"></iframe><div class="screensaver-chrome__overlay"></div></div>');
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        this.html.remove();
+      }
+    }]);
+  }();
+
+  var Cub = /*#__PURE__*/function () {
+    function Cub(params) {
+      _classCallCheck(this, Cub);
+      this.params = params;
+      this["default"] = Utils$2.protocol() + object$2.cub_domain + '/img/background/default.mp4';
+    }
+    return _createClass(Cub, [{
+      key: "create",
+      value: function create() {
+        this.html = Template$1.get('screensaver');
+        var source = this.params && this.params.url ? this.params.url : Storage.get('cub_screensaver', '');
+        if (!source) source = this["default"];
+        this.url = Utils$2.addUrlComponent(source, 'token=' + encodeURIComponent(Storage.get('account', '{}').token));
+        this.preload = $('<div class="screensaver__preload"></div>');
+        this.html.prepend(this.preload);
+        this.html.find('.screensaver__slides').remove();
+        this.time = Utils$2.time(this.html);
+        this.time.tik();
+        if (Platform.is('webos')) this.video(this.url);else this.cache(this.url);
+      }
+    }, {
+      key: "load",
+      value: function load(video, er) {
+        var _this = this;
+        video.load();
+        var playPromise;
+        try {
+          playPromise = video.play();
+        } catch (e) {}
+        var startPlay = function startPlay() {
+          console.log('Screesaver', 'playing');
+          _this.preload.remove();
+        };
+        if (playPromise !== undefined) {
+          playPromise.then(function () {
+            return startPlay();
+          })["catch"](function (e) {
+            console.log('Screesaver', 'play promise error:', e.message);
+            if (er) er();
+          });
+        } else startPlay();
+      }
+    }, {
+      key: "video",
+      value: function video(src) {
+        var _this2 = this;
+        var video = $('<video class="screensaver__video visible" muted="" loop="" preload="" type="video/mp4"></video>');
+        this.html.prepend(video);
+        video[0].src = src;
+        this.load(video[0], function () {
+          console.log('Screesaver', 'get play url');
+          video[0].src = _this2.url;
+          _this2.load(video[0]);
+        });
+      }
+    }, {
+      key: "cache",
+      value: function cache(url) {
+        var _this4 = this;
+        var getblob = function getblob(result) {
+          return new Promise(function (resolve, reject) {
+            console.log('Screesaver', 'db find:', result ? 'true' : 'false');
+            if (result) resolve(result);else {
+              console.log('Screesaver', 'start download video');
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', url, true);
+              xhr.responseType = 'blob';
+              xhr.onload = function (e) {
+                var _this3 = this;
+                if (this.status == 200) {
+                  Cache.addData('screensavers', url, this.response).then(function () {
+                    console.log('Screesaver', 'push blob to db');
+                    resolve(_this3.response);
+                  })["catch"](resolve.bind(this.response));
+                } else reject();
+              };
+              xhr.onerror = reject;
+              xhr.send();
+            }
+          });
+        };
+        Cache.getData('screensavers', url).then(getblob).then(function (blob) {
+          console.log('Screesaver', 'set video blob');
+          _this4.create_url_blob = URL.createObjectURL(new Blob([blob], {
+            type: "video/mp4"
+          }));
+          _this4.video(_this4.create_url_blob);
+        })["catch"](function (e) {
+          console.log('Screesaver', 'error:', typeof e == 'string' ? e : e.message);
+          _this4.video(url);
+        });
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        this.html.remove();
+        this.video = function () {};
+        if (this.create_url_blob) URL.revokeObjectURL(this.create_url_blob);
+      }
+    }]);
+  }();
+
+  var Aerial = /*#__PURE__*/function () {
+    function Aerial(params) {
+      _classCallCheck(this, Aerial);
+      this.params = params;
+      this.net = new create$p();
+      this.visible = false;
+      this.items = [];
+      this.opacity = 0;
+      this.transition_time = 4000;
+      this.transition_timeout;
+    }
+    return _createClass(Aerial, [{
+      key: "create",
+      value: function create() {
+        var _this = this;
+        this.html = Template$1.get('screensaver');
+        this.preload = $('<div class="screensaver__preload"></div>');
+        this.video = $('<video class="screensaver__video" muted="" preload=""></video>')[0];
+        this.overlay = $('<div class="screensaver__video-overlay"></div>');
+        this.video.addEventListener('timeupdate', function () {
+          if (_this.video.duration) {
+            var visible = _this.video.currentTime > 0 && _this.video.currentTime < _this.video.duration - 5;
+            var points = _this.object.pointsOfInterest;
+            if (visible !== _this.visible) {
+              _this.visible = visible;
+              _this.info.toggleClass('visible', visible);
+              if (_this.visible) _this.fadeVideoOut(_this.transition_time);else _this.fadeVideoIn(_this.transition_time);
+            }
+            if (_this.video.currentTime == _this.video.duration && !_this.wait_load) {
+              _this.wait_load = true;
+              _this.select();
+              _this.play();
+            }
+            if (points) {
+              for (var time in points) {
+                var text = points[time];
+                if (parseInt(time) <= _this.video.currentTime && _this.tagline.text_ready !== text) {
+                  _this.tagline.text_ready = text;
+                  _this.tagline.text(text);
+                }
+              }
+            }
+          }
+        });
+        this.info = $("<div class=\"screensaver__title\">\n            <div class=\"screensaver__title-name\"></div>\n            <div class=\"screensaver__title-tagline\"></div>\n        </div>");
+        this.title = this.info.find('.screensaver__title-name');
+        this.tagline = this.info.find('.screensaver__title-tagline');
+        this.html.prepend(this.preload);
+        this.html.prepend(this.overlay);
+        this.html.prepend(this.video);
+        this.html.find('.screensaver__slides').remove();
+        this.html.find('.screensaver__gradient').after(this.info);
+        this.time = Utils$2.time(this.html);
+        this.time.tik();
+        this.cache(function () {
+          _this.select();
+          _this.play();
+        });
+      }
+    }, {
+      key: "select",
+      value: function select() {
+        this.object = this.items[Math.floor(Math.random() * this.items.length)];
+        this.title.text(this.object.name.replace(/\s\d$/, ''));
+        this.tagline.text(Utils$2.capitalizeFirstLetter(this.object.type));
+      }
+    }, {
+      key: "fadeVideoIn",
+      value: function fadeVideoIn(time) {
+        if (time > 0) {
+          this.transition_timeout = setTimeout(this.fadeVideoIn.bind(this), 16, time - 16);
+        }
+        this.opacity = 1 - time / this.transition_time;
+        this.overlay[0].style.opacity = this.opacity;
+      }
+    }, {
+      key: "fadeVideoOut",
+      value: function fadeVideoOut(time) {
+        if (time > 0) {
+          this.transition_timeout = setTimeout(this.fadeVideoOut.bind(this), 16, time - 16);
+        }
+        this.opacity = time / this.transition_time;
+        this.overlay[0].style.opacity = this.opacity;
+      }
+    }, {
+      key: "play",
+      value: function play() {
+        var _this2 = this;
+        this.video.src = this.object.src.H2641080p.replace('https:', 'http:');
+        this.video.load();
+        var playPromise;
+        try {
+          playPromise = this.video.play();
+        } catch (e) {}
+        var startPlay = function startPlay() {
+          console.log('Screesaver', 'playing');
+          _this2.preload.remove();
+          _this2.wait_load = false;
+        };
+        if (playPromise !== undefined) {
+          playPromise.then(function () {
+            return startPlay();
+          })["catch"](function (e) {
+            console.log('Player', 'play promise error:', e.message);
+          });
+        } else startPlay();
+      }
+    }, {
+      key: "cache",
+      value: function cache(call) {
+        var _this3 = this;
+        this.items = Storage.get('screensaver_aerial_items', '[]');
+        if (this.items.length) call();else {
+          this.net.silent('https://raw.githubusercontent.com/OrangeJedi/Aerial/master/videos.json', function (json) {
+            _this3.items = json.filter(function (a) {
+              return a.src.H2641080p;
+            });
+            Storage.set('screensaver_aerial_items', _this3.items);
+            call();
+          });
+        }
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        this.html.remove();
+        this.net.clear();
+        clearTimeout(this.transition_timeout);
+      }
+    }]);
+  }();
+
+  var Screensaver$1 = /*#__PURE__*/function () {
+    function Screensaver() {
+      _classCallCheck(this, Screensaver);
+      this.listener = start$7();
+      this.enabled = false;
+      this.worked = false;
+      this.screensaver;
+      this.timer;
+      this.time_reset = 0;
+      this.time_start = 0;
+      this.class_list = {
+        nature: Nature,
+        chrome: Chrome,
+        cub: Cub,
+        aerial: Aerial
+      };
+    }
+    return _createClass(Screensaver, [{
+      key: "init",
+      value: function init() {
+        var _this = this;
+        this.html = $('<div class="screensaver-layer"></div>');
+        this.html.on('click', this.stop.bind(this));
+        $('body').append(this.html);
+        this.resetTimer();
+        Keypad.listener.follow('keydown', function (e) {
+          _this.resetTimer();
+          if (_this.worked) {
+            _this.stopSlideshow();
+            e.event.preventDefault();
+          }
+        });
+        Keypad.listener.follow('keyup', function (e) {
+          if (_this.worked) e.event.preventDefault();
+        });
+        $(window).on('mousedown', function (e) {
+          _this.resetTimer();
+        });
+        $(window).on('focus', this.resetTimer.bind(this));
+      }
+    }, {
+      key: "toggle",
+      value: function toggle(enabled) {
+        this.enabled = enabled;
+        this.resetTimer();
+        this.listener.send('toggle', {
+          status: this.enabled
+        });
+      }
+    }, {
+      key: "enable",
+      value: function enable() {
+        this.toggle(true);
+      }
+    }, {
+      key: "disable",
+      value: function disable() {
+        this.toggle(false);
+      }
+    }, {
+      key: "isWorked",
+      value: function isWorked() {
+        return this.enabled ? this.worked : this.enabled;
+      }
+    }, {
+      key: "stop",
+      value: function stop() {
+        if (this.isWorked()) this.stopSlideshow();
+      }
+    }, {
+      key: "show",
+      value: function show(type, params) {
+        clearTimeout(this.timer);
+        this.listener.send('start', {});
+        var select = Storage.field('screensaver_type');
+        if (typeof type == 'string') select = type;
+        var Class = Chrome;
+        if (this.class_list[select]) Class = this.class_list[select];
+        this.screensaver = new Class(params);
+        this.screensaver.create();
+        this.html.append(this.screensaver.render());
+        this.html.fadeIn(300);
+        this.worked = true;
+      }
+    }, {
+      key: "resetTimer",
+      value: function resetTimer() {
+        var _this2 = this;
+        clearTimeout(this.timer);
+        this.time_reset = Date.now();
+        if (!Storage.field('screensaver') || !this.enabled || this.worked) return;
+        var timeout = 1000 * 60 * Storage.field('screensaver_time');
+        this.timer = setTimeout(function () {
+          //для ведра, когда в лампе появляетя фокус срабатывает таймер
+          if (Date.now() - _this2.time_reset <= timeout + 100) _this2.show();else _this2.resetTimer();
+        }, timeout);
+      }
+    }, {
+      key: "stopSlideshow",
+      value: function stopSlideshow() {
+        var _this3 = this;
+        this.worked = false;
+        this.html.fadeOut(300, function () {
+          _this3.html.removeClass('visible');
+          if (_this3.screensaver) {
+            _this3.screensaver.destroy();
+            _this3.screensaver = false;
+          }
+        });
+        this.resetTimer();
+        this.listener.send('stop', {});
+      }
+    }]);
+  }();
+  var Screensaver$2 = new Screensaver$1();
+
+  var Screensaver = /*#__PURE__*/function (_Item) {
+    function Screensaver(data, params) {
+      var _this;
+      _classCallCheck(this, Screensaver);
+      _this = _callSuper(this, Screensaver, [data, params]);
+      _this.template = 'extensions_screensaver';
+      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
+      return _this;
+    }
+    _inherits(Screensaver, _Item);
+    return _createClass(Screensaver, [{
+      key: "update",
+      value: function update() {
+        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
+        this.html.querySelector('.extensions__item-time').innerText = Utils$2.parseTime(Date.now()).time;
+        if (this.active()) this.html.classList.add('active');else this.html.classList.remove('active');
+      }
+    }, {
+      key: "active",
+      value: function active() {
+        return Storage.field('screensaver_type') == 'cub' && Storage.get('cub_screensaver', '') == this.link;
+      }
+    }, {
+      key: "visible",
+      value: function visible() {
+        var _this2 = this;
+        _get(_getPrototypeOf(Screensaver.prototype), "visible", this).call(this);
+        if (this.data.premium) this.premium();
+        this.img = this.html.querySelector('.extensions__item-image');
+        this.img.onload = function () {
+          _this2.img.classList.add('loaded');
+        };
+        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
+        this.html.addEventListener('hover:enter', this.menu.bind(this));
+      }
+    }, {
+      key: "menu",
+      value: function menu() {
+        var _this3 = this;
+        var menu = [];
+        var controller = Controller.enabled().name;
+        menu.push({
+          title: Lang.translate('extensions_' + (this.active() ? 'disable' : 'enable')),
+          toggle: true
+        });
+        menu.push({
+          title: Lang.translate('title_watch'),
+          watch: true
+        });
+        Select.show({
+          title: Lang.translate('title_action'),
+          items: menu,
+          onBack: function onBack(a) {
+            Controller.toggle(controller);
+          },
+          onSelect: function onSelect(a) {
+            Controller.toggle(controller);
+            if (a.toggle) {
+              if (_this3.active()) Storage.set('cub_screensaver', '');else {
+                if (_this3.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium();
+                Storage.set('cub_screensaver', _this3.link);
+                Storage.set('screensaver_type', 'cub');
+              }
+              _this3.update();
+            } else {
+              Screensaver$2.show('cub', {
+                url: _this3.link
+              });
+            }
+          }
+        });
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        _get(_getPrototypeOf(Screensaver.prototype), "destroy", this).call(this);
+        if (this.img) {
+          this.img.onload = false;
+          this.img.onerror = false;
+        }
+      }
+    }]);
+  }(Item);
+
+  var Line = /*#__PURE__*/function () {
+    function Line(data, params) {
+      _classCallCheck(this, Line);
+      this.params = params;
+      this.data = data;
+      this.items = [];
+      this.active = 0;
+      this.view = 4;
+      this.last;
+    }
+    return _createClass(Line, [{
+      key: "create",
+      value: function create() {
+        var _this = this;
+        this.scroll = new create$q({
+          horizontal: true,
+          step: window.innerWidth / 4
+        });
+        this.html = Template$1.js('extensions_block', {});
+        this.html.querySelector('.extensions__block-title').innerText = this.params.title;
+        this.html.addEventListener('visible', this.visible.bind(this));
+        this.html.querySelector('.extensions__block-body').appendChild(this.scroll.render(true));
+        this.scroll.onWheel = function (step) {
+          if (!Controller.own(_this)) _this.toggle();
+          Controller.enabled().controller[step > 0 ? 'right' : 'left']();
+        };
+        this.scroll.onScroll = this.attach.bind(this);
+      }
+    }, {
+      key: "display",
+      value: function display(num) {
+        var _this2 = this;
+        this.data.filter(function (p) {
+          if (p.platform) {
+            var platforms = p.platform.split(',');
+            return platforms.find(function (n) {
+              return Platform.is(n);
+            });
+          } else return true;
+        }).slice(0, num || this.view).filter(function (e) {
+          return !_this2.items.find(function (f) {
+            return f.data == e;
+          });
+        }).forEach(this.append.bind(this));
+      }
+    }, {
+      key: "visible",
+      value: function visible() {
+        this.display(this.view);
+        Layer.visible(this.scroll.render(true));
+      }
+    }, {
+      key: "append",
+      value: function append(elem) {
+        var _this3 = this;
+        var Class = Extension;
+        if (this.params.hpu == 'recomend') Class = Recomend;
+        if (this.params.hpu == 'theme') Class = Theme;
+        if (this.params.hpu == 'screensaver') Class = Screensaver;
+        var item = new Class(elem, this.params);
+        item.create();
+        item.render().addEventListener('hover:focus', function () {
+          _this3.last = item.render();
+          var prev_active = _this3.active;
+          _this3.active = _this3.items.indexOf(item);
+          if (_this3.active > 0 || prev_active > _this3.active) _this3.scroll.update(_this3.last, true);
+        });
+        this.scroll.body(true).appendChild(item.render());
+        this.items.push(item);
+        if (Controller.own(this)) Controller.collectionAppend(item.render());
+      }
+    }, {
+      key: "attach",
+      value: function attach() {
+        var size = Platform.screen('tv') ? (Math.round(this.active / this.view) + 1) * this.view + 1 : this.data.length;
+        this.display(size);
+        Layer.visible(this.scroll.render(true));
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "toggle",
+      value: function toggle() {
+        var _this4 = this;
+        Controller.add('extensions_line', {
+          link: this,
+          toggle: function toggle() {
+            Controller.collectionSet(_this4.scroll.render(true));
+            Controller.collectionFocus(_this4.items.length ? _this4.last : false, _this4.scroll.render(true));
+            if (_this4.onToggle) _this4.onToggle(_this4);
+          },
+          update: function update() {},
+          right: function right() {
+            Navigator.move('right');
+          },
+          left: function left() {
+            Navigator.move('left');
+          },
+          down: this.onDown,
+          up: this.onUp,
+          back: this.onBack
+        });
+        Controller.toggle('extensions_line');
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        Arrays.destroy(this.items);
+        this.scroll.destroy();
+        this.html.remove();
+        this.items = null;
+      }
+    }]);
+  }();
+
+  var Add = /*#__PURE__*/function () {
+    function Add() {
+      var _this = this;
+      _classCallCheck(this, Add);
+      this.html = document.createElement('div');
+      this.html.classList.add('extensions__block-add');
+      this.html.classList.add('selector');
+      this.html.innerText = Lang.translate('extensions_add');
+      this.html.addEventListener('hover:enter', function () {
+        Input.edit({
+          title: Lang.translate('extensions_set_url'),
+          value: '',
+          free: true,
+          nosave: true
+        }, function (new_value) {
+          _this.onAdd(new_value);
+        });
+      });
+    }
+    return _createClass(Add, [{
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }]);
+  }();
+
+  var Main = /*#__PURE__*/function () {
+    function Main(params) {
+      _classCallCheck(this, Main);
+      this.items = [];
+      this.active = 0;
+      this.params = params;
+    }
+    return _createClass(Main, [{
+      key: "create",
+      value: function create() {
+        var _this = this;
+        this.html = Template$1.js('extensions');
+        this.scroll = new create$q({
+          mask: true
+        });
+        this.scroll.onWheel = function (step) {
+          if (step > 0) _this.down();else _this.up();
+        };
+        this.scroll.append(HeadBackward(Lang.translate('settings_main_plugins'), true));
+        this.scroll.height();
+        this.html.querySelector('.extensions__body').appendChild(this.scroll.render(true));
+        if (this.params.store) this.loadCustomStore();else this.load();
+      }
+    }, {
+      key: "add",
+      value: function add() {
+        var add = new Add();
+        var line = this.items[0];
+        add.onAdd = function (url) {
+          if (url) {
+            var data = {
+              url: url,
+              status: 1
+            };
+            var plugin = new Extension(data, {
+              type: 'installs',
+              autocheck: true
+            });
+            plugin.create();
+            Plugins.add(data);
+            $(add.render()).after(plugin.render());
+            line.last = add.render();
+            Layer.visible(line.render());
+            line.toggle();
+          } else {
+            line.toggle();
+          }
+        };
+        line.scroll.body(true).appendChild(add.render());
+      }
+    }, {
+      key: "loadCustomStore",
+      value: function loadCustomStore() {
+        var _this2 = this;
+        this.appendLoader();
+        var net = new create$p();
+        net.silent(this.params.store, function (data) {
+          _this2.loader.remove();
+          net = null;
+          if (data.results && data.results.length) {
+            if (_this2.params.with_installed) {
+              _this2.appendLine(Plugins.get().reverse(), {
+                title: Lang.translate('extensions_from_memory'),
+                type: 'installs',
+                autocheck: true
+              });
+            }
+            data.results.forEach(function (a) {
+              _this2.appendLine(a.results, {
+                title: a.title || Lang.translate('player_unknown'),
+                type: 'extensions',
+                hpu: a.hpu,
+                noedit: true
+              });
+            });
+            if (_this2.params.with_installed) _this2.add();
+            _this2.items.slice(0, 3).forEach(function (i) {
+              return i.display();
+            });
+            Layer.visible(_this2.html);
+            _this2.toggle();
+          } else {
+            _this2.error();
+          }
+        }, function () {
+          _this2.loader.remove();
+          net = null;
+          _this2.error();
+        });
+      }
+    }, {
+      key: "load",
+      value: function load() {
+        var _this3 = this;
+        this.appendLoader();
+        var need = 2;
+        if (window.lampa_settings.plugins_store) need += 2;
+        var status = new status$2(need);
+        status.onComplite = function () {
+          _this3.loader.remove();
+          _this3.appendLine(status.data.installs, {
+            title: Lang.translate('extensions_from_memory'),
+            type: 'installs',
+            autocheck: true
+          });
+          if (status.data.plugins.length) _this3.appendLine(status.data.plugins, {
+            title: Lang.translate('extensions_from_cub'),
+            cub: true,
+            type: 'plugins',
+            autocheck: true
+          });
+          if (status.data.best && status.data.best.length) _this3.appendLine(status.data.best, {
+            title: Lang.translate('extensions_from_popular'),
+            cub: true,
+            type: 'extensions'
+          });
+          if (status.data.all && status.data.all.length) _this3.appendLine(status.data.all.reverse(), {
+            title: Lang.translate('extensions_from_lib'),
+            cub: true,
+            type: 'extensions'
+          });
+          if (status.data.list) {
+            status.data.list.forEach(function (data) {
+              if (data.results.length) {
+                _this3.appendLine(data.results, {
+                  title: Lang.translate('extensions_hpu_' + data.hpu),
+                  cub: true,
+                  type: 'extensions',
+                  hpu: data.hpu
+                });
+              }
+            });
+          }
+          _this3.add();
+          _this3.items.slice(0, 3).forEach(function (i) {
+            return i.display();
+          });
+          Layer.visible(_this3.html);
+          _this3.toggle();
+        };
+        status.append('installs', Plugins.get().reverse());
+        Account.plugins(function (plugins) {
+          status.append('plugins', plugins);
+        });
+        if (window.lampa_settings.plugins_store) {
+          Account.extensions(function (extensions) {
+            if (extensions.results) {
+              status.need--;
+              status.append('list', extensions.results);
+            } else {
+              status.append('best', extensions.best);
+              status.append('all', extensions.plugins);
+            }
+          });
+        }
+      }
+    }, {
+      key: "appendLoader",
+      value: function appendLoader() {
+        this.loader = document.createElement('div');
+        this.loader.classList.add('broadcast__scan');
+        this.loader.appendChild(document.createElement('div'));
+        this.scroll.body(true).appendChild(this.loader);
+      }
+    }, {
+      key: "error",
+      value: function error() {
+        var empty = new Lampa.Empty();
+        this.scroll.body(true).appendChild(empty.render(true));
+      }
+    }, {
+      key: "appendLine",
+      value: function appendLine(data, params) {
+        var _this4 = this;
+        var line = new Line(data, params);
+        line.onBack = this.onBack.bind(this);
+        line.onUp = this.up.bind(this);
+        line.onDown = this.down.bind(this);
+        line.onToggle = function () {
+          _this4.active = _this4.items.indexOf(line);
+          _this4.scroll.update(line.render(), true);
+        };
+        line.create();
+        this.scroll.body(true).appendChild(line.render());
+        this.items.push(line);
+      }
+    }, {
+      key: "down",
+      value: function down() {
+        this.active++;
+        if (this.active <= this.items.length - 1) this.items[this.active].toggle();
+        this.active = Math.min(this.items.length - 1, this.active);
+      }
+    }, {
+      key: "up",
+      value: function up() {
+        this.active--;
+        if (this.active >= 0) this.items[this.active].toggle();
+        this.active = Math.max(0, this.active);
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return this.html;
+      }
+    }, {
+      key: "toggle",
+      value: function toggle() {
+        var _this5 = this;
+        Controller.add('extensions', {
+          toggle: function toggle() {
+            Controller.collectionSet(_this5.html);
+            if (_this5.items.length) {
+              _this5.items[_this5.active].toggle();
+            }
+          },
+          back: this.onBack
+        });
+        Controller.toggle('extensions');
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        Arrays.destroy(this.items);
+        this.scroll.destroy();
+        this.html.remove();
+      }
+    }]);
+  }();
+
+  var extensions$1;
+  var listener$e = start$7();
+  function init$w() {}
+  function show$7() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    if (extensions$1) return;
+    var controller = Controller.enabled().name;
+    extensions$1 = new Main(params);
+    extensions$1.onBack = function () {
+      extensions$1.destroy();
+      extensions$1 = null;
+      document.body.toggleClass('ambience--enable', false);
+      Controller.toggle(controller);
+      if (params.onClose) params.onClose();
+      if (!params.store) listener$e.send('close', {});
+    };
+    extensions$1.create();
+    document.body.toggleClass('ambience--enable', true);
+    document.body.appendChild(extensions$1.render(true));
+    extensions$1.toggle();
+    if (!params.store) listener$e.send('open', {
+      extensions: extensions$1
+    });
+  }
+  function render$b(js) {
+    var html = extensions$1 ? extensions$1.render() : document.createElement('div');
+    return js ? html : $(html);
+  }
+  var Extensions = {
+    init: init$w,
+    listener: listener$e,
+    show: show$7,
+    render: render$b
+  };
+
+  var _created = [];
+  var _loaded = [];
+  var _network = new create$p();
+  var _blacklist = [];
+
+  /**
+   * Запуск
+   */
+  function init$v() {
+    _loaded = Storage.get('plugins', '[]');
+    Settings.main().render().find('[data-component="plugins"]').unbind('hover:enter').on('hover:enter', function () {
+      Extensions.show();
+    });
+  }
+  function get$c() {
+    return _loaded.map(function (a) {
+      return a;
+    });
+  }
+  function modify() {
+    var list = Storage.get('plugins', '[]');
+    list = list.map(function (a) {
+      return typeof a == 'string' ? {
+        url: a,
+        status: 1
+      } : a;
+    });
+    list.forEach(function (a) {
+      a.url = (a.url + '').replace('cub.watch', object$2.cub_domain);
+    });
+    console.log('Plugins', 'modify:', list);
+    Storage.set('plugins', list);
+  }
+  function remove$3(plug) {
+    Arrays.remove(_loaded, plug);
+    console.log('Plugins', 'remove:', plug, 'index:', _loaded.indexOf(plug), 'from:', _loaded);
+    Storage.set('plugins', _loaded);
+  }
+  function add$b(plug) {
+    _loaded.push(plug);
+    console.log('Plugins', 'add:', plug);
+    Storage.set('plugins', _loaded);
+    push$3(plug);
+  }
+  function push$3(plug) {
+    var find = _created.find(function (a) {
+      return a == plug.url;
+    });
+    if (!find && plug.status == 1) {
+      if (_blacklist.find(function (a) {
+        return plug.url.indexOf(a) >= 0;
+      })) return Noty.show(Lang.translate('torrent_error_connect'), {
+        time: 8000
+      });
+      _created.push(plug.url);
+      console.log('Plugins', 'push:', plug);
+      Utils$2.putScriptAsync([addPluginParams(plug.url)], false, function () {
+        Noty.show(Lang.translate('plugins_check_fail'), {
+          time: 8000
+        });
+      }, function () {
+        updatePluginDB(plug.url, addPluginParams(plug.url));
+        Noty.show(Lang.translate('plugins_add_success'));
+      }, false);
+    }
+  }
+  function save$5() {
+    console.log('Plugins', 'save:', _loaded);
+    Storage.set('plugins', _loaded);
+  }
+  function updatePluginDB(name, url) {
+    if (Account.hasPremium()) {
+      _network["native"](url, function (str) {
+        Cache.rewriteData('plugins', name, str).then(function () {
+          console.log('Plugins', 'update plugin cache:', name);
+        })["catch"](function (e) {
+          console.log('Plugins', 'add to cache fail:', name, typeof e == 'string' ? e : e ? e.message : 'no details');
+        });
+      }, false, false, {
+        dataType: 'text'
+      });
+    }
+  }
+  function createPluginDB(name) {
+    if (Account.hasPremium()) {
+      Cache.getData('plugins', name).then(function (code) {
+        if (code) {
+          var s = document.createElement('script');
+          s.type = 'text/javascript';
+          try {
+            s.appendChild(document.createTextNode(code));
+            document.body.appendChild(s);
+          } catch (e) {
+            s.text = code;
+            document.body.appendChild(s);
+          }
+          console.log('Plugins', 'add plugin from cache:', name);
+        } else console.log('Plugins', 'no find in cache:', name);
+      })["catch"](function (e) {
+        console.log('Plugins', 'include from cache fail:', name, typeof e == 'string' ? e : e.message);
+      });
+    }
+  }
+  function addPluginParams(url) {
+    var encode = url;
+    encode = encode.replace('cub.watch', object$2.cub_domain);
+    if (!/[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}/.test(encode)) {
+      encode = encode.replace(/\{storage_(\w+|\d+|_|-)\}/g, function (match, key) {
+        return encodeURIComponent(Base64.encode(localStorage.getItem(key) || ''));
+      });
+      var email = (localStorage.getItem('account_email') || '').trim();
+      if (Account.logged() && email) encode = Utils$2.addUrlComponent(encode, 'email=' + encodeURIComponent(Base64.encode(email)));
+      encode = Utils$2.addUrlComponent(encode, 'logged=' + encodeURIComponent(Account.logged() ? 'true' : 'false'));
+      encode = Utils$2.addUrlComponent(encode, 'reset=' + Math.random());
+      encode = Utils$2.rewriteIfHTTPS(encode);
+    }
+    return encode;
+  }
+  function loadBlackList(call) {
+    var status = new status$2(2);
+    status.onComplite = function (res) {
+      call([].concat(res.cub, res.custom));
+    };
+    _network.silent(Utils$2.protocol() + object$2.cub_domain + '/api/plugins/blacklist', function (result) {
+      var list = result.map(function (a) {
+        return a.url;
+      });
+      Storage.set('plugins_blacklist', list);
+      status.append('cub', list);
+    }, function () {
+      status.append('cub', Storage.get('plugins_blacklist', '[]'));
+    });
+    _network.silent('./plugins_black_list.json', function (list) {
+      status.append('custom', list);
+    }, function () {
+      status.append('custom', []);
+    });
+  }
+
+  /**
+   * Загрузка всех плагинов
+   */
+  function load$2(call) {
+    console.log('Plugins', 'start load');
+    modify();
+    loadBlackList(function (black_list) {
+      Account.plugins(function (plugins) {
+        var puts = window.lampa_settings.plugins_use ? plugins.filter(function (plugin) {
+          return plugin.status;
+        }).map(function (plugin) {
+          return plugin.url;
+        }).concat(Storage.get('plugins', '[]').filter(function (plugin) {
+          return plugin.status;
+        }).map(function (plugin) {
+          return plugin.url;
+        })) : [];
+        puts.push('./plugins/modification.js');
+        puts = puts.filter(function (element, index) {
+          return puts.indexOf(element) === index;
+        });
+        console.log('Plugins', 'load list:', puts);
+        black_list.push('lipp.xyz');
+        black_list.push('llpp.xyz');
+        black_list.push('scabrum.github.io');
+        black_list.push('bylampa.github.io');
+        black_list.push('tinyurl.com');
+
+        // Stupid people :(
+        black_list.push('t.me/');
+        black_list.push('4pda.');
+        black_list.push('teletype.in');
+        black_list.push('yotube.com');
+        _blacklist = black_list;
+        console.log('Plugins', 'black list:', black_list);
+        black_list.forEach(function (b) {
+          puts = puts.filter(function (p) {
+            return p.toLowerCase().indexOf(b) == -1;
+          });
+        });
+        console.log('Plugins', 'clear list:', puts);
+        var errors = [];
+        var original = {};
+        var include = [];
+        puts.forEach(function (url) {
+          var encode = addPluginParams(url);
+          include.push(encode);
+          original[encode] = url;
+        });
+        Utils$2.putScriptAsync(include, function () {
+          call();
+          if (errors.length) {
+            setTimeout(function () {
+              Noty.show(Lang.translate('plugins_no_loaded') + ' (' + errors.join(', ') + ')', {
+                time: 6000
+              });
+            }, 2000);
+          }
+        }, function (u) {
+          if (u.indexOf('modification.js') == -1) {
+            console.log('Plugins', 'error:', original[u]);
+            errors.push(original[u]);
+            createPluginDB(original[u]);
+          }
+        }, function (u) {
+          console.log('Plugins', 'include:', original[u]);
+          _created.push(original[u]);
+          updatePluginDB(original[u], u);
+
+          //analysisPlugins(original[u])
+        }, false);
+      });
+    });
+  }
+  var Plugins = {
+    init: init$v,
+    load: load$2,
+    remove: remove$3,
+    loaded: function loaded() {
+      return _created;
+    },
+    add: add$b,
+    get: get$c,
+    save: save$5,
+    push: push$3
+  };
+
+  /**
+   * Короче, постоянно пишут (почему нет картинок?)
+   * Решил сделать автоматическую установку TMDB Proxy если регион RU
+   */
+
+  var network$a = new create$p();
+  function region(call) {
+    var reg = Storage.get('region', '{}');
+    Arrays.extend({
+      time: 0
+    });
+    if (!reg.code || reg.time + 1000 * 60 * 60 * 24 < Date.now()) {
+      var extracted = function extracted(code) {
+        Storage.set('region', {
+          code: code.toLowerCase(),
+          time: Date.now()
+        });
+        call(code.toLowerCase());
+      };
+      extract$2('https', extracted, function () {
+        //может не работает https
+
+        Storage.set('protocol', 'http');
+        console.log('VPN', 'disable HTTPS');
+        extract$2('http', extracted, function () {
+          console.log('VPN', 'domain not responding');
+          Storage.set('region', {
+            code: Storage.field('language'),
+            time: Date.now()
+          });
+          call(Storage.field('language'));
+        });
+      });
+    } else call(reg.code);
+  }
+  var extract$2 = function extract(proto, call, error) {
+    network$a.silent(proto + '://geo.' + object$2.cub_domain, call, error, false, {
+      dataType: 'text'
+    });
+  };
+  function init$u() {
+    if (Storage.get('vpn_checked_ready', 'false') || Storage.get('tmdb_proxy_api', '') || Storage.get('tmdb_proxy_image', '')) return;
+    var install = function install(country) {
+      console.log('VPN', 'country ' + country);
+      if (country.trim() == 'RU') {
+        //ну это наш клиент
+
+        var ready = Plugins.get().find(function (a) {
+          return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
+        });
+        if (!ready) {
+          console.log('VPN', 'install TMDB Proxy');
+          Plugins.add({
+            url: 'http://' + object$2.cub_domain + '/plugin/tmdb-proxy',
+            status: 1,
+            name: 'TMDB Proxy',
+            author: '@lampa'
+          });
+        }
+      }
+    };
+    var installed = Plugins.get().find(function (a) {
+      return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
+    });
+    if (!installed) {
+      console.log('VPN', 'start install TMDB Proxy');
+      extract$2('https', install, function () {
+        //может не работает https
+
+        Storage.set('protocol', 'http');
+        console.log('VPN', 'disable HTTPS');
+        extract$2('http', install, function () {
+          console.log('VPN', 'domain not responding');
+
+          //хммм...., наверно к домену не подключается
+        });
+      });
+    }
+    Storage.set('vpn_checked_ready', true);
+  }
+  var VPN = {
+    init: init$u,
+    region: region
+  };
+
+  var listener$d = start$7();
   var html$e;
   var display;
   var paused;
@@ -9422,10 +11278,10 @@
     /**
      * Специально для вебось
      */
-    listener$e.follow('webos_subs', function (data) {
+    listener$d.follow('webos_subs', function (data) {
       webos_wait.subs = convertToArray(data.subs);
     });
-    listener$e.follow('webos_tracks', function (data) {
+    listener$d.follow('webos_tracks', function (data) {
       webos_wait.tracks = convertToArray(data.tracks);
     });
   }
@@ -9494,7 +11350,7 @@
 
     // видео закончилось
     _video.addEventListener('ended', function () {
-      listener$e.send('ended', {});
+      listener$d.send('ended', {});
     });
     if (Platform.is('apple') && Storage.field('player') == 'ios') {
       _video.addEventListener('webkitendfullscreen', function (e) {
@@ -9508,17 +11364,17 @@
       var msg = (error.message || '').toUpperCase();
       if (msg.indexOf('EMPTY SRC') == -1) {
         if (error.code == 3) {
-          listener$e.send('error', {
+          listener$d.send('error', {
             error: Lang.translate('player_error_one'),
             fatal: true
           });
         } else if (error.code == 4) {
-          listener$e.send('error', {
+          listener$d.send('error', {
             error: Lang.translate('player_error_two'),
             fatal: true
           });
         } else if (typeof error.code !== 'undefined') {
-          listener$e.send('error', {
+          listener$d.send('error', {
             error: 'code [' + error.code + '] details [' + msg + ']',
             fatal: true
           });
@@ -9529,7 +11385,7 @@
     // прогресс буферизации
     _video.addEventListener('progress', function (e) {
       if (typeof e.percent !== 'undefined') {
-        listener$e.send('progress', {
+        listener$d.send('progress', {
           down: e.percent + '%'
         });
       } else {
@@ -9541,7 +11397,7 @@
               if (_video.buffered.start && _video.buffered.start(_video.buffered.length - 1 - i) < _video.currentTime) {
                 var down = Math.max(0, Math.min(100, _video.buffered.end(_video.buffered.length - 1 - i) / duration * 100)) + "%";
                 seconds = Math.max(0, _video.buffered.end(_video.buffered.length - 1 - i) - _video.currentTime);
-                listener$e.send('progress', {
+                listener$d.send('progress', {
                   down: down
                 });
                 break;
@@ -9555,16 +11411,16 @@
 
     // можно ли уже проигрывать?
     _video.addEventListener('canplay', function () {
-      listener$e.send('canplay', {});
+      listener$d.send('canplay', {});
     });
 
     // сколько прошло
     _video.addEventListener('timeupdate', function () {
-      if (rewind_position == 0 && !_video.rewind) listener$e.send('timeupdate', {
+      if (rewind_position == 0 && !_video.rewind) listener$d.send('timeupdate', {
         duration: _video.duration,
         current: _video.currentTime
       });
-      listener$e.send('videosize', {
+      listener$d.send('videosize', {
         width: _video.videoWidth,
         height: _video.videoHeight
       });
@@ -9600,18 +11456,19 @@
 
     //получены первые данные
     _video.addEventListener('loadeddata', function (e) {
-      listener$e.send('videosize', {
+      listener$d.send('videosize', {
         width: _video.videoWidth,
         height: _video.videoHeight
       });
-      listener$e.send('loadeddata', {});
+      listener$d.send('loadeddata', {});
       scale();
       if (neeed_speed) speed(neeed_speed);
       loaded$1();
     });
+    var pc = Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA());
 
     // для страховки
-    _video.volume = 1;
+    _video.volume = pc ? parseFloat(Storage.get('player_volume', '1')) : 1;
     _video.muted = false;
   }
   function hlsBitrate(seconds) {
@@ -9828,7 +11685,7 @@
         tracks[params$1.track].selected = true;
         console.log('Player', 'enable track by default');
       }
-      listener$e.send('tracks', {
+      listener$d.send('tracks', {
         tracks: tracks
       });
     }
@@ -9855,7 +11712,7 @@
         }
         subsview(true);
       }
-      listener$e.send('subs', {
+      listener$d.send('subs', {
         subs: subs
       });
     }
@@ -9890,7 +11747,7 @@
       } else {
         if (hls.currentLevel >= 0) current_level = hls.levels[hls.currentLevel].title;
       }
-      listener$e.send('levels', {
+      listener$d.send('levels', {
         levels: hls.levels,
         current: current_level
       });
@@ -9920,7 +11777,7 @@
         bitrates[params$1.level].selected = true;
         _current_level = bitrates[params$1.level].title;
       }
-      listener$e.send('levels', {
+      listener$d.send('levels', {
         levels: bitrates,
         current: _current_level
       });
@@ -10023,7 +11880,7 @@
         url$5(src, true);
         _video.customSubs = sub;
         webos.repet(_video);
-        listener$e.send('reset_continue', {});
+        listener$d.send('reset_continue', {});
       };
       webos.start();
     }
@@ -10036,7 +11893,7 @@
     display.append(videobox);
     bind$1();
     setTimeout(function () {
-      load$2(url);
+      load$1(url);
     }, 100);
   }
   function normalizationVisible(status) {
@@ -10071,7 +11928,7 @@
     if (/\.mpd/.test(src) && typeof dashjs !== 'undefined') {
       try {
         if (Platform.is('orsay') && Storage.field('player') == 'orsay') {
-          load$2(src);
+          load$1(src);
         } else {
           dash = dashjs.MediaPlayer().create();
           dash.getSettings().streaming.abr.autoSwitchBitrate = false;
@@ -10079,7 +11936,7 @@
         }
       } catch (e) {
         console.log('Player', 'Dash error:', e.stack);
-        load$2(src);
+        load$1(src);
       }
     } else if (/\.m3u8/.test(src)) {
       if (navigator.userAgent.toLowerCase().indexOf('maple') > -1) src += '|COMPONENT=HLS';
@@ -10106,15 +11963,15 @@
           hls.on(Hls.Events.ERROR, function (event, data) {
             if (data.details === Hls.ErrorDetails.MANIFEST_PARSING_ERROR) {
               if (data.reason === "no EXTM3U delimiter") {
-                load$2(src);
+                load$1(src);
               } else {
-                listener$e.send('error', {
+                listener$d.send('error', {
                   error: 'details [' + data.details + '] fatal [' + data.fatal + ']',
                   fatal: data.fatal
                 });
               }
             } else {
-              listener$e.send('error', {
+              listener$d.send('error', {
                 error: 'details [' + data.details + '] fatal [' + data.fatal + ']',
                 fatal: data.fatal
               });
@@ -10133,10 +11990,10 @@
           hls_parser.loadSource(src);
           hls_parser.on(Hls.Events.ERROR, function (event, data) {
             console.log('Player', 'hls parse error', data.reason, data.details, data.fatal);
-            if (!send_load_ready) load$2(src);
+            if (!send_load_ready) load$1(src);
           });
           hls_parser.on(Hls.Events.MANIFEST_LOADED, function () {
-            if (hls_parser.audioTracks.length) listener$e.send('translate', {
+            if (hls_parser.audioTracks.length) listener$d.send('translate', {
               where: 'tracks',
               translate: hls_parser.audioTracks.map(function (a) {
                 return {
@@ -10144,7 +12001,7 @@
                 };
               })
             });
-            if (hls_parser.subtitleTracks.length) listener$e.send('translate', {
+            if (hls_parser.subtitleTracks.length) listener$d.send('translate', {
               where: 'subs',
               translate: hls_parser.subtitleTracks.map(function (a) {
                 return {
@@ -10170,25 +12027,25 @@
                 };
               });
               console.log('Player', 'set hls levels', parsed_levels);
-              listener$e.send('levels', {
+              listener$d.send('levels', {
                 levels: parsed_levels,
                 current: hlsLevelName(select_level)
               });
               console.log('Player', 'hls select level url:', select_level.url[0]);
-              load$2(select_level.url[0]);
-            } else load$2(src);
+              load$1(select_level.url[0]);
+            } else load$1(src);
             send_load_ready = true;
           });
-        } else load$2(src);
-      } else load$2(src);
-    } else load$2(src);
+        } else load$1(src);
+      } else load$1(src);
+    } else load$1(src);
   }
 
   /**
    * Начать загрузку
    * @param {string} src 
    */
-  function load$2(src) {
+  function load$1(src) {
     if (hls_parser) {
       hls_parser.destroy();
       hls_parser = false;
@@ -10215,7 +12072,7 @@
       });
     }
     paused.addClass('hide');
-    listener$e.send('play', {});
+    listener$d.send('play', {});
   }
 
   /**
@@ -10234,7 +12091,7 @@
       });
     }
     paused.removeClass('hide');
-    listener$e.send('pause', {});
+    listener$d.send('pause', {});
   }
 
   /**
@@ -10244,10 +12101,10 @@
     if (wait || rewind_position) return;
     if (_video.paused) {
       play$2();
-      listener$e.send('play', {});
+      listener$d.send('play', {});
     } else {
       pause();
-      listener$e.send('pause', {});
+      listener$d.send('pause', {});
     }
   }
 
@@ -10277,11 +12134,11 @@
     pause();
     if (rewind_position == 0) _video.currentTime = 0;else if (rewind_position == _video.duration) _video.currentTime = _video.duration;
     timer$5.rewind = Date.now();
-    listener$e.send('timeupdate', {
+    listener$d.send('timeupdate', {
       duration: _video.duration,
       current: rewind_position
     });
-    listener$e.send('rewind', {});
+    listener$d.send('rewind', {});
     rewindEnd(immediately);
   }
 
@@ -10345,6 +12202,10 @@
   function togglePictureInPicture() {
     if (document.pictureInPictureElement) exitFromPIP();else enterToPIP();
   }
+  function changeVolume(volume) {
+    _video.volume = volume;
+    Storage.set('player_volume', volume);
+  }
 
   /**
    * Уничтожить
@@ -10395,14 +12256,14 @@
     display.empty();
     loader$1(false);
   }
-  function render$b() {
+  function render$a() {
     return html$e;
   }
   var PlayerVideo = {
     init: init$t,
-    listener: listener$e,
+    listener: listener$d,
     url: url$5,
-    render: render$b,
+    render: render$a,
     destroy: destroy$5,
     playpause: playpause,
     rewind: rewind,
@@ -10420,7 +12281,8 @@
     clearParamas: clearParamas,
     setParams: setParams,
     normalizationVisible: normalizationVisible,
-    togglePictureInPicture: togglePictureInPicture
+    togglePictureInPicture: togglePictureInPicture,
+    changeVolume: changeVolume
   };
 
   function parse$2(data) {
@@ -10505,7 +12367,7 @@
     });
     network$9.silent(url$4() + '/cache', success, fail, data);
   }
-  function add$b(object, success, fail) {
+  function add$a(object, success, fail) {
     var data = JSON.stringify({
       action: 'add',
       link: object.link,
@@ -10572,7 +12434,7 @@
       dataType: 'text'
     });
   }
-  function remove$3(hash, success, fail) {
+  function remove$2(hash, success, fail) {
     var data = JSON.stringify({
       action: 'rem',
       hash: hash
@@ -10689,14 +12551,14 @@
   var Torserver = {
     ip: ip,
     my: my,
-    add: add$b,
+    add: add$a,
     url: url$4,
     hash: hash$1,
     files: files$1,
     clear: clear$9,
     drop: drop,
     stream: stream,
-    remove: remove$3,
+    remove: remove$2,
     connected: connected,
     parse: parse$1,
     error: error$1,
@@ -10705,7 +12567,7 @@
   };
 
   var html$d;
-  var listener$d = start$6();
+  var listener$c = start$7();
   var network$8 = new create$p();
   var elems;
   var error, stat_timer;
@@ -10785,17 +12647,17 @@
         if (hash) {
           Torserver.cache(hash[1], function (cache) {
             pieces(cache);
-            listener$d.send('stat', {
+            listener$c.send('stat', {
               data: data,
               cache: cache
             });
           }, function () {
-            listener$d.send('stat', {
+            listener$c.send('stat', {
               data: data
             });
           });
         } else {
-          listener$d.send('stat', {
+          listener$c.send('stat', {
             data: data
           });
         }
@@ -10829,20 +12691,20 @@
     clearInterval(stat_timer);
     network$8.clear();
   }
-  function render$a() {
+  function render$9() {
     return html$d;
   }
   var PlayerInfo = {
     init: init$s,
-    listener: listener$d,
-    render: render$a,
+    listener: listener$c,
+    render: render$9,
     set: set$3,
     toggle: toggle$7,
     loading: loading$1,
     destroy: destroy$4
   };
 
-  var listener$c = start$6();
+  var listener$b = start$7();
   var current = '';
   var playlist$1 = [];
   var _position = 0;
@@ -10858,7 +12720,7 @@
       items: playlist$1,
       onSelect: function onSelect(a) {
         Controller.toggle(enabled.name);
-        listener$c.send('select', {
+        listener$b.send('select', {
           playlist: playlist$1,
           item: a,
           position: _position
@@ -10886,7 +12748,7 @@
   function prev() {
     active$3();
     if (_position > 0) {
-      listener$c.send('select', {
+      listener$b.send('select', {
         playlist: playlist$1,
         position: _position - 1,
         item: playlist$1[_position - 1]
@@ -10897,10 +12759,10 @@
   /**
    * Далее
    */
-  function next() {
+  function next$1() {
     active$3();
     if (_position < playlist$1.length - 1) {
-      listener$c.send('select', {
+      listener$b.send('select', {
         playlist: playlist$1,
         position: _position + 1,
         item: playlist$1[_position + 1]
@@ -10917,7 +12779,7 @@
     playlist$1.forEach(function (l, i) {
       if (l.url == current) _position = i;
     });
-    listener$c.send('set', {
+    listener$b.send('set', {
       playlist: playlist$1,
       position: _position
     });
@@ -10927,7 +12789,7 @@
    * Получить список
    * @returns {[{title:string, url:string}]}
    */
-  function get$c() {
+  function get$b() {
     return playlist$1;
   }
 
@@ -10939,455 +12801,21 @@
     current = u;
   }
   var PlayerPlaylist = {
-    listener: listener$c,
+    listener: listener$b,
     active: active$3,
     show: show$6,
     url: url$3,
-    get: get$c,
+    get: get$b,
     set: set$2,
     prev: prev,
-    next: next,
+    next: next$1,
     position: function position() {
       return _position;
     }
   };
 
-  var Nature = /*#__PURE__*/function () {
-    function Nature() {
-      _classCallCheck(this, Nature);
-      this.slide = 'one';
-      this.direct = ['lt', 'rt', 'br', 'lb', 'ct'];
-    }
-    _createClass(Nature, [{
-      key: "create",
-      value: function create() {
-        this.html = Template$1.get('screensaver');
-        this.timer = setInterval(this.next.bind(this), 30000);
-        this.time = Utils$2.time(this.html);
-        this.time.tik();
-        this.next();
-      }
-    }, {
-      key: "next",
-      value: function next() {
-        var _this = this;
-        var image = 'https://source.unsplash.com/1600x900/?nature&order_by=relevant&v=' + Math.random();
-        var to_img = $('.screensaver__slides-' + (this.slide == 'one' ? 'two' : 'one'), this.html)[0];
-        to_img.onload = function () {
-          $(to_img).removeClass(_this.direct.join(' ') + ' animate').addClass(_this.direct[Math.floor(Math.random() * _this.direct.length)]);
-          setTimeout(function () {
-            $('.screensaver__slides-' + _this.slide, _this.html).removeClass('visible');
-            _this.slide = _this.slide == 'one' ? 'two' : 'one';
-            $(to_img).addClass('visible').addClass('animate');
-          }, 100);
-        };
-        to_img.onerror = this.next.bind(this);
-        to_img.src = image;
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        clearInterval(this.timer);
-        clearInterval(this.time.timer);
-        this.html.remove();
-      }
-    }]);
-    return Nature;
-  }();
-
-  var Chrome = /*#__PURE__*/function () {
-    function Chrome() {
-      _classCallCheck(this, Chrome);
-    }
-    _createClass(Chrome, [{
-      key: "create",
-      value: function create() {
-        this.html = $('<div class="screensaver-chrome"><iframe src="https://clients3.google.com/cast/chromecast/home" class="screensaver-chrome__iframe"></iframe><div class="screensaver-chrome__overlay"></div></div>');
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        this.html.remove();
-      }
-    }]);
-    return Chrome;
-  }();
-
-  var Cub = /*#__PURE__*/function () {
-    function Cub(params) {
-      _classCallCheck(this, Cub);
-      this.params = params;
-      this["default"] = Utils$2.protocol() + object$2.cub_domain + '/img/background/default.mp4';
-    }
-    _createClass(Cub, [{
-      key: "create",
-      value: function create() {
-        this.html = Template$1.get('screensaver');
-        var source = this.params && this.params.url ? this.params.url : Storage.get('cub_screensaver', '');
-        if (!source) source = this["default"];
-        this.url = Utils$2.addUrlComponent(source, 'token=' + encodeURIComponent(Storage.get('account', '{}').token));
-        this.preload = $('<div class="screensaver__preload"></div>');
-        this.html.prepend(this.preload);
-        this.html.find('.screensaver__slides').remove();
-        this.time = Utils$2.time(this.html);
-        this.time.tik();
-        if (Platform.is('webos')) this.video(this.url);else this.cache(this.url);
-      }
-    }, {
-      key: "load",
-      value: function load(video, er) {
-        var _this = this;
-        video.load();
-        var playPromise;
-        try {
-          playPromise = video.play();
-        } catch (e) {}
-        var startPlay = function startPlay() {
-          console.log('Screesaver', 'playing');
-          _this.preload.remove();
-        };
-        if (playPromise !== undefined) {
-          playPromise.then(function () {
-            return startPlay();
-          })["catch"](function (e) {
-            console.log('Screesaver', 'play promise error:', e.message);
-            if (er) er();
-          });
-        } else startPlay();
-      }
-    }, {
-      key: "video",
-      value: function video(src) {
-        var _this2 = this;
-        var video = $('<video class="screensaver__video visible" muted="" loop="" preload="" type="video/mp4"></video>');
-        this.html.prepend(video);
-        video[0].src = src;
-        this.load(video[0], function () {
-          console.log('Screesaver', 'get play url');
-          video[0].src = _this2.url;
-          _this2.load(video[0]);
-        });
-      }
-    }, {
-      key: "cache",
-      value: function cache(url) {
-        var _this4 = this;
-        var getblob = function getblob(result) {
-          return new Promise(function (resolve, reject) {
-            console.log('Screesaver', 'db find:', result ? 'true' : 'false');
-            if (result) resolve(result);else {
-              console.log('Screesaver', 'start download video');
-              var xhr = new XMLHttpRequest();
-              xhr.open('GET', url, true);
-              xhr.responseType = 'blob';
-              xhr.onload = function (e) {
-                var _this3 = this;
-                if (this.status == 200) {
-                  Cache.addData('screensavers', url, this.response).then(function () {
-                    console.log('Screesaver', 'push blob to db');
-                    resolve(_this3.response);
-                  })["catch"](resolve.bind(this.response));
-                } else reject();
-              };
-              xhr.onerror = reject;
-              xhr.send();
-            }
-          });
-        };
-        Cache.getData('screensavers', url).then(getblob).then(function (blob) {
-          console.log('Screesaver', 'set video blob');
-          _this4.create_url_blob = URL.createObjectURL(new Blob([blob], {
-            type: "video/mp4"
-          }));
-          _this4.video(_this4.create_url_blob);
-        })["catch"](function (e) {
-          console.log('Screesaver', 'error:', typeof e == 'string' ? e : e.message);
-          _this4.video(url);
-        });
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        this.html.remove();
-        this.video = function () {};
-        if (this.create_url_blob) URL.revokeObjectURL(this.create_url_blob);
-      }
-    }]);
-    return Cub;
-  }();
-
-  var Aerial = /*#__PURE__*/function () {
-    function Aerial(params) {
-      _classCallCheck(this, Aerial);
-      this.params = params;
-      this.net = new create$p();
-      this.visible = false;
-      this.items = [];
-      this.opacity = 0;
-      this.transition_time = 4000;
-      this.transition_timeout;
-    }
-    _createClass(Aerial, [{
-      key: "create",
-      value: function create() {
-        var _this = this;
-        this.html = Template$1.get('screensaver');
-        this.preload = $('<div class="screensaver__preload"></div>');
-        this.video = $('<video class="screensaver__video" muted="" preload=""></video>')[0];
-        this.overlay = $('<div class="screensaver__video-overlay"></div>');
-        this.video.addEventListener('timeupdate', function () {
-          if (_this.video.duration) {
-            var visible = _this.video.currentTime > 0 && _this.video.currentTime < _this.video.duration - 5;
-            var points = _this.object.pointsOfInterest;
-            if (visible !== _this.visible) {
-              _this.visible = visible;
-              _this.info.toggleClass('visible', visible);
-              if (_this.visible) _this.fadeVideoOut(_this.transition_time);else _this.fadeVideoIn(_this.transition_time);
-            }
-            if (_this.video.currentTime == _this.video.duration && !_this.wait_load) {
-              _this.wait_load = true;
-              _this.select();
-              _this.play();
-            }
-            if (points) {
-              for (var time in points) {
-                var text = points[time];
-                if (parseInt(time) <= _this.video.currentTime && _this.tagline.text_ready !== text) {
-                  _this.tagline.text_ready = text;
-                  _this.tagline.text(text);
-                }
-              }
-            }
-          }
-        });
-        this.info = $("<div class=\"screensaver__title\">\n            <div class=\"screensaver__title-name\"></div>\n            <div class=\"screensaver__title-tagline\"></div>\n        </div>");
-        this.title = this.info.find('.screensaver__title-name');
-        this.tagline = this.info.find('.screensaver__title-tagline');
-        this.html.prepend(this.preload);
-        this.html.prepend(this.overlay);
-        this.html.prepend(this.video);
-        this.html.find('.screensaver__slides').remove();
-        this.html.find('.screensaver__gradient').after(this.info);
-        this.time = Utils$2.time(this.html);
-        this.time.tik();
-        this.cache(function () {
-          _this.select();
-          _this.play();
-        });
-      }
-    }, {
-      key: "select",
-      value: function select() {
-        this.object = this.items[Math.floor(Math.random() * this.items.length)];
-        this.title.text(this.object.name.replace(/\s\d$/, ''));
-        this.tagline.text(Utils$2.capitalizeFirstLetter(this.object.type));
-      }
-    }, {
-      key: "fadeVideoIn",
-      value: function fadeVideoIn(time) {
-        if (time > 0) {
-          this.transition_timeout = setTimeout(this.fadeVideoIn.bind(this), 16, time - 16);
-        }
-        this.opacity = 1 - time / this.transition_time;
-        this.overlay[0].style.opacity = this.opacity;
-      }
-    }, {
-      key: "fadeVideoOut",
-      value: function fadeVideoOut(time) {
-        if (time > 0) {
-          this.transition_timeout = setTimeout(this.fadeVideoOut.bind(this), 16, time - 16);
-        }
-        this.opacity = time / this.transition_time;
-        this.overlay[0].style.opacity = this.opacity;
-      }
-    }, {
-      key: "play",
-      value: function play() {
-        var _this2 = this;
-        this.video.src = this.object.src.H2641080p.replace('https:', 'http:');
-        this.video.load();
-        var playPromise;
-        try {
-          playPromise = this.video.play();
-        } catch (e) {}
-        var startPlay = function startPlay() {
-          console.log('Screesaver', 'playing');
-          _this2.preload.remove();
-          _this2.wait_load = false;
-        };
-        if (playPromise !== undefined) {
-          playPromise.then(function () {
-            return startPlay();
-          })["catch"](function (e) {
-            console.log('Player', 'play promise error:', e.message);
-          });
-        } else startPlay();
-      }
-    }, {
-      key: "cache",
-      value: function cache(call) {
-        var _this3 = this;
-        this.items = Storage.get('screensaver_aerial_items', '[]');
-        if (this.items.length) call();else {
-          this.net.silent('https://raw.githubusercontent.com/OrangeJedi/Aerial/master/videos.json', function (json) {
-            _this3.items = json.filter(function (a) {
-              return a.src.H2641080p;
-            });
-            Storage.set('screensaver_aerial_items', _this3.items);
-            call();
-          });
-        }
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        this.html.remove();
-        this.net.clear();
-        clearTimeout(this.transition_timeout);
-      }
-    }]);
-    return Aerial;
-  }();
-
-  var Screensaver$1 = /*#__PURE__*/function () {
-    function Screensaver() {
-      _classCallCheck(this, Screensaver);
-      this.listener = start$6();
-      this.enabled = false;
-      this.worked = false;
-      this.screensaver;
-      this.timer;
-      this.time_reset = 0;
-      this.time_start = 0;
-      this.class_list = {
-        nature: Nature,
-        chrome: Chrome,
-        cub: Cub,
-        aerial: Aerial
-      };
-    }
-    _createClass(Screensaver, [{
-      key: "init",
-      value: function init() {
-        var _this = this;
-        this.html = $('<div class="screensaver-layer"></div>');
-        this.html.on('click', this.stop.bind(this));
-        $('body').append(this.html);
-        this.resetTimer();
-        Keypad.listener.follow('keydown', function (e) {
-          _this.resetTimer();
-          if (_this.worked) {
-            _this.stopSlideshow();
-            e.event.preventDefault();
-          }
-        });
-        Keypad.listener.follow('keyup', function (e) {
-          if (_this.worked) e.event.preventDefault();
-        });
-        $(window).on('mousedown', function (e) {
-          _this.resetTimer();
-        });
-        $(window).on('focus', this.resetTimer.bind(this));
-      }
-    }, {
-      key: "toggle",
-      value: function toggle(enabled) {
-        this.enabled = enabled;
-        this.resetTimer();
-        this.listener.send('toggle', {
-          status: this.enabled
-        });
-      }
-    }, {
-      key: "enable",
-      value: function enable() {
-        this.toggle(true);
-      }
-    }, {
-      key: "disable",
-      value: function disable() {
-        this.toggle(false);
-      }
-    }, {
-      key: "isWorked",
-      value: function isWorked() {
-        return this.enabled ? this.worked : this.enabled;
-      }
-    }, {
-      key: "stop",
-      value: function stop() {
-        if (this.isWorked()) this.stopSlideshow();
-      }
-    }, {
-      key: "show",
-      value: function show(type, params) {
-        clearTimeout(this.timer);
-        this.listener.send('start', {});
-        var select = Storage.field('screensaver_type');
-        if (typeof type == 'string') select = type;
-        var Class = Chrome;
-        if (this.class_list[select]) Class = this.class_list[select];
-        this.screensaver = new Class(params);
-        this.screensaver.create();
-        this.html.append(this.screensaver.render());
-        this.html.fadeIn(300);
-        this.worked = true;
-      }
-    }, {
-      key: "resetTimer",
-      value: function resetTimer() {
-        var _this2 = this;
-        clearTimeout(this.timer);
-        this.time_reset = Date.now();
-        if (!Storage.field('screensaver') || !this.enabled || this.worked) return;
-        var timeout = 1000 * 60 * Storage.field('screensaver_time');
-        this.timer = setTimeout(function () {
-          //для ведра, когда в лампе появляетя фокус срабатывает таймер
-          if (Date.now() - _this2.time_reset <= timeout + 100) _this2.show();else _this2.resetTimer();
-        }, timeout);
-      }
-    }, {
-      key: "stopSlideshow",
-      value: function stopSlideshow() {
-        var _this3 = this;
-        this.worked = false;
-        this.html.fadeOut(300, function () {
-          _this3.html.removeClass('visible');
-          if (_this3.screensaver) {
-            _this3.screensaver.destroy();
-            _this3.screensaver = false;
-          }
-        });
-        this.resetTimer();
-        this.listener.send('stop', {});
-      }
-    }]);
-    return Screensaver;
-  }();
-  var Screensaver$2 = new Screensaver$1();
-
   var timer$4;
-  var listener$b;
+  var listener$a;
 
   /**
    * Открыть окно
@@ -11406,7 +12834,7 @@
     timer$4 = setInterval(function () {
       Socket.send('devices', {});
     }, 3000);
-    listener$b = function listener(e) {
+    listener$a = function listener(e) {
       if (e.method == 'devices') {
         var devices = e.data.filter(function (d) {
           return !(d.name == 'CUB' || d.device_id == Socket.uid());
@@ -11452,21 +12880,21 @@
         Controller.toggle(enabled);
       }
     });
-    listener$b({
+    listener$a({
       method: 'devices',
       data: Socket.devices()
     });
-    Socket.listener.follow('message', listener$b);
+    Socket.listener.follow('message', listener$a);
   }
 
   /**
    * Закрыть окно
    */
   function close$4() {
-    Socket.listener.remove('message', listener$b);
+    Socket.listener.remove('message', listener$a);
     clearInterval(timer$4);
     Modal.close();
-    listener$b = null;
+    listener$a = null;
   }
   var Broadcast = {
     open: open$4
@@ -12351,7 +13779,7 @@
     canvas$1.width = width;
     canvas$1.height = height;
   }
-  function get$b(img) {
+  function get$a(img) {
     reset(30, 17);
     var ratio = Math.max(canvas$1.width / img.width, canvas$1.height / img.height);
     var nw = img.width * ratio,
@@ -12379,7 +13807,7 @@
     return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
   }
   var Color = {
-    get: get$b,
+    get: get$a,
     extract: extract$1,
     palette: palette,
     rgba: rgba,
@@ -12609,7 +14037,7 @@
   /**
    * Загрузить картинку в память
    */
-  function load$1() {
+  function load() {
     if (loaded[src]) {
       draw(loaded[src], bg());
     } else if (src) {
@@ -12649,7 +14077,7 @@
     if (url) src = url;
     clearTimeout(timer$3);
     timer$3 = setTimeout(function () {
-      if (url) load$1();else draw(false, false, true);
+      if (url) load();else draw(false, false, true);
     }, 1000);
   }
 
@@ -12664,7 +14092,7 @@
     clearTimeout(timer$3);
     bokeh.d = false;
     immed_time = Date.now();
-    if (url) load$1();else draw(false, false, true);
+    if (url) load();else draw(false, false, true);
   }
   function theme(color) {
     if (color == 'black') color = '#000000';else if (color == 'reset') color = '#1d1f20';
@@ -12675,11 +14103,11 @@
    * Рендер
    * @returns {object}
    */
-  function render$9() {
+  function render$8() {
     return html$c;
   }
   var Background = {
-    render: render$9,
+    render: render$8,
     change: change,
     update: resize,
     init: init$r,
@@ -12851,8 +14279,85 @@
     install: install$1
   };
 
+  var status$1 = false;
+  function init$p() {
+    $.ajax({
+      url: "./personal.lampa",
+      dataType: 'text',
+      success: function success() {
+        status$1 = true;
+      }
+    });
+  }
+  function confirm() {
+    return status$1;
+  }
+  var Personal = {
+    init: init$p,
+    confirm: confirm
+  };
+
+  var next = 0;
+  function init$o() {}
+  function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+  function video(num, started, ended) {
+    var item = new VideoBlock(num);
+    item.listener.follow('launch', started);
+    item.listener.follow('ended', ended);
+    item.listener.follow('empty', ended);
+  }
+  function launch(call) {
+    var enabled = Controller.enabled().name;
+    next = Date.now() + 1000 * 60 * random(30, 80);
+    var html = $("\n        <div class=\"ad-preroll\">\n            <div class=\"ad-preroll__bg\"></div>\n            <div class=\"ad-preroll__text\">".concat(Lang.translate('ad'), "</div>\n            <div class=\"ad-preroll__over\"></div>\n        </div>\n    "));
+    $('body').append(html);
+    setTimeout(function () {
+      html.find('.ad-preroll__bg').addClass('animate');
+      setTimeout(function () {
+        html.find('.ad-preroll__text').addClass('animate');
+      }, 500);
+    }, 100);
+    setTimeout(function () {
+      html.find('.ad-preroll__over').addClass('animate');
+      setTimeout(function () {
+        Controller.toggle(enabled);
+        video(1, function () {
+          html.remove();
+        }, function () {
+          html.remove();
+          call();
+        });
+      }, 300);
+    }, 3500);
+    Controller.add('ad_preroll', {
+      toggle: function toggle() {
+        Controller.clear();
+      },
+      enter: function enter() {},
+      back: function back() {}
+    });
+    Controller.toggle('ad_preroll');
+  }
+  function show$5(data, call) {
+    if (window.god_enabled) return launch(call);
+
+    //return call()
+
+    if (!Account.hasPremium() && next < Date.now() && !(data.torrent_hash || data.youtube || data.iptv || data.continue_play) && !Personal.confirm()) {
+      VPN.region(function (code) {
+        if (code == 'ru') launch(call);else call();
+      });
+    } else call();
+  }
+  var Preroll = {
+    init: init$o,
+    show: show$5
+  };
+
   var html$b;
-  var listener$a = start$6();
+  var listener$9 = start$7();
   new create$p();
   var callback$2;
   var work = false;
@@ -12873,7 +14378,7 @@
    * Подписываемся на события
    */
 
-  function init$p() {
+  function init$n() {
     PlayerPanel.init();
     PlayerVideo.init();
     PlayerInfo.init();
@@ -12885,6 +14390,7 @@
     html$b.on('mousemove', function () {
       if (Storage.field('navigation_type') == 'mouse' && !Utils$2.isTouchDevice()) PlayerPanel.mousemove();
     });
+    if (!window.localStorage.getItem('player_torrent')) Storage.set('player_torrent', Storage.field('player'));
 
     /** Следим за обновлением времени */
     PlayerVideo.listener.follow('timeupdate', function (e) {
@@ -13101,6 +14607,7 @@
       var call = function call() {
         var params = PlayerVideo.saveParams();
         destroy$3();
+        e.item.continue_play = true;
         play$1(e.item);
         PlayerVideo.setParams(params);
         if (e.item.callback) e.item.callback();
@@ -13227,7 +14734,7 @@
     PlayerInfo.destroy();
     html$b.detach();
     Background.theme('reset');
-    listener$a.send('destroy', {});
+    listener$9.send('destroy', {});
   }
 
   /**
@@ -13353,6 +14860,54 @@
       });
     } else call();
   }
+  function start$5(data, need, inner) {
+    var player_need = 'player' + (need ? '_' + need : '');
+    if (launch_player == 'lampa' || launch_player == 'inner' || data.url.indexOf('youtube.com') >= 0) inner();else if (Platform.is('apple')) {
+      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
+      if (Storage.field(player_need) == 'vlc') window.open('vlc://' + data.url);else if (Storage.field(player_need) == 'nplayer') window.open('nplayer-' + data.url);else if (Storage.field(player_need) == 'infuse') window.open('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field(player_need) == 'svplayer') window.open('svplayer://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field(player_need) == 'ios') {
+        html$b.addClass('player--ios');
+        inner();
+      } else inner();
+    } else if (Platform.is('apple_tv')) {
+      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
+      if (Storage.field(player_need) == 'vlc') window.location.assign('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field(player_need) == 'infuse') window.location.assign('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field(player_need) == 'svplayer') window.location.assign('svplayer://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field(player_need) == 'tvos') window.location.assign('lampa://video?player=tvos&src=' + encodeURIComponent(data.url) + '&playlist=' + encodeURIComponent(JSON.stringify(data.playlist)));else inner();
+    } else if (Platform.is('webos') && (Storage.field(player_need) == 'webos' || launch_player == 'webos')) {
+      data.url = data.url.replace('&preload', '&play');
+      Preroll.show(data, function () {
+        runWebOS({
+          need: 'com.webos.app.photovideo',
+          url: data.url,
+          name: data.path || data.title,
+          position: data.timeline ? data.timeline.time || -1 : -1
+        });
+      });
+    } else if (Platform.is('android') && (Storage.field(player_need) == 'android' || launch_player == 'android' || data.torrent_hash)) {
+      data.url = data.url.replace('&preload', '&play');
+      if (data.playlist && Array.isArray(data.playlist)) {
+        data.playlist = data.playlist.filter(function (p) {
+          return typeof p.url == 'string';
+        });
+        data.playlist.forEach(function (a) {
+          a.url = a.url.replace('&preload', '&play');
+        });
+      }
+      Preroll.show(data, function () {
+        Android.openPlayer(data.url, data);
+      });
+    } else if (Platform.desktop() && Storage.field(player_need) == 'other') {
+      var path = Storage.field('player_nw_path');
+      var file = require('fs');
+      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
+      if (file.existsSync(path)) {
+        Preroll.show(data, function () {
+          var spawn = require('child_process').spawn;
+          spawn(path, [data.url]);
+        });
+      } else {
+        Noty.show(Lang.translate('player_not_found') + ': ' + path);
+      }
+    } else inner();
+  }
 
   /**
    * Запустить плеер
@@ -13371,68 +14926,32 @@
       }
     }
     var lauch = function lauch() {
-      Background.theme('black');
-      preload$1(data, function () {
-        html$b.toggleClass('tv', data.tv ? true : false);
-        html$b.toggleClass('youtube', Boolean(data.url.indexOf('youtube.com') >= 0));
-        listener$a.send('start', data);
-        work = data;
-        if (work.timeline) work.timeline.continued = false;
-        PlayerPlaylist.url(data.url);
-        PlayerPanel.quality(data.quality, data.url);
-        if (data.translate) PlayerPanel.setTranslate(data.translate);
-        PlayerVideo.url(data.url);
-        PlayerVideo.size(Storage.get('player_size', 'default'));
-        PlayerVideo.speed(Storage.get('player_speed', 'default'));
-        if (data.subtitles) PlayerVideo.customSubs(data.subtitles);
-        PlayerInfo.set('name', data.title);
-        if (!preloader.call) $('body').append(html$b);
-        toggle$6();
-        PlayerPanel.show(true);
-        ask();
-        saveTimeLoop();
-        listener$a.send('ready', data);
+      work = data;
+      Preroll.show(data, function () {
+        Background.theme('black');
+        preload$1(data, function () {
+          html$b.toggleClass('tv', data.tv ? true : false);
+          html$b.toggleClass('youtube', Boolean(data.url.indexOf('youtube.com') >= 0));
+          listener$9.send('start', data);
+          if (work.timeline) work.timeline.continued = false;
+          PlayerPlaylist.url(data.url);
+          PlayerPanel.quality(data.quality, data.url);
+          if (data.translate) PlayerPanel.setTranslate(data.translate);
+          PlayerVideo.url(data.url);
+          PlayerVideo.size(Storage.get('player_size', 'default'));
+          PlayerVideo.speed(Storage.get('player_speed', 'default'));
+          if (data.subtitles) PlayerVideo.customSubs(data.subtitles);
+          PlayerInfo.set('name', data.title);
+          if (!preloader.call) $('body').append(html$b);
+          toggle$6();
+          PlayerPanel.show(true);
+          ask();
+          saveTimeLoop();
+          listener$9.send('ready', data);
+        });
       });
     };
-    if (launch_player == 'lampa' || launch_player == 'inner' || data.url.indexOf('youtube.com') >= 0) lauch();else if (Platform.is('apple')) {
-      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
-      if (Storage.field('player') == 'vlc') window.open('vlc://' + data.url);else if (Storage.field('player') == 'nplayer') window.open('nplayer-' + data.url);else if (Storage.field('player') == 'infuse') window.open('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'ios') {
-        html$b.addClass('player--ios');
-        lauch();
-      } else lauch();
-    } else if (Platform.is('apple_tv')) {
-      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
-      if (Storage.field('player') == 'vlc') window.location.assign('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'infuse') window.location.assign('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player') == 'tvos') window.location.assign('lampa://video?player=tvos&src=' + encodeURIComponent(data.url));else lauch();
-    } else if (Platform.is('webos') && (Storage.field('player') == 'webos' || launch_player == 'webos')) {
-      data.url = data.url.replace('&preload', '&play');
-      runWebOS({
-        need: 'com.webos.app.photovideo',
-        url: data.url,
-        name: data.path || data.title,
-        position: data.timeline ? data.timeline.time || -1 : -1
-      });
-    } else if (Platform.is('android') && (Storage.field('player') == 'android' || launch_player == 'android' || data.torrent_hash)) {
-      data.url = data.url.replace('&preload', '&play');
-      if (data.playlist && Array.isArray(data.playlist)) {
-        data.playlist = data.playlist.filter(function (p) {
-          return typeof p.url == 'string';
-        });
-        data.playlist.forEach(function (a) {
-          a.url = a.url.replace('&preload', '&play');
-        });
-      }
-      Android.openPlayer(data.url, data);
-    } else if (Platform.desktop() && Storage.field('player') == 'other') {
-      var path = Storage.field('player_nw_path');
-      var file = require('fs');
-      data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
-      if (file.existsSync(path)) {
-        var spawn = require('child_process').spawn;
-        spawn(path, [data.url]);
-      } else {
-        Noty.show(Lang.translate('player_not_found') + ': ' + path);
-      }
-    } else lauch();
+    start$5(data, data.torrent_hash ? 'torrent' : '', lauch);
     launch_player = '';
   }
   function iptv(data) {
@@ -13442,7 +14961,7 @@
 
       var lauch = function lauch() {
         Background.theme('black');
-        listener$a.send('start', data);
+        listener$9.send('start', data);
         html$b.toggleClass('iptv', true);
         PlayerIPTV.start(data);
         PlayerVideo.size(Storage.get('player_size', 'default'));
@@ -13450,39 +14969,9 @@
         $('body').append(html$b);
         toggle$6();
         PlayerPanel.show(true);
-        listener$a.send('ready', data);
+        listener$9.send('ready', data);
       };
-      if (launch_player == 'lampa' || launch_player == 'inner') lauch();else if (Platform.is('apple')) {
-        if (Storage.field('player_iptv') == 'vlc') window.open('vlc://' + data.url);else if (Storage.field('player_iptv') == 'nplayer') window.open('nplayer-' + data.url);else if (Storage.field('player_iptv') == 'infuse') window.open('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'ios') {
-          html$b.addClass('player--ios');
-          lauch();
-        } else lauch();
-      } else if (Platform.is('apple_tv')) {
-        if (Storage.field('player_iptv') == 'vlc') window.location.assign('vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'infuse') window.location.assign('infuse://x-callback-url/play?url=' + encodeURIComponent(data.url));else if (Storage.field('player_iptv') == 'tvos') window.location.assign('lampa://video?player=tvos&src=' + encodeURIComponent(data.url));else lauch();
-      } else if (Platform.is('webos') && (Storage.field('player_iptv') == 'webos' || launch_player == 'webos')) {
-        runWebOS({
-          need: 'com.webos.app.photovideo',
-          url: data.url,
-          name: data.path || data.title,
-          position: data.timeline ? data.timeline.time || -1 : -1
-        });
-      } else if (Platform.is('android') && (Storage.field('player_iptv') == 'android' || launch_player == 'android' || data.torrent_hash)) {
-        if (data.playlist && Array.isArray(data.playlist)) {
-          data.playlist = data.playlist.filter(function (p) {
-            return typeof p.url == 'string';
-          });
-        }
-        Android.openPlayer(data.url, data);
-      } else if (Platform.desktop() && Storage.field('player_iptv') == 'other') {
-        var path = Storage.field('player_nw_path');
-        var file = require('fs');
-        if (file.existsSync(path)) {
-          var spawn = require('child_process').spawn;
-          spawn(path, [data.url]);
-        } else {
-          Noty.show(Lang.translate('player_not_found') + ': ' + path);
-        }
-      } else lauch();
+      start$5(data, 'iptv', lauch);
     });
   }
 
@@ -13532,7 +15021,7 @@
    * Рендер плеера
    * @returns Html
    */
-  function render$8() {
+  function render$7() {
     return html$b;
   }
 
@@ -13544,11 +15033,11 @@
     return $('body').find('.player').length ? true : false;
   }
   var Player = {
-    init: init$p,
-    listener: listener$a,
+    init: init$n,
+    listener: listener$9,
     play: play$1,
     playlist: playlist,
-    render: render$8,
+    render: render$7,
     stat: stat,
     subtitles: subtitles,
     runas: runas,
@@ -13559,7 +15048,7 @@
     close: backward$1
   };
 
-  var listener$9 = start$6();
+  var listener$8 = start$7();
   function filename() {
     var acc = Account.canSync();
     var name = 'file_view' + (acc ? '_' + acc.profile.id : '');
@@ -13597,7 +15086,7 @@
       $(this).find('[a="d"]').text(f.duration);
       $(this).toggleClass('hide', road.duration ? false : true);
     });
-    listener$9.send('update', {
+    listener$8.send('update', {
       data: {
         hash: params.hash,
         road: road
@@ -13627,7 +15116,7 @@
       road.percent = curent || 0;
       road.profile = profile;
     }
-    listener$9.send('view', {
+    listener$8.send('view', {
       data: {
         hash: hash,
         road: road
@@ -13650,7 +15139,7 @@
       }
     };
   }
-  function render$7(params) {
+  function render$6(params) {
     var line = Template$1.get('timeline', params);
     line.toggleClass('hide', params.percent ? false : true);
     return line;
@@ -13672,8 +15161,8 @@
     return road;
   }
   var Timeline = {
-    listener: listener$9,
-    render: render$7,
+    listener: listener$8,
+    render: render$6,
     update: update$7,
     view: view,
     details: details,
@@ -13684,7 +15173,7 @@
   var ping;
   var _uid = Utils$2.uid();
   var _devices = [];
-  var listener$8 = start$6();
+  var listener$7 = start$7();
   var expects = [];
   var timeping = 5000;
   var timeout;
@@ -13707,12 +15196,12 @@
       timeping = 5000;
       clearTimeout(timeout);
       send('start', {});
-      listener$8.send('open', {});
+      listener$7.send('open', {});
     });
     socket.addEventListener('close', function (event) {
       console.log('Socket', 'close', event.code);
       clearTimeout(timeout);
-      listener$8.send('close', {});
+      listener$7.send('close', {});
       console.log('Socket', 'try connect after', Math.round(timeping) / 1000, 'sec.');
       setTimeout(connect$1, Math.round(timeping));
       timeping *= 2;
@@ -13746,7 +15235,7 @@
           Player.playlist(result.data.object.playlist);
         }
       }
-      listener$8.send('message', result);
+      listener$7.send('message', result);
     });
     setInterval(function () {
       if (expects.length > 50) expects = expects.slice(-50);
@@ -13768,7 +15257,7 @@
     if (socket && socket.readyState == 1) socket.send(JSON.stringify(data));else expects.push(data);
   }
   var Socket = {
-    listener: listener$8,
+    listener: listener$7,
     init: connect$1,
     send: send,
     uid: function uid() {
@@ -13819,7 +15308,7 @@
       this.params = params;
       this.name = 'Noname';
     }
-    _createClass(NoticeClass, [{
+    return _createClass(NoticeClass, [{
       key: "active",
       value: function active() {
         return true;
@@ -13848,11 +15337,9 @@
         return 0;
       }
     }]);
-    return NoticeClass;
   }();
 
   var NoticeAll = /*#__PURE__*/function (_NoticeClass) {
-    _inherits(NoticeAll, _NoticeClass);
     function NoticeAll() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -13861,7 +15348,8 @@
       _this.name = Lang.translate('settings_param_jackett_interview_all');
       return _this;
     }
-    _createClass(NoticeAll, [{
+    _inherits(NoticeAll, _NoticeClass);
+    return _createClass(NoticeAll, [{
       key: "active",
       value: function active() {
         return false;
@@ -13903,11 +15391,9 @@
         return items;
       }
     }]);
-    return NoticeAll;
   }(NoticeClass);
 
   var NoticeLampa = /*#__PURE__*/function (_NoticeClass) {
-    _inherits(NoticeLampa, _NoticeClass);
     function NoticeLampa() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -13921,7 +15407,8 @@
       _this.connect();
       return _this;
     }
-    _createClass(NoticeLampa, [{
+    _inherits(NoticeLampa, _NoticeClass);
+    return _createClass(NoticeLampa, [{
       key: "connect",
       value: function connect() {
         this.db = new IndexedDB(this.db_name, ['all', 'readed'], 2);
@@ -13981,11 +15468,9 @@
         return this.notices;
       }
     }]);
-    return NoticeLampa;
   }(NoticeClass);
 
   var NoticeCub = /*#__PURE__*/function (_NoticeClass) {
-    _inherits(NoticeCub, _NoticeClass);
     function NoticeCub() {
       var _this;
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -13994,11 +15479,12 @@
       _this.name = 'CUB';
       _this.time = Storage.get('cub_notice_time', '0');
       _this.notices = [];
-      setInterval(_this.update.bind(_assertThisInitialized(_this)), 1000 * 60 * 5);
+      setInterval(_this.update.bind(_this), 1000 * 60 * 5);
       _this.update();
       return _this;
     }
-    _createClass(NoticeCub, [{
+    _inherits(NoticeCub, _NoticeClass);
+    return _createClass(NoticeCub, [{
       key: "update",
       value: function update() {
         var _this2 = this;
@@ -14059,7 +15545,6 @@
         return this.notices;
       }
     }]);
-    return NoticeCub;
   }(NoticeClass);
 
   function translate$1(str) {
@@ -14072,11 +15557,11 @@
   var Notice = /*#__PURE__*/function () {
     function Notice() {
       _classCallCheck(this, Notice);
-      this.listener = start$6();
+      this.listener = start$7();
       this.display = 'all';
       this.classes = {};
     }
-    _createClass(Notice, [{
+    return _createClass(Notice, [{
       key: "init",
       value: function init() {
         this.classes.all = new NoticeAll();
@@ -14206,7 +15691,18 @@
     }, {
       key: "drawCount",
       value: function drawCount() {
-        $('.head .notice--icon').toggleClass('active', Boolean(this.count()));
+        var status = Boolean(this.count());
+        var icon = $('.head .notice--icon');
+        icon.toggleClass('active', status);
+        clearInterval(this.blick_timer);
+        if (status) {
+          this.blick_timer = setInterval(function () {
+            icon.addClass('animate');
+            setTimeout(function () {
+              icon.removeClass('animate');
+            }, 1000);
+          }, 1000 * 15);
+        }
       }
     }, {
       key: "addClass",
@@ -14221,38 +15717,15 @@
         } else if (reject) reject('No find class');
       }
     }]);
-    return Notice;
   }();
   var Notice$1 = new Notice();
-
-  function status$1(need) {
-    this.data = {};
-    this.work = 0;
-    this.need = need;
-    this.complited = false;
-    this.check = function () {
-      if (this.work >= this.need && !this.complited) {
-        this.complited = true;
-        this.onComplite(this.data);
-      }
-    };
-    this.append = function (name, json) {
-      this.work++;
-      this.data[name] = json;
-      this.check();
-    };
-    this.error = function () {
-      this.work++;
-      this.check();
-    };
-  }
 
   var data$3 = [];
 
   /**
    * Запуск
    */
-  function init$o() {
+  function init$m() {
     data$3 = Storage.cache('recomends_scan', 300, []);
     setInterval(function () {
       var history = Favorite.get({
@@ -14313,7 +15786,7 @@
     }
     Storage.set('recomends_scan', data$3);
   }
-  function get$a(type) {
+  function get$9(type) {
     var all = Storage.get('recomends_list', '[]');
     var items = all.filter(function (e) {
       return type == 'tv' ? e.number_of_seasons || e.first_air_date : !(e.number_of_seasons || e.first_air_date);
@@ -14324,52 +15797,8 @@
     return items;
   }
   var Recomends = {
-    init: init$o,
-    get: get$a
-  };
-
-  var callback_cancel, controller_enabled, loader, timer$2;
-  function start$4(on_cancel, text) {
-    callback_cancel = on_cancel;
-    controller_enabled = Controller.enabled().name;
-    loader = $("<div class=\"loading-layer\">\n        <div class=\"loading-layer__box\">\n            <div class=\"loading-layer__text\">".concat(Lang.translate('loading'), "</div>\n            <div class=\"loading-layer__ico\"></div>\n        </div>\n    </div>"));
-    if (text) loader.find('.loading-layer__text').text(text);
-    loader.on('click', function (e) {
-      if (DeviceInput.canClick(e.originalEvent)) cancel();
-    });
-    clearTimeout(timer$2);
-    timer$2 = setTimeout(function () {
-      $('body').append(loader);
-    }, 500);
-    toggle$5();
-  }
-  function toggle$5() {
-    Controller.add('loading', {
-      invisible: true,
-      toggle: function toggle() {},
-      back: cancel,
-      up: cancel,
-      down: cancel,
-      left: cancel,
-      right: cancel
-    });
-    Controller.toggle('loading');
-  }
-  function cancel() {
-    if (callback_cancel) callback_cancel();
-  }
-  function stop() {
-    if (loader) loader.remove();
-    clearTimeout(timer$2);
-    if (controller_enabled) Controller.toggle(controller_enabled);
-  }
-  function setText(text) {
-    if (loader) loader.find('.loading-layer__text').text(text);
-  }
-  var Loading = {
-    start: start$4,
-    stop: stop,
-    setText: setText
+    init: init$m,
+    get: get$9
   };
 
   /**
@@ -14597,20 +16026,24 @@
     if (params.langs) ln = typeof params.langs == 'string' ? [params.langs] : ln.concat(params.langs.filter(function (n) {
       return n !== ln[0];
     }));
-    u = add$a(u, 'api_key=' + TMDB$1.key());
-    u = add$a(u, 'language=' + ln.join(','));
-    if (params.genres && u.indexOf('with_genres') == -1) u = add$a(u, 'with_genres=' + params.genres);
-    if (params.page) u = add$a(u, 'page=' + params.page);
-    if (params.query) u = add$a(u, 'query=' + params.query);
-    if (params.keywords) u = add$a(u, 'with_keywords=' + params.keywords);
+    u = add$9(u, 'api_key=' + TMDB$1.key());
+    u = add$9(u, 'language=' + ln.join(','));
+    if (params.genres && u.indexOf('with_genres') == -1) u = add$9(u, 'with_genres=' + params.genres);
+    if (params.page) u = add$9(u, 'page=' + params.page);
+    if (params.query) u = add$9(u, 'query=' + params.query);
+    if (params.keywords) u = add$9(u, 'with_keywords=' + params.keywords);
+    if (params.watch_region) u = add$9(u, 'watch_region=' + params.watch_region);
+    if (params.watch_providers) u = add$9(u, 'with_watch_providers=' + params.watch_providers);
+    if (params.networks) u = add$9(u, 'with_networks=' + params.networks);
+    if (params.sort_by) u = add$9(u, 'sort_by=' + params.sort_by);
     if (params.filter) {
       for (var i in params.filter) {
-        u = add$a(u, i + '=' + params.filter[i]);
+        u = add$9(u, i + '=' + params.filter[i]);
       }
     }
     return TMDB$1.api(u);
   }
-  function add$a(u, params) {
+  function add$9(u, params) {
     return u + (/\?/.test(u) ? '&' : '?') + params;
   }
   function img(src, size) {
@@ -14642,42 +16075,51 @@
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
     var parts_limit = 6;
     var parts_data = [function (call) {
-      get$9('movie/now_playing', params, function (json) {
+      get$8('movie/now_playing', params, function (json) {
         json.title = Lang.translate('title_now_watch');
         call(json);
       }, call);
     }, function (call) {
-      get$9('trending/movie/day', params, function (json) {
+      call({
+        results: TimeTable.lately().slice(0, 20),
+        title: Lang.translate('title_upcoming_episodes'),
+        nomore: true,
+        cardClass: function cardClass(_elem, _params) {
+          return new Episode(_elem, _params);
+        }
+      });
+    }, function (call) {
+      get$8('trending/movie/day', params, function (json) {
         json.title = Lang.translate('title_trend_day');
         call(json);
       }, call);
     }, function (call) {
-      get$9('trending/movie/week', params, function (json) {
+      get$8('trending/movie/week', params, function (json) {
         json.title = Lang.translate('title_trend_week');
         call(json);
       }, call);
     }, function (call) {
-      get$9('movie/upcoming', params, function (json) {
+      get$8('movie/upcoming', params, function (json) {
         json.title = Lang.translate('title_upcoming');
         call(json);
       }, call);
     }, function (call) {
-      get$9('movie/popular', params, function (json) {
+      get$8('movie/popular', params, function (json) {
         json.title = Lang.translate('title_popular_movie');
         call(json);
       }, call);
     }, function (call) {
-      get$9('trending/tv/week', params, function (json) {
+      get$8('trending/tv/week', params, function (json) {
         json.title = Lang.translate('title_popular_tv');
         call(json);
       }, call);
     }, function (call) {
-      get$9('movie/top_rated', params, function (json) {
+      get$8('movie/top_rated', params, function (json) {
         json.title = Lang.translate('title_top_movie');
         call(json);
       }, call);
     }, function (call) {
-      get$9('tv/top_rated', params, function (json) {
+      get$8('tv/top_rated', params, function (json) {
         json.title = Lang.translate('title_top_tv');
         call(json);
       }, call);
@@ -14685,7 +16127,7 @@
     Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit, 'movie'));
     genres$1.movie.forEach(function (genre) {
       var event = function event(call) {
-        get$9('discover/movie/?with_genres=' + genre.id, params, function (json) {
+        get$8('discover/movie?with_genres=' + genre.id, params, function (json) {
           json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
           call(json);
         }, call);
@@ -14736,18 +16178,22 @@
       });
     }, function (call) {
       if (params.url == 'movie') {
-        get$9('discover/' + params.url + '?with_release_type=3', params, function (json) {
+        get$8('discover/' + params.url + '?with_release_type=3', params, function (json) {
           json.title = Lang.translate('title_now_watch');
           call(json);
         }, call);
       } else call();
     }, function (call) {
-      get$9(params.url == 'movie' ? 'discover/movie' : 'trending/tv/day', params, function (json) {
+      get$8(params.url == 'movie' ? 'discover/movie' : 'trending/tv/day', params, function (json) {
         json.title = Lang.translate('title_popular');
+        if (params.url == 'tv') {
+          json.ad = 'bot';
+          json.type = params.url;
+        }
         call(json);
       }, call);
     }, function (call) {
-      get$9('discover/' + params.url + '?' + (params.url == 'movie' ? 'primary_release_year' : 'first_air_date_year') + '=' + (new Date().getFullYear() - 1), params, function (json) {
+      get$8('discover/' + params.url + '?' + (params.url == 'movie' ? 'primary_release_year' : 'first_air_date_year') + '=' + (new Date().getFullYear() - 1), params, function (json) {
         json.title = Lang.translate('title_last_year');
         call(json);
       }, call);
@@ -14757,7 +16203,7 @@
       var reg = params.url == 'movie' ? 'primary_release_date' : 'first_air_date';
       lte = reg + '.lte=' + lte;
       gte = reg + '.gte=' + gte;
-      get$9('discover/' + params.url + '?' + lte + '&' + gte, params, function (json) {
+      get$8('discover/' + params.url + '?' + lte + '&' + gte, params, function (json) {
         json.title = Lang.translate('title_worth_rewatch');
         call(json);
       }, call);
@@ -14767,19 +16213,19 @@
       var reg = params.url == 'movie' ? 'primary_release_date' : 'first_air_date';
       lte = reg + '.lte=' + lte;
       gte = reg + '.gte=' + gte;
-      get$9('discover/' + params.url + '?' + lte + '&' + gte + '&vote_average.gte=8&vote_average.lte=9', params, function (json) {
+      get$8('discover/' + params.url + '?' + lte + '&' + gte + '&vote_average.gte=8&vote_average.lte=9', params, function (json) {
         json.title = Lang.translate('title_hight_voite');
         call(json);
       }, call);
     }, function (call) {
       if (params.genres) return call();
       if (params.url == 'tv') {
-        get$9('trending/tv/week', params, function (json) {
+        get$8('trending/tv/week', params, function (json) {
           json.title = Lang.translate('title_this_week');
           call(json);
         }, call);
       } else {
-        get$9('movie/upcoming', params, function (json) {
+        get$8('movie/upcoming', params, function (json) {
           json.title = Lang.translate('title_upcoming');
           json.small = true;
           json.wide = true;
@@ -14796,7 +16242,7 @@
       var gen = params.genres ? [].concat(params.genres, genre.id) : [genre.id];
       if (params.genres && params.genres == genre.id) return;
       var event = function event(call) {
-        get$9('discover/' + params.url + '/?with_genres=' + gen.join(','), params, function (json) {
+        get$8('discover/' + params.url + '?with_genres=' + gen.join(','), params, function (json) {
           json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
           call(json);
         }, call);
@@ -14813,22 +16259,22 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
-    var status = new status$1(8);
+    var status = new status$2(8);
     status.onComplite = oncomplite;
     if (Utils$2.dcma(params.method, params.id)) return onerror();
-    get$9(params.method + '/' + params.id + '?append_to_response=content_ratings,release_dates,external_ids,keywords', params, function (json) {
+    get$8(params.method + '/' + params.id + '?append_to_response=content_ratings,release_dates,external_ids,keywords', params, function (json) {
       json.source = 'tmdb';
       if (json.external_ids) {
         json.imdb_id = json.external_ids.imdb_id;
       }
       if (params.method == 'tv') {
         var season = Utils$2.countSeasons(json);
-        get$9('tv/' + json.id + '/season/' + season, {}, function (ep) {
+        get$8('tv/' + json.id + '/season/' + season, {}, function (ep) {
           status.append('episodes', ep);
         }, status.error.bind(status));
       } else status.need--;
       if (json.belongs_to_collection) {
-        get$9('collection/' + json.belongs_to_collection.id, {}, function (collection) {
+        get$8('collection/' + json.belongs_to_collection.id, {}, function (collection) {
           collection.results = collection.parts.slice(0, 19);
           status.append('collection', collection);
         }, status.error.bind(status));
@@ -14838,13 +16284,13 @@
       status.need -= 2;
       status.error();
     });
-    get$9(params.method + '/' + params.id + '/credits', params, function (json) {
+    get$8(params.method + '/' + params.id + '/credits', params, function (json) {
       status.append('persons', json);
     }, status.error.bind(status));
-    get$9(params.method + '/' + params.id + '/recommendations', params, function (json) {
+    get$8(params.method + '/' + params.id + '/recommendations', params, function (json) {
       status.append('recomend', json);
     }, status.error.bind(status));
-    get$9(params.method + '/' + params.id + '/similar', params, function (json) {
+    get$8(params.method + '/' + params.id + '/similar', params, function (json) {
       status.append('simular', json);
     }, status.error.bind(status));
     videos(params, function (json) {
@@ -14858,7 +16304,7 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var lg = Storage.field('tmdb_lang');
-    var status = new status$1(lg == 'en' ? 1 : 2);
+    var status = new status$2(lg == 'en' ? 1 : 2);
     status.onComplite = function (res) {
       var data = [];
       if (res.one && res.one.results.length) data = data.concat(res.one.results);
@@ -14867,13 +16313,13 @@
         results: data
       });
     };
-    get$9(params.method + '/' + params.id + '/videos', {
+    get$8(params.method + '/' + params.id + '/videos', {
       langs: Storage.field('tmdb_lang')
     }, function (json) {
       status.append('one', json);
     }, status.error.bind(status));
     if (lg !== 'en') {
-      get$9(params.method + '/' + params.id + '/videos', {
+      get$8(params.method + '/' + params.id + '/videos', {
         langs: 'en'
       }, function (json) {
         status.append('two', json);
@@ -14887,7 +16333,7 @@
     var u = url$2(params.url, params);
     network$7.silent(u, oncomplite, onerror);
   }
-  function get$9(method) {
+  function get$8(method) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var oncomplite = arguments.length > 2 ? arguments[2] : undefined;
     var onerror = arguments.length > 3 ? arguments[3] : undefined;
@@ -14900,7 +16346,7 @@
   function search$5() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-    var status = new status$1(3);
+    var status = new status$2(3);
     status.onComplite = function (data) {
       var items = [];
       if (data.movie && data.movie.results.length) items.push(data.movie);
@@ -14908,17 +16354,17 @@
       if (data.person && data.person.results.length) items.push(data.person);
       oncomplite(items);
     };
-    get$9('search/movie', params, function (json) {
+    get$8('search/movie', params, function (json) {
       json.title = Lang.translate('menu_movies');
       json.type = 'movie';
       status.append('movie', json);
     }, status.error.bind(status));
-    get$9('search/tv', params, function (json) {
+    get$8('search/tv', params, function (json) {
       json.title = Lang.translate('menu_tv');
       json.type = 'tv';
       status.append('tv', json);
     }, status.error.bind(status));
-    get$9('search/person', params, function (json) {
+    get$8('search/person', params, function (json) {
       json.title = Lang.translate('title_actors');
       json.type = 'person';
       status.append('person', json);
@@ -14967,21 +16413,9 @@
         }));
         return result;
       } else {
-        var title_production = Lang.translate('full_production'),
-          title_directing = Lang.translate('full_directing'),
-          title_writing = Lang.translate('full_writing');
+        var department = ['directing', 'writing', 'editing', 'creator'];
         credits.crew.forEach(function (a) {
-          switch (a.department) {
-            case "Production":
-              a.department = title_production;
-              break;
-            case "Directing":
-              a.department = title_directing;
-              break;
-            case "Writing":
-              a.department = title_writing;
-              break;
-          }
+          a.department = Lang.translate(department.indexOf(a.department.toLowerCase()) == -1 ? 'settings_main_rest' : 'full_' + a.department.toLowerCase());
         });
         var _cast = sortCredits(credits.cast),
           crew = sortCredits(credits.crew),
@@ -14996,9 +16430,8 @@
         //Наиболее известные работы человека
         //1. Группируем все работы по департаментам (Актер, Режиссер, Сценарист и т.д.)
         knownFor = Arrays.groupBy(crew, 'department');
-        var actorGender = person_data.gender === 1 ? Lang.translate('title_actress') : Lang.translate('title_actor');
-        if (movie.length > 0) knownFor["".concat(actorGender, " - ") + Lang.translate('menu_movies')] = movie;
-        if (tv.length > 0) knownFor["".concat(actorGender, " - ") + Lang.translate('menu_tv')] = tv;
+        if (movie.length > 0) knownFor[Lang.translate('menu_movies')] = movie;
+        if (tv.length > 0) knownFor[Lang.translate('menu_tv')] = tv;
 
         //2. Для каждого департамента суммируем кол-ва голосов (вроде бы сам TMDB таким образом определяет knownFor для людей)
         knownFor = Object.entries(knownFor).map(function (_ref) {
@@ -15019,7 +16452,7 @@
           };
           //3. Сортируем департаменты по кол-ву голосов
         }).sort(function (a, b) {
-          return b.vote_count - a.vote_count;
+          return b.credits.length - a.credits.length;
         });
         return {
           raw: credits,
@@ -15031,7 +16464,7 @@
         };
       }
     };
-    var status = new status$1(params.only_credits ? 1 : 2);
+    var status = new status$2(params.only_credits ? 1 : 2);
     status.onComplite = function () {
       var fulldata = {};
       if (status.data.person) fulldata.person = status.data.person;
@@ -15039,11 +16472,11 @@
       oncomplite(fulldata);
     };
     if (!params.only_credits) {
-      get$9('person/' + params.id, params, function (json) {
+      get$8('person/' + params.id, params, function (json) {
         status.append('person', json);
       }, status.error.bind(status));
     }
-    get$9('person/' + params.id + '/combined_credits', params, function (json) {
+    get$8('person/' + params.id + '/combined_credits', params, function (json) {
       status.append('credits', json);
     }, status.error.bind(status));
   }
@@ -15105,12 +16538,12 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
-    get$9((params.type || 'tv') + '/' + params.id + '/external_ids', params, oncomplite, onerror);
+    get$8((params.type || 'tv') + '/' + params.id + '/external_ids', params, oncomplite, onerror);
   }
   function external_imdb_id() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-    get$9(params.type + '/' + params.id + '/external_ids', params, function (ids) {
+    get$8(params.type + '/' + params.id + '/external_ids', params, function (ids) {
       oncomplite(ids.imdb_id || '');
     }, function () {
       oncomplite('');
@@ -15120,7 +16553,7 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
-    var status = new status$1(3);
+    var status = new status$2(3);
     status.onComplite = function () {
       function sortResultsByVoteAverage(results) {
         return results.sort(function (a, b) {
@@ -15145,21 +16578,21 @@
         oncomplite(fulldata);
       } else onerror();
     };
-    get$9('company/' + params.id, params, function (json) {
+    get$8('company/' + params.id, params, function (json) {
       status.append('company', json);
     }, status.error.bind(status));
-    get$9('discover/movie?sort_by=vote_count.desc&with_companies=' + params.id, params, function (json) {
+    get$8('discover/movie?sort_by=vote_count.desc&with_companies=' + params.id, params, function (json) {
       status.append('movie', json);
     }, status.error.bind(status));
-    get$9('discover/tv?sort_by=vote_count.desc&with_companies=' + params.id, params, function (json) {
+    get$8('discover/tv?sort_by=vote_count.desc&with_companies=' + params.id, params, function (json) {
       status.append('tv', json);
     }, status.error.bind(status));
   }
   function seasons$2(tv, from, oncomplite) {
-    var status = new status$1(from.length);
+    var status = new status$2(from.length);
     status.onComplite = oncomplite;
     from.forEach(function (season) {
-      get$9('tv/' + tv.id + '/season/' + season, {}, function (json) {
+      get$8('tv/' + tv.id + '/season/' + season, {}, function (json) {
         status.append('' + season, json);
       }, status.error.bind(status));
     });
@@ -15480,7 +16913,7 @@
     seasons: seasons$2,
     find: find,
     external_ids: external_ids,
-    get: get$9,
+    get: get$8,
     menuCategory: menuCategory$2,
     discovery: discovery$1,
     parsePG: parsePG,
@@ -15499,7 +16932,7 @@
   /**
    * Запуск
    */
-  function init$n() {
+  function init$l() {
     data$2 = Storage.cache('timetable', limit$1, []);
     setInterval(extract, 1000 * 60 * (2));
     setInterval(favorites, 1000 * 60 * 10);
@@ -15529,7 +16962,7 @@
    * Добавить карточки к парсингу
    * @param {[{id:integer,number_of_seasons:integer}]} elems - карточки
    */
-  function add$9(elems) {
+  function add$8(elems) {
     if (started + 1000 * 60 * 2 > Date.now()) return;
     var filtred = elems.filter(function (elem) {
       return elem.number_of_seasons && typeof elem.id == 'number';
@@ -15556,7 +16989,7 @@
   function favorites() {
     var category = ['like', 'wath', 'book', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
     category.forEach(function (a) {
-      add$9(Favorite.get({
+      add$8(Favorite.get({
         type: a
       }));
     });
@@ -15583,18 +17016,18 @@
     console.log('Timetable', 'parse:', object$1.id, 'any:', any, 'season:', object$1.season);
     if (any) {
       TMDB.get('tv/' + object$1.id + '/season/' + object$1.season, {}, function (ep) {
-        if (!ep.episodes) return save$5();
+        if (!ep.episodes) return save$4();
         object$1.episodes = filter(ep.episodes);
         Cache.getData('timetable', object$1.id).then(function (obj) {
           if (obj) obj.episodes = object$1.episodes;else obj = Arrays.clone(object$1);
           Cache.rewriteData('timetable', object$1.id, obj).then(function () {})["catch"](function () {});
         })["catch"](function (e) {});
-        save$5();
-      }, save$5);
+        save$4();
+      }, save$4);
     } else {
       Arrays.remove(data$2, object$1);
       Storage.remove('timetable', object$1.id);
-      save$5();
+      save$4();
     }
   }
 
@@ -15620,7 +17053,7 @@
   /**
    * Сохранить состояние
    */
-  function save$5() {
+  function save$4() {
     if (object$1) {
       object$1.scaned = 1;
       object$1.scaned_time = Date.now();
@@ -15633,7 +17066,7 @@
    * @param {{id:integer}} elem - карточка
    * @returns {array}
    */
-  function get$8(elem, callback) {
+  function get$7(elem, callback) {
     var fid = data$2.filter(function (e) {
       return e.id == elem.id;
     });
@@ -15722,12 +17155,56 @@
     return cards;
   }
   var TimeTable = {
-    init: init$n,
-    get: get$8,
-    add: add$9,
+    init: init$l,
+    get: get$7,
+    add: add$8,
     all: all$3,
     update: update$6,
     lately: lately
+  };
+
+  var callback_cancel, controller_enabled, loader, timer$2;
+  function start$4(on_cancel, text) {
+    callback_cancel = on_cancel;
+    controller_enabled = Controller.enabled().name;
+    loader = $("<div class=\"loading-layer\">\n        <div class=\"loading-layer__box\">\n            <div class=\"loading-layer__text\">".concat(Lang.translate('loading'), "</div>\n            <div class=\"loading-layer__ico\"></div>\n        </div>\n    </div>"));
+    if (text) loader.find('.loading-layer__text').text(text);
+    loader.on('click', function (e) {
+      if (DeviceInput.canClick(e.originalEvent)) cancel();
+    });
+    clearTimeout(timer$2);
+    timer$2 = setTimeout(function () {
+      $('body').append(loader);
+    }, 500);
+    toggle$5();
+  }
+  function toggle$5() {
+    Controller.add('loading', {
+      invisible: true,
+      toggle: function toggle() {},
+      back: cancel,
+      up: cancel,
+      down: cancel,
+      left: cancel,
+      right: cancel
+    });
+    Controller.toggle('loading');
+  }
+  function cancel() {
+    if (callback_cancel) callback_cancel();
+  }
+  function stop() {
+    if (loader) loader.remove();
+    clearTimeout(timer$2);
+    if (controller_enabled) Controller.toggle(controller_enabled);
+  }
+  function setText(text) {
+    if (loader) loader.find('.loading-layer__text').text(text);
+  }
+  var Loading = {
+    start: start$4,
+    stop: stop,
+    setText: setText
   };
 
   /**
@@ -15737,12 +17214,14 @@
    */
   function Card(data) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    this.data = data;
+    this.params = params;
     Arrays.extend(data, {
       title: data.name,
       original_title: data.original_name,
       release_date: data.first_air_date
     });
-    data.release_year = ((data.release_date || '0000') + '').slice(0, 4);
+    data.release_year = ((data.release_date || data.birthday || '0000') + '').slice(0, 4);
     function remove(elem) {
       if (elem) elem.remove();
     }
@@ -16180,7 +17659,7 @@
           page: 1,
           genres: params.genres,
           filter: data.filter,
-          source: params.object.source
+          source: data.source || params.object.source
         });
       }
     };
@@ -16365,7 +17844,7 @@
       items = [],
       active = 0,
       query;
-    this.listener = start$6();
+    this.listener = start$7();
     this.create = function () {
       this.empty();
     };
@@ -16515,7 +17994,7 @@
     var scroll, last, active;
     var html = $('<div></div>'),
       results = [];
-    this.listener = start$6();
+    this.listener = start$7();
     this.create = function () {
       scroll = new create$q({
         over: true,
@@ -16647,7 +18126,7 @@
     var scroll,
       last,
       keys = [];
-    this.listener = start$6();
+    this.listener = start$7();
     this.create = function () {
       var _this = this;
       scroll = new create$q({
@@ -16750,7 +18229,7 @@
     input$1 = '',
     params = {},
     additional = [],
-    listener$7 = start$6();
+    listener$6 = start$7();
   function open$3() {
     var use_params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     params = use_params;
@@ -16760,7 +18239,7 @@
     create$f();
     toggle$4();
     Layer.update(html$a[0]);
-    listener$7.send('open');
+    listener$6.send('open');
   }
   function toggle$4() {
     Controller.add('search', {
@@ -16801,7 +18280,7 @@
       sources: params.sources,
       additional: additional
     });
-    listener$7.send('sources', {
+    listener$6.send('sources', {
       sources: sources$1
     });
     sources$1.create();
@@ -16864,7 +18343,7 @@
   function removeSource(source) {
     Arrays.remove(additional, source);
   }
-  function render$6() {
+  function render$5() {
     return html$a;
   }
   function destroy$2() {
@@ -16873,20 +18352,20 @@
     sources$1.destroy();
     search$4.remove();
     html$a.empty();
-    if (params.onBack) params.onBack();else Controller.toggle('content');
     $('body').toggleClass('ambience--enable', false);
     $('body').toggleClass('search--open', false);
+    if (params.onBack) params.onBack();else Controller.toggle('content');
     params = {};
     input$1 = '';
-    listener$7.send('close');
+    listener$6.send('close');
   }
   function close$3() {
     destroy$2();
   }
   var Search = {
-    listener: listener$7,
+    listener: listener$6,
     open: open$3,
-    render: render$6,
+    render: render$5,
     addSource: addSource,
     removeSource: removeSource,
     close: close$3
@@ -16895,7 +18374,7 @@
   var html$9 = $('<div class="processing hide"><div><div class="processing__loader"></div><div class="processing__text"></div></div></div>'),
     text = html$9.find('.processing__text');
   var processing = [];
-  function init$m() {
+  function init$k() {
     update$5();
   }
   function update$5() {
@@ -16922,19 +18401,19 @@
       update$5();
     } else find.percent = percent;
   }
-  function render$5(js) {
+  function render$4(js) {
     return js ? html$9[0] : html$9;
   }
   var Processing = {
-    init: init$m,
+    init: init$k,
     push: push$2,
-    render: render$5
+    render: render$4
   };
 
   var html$8;
   var last$2;
   var activi = false;
-  function init$l() {
+  function init$j() {
     html$8 = Template$1.get('head');
     html$8.find('.head__actions').prepend(Processing.render());
     Utils$2.time(html$8);
@@ -17030,20 +18509,21 @@
   function title(title) {
     html$8.find('.head__title').text(title || '');
   }
-  function render$4() {
+  function render$3() {
     return html$8;
   }
   var Head = {
-    render: render$4,
+    render: render$3,
     title: title,
-    init: init$l
+    init: init$j
   };
 
   var body$2;
   var network$6 = new create$p();
   var api$1 = Utils$2.protocol() + object$2.cub_domain + '/api/';
-  var listener$6 = start$6();
+  var listener$5 = start$7();
   var start_time = Date.now();
+  var user_data;
   var notice_load = {
     time: 0,
     data: []
@@ -17053,7 +18533,7 @@
   /**
    * Запуск
    */
-  function init$k() {
+  function init$i() {
     if (!window.lampa_settings.account_use) return;
     Settings.listener.follow('open', function (e) {
       body$2 = null;
@@ -17075,10 +18555,10 @@
       if (Date.now() - start_time > 1000 * 60 * 5) timelines(false, true);
     });
     Favorite.listener.follow('add,added', function (e) {
-      save$4('add', e.where, e.card);
+      save$3('add', e.where, e.card);
     });
     Favorite.listener.follow('remove', function (e) {
-      if (e.method == 'id') save$4('remove', e.where, e.card);
+      if (e.method == 'id') save$3('remove', e.where, e.card);
     });
     Head.render().find('.head__body .open--profile').on('hover:enter', function () {
       showProfiles('head');
@@ -17094,6 +18574,7 @@
       timelines();
       getUser();
       updateProfileIcon();
+      persons();
     });
   }
   function checkProfile(call) {
@@ -17117,6 +18598,8 @@
           }
         });
       }
+    } else {
+      Storage.set('account_user', '');
     }
   }
   function checkValidAccount() {
@@ -17136,10 +18619,26 @@
       img.src = Utils$2.protocol() + object$2.cub_domain + '/img/profiles/' + (account.profile.icon || 'l_1') + '.png';
     }
   }
+  function persons(secuses, error) {
+    var account = Storage.get('account', '{}');
+    if (account.token && window.lampa_settings.account_use) {
+      network$6.silent(api$1 + 'person/list', function (data) {
+        Storage.set('person_subscribes_id', data.results.map(function (a) {
+          return a.person_id;
+        }));
+        if (secuses) secuses(data.results);
+      }, error ? error : false, false, {
+        headers: {
+          token: account.token
+        }
+      });
+    } else error();
+  }
   function getUser() {
     var account = Storage.get('account', '{}');
     if (account.token && window.lampa_settings.account_use) {
       network$6.silent(api$1 + 'users/get', function (result) {
+        user_data = result.user;
         Storage.set('account_user', JSON.stringify(result.user));
       }, false, false, {
         headers: {
@@ -17148,8 +18647,8 @@
       });
     }
   }
-  function hasPremium() {
-    var user = Storage.get('account_user', '{}');
+  function checkPremium() {
+    var user = user_data || Storage.get('account_user', '{}');
     return user.id ? Utils$2.countDays(Date.now(), user.premium) : 0;
   }
   function timelines(full, visual) {
@@ -17195,7 +18694,7 @@
       });
     }
   }
-  function save$4(method, type, card) {
+  function save$3(method, type, card) {
     var account = Storage.get('account', '{}');
     if (account.token && Storage.field('account_use') && window.lampa_settings.account_use && window.lampa_settings.account_sync) {
       var list = bookmarks;
@@ -17290,7 +18789,7 @@
       call([]);
     }
   }
-  function extensions$1(call) {
+  function extensions(call) {
     var account = Storage.get('account', '{}');
     var headers = {};
     if (account.token && window.lampa_settings.account_use) {
@@ -17404,9 +18903,9 @@
       }
       body$2.find('.settings--account-signin').toggleClass('hide', signed);
       body$2.find('.settings--account-user').toggleClass('hide', !signed);
-      body$2.find('.settings--account-premium').toggleClass('selectbox-item--checked', Boolean(hasPremium()));
-      body$2.find('.settings-param__label').toggleClass('hide', !Boolean(hasPremium()));
-      if (!hasPremium()) {
+      body$2.find('.settings--account-premium').toggleClass('selectbox-item--checked', Boolean(checkPremium()));
+      body$2.find('.settings-param__label').toggleClass('hide', !Boolean(checkPremium()));
+      if (!checkPremium()) {
         body$2.find('.selectbox-item').on('hover:enter', showCubPremium);
       }
       body$2.find('.settings--account-device-add').on('hover:enter', addDevice);
@@ -17414,7 +18913,9 @@
         body$2.find('.settings--account-user-info .settings-param__value').text(account.email);
         body$2.find('.settings--account-user-profile .settings-param__value').text(account.profile.name);
         body$2.find('.settings--account-user-out').on('hover:enter', function () {
-          Storage.set('account', {});
+          Storage.set('account', '');
+          Storage.set('account_user', '');
+          Storage.set('account_email', '');
           Settings.update();
           update$4();
         });
@@ -17560,7 +19061,7 @@
   function logged() {
     return Storage.get('account', '{}').token ? window.lampa_settings.account_use : false;
   }
-  function get$7(params) {
+  function get$6(params) {
     return bookmarks.filter(function (elem) {
       return elem.type == params.type;
     }).map(function (elem) {
@@ -17580,7 +19081,7 @@
       Storage.set('account_bookmarks', rows);
       bookmarks = e.data;
       if (call) call();
-      listener$6.send('update_bookmarks', {
+      listener$5.send('update_bookmarks', {
         rows: rows,
         bookmarks: e.data
       });
@@ -17814,11 +19315,11 @@
     }
   }
   var Account = {
-    listener: listener$6,
-    init: init$k,
+    listener: listener$5,
+    init: init$i,
     working: working,
     canSync: canSync,
-    get: get$7,
+    get: get$6,
     all: all$2,
     plugins: plugins,
     notice: notice,
@@ -17830,24 +19331,30 @@
     update: update$4,
     network: network$6,
     backup: backup,
-    extensions: extensions$1,
+    extensions: extensions,
     subscribeToTranslation: subscribeToTranslation,
     subscribes: subscribes,
     showNoAccount: showNoAccount,
     showCubPremium: showCubPremium,
     showLimitedAccount: showLimitedAccount,
-    hasPremium: hasPremium,
     logged: logged,
     removeStorage: function removeStorage() {},
     //устарело
-    logoff: logoff
+    logoff: logoff,
+    persons: persons
   };
+  Object.defineProperty(Account, 'hasPremium', {
+    value: function value() {
+      return checkPremium();
+    },
+    writable: false
+  });
 
   var data$1 = {};
-  var listener$5 = start$6();
+  var listener$4 = start$7();
   var category$2 = ['like', 'wath', 'book', 'history', 'look', 'viewed', 'scheduled', 'continued', 'thrown'];
   var marks = ['look', 'viewed', 'scheduled', 'continued', 'thrown'];
-  function save$3() {
+  function save$2() {
     Storage.set('favorite', data$1);
   }
 
@@ -17856,14 +19363,14 @@
    * @param {String} where 
    * @param {Object} card 
    */
-  function add$8(where, card, limit) {
+  function add$7(where, card, limit) {
     read$1();
     var find = data$1[where].find(function (id) {
       return id == card.id;
     });
     if (!find) {
       Arrays.insert(data$1[where], 0, card.id);
-      listener$5.send('add', {
+      listener$4.send('add', {
         where: where,
         card: card
       });
@@ -17871,17 +19378,17 @@
       if (limit) {
         var excess = data$1[where].slice(limit);
         for (var i = excess.length - 1; i >= 0; i--) {
-          remove$2(where, {
+          remove$1(where, {
             id: excess[i]
           });
         }
       }
-      save$3();
+      save$2();
     } else {
       Arrays.remove(data$1[where], card.id);
       Arrays.insert(data$1[where], 0, card.id);
-      save$3();
-      listener$5.send('added', {
+      save$2();
+      listener$4.send('added', {
         where: where,
         card: card
       });
@@ -17893,10 +19400,10 @@
    * @param {String} where 
    * @param {Object} card 
    */
-  function remove$2(where, card) {
+  function remove$1(where, card) {
     read$1();
     Arrays.remove(data$1[where], card.id);
-    listener$5.send('remove', {
+    listener$4.send('remove', {
       where: where,
       card: card,
       method: 'id'
@@ -17905,14 +19412,14 @@
       var element = data$1.card[i];
       if (!check(element).any) {
         Arrays.remove(data$1.card, element);
-        listener$5.send('remove', {
+        listener$4.send('remove', {
           where: where,
           card: element,
           method: 'card'
         });
       }
     }
-    save$3();
+    save$2();
   }
 
   /**
@@ -17946,9 +19453,9 @@
       var added = marks.find(function (a) {
         return find[a];
       });
-      if (added && added !== where) remove$2(added, card);
+      if (added && added !== where) remove$1(added, card);
     }
-    if (find[where]) remove$2(where, card);else add$8(where, card);
+    if (find[where]) remove$1(where, card);else add$7(where, card);
     return find[where] ? false : true;
   }
 
@@ -18012,7 +19519,7 @@
    * @param {String} params.type - тип 
    * @returns Object
    */
-  function get$6(params) {
+  function get$5(params) {
     if (Account.working()) {
       return Account.get(params);
     } else {
@@ -18039,10 +19546,10 @@
     if (Account.working()) {
       Account.clear(where);
     } else {
-      if (card) remove$2(where, card);else {
+      if (card) remove$1(where, card);else {
         for (var i = data$1[where].length - 1; i >= 0; i--) {
           var _card = search$3(data$1[where][i]);
-          if (_card) remove$2(where, _card);
+          if (_card) remove$1(where, _card);
         }
       }
     }
@@ -18078,14 +19585,14 @@
   function all$1() {
     var result = {};
     category$2.forEach(function (a) {
-      result[a] = get$6({
+      result[a] = get$5({
         type: a
       });
     });
     return result;
   }
   function continues(type) {
-    return Arrays.clone(get$6({
+    return Arrays.clone(get$5({
       type: 'history'
     }).filter(function (e) {
       return type == 'tv' ? e.number_of_seasons || e.first_air_date : !(e.number_of_seasons || e.first_air_date);
@@ -18098,17 +19605,17 @@
   /**
    * Запуск
    */
-  function init$j() {
+  function init$h() {
     read$1();
   }
   var Favorite = {
-    listener: listener$5,
+    listener: listener$4,
     check: cloud,
-    add: add$8,
-    remove: remove$2,
+    add: add$7,
+    remove: remove$1,
     toggle: toggle$3,
-    get: get$6,
-    init: init$j,
+    get: get$5,
+    init: init$h,
     clear: clear$6,
     continues: continues,
     full: full$2,
@@ -18138,20 +19645,20 @@
   var network$5 = new create$p();
   function url$1(u) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    if (params.genres && u.indexOf('genre') == -1) u = add$7(u, 'genre=' + params.genres);
-    if (params.page) u = add$7(u, 'page=' + params.page);
-    if (params.query) u = add$7(u, 'query=' + params.query);
+    if (params.genres && u.indexOf('genre') == -1) u = add$6(u, 'genre=' + params.genres);
+    if (params.page) u = add$6(u, 'page=' + params.page);
+    if (params.query) u = add$6(u, 'query=' + params.query);
     if (params.filter) {
       for (var i in params.filter) {
-        u = add$7(u, i + '=' + params.filter[i]);
+        u = add$6(u, i + '=' + params.filter[i]);
       }
     }
     return baseurl + u;
   }
-  function add$7(u, params) {
+  function add$6(u, params) {
     return u + (/\?/.test(u) ? '&' : '?') + params;
   }
-  function get$5(method) {
+  function get$4(method) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var oncomplite = arguments.length > 2 ? arguments[2] : undefined;
     var onerror = arguments.length > 3 ? arguments[3] : undefined;
@@ -18174,17 +19681,26 @@
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
     var parts_limit = 6;
     var parts_data = [function (call) {
-      get$5('?sort=now_playing', params, function (json) {
+      get$4('?sort=now_playing', params, function (json) {
         json.title = Lang.translate('title_now_watch');
         call(json);
       }, call);
     }, function (call) {
-      get$5('?sort=latest', params, function (json) {
+      call({
+        results: TimeTable.lately().slice(0, 20),
+        title: Lang.translate('title_upcoming_episodes'),
+        nomore: true,
+        cardClass: function cardClass(_elem, _params) {
+          return new Episode(_elem, _params);
+        }
+      });
+    }, function (call) {
+      get$4('?sort=latest', params, function (json) {
         json.title = Lang.translate('title_latest');
         call(json);
       }, call);
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=latest&uhd=true', params, function (json) {
+      get$4('?cat=' + params.url + '&sort=latest&uhd=true', params, function (json) {
         json.title = Lang.translate('title_in_high_quality');
         json.small = true;
         json.wide = true;
@@ -18195,19 +19711,19 @@
         call(json);
       }, call);
     }, function (call) {
-      get$5('movie/now', params, function (json) {
+      get$4('movie/now', params, function (json) {
         json.title = Lang.translate('menu_movies');
         call(json);
       }, call);
     }, function (call) {
       trailers('added', call);
     }, function (call) {
-      get$5('tv/now', params, function (json) {
+      get$4('tv/now', params, function (json) {
         json.title = Lang.translate('menu_tv');
         call(json);
       }, call);
     }, function (call) {
-      get$5('tv/popular', params, function (json) {
+      get$4('tv/popular', params, function (json) {
         json.title = Lang.translate('title_popular_tv');
         call(json);
       }, call);
@@ -18215,7 +19731,7 @@
     Arrays.insert(parts_data, 0, Api.partPersons(parts_data, parts_limit, 'movie'));
     TMDB.genres.movie.forEach(function (genre) {
       var event = function event(call) {
-        get$5('?sort=now&genre=' + genre.id, params, function (json) {
+        get$4('?sort=now&genre=' + genre.id, params, function (json) {
           json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
           call(json);
         }, call);
@@ -18230,7 +19746,7 @@
       var offset = Math.round(total / rolls.length);
       rolls.forEach(function (collection, index) {
         Arrays.insert(parts_data, index + parts_limit + 3 + offset * index, function (call_inner) {
-          get$5('collections/' + collection.hpu, {}, function (json) {
+          get$4('collections/' + collection.hpu, {}, function (json) {
             json.title = collection.title;
             json.collection = true;
             json.line_type = 'collection';
@@ -18283,13 +19799,17 @@
         title: Lang.translate('title_recomend_watch')
       });
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=now_playing' + airdate, params, function (json) {
+      get$4('?cat=' + params.url + '&sort=now_playing' + airdate, params, function (json) {
         json.title = Lang.translate('title_now_watch');
+        if (params.url == 'tv') {
+          json.ad = 'bot';
+          json.type = params.url;
+        }
         call(json);
       }, call);
     }, function (call) {
       if (params.url == 'anime') {
-        get$5('?cat=' + params.url + '&sort=top', params, function (json) {
+        get$4('?cat=' + params.url + '&sort=top', params, function (json) {
           json.title = Lang.translate('title_in_top');
           json.small = true;
           json.wide = true;
@@ -18300,7 +19820,7 @@
           call(json);
         }, call);
       } else {
-        get$5('?cat=' + params.url + '&sort=latest&uhd=true' + airdate, params, function (json) {
+        get$4('?cat=' + params.url + '&sort=latest&uhd=true' + airdate, params, function (json) {
           json.title = Lang.translate('title_in_high_quality');
           json.small = true;
           json.wide = true;
@@ -18313,35 +19833,35 @@
       }
     }, function (call) {
       if (params.url == 'tv' || params.url == 'anime') {
-        get$5('?cat=' + params.url + '&sort=airing' + airdate, params, function (json) {
+        get$4('?cat=' + params.url + '&sort=airing' + airdate, params, function (json) {
           json.title = Lang.translate('title_ongoing');
           call(json);
         }, call);
       } else call();
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=top' + airdate, params, function (json) {
+      get$4('?cat=' + params.url + '&sort=top' + airdate, params, function (json) {
         json.title = Lang.translate('title_popular');
         call(json);
       }, call);
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=now', params, function (json) {
+      get$4('?cat=' + params.url + '&sort=now', params, function (json) {
         json.title = Lang.translate('title_new_this_year');
         call(json);
       }, call);
     }, function (call) {
       if (params.url == 'movie' && fullcat) trailers('added', call);else call();
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 1), params, function (json) {
+      get$4('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 1), params, function (json) {
         json.title = Lang.translate('title_last_year');
         call(json);
       }, call);
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=6-8', params, function (json) {
+      get$4('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=6-8', params, function (json) {
         json.title = Lang.translate('title_worth_rewatch');
         call(json);
       }, call);
     }, function (call) {
-      get$5('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=8-10', params, function (json) {
+      get$4('?cat=' + params.url + '&sort=top&airdate=' + (new Date().getFullYear() - 7) + '-' + (new Date().getFullYear() - 2) + '&vote=8-10', params, function (json) {
         json.title = Lang.translate('title_hight_voite');
         call(json);
       }, call);
@@ -18352,7 +19872,7 @@
         var gen = params.genres ? [].concat(params.genres, genre.id) : [genre.id];
         if (params.genres && params.genres == genre.id) return;
         var event = function event(call) {
-          get$5('?cat=' + params.url + '&sort=top&genre=' + gen.join(','), params, function (json) {
+          get$4('?cat=' + params.url + '&sort=top&genre=' + gen.join(','), params, function (json) {
             json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
             call(json);
           }, call);
@@ -18368,7 +19888,7 @@
           var offset = Math.round(total / rolls.length);
           rolls.forEach(function (collection, index) {
             Arrays.insert(parts_data, index + parts_limit + 5 + offset * index, function (call_inner) {
-              get$5('collections/' + collection.hpu, {}, function (json) {
+              get$4('collections/' + collection.hpu, {}, function (json) {
                 json.title = collection.title;
                 json.collection = true;
                 json.line_type = 'collection';
@@ -18383,7 +19903,7 @@
         return !(a.id == 99 || a.id == 10766);
       }).forEach(function (genre) {
         var event = function event(call) {
-          get$5('?cat=' + params.url + '&sort=top&genre=' + genre.id, params, function (json) {
+          get$4('?cat=' + params.url + '&sort=top&genre=' + genre.id, params, function (json) {
             json.title = Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
             call(json);
           }, call);
@@ -18398,10 +19918,10 @@
     return loadPart;
   }
   function full$1(params, oncomplite, onerror) {
-    var status = new status$1(8);
+    var status = new status$2(8);
     status.onComplite = oncomplite;
     if (Utils$2.dcma(params.method, params.id)) return onerror();
-    get$5('3/' + params.method + '/' + params.id + '?api_key=' + TMDB$1.key() + '&append_to_response=content_ratings,release_dates,keywords&language=' + Storage.field('tmdb_lang'), params, function (json) {
+    get$4('3/' + params.method + '/' + params.id + '?api_key=' + TMDB$1.key() + '&append_to_response=content_ratings,release_dates,keywords&language=' + Storage.field('tmdb_lang'), params, function (json) {
       json.source = 'tmdb';
       if (params.method == 'tv') {
         var season = Utils$2.countSeasons(json);
@@ -18495,7 +20015,7 @@
   function search$2() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-    var status = new status$1(3);
+    var status = new status$2(3);
     status.onComplite = function (data) {
       var items = [];
       if (data.movie && data.movie.results.length) items.push(data.movie);
@@ -18503,17 +20023,17 @@
       if (data.anime && data.anime.results.length) items.push(data.anime);
       oncomplite(items);
     };
-    get$5('search/movie', params, function (json) {
+    get$4('search/movie', params, function (json) {
       json.title = Lang.translate('menu_movies');
       json.type = 'movie';
       status.append('movie', json);
     }, status.error.bind(status));
-    get$5('search/tv', params, function (json) {
+    get$4('search/tv', params, function (json) {
       json.title = Lang.translate('menu_tv');
       json.type = 'tv';
       status.append('tv', json);
     }, status.error.bind(status));
-    get$5('search/anime', params, function (json) {
+    get$4('search/anime', params, function (json) {
       json.title = Lang.translate('menu_anime');
       json.type = 'anime';
       status.append('anime', json);
@@ -18898,8 +20418,16 @@
     partNext: partNext
   };
 
-  function component$j(object) {
+  function component$k(object) {
     var comp = new Lampa.InteractionMain(object);
+    comp.onLinesBuild = function (data) {
+      object$2.plugins.forEach(function (plugin) {
+        if (plugin.onMain) {
+          var result = plugin.onMain(data);
+          if (result.results.length) comp.append(result);
+        }
+      });
+    };
     comp.create = function () {
       this.activity.loader(true);
       var next = Api.main(object, this.build.bind(this), this.empty.bind(this));
@@ -20033,7 +21561,7 @@
         if (element.overview) {
           Modal.open({
             title: element.name,
-            html: $('<div class="about"><div class="selector">' + element.overview + '</div></div>'),
+            html: $('<div class="about">' + element.overview + '</div>'),
             onBack: function onBack() {
               Modal.close();
               Controller.toggle('content');
@@ -20095,7 +21623,7 @@
     comments: create$9,
     episodes: create$8
   };
-  function component$i(object) {
+  function component$j(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -20334,7 +21862,7 @@
     };
   }
 
-  function component$h(object) {
+  function component$i(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -20522,15 +22050,15 @@
     };
   }
 
-  function component$g(object) {
-    var comp = new component$h(object);
+  function component$h(object) {
+    var comp = new component$i(object);
     comp.create = function () {
       Api.list(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$f(object) {
+  function component$g(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       this.activity.loader(true);
@@ -20544,24 +22072,78 @@
   function create$7(data) {
     var html;
     var last;
+    var subscribed = Storage.get('person_subscribes_id', '[]').find(function (a) {
+      return a == data.id;
+    });
+    var network = new create$p();
     this.create = function () {
+      var _this = this;
       html = Template$1.get('person_start', {
         name: data.name,
-        birthday: Utils$2.parseTime(data.birthday).full,
-        descr: Utils$2.substr(data.biography || '', 1020),
+        birthday: data.birthday ? Utils$2.parseTime(data.birthday).full : Lang.translate('player_unknown'),
         img: data.profile_path ? Api.img(data.profile_path) : data.img || 'img/img_broken.svg',
-        place: data.place_of_birth || ''
+        place: data.place_of_birth || Lang.translate('player_unknown')
       });
-      if (!data.birthday) html.find('.person-start__tag').remove();
-      if (!data.place_of_birth) html.find('.person-start__place').remove();
-      if (!data.biography) html.addClass('person-start--small');
+      this.substatus();
+      html.find('.button--info').on('hover:enter', function () {
+        if (data.biography) {
+          Modal.open({
+            title: data.name,
+            size: 'large',
+            html: $('<div class="about">' + data.biography + '</div>'),
+            onBack: function onBack() {
+              Modal.close();
+              Controller.toggle('content');
+            },
+            onSelect: function onSelect() {
+              Modal.close();
+              Controller.toggle('content');
+            }
+          });
+        } else {
+          Noty.show(Lang.translate('empty_title_two'));
+        }
+      }).on('hover:focus', function (e) {
+        last = e.target;
+      });
+      html.find('.button--subscribe').on('hover:enter', function () {
+        var subscribes = Storage.get('person_subscribes_id', '[]');
+        subscribed = subscribes.find(function (a) {
+          return a == data.id;
+        });
+        if (!subscribed && !Account.hasPremium()) return Account.showCubPremium();
+        var account = Account.logged() ? Storage.get('account', '{}') : false;
+        if (!account) return Account.showNoAccount();
+        network.silent(Utils$2.protocol() + object$2.cub_domain + '/api/person/' + (subscribed ? 'unsubscribe' : 'subscribe'), function (result) {
+          if (subscribed) Arrays.remove(subscribes, data.id);else if (subscribes.indexOf(data.id) == -1) subscribes.push(data.id);
+          Storage.set('person_subscribes_id', subscribes);
+          subscribed = subscribes.find(function (a) {
+            return a == data.id;
+          });
+          _this.substatus();
+        }, function (err) {
+          if (err.responseJSON && err.responseJSON.code == 555) Account.showCubPremium();else Noty.show(Lang.translate('subscribe_error'));
+        }, {
+          person: JSON.stringify(data)
+        }, {
+          headers: {
+            token: account.token
+          }
+        });
+      }).on('hover:focus', function (e) {
+        last = e.target;
+      });
+    };
+    this.substatus = function () {
+      html.find('.button--subscribe path:eq(1)').attr('fill', subscribed ? 'currentColor' : 'transparent');
+      html.find('.button--subscribe span').text(Lang.translate(subscribed ? 'title_unsubscribe' : 'title_subscribe'));
     };
     this.toggle = function () {
-      var _this = this;
+      var _this2 = this;
       Controller.add('full_start', {
         toggle: function toggle() {
-          Controller.collectionSet(_this.render());
-          Controller.collectionFocus(last, _this.render());
+          Controller.collectionSet(_this2.render());
+          Controller.collectionFocus(last, _this2.render());
         },
         update: function update() {},
         right: function right() {
@@ -20590,7 +22172,7 @@
     start: create$7,
     line: create$j
   };
-  function component$e(object) {
+  function component$f(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -20610,12 +22192,19 @@
           poster = data.person.profile_path;
           _this.build('start', data.person);
           if (data.credits && data.credits.knownFor && data.credits.knownFor.length > 0) {
-            for (var i = 0; i < Math.min(data.credits.knownFor.length, 3); i++) {
+            for (var i = 0; i < data.credits.knownFor.length; i++) {
               var departament = data.credits.knownFor[i];
+              var credits = departament.credits.map(function (a) {
+                a.time_sort = new Date(a.first_air_date || a.release_date || '').getTime();
+                return a;
+              });
+              credits.sort(function (a, b) {
+                return b.time_sort - a.time_sort;
+              });
               _this.build('line', {
                 title: departament.name,
                 noimage: true,
-                results: departament.credits
+                results: credits
               });
             }
           }
@@ -20706,8 +22295,8 @@
     };
   }
 
-  function component$d(object) {
-    var comp = new component$h(object);
+  function component$e(object) {
+    var comp = new component$i(object);
     var update = function update(e) {
       if (e.name == 'account') comp.activity.needRefresh();
     };
@@ -21033,7 +22622,7 @@
     time;
   var memorys = {};
   var remember = 1000 * 60 * 60 * 14;
-  function show$5(name, text, elem) {
+  function show$4(name, text, elem) {
     if (!Storage.field('helper')) return;
     var help = memorys[name];
     if (!help) {
@@ -21064,7 +22653,7 @@
       }
     }
   }
-  function init$i() {
+  function init$g() {
     memorys = Storage.cache('helper', 300, {});
     Settings.listener.follow('open', function (e) {
       if (e.name == 'more') {
@@ -21078,8 +22667,8 @@
     $('body').append(html$6);
   }
   var Helper = {
-    show: show$5,
-    init: init$i
+    show: show$4,
+    init: init$g
   };
 
   var SERVER = {};
@@ -21163,7 +22752,7 @@
       Torserver.files(SERVER.hash, function (json) {
         if (json.file_stats) {
           clearInterval(timers.files);
-          show$4(json.file_stats);
+          show$3(json.file_stats);
         }
       });
       if (repeat >= 45) {
@@ -21187,7 +22776,7 @@
       }
     });
   }
-  function show$4(files) {
+  function show$3(files) {
     files.sort(function (a, b) {
       var an = a.path.replace(/\d+/g, function (m) {
         return m.length > 3 ? m : ('000' + m).substr(-4);
@@ -21348,7 +22937,7 @@
           item.append(Timeline.render(view));
         }
       } else if (items.length == 1 && params.movie && !params.movie.name) {
-        element.fname = params.movie.title;
+        element.fname = params.movie.title || element.title;
         if (params.movie.backdrop_path) element.img = Api.img(params.movie.backdrop_path);
         item = Template$1.get('torrent_file_serial', element);
         item.find('.torrent-serial__line').empty().text(params.movie.tagline || '');
@@ -21524,11 +23113,11 @@
 
   var url;
   var network$3 = new create$p();
-  function init$h() {
+  function init$f() {
     var source = {
       title: Lang.translate('title_parser'),
       search: function search(params, oncomplite) {
-        get$4({
+        get$3({
           search: decodeURIComponent(params.query),
           other: true,
           from_search: true
@@ -21614,7 +23203,7 @@
       Search.addSource(source);
     }
   }
-  function get$4() {
+  function get$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
@@ -21641,6 +23230,13 @@
         }
       } else {
         error(Lang.translate('torrent_parser_set_link') + ': Jackett');
+      }
+    } else if (Storage.field('parser_torrent_type') == 'prowlarr') {
+      if (Storage.field('prowlarr_url')) {
+        url = Utils$2.checkEmptyUrl(Storage.field('prowlarr_url'));
+        prowlarr(params, complite, error);
+      } else {
+        error(Lang.translate('torrent_parser_set_link') + ': Prowlarr');
       }
     } else {
       if (Storage.get('native')) {
@@ -21751,6 +23347,48 @@
       onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
     });
   }
+
+  // доки https://wiki.servarr.com/en/prowlarr/search#search-feed
+  function prowlarr() {
+    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
+    var onerror = arguments.length > 2 ? arguments[2] : undefined;
+    var u = new URL('/api/v1/search', url);
+    network$3.timeout(1000 * Storage.field('parse_timeout'));
+    u.searchParams.set('apikey', Storage.field('prowlarr_key'));
+    u.searchParams.set('query', params.search);
+    if (!params.from_search) {
+      var isSerial = !!(params.movie.first_air_date || params.movie.last_air_date);
+      u.searchParams.set('categories', (params.movie.number_of_seasons > 0 ? 5000 : 2000) + (params.movie.original_language == 'ja' ? ',5070' : ''));
+      u.searchParams.set('type', isSerial ? 'tvsearch' : 'search');
+    }
+    network$3["native"](u.href, function (json) {
+      if (Array.isArray(json)) {
+        oncomplite({
+          Results: json.filter(function (e) {
+            return e.protocol === 'torrent';
+          }).map(function (e) {
+            var hash = Utils$2.hash(e.title);
+            return {
+              Title: e.title,
+              Tracker: e.indexer,
+              size: Utils$2.bytesToSize(e.size),
+              PublishDate: Utils$2.strToTime(e.publishDate),
+              Seeders: parseInt(e.seeders),
+              Peers: parseInt(e.leechers),
+              MagnetUri: e.downloadUrl,
+              viewed: viewed(hash),
+              hash: hash
+            };
+          })
+        });
+      } else {
+        onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
+      }
+    }, function () {
+      onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
+    });
+  }
   function marnet(element, oncomplite, onerror) {
     network$3.timeout(1000 * 15);
     var s = Utils$2.checkHttp(Storage.field('torlook_site')) + '/';
@@ -21773,8 +23411,8 @@
     network$3.clear();
   }
   var Parser = {
-    init: init$h,
-    get: get$4,
+    init: init$f,
+    get: get$3,
     torlook: torlook,
     jackett: jackett,
     marnet: marnet,
@@ -21845,7 +23483,7 @@
     };
   }
 
-  function component$c(object) {
+  function component$d(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -22825,7 +24463,7 @@
     };
   }
 
-  function component$b(object) {
+  function component$c(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -22975,8 +24613,8 @@
     };
   }
 
-  function component$a(object) {
-    var comp = new component$h(object);
+  function component$b(object) {
+    var comp = new component$i(object);
     comp.create = function () {
       this.activity.loader(true);
       Api.relise(object, this.build.bind(this), this.empty.bind(this));
@@ -22987,7 +24625,7 @@
     return comp;
   }
 
-  function component$9(object) {
+  function component$a(object) {
     var network = new create$p();
     var scroll = new create$q({
       mask: true,
@@ -23107,15 +24745,15 @@
     };
   }
 
-  function component$8(object) {
-    var comp = new component$h(object);
+  function component$9(object) {
+    var comp = new component$i(object);
     comp.create = function () {
       Api.collections(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
   }
 
-  function component$7(object) {
+  function component$8(object) {
     var html = $('<div></div>');
     var empty = new create$a();
     this.create = function () {
@@ -23173,7 +24811,7 @@
     };
   }
 
-  function component$6(object) {
+  function component$7(object) {
     var _this = this;
     var scroll = new create$q({
       mask: true,
@@ -23344,8 +24982,8 @@
     };
   }
 
-  function component$5(object) {
-    var comp = new component$h(object);
+  function component$6(object) {
+    var comp = new component$i(object);
     comp.create = function () {
       this.activity.loader(true);
       Account.subscribes(object, this.build.bind(this), this.empty.bind(this));
@@ -23389,7 +25027,7 @@
     };
   }
 
-  function component$4(object) {
+  function component$5(object) {
     var comp = new Lampa.InteractionMain(object);
     comp.create = function () {
       var _this = this;
@@ -23564,7 +25202,7 @@
     };
   }
 
-  function component$3(object) {
+  function component$4(object) {
     var all = Favorite.all();
     var comp = new Lampa.InteractionMain(object);
     var viev_all = false;
@@ -23674,7 +25312,7 @@
     return comp;
   }
 
-  function component$2(object) {
+  function component$3(object) {
     var explorer = new Explorer(object);
     var filter = new create$5(object);
     var scroll = new create$q({
@@ -23876,25 +25514,176 @@
     this.destroy = function () {};
   }
 
+  function component$2(object) {
+    var network = new create$p();
+    var scroll = new create$q({
+      mask: true,
+      over: true,
+      step: 250,
+      end_ratio: 2
+    });
+    var items = [];
+    var html = document.createElement('div');
+    var body = document.createElement('div');
+    var last;
+    var active = 0;
+    var follow = function follow(event) {
+      if (event.name == 'person_subscribes_id') {
+        items.forEach(function (card) {
+          if (event.value.indexOf(card.data.id) == -1) {
+            card.render(true).style.opacity = 0.5;
+            card.onEnter = function () {};
+          }
+        });
+      }
+    };
+    this.create = function () {
+      this.activity.loader(true);
+      Storage.listener.follow('change', follow);
+      Account.persons(this.build.bind(this), this.empty.bind(this));
+    };
+    this.empty = function () {
+      var empty = new create$a();
+      html.appendChild(empty.render(true));
+      this.start = empty.start;
+      this.activity.loader(false);
+      this.activity.toggle();
+    };
+    this.append = function (data, append) {
+      data.forEach(function (element) {
+        var card = new Card(element.person, {});
+        card.create();
+        card.onFocus = function (target, card_data) {
+          last = target;
+          active = items.indexOf(card);
+          scroll.update(card.render(true));
+          Background.change(Utils$2.cardImgBackgroundBlur(card_data));
+        };
+        card.onTouch = function (target, card_data) {
+          last = target;
+          active = items.indexOf(card);
+        };
+        card.onEnter = function (target, card_data) {
+          last = target;
+          Activity$1.push({
+            url: element.person.url,
+            title: Lang.translate('title_person'),
+            component: 'actor',
+            id: element.person_id,
+            source: object.source
+          });
+        };
+        card.onMenu = function () {};
+        body.appendChild(card.render(true));
+        items.push(card);
+        if (append) Controller.collectionAppend(card.render(true));
+      });
+    };
+    this.limit = function () {
+      var limit_view = 12;
+      var lilit_collection = 36;
+      var colection = items.slice(Math.max(0, active - limit_view), active + limit_view);
+      items.forEach(function (item) {
+        if (colection.indexOf(item) == -1) {
+          item.render(true).classList.remove('layer--render');
+        } else {
+          item.render(true).classList.add('layer--render');
+        }
+      });
+      Navigator.setCollection(items.slice(Math.max(0, active - lilit_collection), active + lilit_collection).map(function (c) {
+        return c.render(true);
+      }));
+      Navigator.focused(last);
+      Layer.visible(scroll.render(true));
+    };
+    this.build = function (data) {
+      var _this = this;
+      if (data.length) {
+        body.classList.add('category-full');
+        scroll.minus();
+        scroll.onScroll = this.limit.bind(this);
+        scroll.onWheel = function (step) {
+          if (!Controller.own(_this)) _this.start();
+          if (step > 0) Navigator.move('down');else Navigator.move('up');
+        };
+        this.append(data);
+        scroll.append(body);
+        html.appendChild(scroll.render(true));
+        this.limit();
+        this.activity.loader(false);
+        this.activity.toggle();
+      } else {
+        this.empty();
+      }
+    };
+    this.start = function () {
+      var _this2 = this;
+      Controller.add('content', {
+        link: this,
+        toggle: function toggle() {
+          if (_this2.activity.canRefresh()) return false;
+          Controller.collectionSet(scroll.render(true));
+          Controller.collectionFocus(last || false, scroll.render(true));
+        },
+        left: function left() {
+          if (Navigator.canmove('left')) Navigator.move('left');else Controller.toggle('menu');
+        },
+        right: function right() {
+          if (_this2.onRight) {
+            if (Navigator.canmove('right')) Navigator.move('right');else _this2.onRight();
+          } else Navigator.move('right');
+        },
+        up: function up() {
+          if (Navigator.canmove('up')) Navigator.move('up');else Controller.toggle('head');
+        },
+        down: function down() {
+          if (Navigator.canmove('down')) Navigator.move('down');
+        },
+        back: function back() {
+          Activity$1.backward();
+        }
+      });
+      Controller.toggle('content');
+    };
+    this.refresh = function () {
+      this.activity.needRefresh();
+    };
+    this.pause = function () {};
+    this.stop = function () {};
+    this.render = function (js) {
+      return js ? html : $(html);
+    };
+    this.destroy = function () {
+      network.clear();
+      Arrays.destroy(items);
+      scroll.destroy();
+      Storage.listener.remove('change', follow);
+      html.remove();
+      body.remove();
+      items = [];
+    };
+  }
+
   var component$1 = {
-    main: component$j,
-    full: component$i,
-    category: component$f,
-    category_full: component$g,
-    actor: component$e,
-    favorite: component$d,
-    torrents: component$c,
-    mytorrents: component$b,
-    relise: component$a,
-    collections: component$9,
-    collections_view: component$8,
-    nocomponent: component$7,
-    timetable: component$6,
-    subscribes: component$5,
-    company: component$4,
+    main: component$k,
+    full: component$j,
+    category: component$g,
+    category_full: component$h,
+    actor: component$f,
+    favorite: component$e,
+    torrents: component$d,
+    mytorrents: component$c,
+    relise: component$b,
+    collections: component$a,
+    collections_view: component$9,
+    nocomponent: component$8,
+    timetable: component$7,
+    subscribes: component$6,
+    company: component$5,
     feed: Feed,
-    bookmarks: component$3,
-    episodes: component$2
+    bookmarks: component$4,
+    episodes: component$3,
+    myperson: component$2
   };
 
   /**
@@ -23920,7 +25709,7 @@
    * @param {string} name 
    * @param {class} comp 
    */
-  function add$6(name, comp) {
+  function add$5(name, comp) {
     component$1[name] = comp;
   }
 
@@ -23929,16 +25718,16 @@
    * @param {string} name 
    * @returns {class}
    */
-  function get$3(name) {
+  function get$2(name) {
     return component$1[name];
   }
   var Component = {
     create: create$4,
-    add: add$6,
-    get: get$3
+    add: add$5,
+    get: get$2
   };
 
-  var listener$4 = start$6();
+  var listener$3 = start$7();
   var activites = [];
   var callback = false;
   var fullout = false;
@@ -24110,7 +25899,7 @@
   /**
    * Запуск
    */
-  function init$g() {
+  function init$e() {
     content = Template$1.js('activitys');
     slides = content.querySelector('.activitys__slides');
     maxsave = Storage.get('pages_save_total', 5);
@@ -24124,7 +25913,7 @@
       if (fullout || wait) return;
       Screensaver$2.stop();
       empty();
-      listener$4.send('popstate', {
+      listener$3.send('popstate', {
         count: activites.length
       });
       if (callback) callback();else {
@@ -24241,7 +26030,7 @@
    */
   function backward() {
     callback = false;
-    listener$4.send('backward', {
+    listener$3.send('backward', {
       count: activites.length
     });
     if (activites.length == 1) return;
@@ -24283,7 +26072,7 @@
    * Сохранить активность в память
    * @param {{component:string, activity:class}} object 
    */
-  function save$2(object) {
+  function save$1(object) {
     var saved = {};
     for (var i in object) {
       if (i !== 'activity') saved[i] = object[i];
@@ -24310,7 +26099,7 @@
    */
   function start$2(object) {
     object.activity.start();
-    save$2(object);
+    save$1(object);
     Array.from(slides.children).forEach(function (slide) {
       return slide.classList.remove('activity--active');
     });
@@ -24370,7 +26159,7 @@
    * Рендер
    * @returns {object}
    */
-  function render$3() {
+  function render$2() {
     return content;
   }
 
@@ -24413,11 +26202,11 @@
     push$1(clear ? replace : object);
   }
   var Activity$1 = {
-    init: init$g,
-    listener: listener$4,
+    init: init$e,
+    listener: listener$3,
     push: push$1,
     back: back$3,
-    render: render$3,
+    render: render$2,
     backward: backward,
     call: call,
     last: last$1,
@@ -24430,7 +26219,7 @@
     inActivity: inActivity
   };
 
-  var listener$3 = start$6();
+  var listener$2 = start$7();
   var active$1;
   var active_name = '';
   var controlls = {};
@@ -24459,7 +26248,7 @@
    * @param {String} name 
    * @param {Object} calls 
    */
-  function add$5(name, calls) {
+  function add$4(name, calls) {
     controlls[name] = calls;
   }
 
@@ -24530,7 +26319,7 @@
       if (active$1.update) active$1.update();else {
         Layer.update();
       }
-      listener$3.send('toggle', {
+      listener$2.send('toggle', {
         name: name
       });
     }
@@ -24561,11 +26350,12 @@
         longStart();
         Utils$2.trigger(elem, 'hover:touch');
       };
+      var rightClick = function rightClick(e) {
+        Utils$2.trigger(elem, 'hover:long');
+      };
       elem.trigger_click = function (e) {
         if (Storage.field('navigation_type') == 'mouse' || Platform.screen('mobile')) {
           if (DeviceInput.canClick(e)) {
-            //Noty.show('click: ' + e.pointerType)
-
             Utils$2.trigger(elem, 'hover:enter');
           }
         }
@@ -24587,6 +26377,7 @@
         elem.addEventListener('mouseout', longClear);
         elem.addEventListener('mouseup', longClear);
         elem.addEventListener('mousedown', longStart);
+        elem.addEventListener('contextmenu', rightClick);
       }
       if (Utils$2.isTouchDevice()) {
         elem.addEventListener('touchstart', touchStart);
@@ -24711,9 +26502,9 @@
     Navigator.setCollection([]);
   }
   var Controller = {
-    listener: listener$3,
+    listener: listener$2,
     observe: observe$1,
-    add: add$5,
+    add: add$4,
     move: move,
     enter: enter,
     finish: finish,
@@ -24759,19 +26550,19 @@
       'default': ['0 1 2 3 4 {BKSP}', '5 6 7 8 9 {ENTER}']
     }
   };
-  function add$4(name, layout) {
+  function add$3(name, layout) {
     layers[name] = layout;
   }
   function addLang(name, code, layout) {
     layers[name][code] = layout;
   }
-  function get$2(name) {
+  function get$1(name) {
     return layers[name];
   }
   var Layers = {
-    add: add$4,
+    add: add$3,
     addLang: addLang,
-    get: get$2
+    get: get$1
   };
 
   function create$2() {
@@ -24788,7 +26579,7 @@
     if (params.keyboard) {
       simple = params.keyboard !== 'lampa';
     }
-    this.listener = start$6();
+    this.listener = start$7();
     this.create = function () {
       var _this = this;
       if (simple) {
@@ -25279,18 +27070,22 @@
 
   var values = {};
   var defaults = {};
-  var listener$2 = start$6();
+  var listener$1 = start$7();
 
   /**
    * Запуск
    */
-  function init$f() {
+  function init$d() {
     if (Platform.is('tizen')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
         'tizen': 'Tizen'
       }, 'tizen');
       select$1('player_iptv', {
+        'inner': '#{settings_param_player_inner}',
+        'tizen': 'Tizen'
+      }, 'tizen');
+      select$1('player_torrent', {
         'inner': '#{settings_param_player_inner}',
         'tizen': 'Tizen'
       }, 'tizen');
@@ -25304,6 +27099,10 @@
         'inner': '#{settings_param_player_inner}',
         'orsay': 'Orsay'
       }, 'orsay');
+      select$1('player_torrent', {
+        'inner': '#{settings_param_player_inner}',
+        'orsay': 'Orsay'
+      }, 'orsay');
     } else if (Platform.is('webos')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
@@ -25313,12 +27112,20 @@
         'inner': '#{settings_param_player_inner}',
         'webos': 'WebOS'
       }, 'inner');
+      select$1('player_torrent', {
+        'inner': '#{settings_param_player_inner}',
+        'webos': 'WebOS'
+      }, 'inner');
     } else if (Platform.is('android')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
         'android': 'Android'
       }, 'android');
       select$1('player_iptv', {
+        'inner': '#{settings_param_player_inner}',
+        'android': 'Android'
+      }, 'android');
+      select$1('player_torrent', {
         'inner': '#{settings_param_player_inner}',
         'android': 'Android'
       }, 'android');
@@ -25332,32 +27139,55 @@
         'inner': '#{settings_param_player_inner}',
         'other': '#{settings_param_player_outside}'
       }, 'inner');
+      select$1('player_torrent', {
+        'inner': '#{settings_param_player_inner}',
+        'other': '#{settings_param_player_outside}'
+      }, 'inner');
     } else if (Platform.is('apple')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
         'ios': 'iOS',
         'vlc': 'VLC',
         'nplayer': 'nPlayer',
-        'infuse': 'Infuse'
+        'infuse': 'Infuse',
+        'svplayer': 'SVPlayer'
       }, 'inner');
       select$1('player_iptv', {
         'inner': '#{settings_param_player_inner}',
         'ios': 'iOS',
         'vlc': 'VLC',
         'nplayer': 'nPlayer',
-        'infuse': 'Infuse'
+        'infuse': 'Infuse',
+        'svplayer': 'SVPlayer'
+      }, 'inner');
+      select$1('player_torrent', {
+        'inner': '#{settings_param_player_inner}',
+        'ios': 'iOS',
+        'vlc': 'VLC',
+        'nplayer': 'nPlayer',
+        'infuse': 'Infuse',
+        'svplayer': 'SVPlayer'
       }, 'inner');
     } else if (Platform.is('apple_tv')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
         'vlc': 'VLC',
         'infuse': 'Infuse',
+        'svplayer': 'SVPlayer',
         'tvos': 'tvOS'
       }, 'inner');
       select$1('player_iptv', {
         'inner': '#{settings_param_player_inner}',
         'vlc': 'VLC',
         'infuse': 'Infuse',
+        'svplayer': 'SVPlayer',
+        'tvos': 'tvOS'
+      }, 'inner');
+      select$1('player_torrent', {
+        'inner': '#{settings_param_player_inner}',
+        'vlc': 'VLC',
+        'infuse': 'Infuse',
+        'svplayer': 'SVPlayer',
         'tvos': 'tvOS'
       }, 'inner');
     }
@@ -25426,7 +27256,7 @@
 
   /**
    * Биндит события на элемент
-   * @param {object} elems 
+   * @param {object} elems
    */
   function bind(elems, elems_html) {
     elems.on('hover:enter', function (event) {
@@ -25459,7 +27289,7 @@
         });
       }
       if (type == 'button') {
-        listener$2.send('button', {
+        listener$1.send('button', {
           name: name
         });
         if (onChange) onChange();
@@ -25470,7 +27300,7 @@
         }, function (new_value) {
           if (new_value && Storage.add(name, new_value)) {
             displayAddItem(elem, new_value);
-            listener$2.send('update_scroll');
+            listener$1.send('update_scroll');
           }
         });
       }
@@ -25512,8 +27342,8 @@
 
   /**
    * Добавить дополнительное полу
-   * @param {object} elem 
-   * @param {object} element 
+   * @param {object} elem
+   * @param {object} element
    */
   function displayAddItem(elem, element) {
     var name = elem.data('name');
@@ -25531,19 +27361,19 @@
 
   /**
    * Вывести дополнительные поля
-   * @param {object} elem 
+   * @param {object} elem
    */
   function displayAddList(elem) {
     var list = Storage.get(elem.data('name'), '[]');
     list.forEach(function (element) {
       displayAddItem(elem, element);
     });
-    listener$2.send('update_scroll');
+    listener$1.send('update_scroll');
   }
 
   /**
    * Обновляет значения на элементе
-   * @param {object} elem 
+   * @param {object} elem
    */
   function update$2(elem, elems, elems_html) {
     var name = elem.data('name');
@@ -25559,13 +27389,16 @@
       var visibl = value ? Storage.field(name) !== value : !Storage.field(name);
       if (elem.data('children-reverse')) visibl = !visibl;
       parent.toggleClass('hide', visibl);
-      listener$2.send('update_scroll_position');
+      parent.filter('[data-visible-value]').each(function () {
+        $(this).toggleClass('hide', $(this).data('visible-value') !== key);
+      });
+      listener$1.send('update_scroll_position');
     }
   }
 
   /**
    * Получить значение параметра
-   * @param {string} name 
+   * @param {string} name
    * @returns *
    */
   function field$1(name) {
@@ -25586,7 +27419,8 @@
     'w500': '#{settings_param_poster_quality_high}'
   }, 'w200');
   select$1('parser_torrent_type', {
-    'jackett': 'Jackett'
+    'jackett': 'Jackett',
+    'prowlarr': 'Prowlarr'
   }, 'jackett');
   select$1('jackett_interview', {
     'all': '#{settings_param_jackett_interview_all}',
@@ -25612,6 +27446,9 @@
     'inner': '#{settings_param_player_inner}'
   }, 'inner');
   select$1('player_iptv', {
+    'inner': '#{settings_param_player_inner}'
+  }, 'inner');
+  select$1('player_torrent', {
     'inner': '#{settings_param_player_inner}'
   }, 'inner');
   select$1('torrserver_use_link', {
@@ -25669,7 +27506,7 @@
     'favorite@history': '#{title_history}',
     'mytorrents': '#{title_mytorrents}',
     'last': '#{title_last}'
-  }, 'last');
+  }, 'main');
   select$1('scroll_type', {
     'css': 'CSS',
     'js': 'Javascript'
@@ -25770,6 +27607,8 @@
    */
   select$1('jackett_url', '', '');
   select$1('jackett_key', '', '');
+  select$1('prowlarr_url', '', '');
+  select$1('prowlarr_key', '', '');
   select$1('torrserver_url', '', '');
   select$1('torrserver_url_two', '', '');
   select$1('torrserver_login', '', '');
@@ -25784,8 +27623,8 @@
   select$1('tmdb_proxy_api', '', '');
   select$1('tmdb_proxy_image', '', '');
   var Params = {
-    listener: listener$2,
-    init: init$f,
+    listener: listener$1,
+    init: init$d,
     bind: bind,
     update: update$2,
     field: field$1,
@@ -25806,7 +27645,7 @@
       this.limit = 3000;
       this.loaded = false;
     }
-    _createClass(WorkerArray, [{
+    return _createClass(WorkerArray, [{
       key: "init",
       value: function init(class_type) {
         var _this = this;
@@ -25993,15 +27832,14 @@
         this.sendClean();
       }
     }]);
-    return WorkerArray;
   }();
   var WorkerFilterID = /*#__PURE__*/function (_WorkerArray) {
-    _inherits(WorkerFilterID, _WorkerArray);
     function WorkerFilterID() {
       _classCallCheck(this, WorkerFilterID);
       return _callSuper(this, WorkerFilterID, arguments);
     }
-    _createClass(WorkerFilterID, [{
+    _inherits(WorkerFilterID, _WorkerArray);
+    return _createClass(WorkerFilterID, [{
       key: "filter",
       value: function filter(from, to) {
         from.forEach(function (a) {
@@ -26064,10 +27902,8 @@
         this.sendRemove(id, null);
       }
     }]);
-    return WorkerFilterID;
   }(WorkerArray);
   var WorkerObject = /*#__PURE__*/function (_WorkerArray2) {
-    _inherits(WorkerObject, _WorkerArray2);
     function WorkerObject(params) {
       var _this5;
       _classCallCheck(this, WorkerObject);
@@ -26076,7 +27912,8 @@
       _this5.empty = {};
       return _this5;
     }
-    _createClass(WorkerObject, [{
+    _inherits(WorkerObject, _WorkerArray2);
+    return _createClass(WorkerObject, [{
       key: "filter",
       value: function filter(from, to) {
         for (var _id in from) {
@@ -26135,7 +27972,6 @@
         this.sendClean();
       }
     }]);
-    return WorkerObject;
   }(WorkerArray);
   var Workers = {
     //['string',0499383]
@@ -26148,10 +27984,10 @@
     object_string: WorkerObject
   };
 
-  var listener$1 = start$6();
+  var listener = start$7();
   var readed$1 = {};
   var workers = {};
-  function init$e() {
+  function init$c() {
     sync('online_view', 'array_string');
     sync('torrents_view', 'array_string');
     sync('search_history', 'array_string');
@@ -26162,7 +27998,7 @@
     sync('user_clarifys', 'object_object');
     sync('torrents_filter_data', 'object_object');
   }
-  function get$1(name, empty) {
+  function get(name, empty) {
     var value = readed$1[name] || window.localStorage.getItem(name) || empty || '';
     if (value == 'true' || value == 'false') return value == 'true' ? true : false;
     if (readed$1[name] && (Arrays.isObject(value) || Arrays.isArray(value))) return readed$1[name];
@@ -26190,17 +28026,17 @@
       }
       readed$1[name] = value;
     } catch (e) {}
-    if (!nolisten) listener$1.send('change', {
+    if (!nolisten) listener.send('change', {
       name: name,
       value: value
     });
   }
-  function add$3(name, new_value) {
-    var list = get$1(name, '[]');
+  function add$2(name, new_value) {
+    var list = get(name, '[]');
     if (list.indexOf(new_value) == -1) {
       list.push(new_value);
       set(name, list);
-      listener$1.send('add', {
+      listener.send('add', {
         name: name,
         value: new_value
       });
@@ -26211,7 +28047,7 @@
     return Params.field(name);
   }
   function cache(name, max, empty) {
-    var result = get$1(name, JSON.stringify(empty));
+    var result = get(name, JSON.stringify(empty));
     if (Arrays.isObject(empty)) {
       var keys = Arrays.getKeys(result);
       if (keys.length > max) {
@@ -26233,7 +28069,7 @@
       workers[field_name].init(class_type);
     }
   }
-  function remove$1(field_name, value) {
+  function remove(field_name, value) {
     if (workers[field_name]) workers[field_name].remove(value);
   }
   function clean(field_name) {
@@ -26278,16 +28114,16 @@
     }
   }
   var Storage = {
-    listener: listener$1,
-    init: init$e,
-    get: get$1,
+    listener: listener,
+    init: init$c,
+    get: get,
     set: set,
     field: field,
     cache: cache,
-    add: add$3,
+    add: add$2,
     value: value,
     sync: sync,
-    remove: remove$1,
+    remove: remove,
     clear: clear$1,
     clean: clean,
     getsize: getsize
@@ -26392,6 +28228,9 @@
     full_directing: 'Режиссура',
     full_writing: 'Сценарий',
     full_keywords: 'Теги',
+    full_crew: 'Еще',
+    full_editing: 'Редактирование',
+    full_creator: 'Создатель',
     settings_cub_sync: 'Синхронизация',
     settings_cub_sync_descr: 'Синхронизация с сервисом CUB: синхронизация ваших закладок, истории просмотров, меток и тайм-кодов. Сайт: www.cub.red',
     settings_cub_account: 'Аккаунт',
@@ -26494,9 +28333,11 @@
     settings_parser_jackett_placeholder: 'Например: 192.168.х',
     settings_parser_jackett_link: 'Ссылка',
     settings_parser_jackett_link_descr: 'Укажите ссылку на скрипт Jackett',
+    settings_parser_prowlarr_link_descr: 'Укажите ссылку на сервер Prowlarr',
     settings_parser_jackett_key_placeholder: 'Например: sa0sk83d..',
     settings_parser_jackett_key: 'Api-ключ',
     settings_parser_jackett_key_descr: 'Находится в Jackett',
+    settings_parser_prowlarr_key_descr: 'Находится во вкладке настроек Prowlarr в категории основное',
     settings_parser_torlook_type: 'Метод парсинга сайта TorLook',
     settings_parser_scraperapi_placeholder: 'Например: scraperapi.com',
     settings_parser_scraperapi_link: 'Ссылка на парсер сайтов',
@@ -26511,6 +28352,8 @@
     settings_player_type_descr: 'Каким плеером воспроизводить',
     settings_player_iptv_type: 'Тип плеера для IPTV',
     settings_player_iptv_type_descr: 'Каким плеером воспроизводить IPTV каналы',
+    settings_player_torrent_type: 'Тип плеера для торрентов',
+    settings_player_torrent_type_descr: 'Каким плеером воспроизводить торренты',
     settings_player_reset: 'Сбросить плеер по умолчанию',
     settings_player_reset_descr: 'Сбрасывает выбранный Android плеер в приложении',
     settings_player_path: 'Путь к плееру',
@@ -27394,7 +29237,12 @@
     termsofuse_t_11: 'Нарушения авторских прав',
     termsofuse_t_12: 'Если вы обнаружили нарушение авторских прав в приложении Lampa - свяжитесь с разработчиками, используя раздел Контакты приложения. Однако, важно учесть, что приложение Lampa использует API от каталога themoviedb.org, который предоставляет открытый доступ к информации о фильмах и сериалах. Это означает, что информация, которая отображается в приложении Lampa, является общедоступной и не нарушает авторских прав.',
     termsofuse_t_13: 'Если вы считаете, что в приложении Lampa все же есть контент, нарушающий авторские права - обратитесь к правообладателю этого контента с просьбой удалить его со страниц сайта themoviedb.org. В свою очередь, приложение Lampa может удалить контент при получении соответствующего уведомления о нарушении авторских прав.',
-    install_app_apk_text: 'Мы заметили, что для запуска Lampa на Android вы используете MediaStationX. Мы рекомендуем вам установить Lampa в виде APK-приложения. Вы можете скачать последнюю версию приложения здесь:'
+    install_app_apk_text: 'Мы заметили, что для запуска Lampa на Android вы используете MediaStationX. Мы рекомендуем вам установить Lampa в виде APK-приложения. Вы можете скачать последнюю версию приложения здесь:',
+    ad: 'Реклама',
+    ad_disable: 'Подписавшись на CUB Premium, вы забудете о рекламе.',
+    ad_after: 'Реклама через',
+    ad_skip: 'Пропустить',
+    ad_continue_after: 'Просмотр начнется через'
   };
 
   var en = {
@@ -28431,7 +30279,19 @@
     parental_control_no_match_code: 'PIN code does not match the previous code',
     parental_control_input_code: 'Enter PIN code',
     parental_control_input_error: 'You entered an incorrect PIN code',
-    title_worth_rewatch: 'Worth a rewatch'
+    title_worth_rewatch: 'Worth a rewatch',
+    ad_disable: 'By subscribing to CUB Premium, you will forget about advertising.',
+    ad_after: 'Advertising via',
+    ad: 'Advertising',
+    ad_skip: 'Skip',
+    ad_continue_after: 'Viewing will start in',
+    settings_parser_prowlarr_link_descr: 'Provide a link to the Prowlarr server',
+    settings_parser_prowlarr_key_descr: 'Located in the Prowlarr settings tab in the general category',
+    settings_player_torrent_type: 'Player type for torrents',
+    settings_player_torrent_type_descr: 'Which player to play torrents',
+    full_crew: 'More',
+    full_editing: 'Editing',
+    full_creator: 'Creator'
   };
 
   var langs = {};
@@ -28477,7 +30337,7 @@
    * Добавить переводы
    * @param {{key_name:{en:string,ru:string}}} data 
    */
-  function add$2(data) {
+  function add$1(data) {
     for (var name in data) {
       for (var _code in data[name]) {
         if (langs[_code]) {
@@ -28522,7 +30382,7 @@
   }
   var Lang = {
     translate: translate,
-    add: add$2,
+    add: add$1,
     codes: codes,
     addCodes: addCodes,
     AddTranslation: AddTranslation,
@@ -29201,11 +31061,11 @@
       }
     });
   }
-  function show$3() {
+  function show$2() {
     main();
   }
   var Filter = {
-    show: show$3
+    show: show$2
   };
 
   var html$4;
@@ -29215,7 +31075,7 @@
   var sort_item;
   var sort_timer;
   var visible_timer;
-  function init$d() {
+  function init$b() {
     html$4 = Template$1.get('menu');
     scroll = new create$q({
       mask: true,
@@ -29442,6 +31302,12 @@
           source: Storage.field('source')
         });
       }
+      if (prepared(action, ['myperson'])) {
+        Activity$1.push({
+          title: Lang.translate('title_person'),
+          component: 'myperson'
+        });
+      }
       if (action == 'search') Controller.toggle('search');
       if (action == 'settings') Controller.toggle('settings');
       if (action == 'about') {
@@ -29550,12 +31416,12 @@
       });
     });
   }
-  function render$2() {
+  function render$1() {
     return scroll.render();
   }
   var Menu = {
-    render: render$2,
-    init: init$d,
+    render: render$1,
+    init: init$b,
     ready: ready
   };
 
@@ -29576,10 +31442,10 @@
 
   var html$3;
   var object;
-  function init$c() {
+  function init$a() {
     html$3 = Template$1.get('iframe');
   }
-  function show$2() {
+  function show$1() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     object = params;
     html$3.find('iframe').attr('src', params.url)[0].onload = function () {
@@ -29601,14 +31467,14 @@
     html$3.find('iframe').attr('src', '');
     if (object.onBack) object.onBack();
   }
-  function render$1() {
+  function render() {
     return html$3;
   }
   var Iframe = {
-    init: init$c,
-    show: show$2,
+    init: init$a,
+    show: show$1,
     close: close$1,
-    render: render$1
+    render: render
   };
 
   var items = {};
@@ -29617,7 +31483,7 @@
   var scroll_tabs;
   var scroll_body;
   var last_tab;
-  function init$b() {
+  function init$9() {
     Keypad.listener.follow('keydown', function (e) {
       if (e.code == 38 || e.code == 29460) {
         var enable = Controller.enabled();
@@ -29663,7 +31529,7 @@
     html$2.remove();
     Controller.toggle('head');
   }
-  function show$1(name) {
+  function show(name) {
     scroll_body.clear();
     scroll_body.reset();
     if (items[name]) {
@@ -29707,14 +31573,14 @@
   function tab(name, lines) {
     var elem = $('<div class="console__tab selector" data-name="' + Utils$2.hash(name) + '">' + Utils$2.shortText(name, 10) + ' - <span>' + lines.length + '</span></div>');
     elem.on('hover:enter', function () {
-      show$1(name);
+      show(name);
       last_tab = name;
     }).on('hover:focus', function (e) {
       scroll_tabs.update($(e.target));
     });
     scroll_tabs.append(elem);
     if (!last_tab) last_tab = name;
-    if (last_tab == name) show$1(name);
+    if (last_tab == name) show(name);
   }
   function build() {
     html$2 = Template$1.get('console');
@@ -29731,7 +31597,7 @@
     scroll_body.height(html$2.find('.console__tabs'));
     $('body').append(html$2);
   }
-  function add$1(name, message) {
+  function add(name, message) {
     if (!items[name]) items[name] = [];
     var where = items[name];
     var time = Utils$2.parseTime(Date.now()).time;
@@ -29780,7 +31646,7 @@
       } else {
         msgs[0] = '<span style="color: ' + Utils$2.stringToHslColor(msgs[0], 50, 65) + '">' + msgs[0] + '</span>';
       }
-      add$1(name, msgs.join(' '));
+      add(name, msgs.join(' '));
       log.apply(console, mcon);
     };
     window.addEventListener("error", function (e) {
@@ -29794,14 +31660,14 @@
       }
       var stack = (e.error && e.error.stack ? e.error.stack : e.stack || '').split("\n").join('<br>');
       var message = typeof e.error == 'string' ? e.error : (e.error || e).message;
-      add$1('Script', message + '<br><br>' + stack);
+      add('Script', message + '<br><br>' + stack);
       if (!(stack.indexOf('resetTopStyle') >= 0 || stack.indexOf('Blocked a frame') >= 0)) Noty.show('Error: ' + message + '<br><br>' + stack, {
         time: 8000
       });
     });
   }
   var Console = {
-    init: init$b
+    init: init$9
   };
 
   function create$1() {
@@ -29851,7 +31717,7 @@
   /**
    * Запуск
    */
-  function init$a() {
+  function init$8() {
     if (Storage.field('cloud_use')) status(1);
     Settings.listener.follow('open', function (e) {
       body = null;
@@ -29979,7 +31845,7 @@
    * Обновляем состояние
    */
   function update$1() {
-    save$1();
+    save();
   }
 
   /**
@@ -30005,7 +31871,7 @@
             item: item
           };
           read(call);
-        } else save$1(call);
+        } else save(call);
       }, function () {}, false, {
         beforeSend: {
           name: 'Authorization',
@@ -30021,7 +31887,7 @@
   /**
    * Сохраняем закладки в облако
    */
-  function save$1(call) {
+  function save(call) {
     if (Storage.get('cloud_token') && Storage.field('cloud_use')) {
       var conent = JSON.stringify({
         torrents_view: Storage.get('torrents_view', '[]'),
@@ -30057,7 +31923,7 @@
     }
   }
   var Cloud = {
-    init: init$a
+    init: init$8
   };
 
   function create() {
@@ -30097,1130 +31963,6 @@
       html = null;
     };
   }
-
-  var Item = /*#__PURE__*/function () {
-    function Item(data, params) {
-      _classCallCheck(this, Item);
-      this.data = data;
-      this.params = params;
-    }
-    _createClass(Item, [{
-      key: "create",
-      value: function create() {
-        this.html = Template$1.js(this.template, {});
-        this.html.addEventListener('visible', this.visible.bind(this));
-      }
-    }, {
-      key: "update",
-      value: function update() {
-        var url = (this.data.url || this.data.link) + '';
-        var loc = url.slice(0, 6) == 'https:' || window.location.protocol == 'https:';
-        var hts = url.slice(0, 6) == 'https:' || url.slice(0, 5) == 'http:';
-        if (window.location.protocol == 'https:' && hts) url = url.replace(/(http:\/\/|https:\/\/)/g, 'https://');
-        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
-        this.html.querySelector('.extensions__item-author').innerText = this.data.author || (this.params.type == 'plugins' ? '@cub' : '@lampa');
-        this.html.querySelector('.extensions__item-descr').innerText = (this.data.descr || url).replace(/\n|\t|\r/g, ' ');
-        var proto = this.html.querySelector('.extensions__item-proto');
-        if (proto && hts) {
-          proto.toggleClass('hide', !Boolean(this.params.type == 'plugins' || this.params.type == 'installs'));
-          proto.addClass('protocol-' + (loc ? 'https' : 'http'));
-        }
-        var status = this.html.querySelector('.extensions__item-disabled');
-        status.innerText = Lang.translate('player_disabled');
-        if (this.data.status || !this.params.autocheck) status.classList.add('hide');else status.classList.remove('hide');
-      }
-    }, {
-      key: "cub",
-      value: function cub() {
-        var cub = document.createElement('div');
-        cub.classList.add('extensions__cub');
-        cub.innerText = 'CUB';
-        this.html.appendChild(cub);
-      }
-    }, {
-      key: "premium",
-      value: function premium() {
-        var author = this.html.querySelector('.extensions__item-author');
-        var premium = document.createElement('span');
-        premium.classList.add('extensions__item-premium');
-        premium.innerText = 'CUB Premium';
-        var where = author || this.html;
-        where.appendChild(premium);
-      }
-    }, {
-      key: "visible",
-      value: function visible() {
-        this.update();
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        this.html.remove();
-      }
-    }]);
-    return Item;
-  }();
-
-  function showReload(cancel) {
-    Modal.open({
-      title: '',
-      align: 'center',
-      zIndex: 300,
-      html: $('<div class="about">' + Lang.translate('plugins_need_reload') + '</div>'),
-      buttons: [{
-        name: Lang.translate('settings_param_no'),
-        onSelect: function onSelect() {
-          Modal.close();
-          cancel();
-        }
-      }, {
-        name: Lang.translate('settings_param_yes'),
-        onSelect: function onSelect() {
-          window.location.reload();
-        }
-      }]
-    });
-  }
-  function showInfo(plug, back) {
-    var modal = Template$1.get('extensions_info');
-    var footer = $('.extensions-info__footer', modal);
-    if (plug.image) modal.prepend($('<img class="extensions-info__image" src="' + plug.image + '"/>'));
-    $('.extensions-info__descr', modal).text(plug.descr);
-    $('.extensions-info__instruction', modal).html((plug.instruction || Lang.translate('extensions_no_info')).replace(/\n/g, '<br>').replace(/\s\s/g, '&nbsp;&nbsp;'));
-    function addLabel(name, value) {
-      var label = $("<div>\n            <div class=\"extensions-info__label\">".concat(name, "</div>\n            <div class=\"extensions-info__value\">").concat(value, "</div>\n        </div>"));
-      footer.append(label);
-    }
-    if (plug.link) addLabel(Lang.translate('settings_parser_jackett_link'), plug.link);
-    if (plug.author) addLabel(Lang.translate('title_author'), plug.author);
-    if (plug.time) addLabel(Lang.translate('settings_added'), Utils$2.parseTime(plug.time).full);
-    Modal.open({
-      title: plug.name || Lang.translate('extensions_info'),
-      html: modal,
-      size: 'large',
-      onBack: function onBack() {
-        Modal.close();
-        back();
-      }
-    });
-  }
-  var Utils$1 = {
-    showReload: showReload,
-    showInfo: showInfo
-  };
-
-  var Extension = /*#__PURE__*/function (_Item) {
-    _inherits(Extension, _Item);
-    function Extension(data, params) {
-      var _this;
-      _classCallCheck(this, Extension);
-      _this = _callSuper(this, Extension, [data, params]);
-      _this.network = new create$p();
-      _this.template = 'extensions_item';
-      return _this;
-    }
-    _createClass(Extension, [{
-      key: "visible",
-      value: function visible() {
-        _get(_getPrototypeOf(Extension.prototype), "visible", this).call(this);
-        if (this.params.cub) this.cub();
-        if (this.data.premium) this.premium();
-        if (this.params.autocheck) this.check();
-        if (Plugins.loaded().indexOf(this.data.url || this.data.link) >= 0) this.html.querySelector('.extensions__item-included').classList.remove('hide');
-        this.html.addEventListener('hover:enter', this.menu.bind(this));
-      }
-    }, {
-      key: "menu",
-      value: function menu() {
-        var _this2 = this;
-        if (this.removed) return;
-        var menu = [];
-        var controller = Controller.enabled().name;
-        var back = function back() {
-          Controller.toggle(controller);
-        };
-        if (this.params.type == 'plugins' || this.params.type == 'installs') {
-          menu.push({
-            title: Lang.translate('extensions_' + (this.data.status ? 'disable' : 'enable')),
-            toggle: true
-          });
-        }
-        menu.push({
-          title: Lang.translate('extensions_check'),
-          status: true
-        });
-        if (this.params.cub || this.params.noedit) {
-          if (this.params.type == 'extensions') {
-            menu.push({
-              title: Lang.translate('extensions_install'),
-              install: true
-            });
-          }
-          menu.push({
-            title: Lang.translate('extensions_info'),
-            instruction: true
-          });
-        } else {
-          menu.push({
-            title: Lang.translate('extensions_edit'),
-            separator: true
-          });
-          menu.push({
-            title: Lang.translate('extensions_change_name'),
-            change: 'name'
-          });
-          menu.push({
-            title: Lang.translate('extensions_change_link'),
-            change: 'url'
-          });
-          menu.push({
-            title: Lang.translate('extensions_remove'),
-            remove: true
-          });
-        }
-        Select.show({
-          title: Lang.translate('title_action'),
-          items: menu,
-          onBack: back,
-          onSelect: function onSelect(a) {
-            if (a.toggle) {
-              _this2.data.status = _this2.data.status == 1 ? 0 : 1;
-              if (_this2.params.cub) Account.pluginsStatus(_this2.data, _this2.data.status);else Plugins.save(_this2.data);
-              _this2.update();
-              if (_this2.data.status == 1) {
-                back();
-                Plugins.push(_this2.data);
-              } else {
-                Utils$1.showReload(back);
-              }
-            } else if (a.change) {
-              Input.edit({
-                title: a.change == 'name' ? Lang.translate('extensions_set_name') : Lang.translate('extensions_set_url'),
-                value: _this2.data[a.change] || '',
-                free: true,
-                nosave: true
-              }, function (new_value) {
-                if (new_value) {
-                  _this2.data[a.change] = new_value;
-                  Plugins.save(_this2.data);
-                  _this2.update();
-                  if (a.change == 'url') {
-                    _this2.check();
-                    Plugins.push(_this2.data);
-                  }
-                }
-                back();
-              });
-            } else if (a.status) {
-              back();
-              _this2.check();
-            } else if (a.install) {
-              var ready = Plugins.get().find(function (b) {
-                return b.url == _this2.data.link;
-              });
-              if (ready) {
-                Noty.show(Lang.translate('extensions_ready'));
-                back();
-              } else {
-                back();
-                Plugins.add({
-                  url: _this2.data.link,
-                  status: 1,
-                  name: _this2.data.name,
-                  author: _this2.data.author
-                });
-                _this2.html.querySelector('.extensions__item-included').classList.remove('hide');
-              }
-            } else if (a.instruction) {
-              Utils$1.showInfo(_this2.data, back);
-            } else if (a.remove) {
-              Plugins.remove(_this2.data);
-              _this2.html.style.opacity = 0.5;
-              _this2.removed = true;
-              Utils$1.showReload(back);
-            }
-          }
-        });
-      }
-    }, {
-      key: "check",
-      value: function check() {
-        var check = this.html.querySelector('.extensions__item-check');
-        var code = this.html.querySelector('.extensions__item-code');
-        var stat = this.html.querySelector('.extensions__item-status');
-        check.classList.remove('hide');
-        code.classList.add('hide');
-        stat.classList.add('hide');
-        var display = function display(type, num, text) {
-          code.innerText = num;
-          code.classList.remove('hide');
-          code.classList.remove('success');
-          code.classList.remove('error');
-          code.classList.add(type);
-          stat.innerText = text;
-          stat.classList.remove('hide');
-          check.classList.add('hide');
-        };
-        var url = Utils$2.rewriteIfHTTPS(this.data.url || this.data.link);
-        this.network.timeout(5000);
-        this.network["native"](url, function (str) {
-          if (/Lampa\./.test(str)) {
-            display('success', 200, Lang.translate('extensions_worked'));
-          } else {
-            display('error', 500, Lang.translate('extensions_no_plugin'));
-          }
-        }, function (a, e) {
-          display('error', 404, Lang.translate('title_error'));
-        }, false, {
-          dataType: 'text'
-        });
-      }
-    }]);
-    return Extension;
-  }(Item);
-
-  var Recomend = /*#__PURE__*/function (_Extension) {
-    _inherits(Recomend, _Extension);
-    function Recomend(data, params) {
-      var _this;
-      _classCallCheck(this, Recomend);
-      _this = _callSuper(this, Recomend, [data, params]);
-      _this.template = 'extensions_recomend';
-      return _this;
-    }
-    _createClass(Recomend, [{
-      key: "visible",
-      value: function visible() {
-        var _this2 = this;
-        _get(_getPrototypeOf(Recomend.prototype), "visible", this).call(this);
-        this.img = this.html.querySelector('.extensions__item-image');
-        this.img.onload = function () {
-          _this2.img.classList.add('loaded');
-        };
-        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        _get(_getPrototypeOf(Recomend.prototype), "destroy", this).call(this);
-        if (this.img) {
-          this.img.onload = false;
-          this.img.onerror = false;
-        }
-      }
-    }]);
-    return Recomend;
-  }(Extension);
-
-  var Theme$1 = /*#__PURE__*/function () {
-    function Theme() {
-      _classCallCheck(this, Theme);
-    }
-    _createClass(Theme, [{
-      key: "init",
-      value: function init() {
-        if (this.get()) this.set(this.get());
-      }
-    }, {
-      key: "toggle",
-      value: function toggle(url) {
-        if (url) {
-          Storage.set('cub_theme', url);
-          this.set(url);
-        } else {
-          Storage.set('cub_theme', '');
-          $('#cub-theme').remove();
-        }
-      }
-    }, {
-      key: "get",
-      value: function get() {
-        return Storage.get('cub_theme', '');
-      }
-    }, {
-      key: "set",
-      value: function set(url) {
-        $('#cub-theme').remove();
-        var href = Utils$2.rewriteIfHTTPS(Utils$2.addUrlComponent(url, 'token=' + encodeURIComponent(Storage.get('account', '{}').token)));
-        var css = $('<link rel="stylesheet" href="' + href + '" id="cub-theme">');
-        $('body').append(css);
-      }
-    }]);
-    return Theme;
-  }();
-  var Theme$2 = new Theme$1();
-
-  var Theme = /*#__PURE__*/function (_Item) {
-    _inherits(Theme, _Item);
-    function Theme(data, params) {
-      var _this;
-      _classCallCheck(this, Theme);
-      _this = _callSuper(this, Theme, [data, params]);
-      _this.template = 'extensions_theme';
-      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
-      return _this;
-    }
-    _createClass(Theme, [{
-      key: "update",
-      value: function update() {
-        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
-        if (this.active()) this.html.classList.add('active');else this.html.classList.remove('active');
-      }
-    }, {
-      key: "active",
-      value: function active() {
-        return Storage.get('cub_theme', '') == this.link;
-      }
-    }, {
-      key: "visible",
-      value: function visible() {
-        var _this2 = this;
-        _get(_getPrototypeOf(Theme.prototype), "visible", this).call(this);
-        if (this.data.premium) this.premium();
-        this.img = this.html.querySelector('.extensions__item-image');
-        this.img.onload = function () {
-          _this2.img.classList.add('loaded');
-        };
-        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
-        this.html.addEventListener('hover:enter', this.menu.bind(this));
-      }
-    }, {
-      key: "menu",
-      value: function menu() {
-        var _this3 = this;
-        var menu = [];
-        var controller = Controller.enabled().name;
-        menu.push({
-          title: Lang.translate('extensions_' + (this.active() ? 'disable' : 'enable')),
-          toggle: true
-        });
-        Select.show({
-          title: Lang.translate('title_action'),
-          items: menu,
-          onBack: function onBack() {
-            Controller.toggle(controller);
-          },
-          onSelect: function onSelect(a) {
-            Controller.toggle(controller);
-            if (a.toggle) {
-              if (!_this3.active() && _this3.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium();
-              Theme$2.toggle(_this3.active() ? '' : _this3.link);
-              _this3.update();
-            }
-          }
-        });
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        _get(_getPrototypeOf(Theme.prototype), "destroy", this).call(this);
-        if (this.img) {
-          this.img.onload = false;
-          this.img.onerror = false;
-        }
-      }
-    }]);
-    return Theme;
-  }(Item);
-
-  var Screensaver = /*#__PURE__*/function (_Item) {
-    _inherits(Screensaver, _Item);
-    function Screensaver(data, params) {
-      var _this;
-      _classCallCheck(this, Screensaver);
-      _this = _callSuper(this, Screensaver, [data, params]);
-      _this.template = 'extensions_screensaver';
-      _this.link = Utils$2.rewriteIfHTTPS(Utils$2.protocol() + object$2.cub_domain + '/extensions/' + _this.data.id);
-      return _this;
-    }
-    _createClass(Screensaver, [{
-      key: "update",
-      value: function update() {
-        this.html.querySelector('.extensions__item-name').innerText = this.data.name || Lang.translate('extensions_no_name');
-        this.html.querySelector('.extensions__item-time').innerText = Utils$2.parseTime(Date.now()).time;
-        if (this.active()) this.html.classList.add('active');else this.html.classList.remove('active');
-      }
-    }, {
-      key: "active",
-      value: function active() {
-        return Storage.field('screensaver_type') == 'cub' && Storage.get('cub_screensaver', '') == this.link;
-      }
-    }, {
-      key: "visible",
-      value: function visible() {
-        var _this2 = this;
-        _get(_getPrototypeOf(Screensaver.prototype), "visible", this).call(this);
-        if (this.data.premium) this.premium();
-        this.img = this.html.querySelector('.extensions__item-image');
-        this.img.onload = function () {
-          _this2.img.classList.add('loaded');
-        };
-        this.img.src = Utils$2.rewriteIfHTTPS(this.data.image);
-        this.html.addEventListener('hover:enter', this.menu.bind(this));
-      }
-    }, {
-      key: "menu",
-      value: function menu() {
-        var _this3 = this;
-        var menu = [];
-        var controller = Controller.enabled().name;
-        menu.push({
-          title: Lang.translate('extensions_' + (this.active() ? 'disable' : 'enable')),
-          toggle: true
-        });
-        menu.push({
-          title: Lang.translate('title_watch'),
-          watch: true
-        });
-        Select.show({
-          title: Lang.translate('title_action'),
-          items: menu,
-          onBack: function onBack(a) {
-            Controller.toggle(controller);
-          },
-          onSelect: function onSelect(a) {
-            Controller.toggle(controller);
-            if (a.toggle) {
-              if (_this3.active()) Storage.set('cub_screensaver', '');else {
-                if (_this3.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium();
-                Storage.set('cub_screensaver', _this3.link);
-                Storage.set('screensaver_type', 'cub');
-              }
-              _this3.update();
-            } else {
-              Screensaver$2.show('cub', {
-                url: _this3.link
-              });
-            }
-          }
-        });
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        _get(_getPrototypeOf(Screensaver.prototype), "destroy", this).call(this);
-        if (this.img) {
-          this.img.onload = false;
-          this.img.onerror = false;
-        }
-      }
-    }]);
-    return Screensaver;
-  }(Item);
-
-  var Line = /*#__PURE__*/function () {
-    function Line(data, params) {
-      _classCallCheck(this, Line);
-      this.params = params;
-      this.data = data;
-      this.items = [];
-      this.active = 0;
-      this.view = 4;
-      this.last;
-    }
-    _createClass(Line, [{
-      key: "create",
-      value: function create() {
-        var _this = this;
-        this.scroll = new create$q({
-          horizontal: true,
-          step: window.innerWidth / 4
-        });
-        this.html = Template$1.js('extensions_block', {});
-        this.html.querySelector('.extensions__block-title').innerText = this.params.title;
-        this.html.addEventListener('visible', this.visible.bind(this));
-        this.html.querySelector('.extensions__block-body').appendChild(this.scroll.render(true));
-        this.scroll.onWheel = function (step) {
-          if (!Controller.own(_this)) _this.toggle();
-          Controller.enabled().controller[step > 0 ? 'right' : 'left']();
-        };
-        this.scroll.onScroll = this.attach.bind(this);
-      }
-    }, {
-      key: "display",
-      value: function display(num) {
-        var _this2 = this;
-        this.data.filter(function (p) {
-          if (p.platform) {
-            var platforms = p.platform.split(',');
-            return platforms.find(function (n) {
-              return Platform.is(n);
-            });
-          } else return true;
-        }).slice(0, num || this.view).filter(function (e) {
-          return !_this2.items.find(function (f) {
-            return f.data == e;
-          });
-        }).forEach(this.append.bind(this));
-      }
-    }, {
-      key: "visible",
-      value: function visible() {
-        this.display(this.view);
-        Layer.visible(this.scroll.render(true));
-      }
-    }, {
-      key: "append",
-      value: function append(elem) {
-        var _this3 = this;
-        var Class = Extension;
-        if (this.params.hpu == 'recomend') Class = Recomend;
-        if (this.params.hpu == 'theme') Class = Theme;
-        if (this.params.hpu == 'screensaver') Class = Screensaver;
-        var item = new Class(elem, this.params);
-        item.create();
-        item.render().addEventListener('hover:focus', function () {
-          _this3.last = item.render();
-          var prev_active = _this3.active;
-          _this3.active = _this3.items.indexOf(item);
-          if (_this3.active > 0 || prev_active > _this3.active) _this3.scroll.update(_this3.last, true);
-        });
-        this.scroll.body(true).appendChild(item.render());
-        this.items.push(item);
-        if (Controller.own(this)) Controller.collectionAppend(item.render());
-      }
-    }, {
-      key: "attach",
-      value: function attach() {
-        var size = Platform.screen('tv') ? (Math.round(this.active / this.view) + 1) * this.view + 1 : this.data.length;
-        this.display(size);
-        Layer.visible(this.scroll.render(true));
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "toggle",
-      value: function toggle() {
-        var _this4 = this;
-        Controller.add('extensions_line', {
-          link: this,
-          toggle: function toggle() {
-            Controller.collectionSet(_this4.scroll.render(true));
-            Controller.collectionFocus(_this4.items.length ? _this4.last : false, _this4.scroll.render(true));
-            if (_this4.onToggle) _this4.onToggle(_this4);
-          },
-          update: function update() {},
-          right: function right() {
-            Navigator.move('right');
-          },
-          left: function left() {
-            Navigator.move('left');
-          },
-          down: this.onDown,
-          up: this.onUp,
-          back: this.onBack
-        });
-        Controller.toggle('extensions_line');
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        Arrays.destroy(this.items);
-        this.scroll.destroy();
-        this.html.remove();
-        this.items = null;
-      }
-    }]);
-    return Line;
-  }();
-
-  var Add = /*#__PURE__*/function () {
-    function Add() {
-      var _this = this;
-      _classCallCheck(this, Add);
-      this.html = document.createElement('div');
-      this.html.classList.add('extensions__block-add');
-      this.html.classList.add('selector');
-      this.html.innerText = Lang.translate('extensions_add');
-      this.html.addEventListener('hover:enter', function () {
-        Input.edit({
-          title: Lang.translate('extensions_set_url'),
-          value: '',
-          free: true,
-          nosave: true
-        }, function (new_value) {
-          _this.onAdd(new_value);
-        });
-      });
-    }
-    _createClass(Add, [{
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }]);
-    return Add;
-  }();
-
-  var Main = /*#__PURE__*/function () {
-    function Main(params) {
-      _classCallCheck(this, Main);
-      this.items = [];
-      this.active = 0;
-      this.params = params;
-    }
-    _createClass(Main, [{
-      key: "create",
-      value: function create() {
-        var _this = this;
-        this.html = Template$1.js('extensions');
-        this.scroll = new create$q({
-          mask: true
-        });
-        this.scroll.onWheel = function (step) {
-          if (step > 0) _this.down();else _this.up();
-        };
-        this.scroll.append(HeadBackward(Lang.translate('settings_main_plugins'), true));
-        this.scroll.height();
-        this.html.querySelector('.extensions__body').appendChild(this.scroll.render(true));
-        if (this.params.store) this.loadCustomStore();else this.load();
-      }
-    }, {
-      key: "add",
-      value: function add() {
-        var add = new Add();
-        var line = this.items[0];
-        add.onAdd = function (url) {
-          if (url) {
-            var data = {
-              url: url,
-              status: 1
-            };
-            var plugin = new Extension(data, {
-              type: 'installs',
-              autocheck: true
-            });
-            plugin.create();
-            Plugins.add(data);
-            $(add.render()).after(plugin.render());
-            line.last = add.render();
-            Layer.visible(line.render());
-            line.toggle();
-          } else {
-            line.toggle();
-          }
-        };
-        line.scroll.body(true).appendChild(add.render());
-      }
-    }, {
-      key: "loadCustomStore",
-      value: function loadCustomStore() {
-        var _this2 = this;
-        this.appendLoader();
-        var net = new create$p();
-        net.silent(this.params.store, function (data) {
-          _this2.loader.remove();
-          net = null;
-          if (data.results && data.results.length) {
-            if (_this2.params.with_installed) {
-              _this2.appendLine(Plugins.get().reverse(), {
-                title: Lang.translate('extensions_from_memory'),
-                type: 'installs',
-                autocheck: true
-              });
-            }
-            data.results.forEach(function (a) {
-              _this2.appendLine(a.results, {
-                title: a.title || Lang.translate('player_unknown'),
-                type: 'extensions',
-                hpu: a.hpu,
-                noedit: true
-              });
-            });
-            if (_this2.params.with_installed) _this2.add();
-            _this2.items.slice(0, 3).forEach(function (i) {
-              return i.display();
-            });
-            Layer.visible(_this2.html);
-            _this2.toggle();
-          } else {
-            _this2.error();
-          }
-        }, function () {
-          _this2.loader.remove();
-          net = null;
-          _this2.error();
-        });
-      }
-    }, {
-      key: "load",
-      value: function load() {
-        var _this3 = this;
-        this.appendLoader();
-        var need = 2;
-        if (window.lampa_settings.plugins_store) need += 2;
-        var status = new status$1(need);
-        status.onComplite = function () {
-          _this3.loader.remove();
-          _this3.appendLine(status.data.installs, {
-            title: Lang.translate('extensions_from_memory'),
-            type: 'installs',
-            autocheck: true
-          });
-          if (status.data.plugins.length) _this3.appendLine(status.data.plugins, {
-            title: Lang.translate('extensions_from_cub'),
-            cub: true,
-            type: 'plugins',
-            autocheck: true
-          });
-          if (status.data.best && status.data.best.length) _this3.appendLine(status.data.best, {
-            title: Lang.translate('extensions_from_popular'),
-            cub: true,
-            type: 'extensions'
-          });
-          if (status.data.all && status.data.all.length) _this3.appendLine(status.data.all.reverse(), {
-            title: Lang.translate('extensions_from_lib'),
-            cub: true,
-            type: 'extensions'
-          });
-          if (status.data.list) {
-            status.data.list.forEach(function (data) {
-              if (data.results.length) {
-                _this3.appendLine(data.results, {
-                  title: Lang.translate('extensions_hpu_' + data.hpu),
-                  cub: true,
-                  type: 'extensions',
-                  hpu: data.hpu
-                });
-              }
-            });
-          }
-          _this3.add();
-          _this3.items.slice(0, 3).forEach(function (i) {
-            return i.display();
-          });
-          Layer.visible(_this3.html);
-          _this3.toggle();
-        };
-        status.append('installs', Plugins.get().reverse());
-        Account.plugins(function (plugins) {
-          status.append('plugins', plugins);
-        });
-        if (window.lampa_settings.plugins_store) {
-          Account.extensions(function (extensions) {
-            if (extensions.results) {
-              status.need--;
-              status.append('list', extensions.results);
-            } else {
-              status.append('best', extensions.best);
-              status.append('all', extensions.plugins);
-            }
-          });
-        }
-      }
-    }, {
-      key: "appendLoader",
-      value: function appendLoader() {
-        this.loader = document.createElement('div');
-        this.loader.classList.add('broadcast__scan');
-        this.loader.appendChild(document.createElement('div'));
-        this.scroll.body(true).appendChild(this.loader);
-      }
-    }, {
-      key: "error",
-      value: function error() {
-        var empty = new Lampa.Empty();
-        this.scroll.body(true).appendChild(empty.render(true));
-      }
-    }, {
-      key: "appendLine",
-      value: function appendLine(data, params) {
-        var _this4 = this;
-        var line = new Line(data, params);
-        line.onBack = this.onBack.bind(this);
-        line.onUp = this.up.bind(this);
-        line.onDown = this.down.bind(this);
-        line.onToggle = function () {
-          _this4.active = _this4.items.indexOf(line);
-          _this4.scroll.update(line.render(), true);
-        };
-        line.create();
-        this.scroll.body(true).appendChild(line.render());
-        this.items.push(line);
-      }
-    }, {
-      key: "down",
-      value: function down() {
-        this.active++;
-        if (this.active <= this.items.length - 1) this.items[this.active].toggle();
-        this.active = Math.min(this.items.length - 1, this.active);
-      }
-    }, {
-      key: "up",
-      value: function up() {
-        this.active--;
-        if (this.active >= 0) this.items[this.active].toggle();
-        this.active = Math.max(0, this.active);
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return this.html;
-      }
-    }, {
-      key: "toggle",
-      value: function toggle() {
-        var _this5 = this;
-        Controller.add('extensions', {
-          toggle: function toggle() {
-            Controller.collectionSet(_this5.html);
-            if (_this5.items.length) {
-              _this5.items[_this5.active].toggle();
-            }
-          },
-          back: this.onBack
-        });
-        Controller.toggle('extensions');
-      }
-    }, {
-      key: "destroy",
-      value: function destroy() {
-        Arrays.destroy(this.items);
-        this.scroll.destroy();
-        this.html.remove();
-      }
-    }]);
-    return Main;
-  }();
-
-  var extensions;
-  var listener = start$6();
-  function init$9() {}
-  function show() {
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    if (extensions) return;
-    var controller = Controller.enabled().name;
-    extensions = new Main(params);
-    extensions.onBack = function () {
-      extensions.destroy();
-      extensions = null;
-      document.body.toggleClass('ambience--enable', false);
-      Controller.toggle(controller);
-      if (params.onClose) params.onClose();
-      if (!params.store) listener.send('close', {});
-    };
-    extensions.create();
-    document.body.toggleClass('ambience--enable', true);
-    document.body.appendChild(extensions.render(true));
-    extensions.toggle();
-    if (!params.store) listener.send('open', {
-      extensions: extensions
-    });
-  }
-  function render(js) {
-    var html = extensions ? extensions.render() : document.createElement('div');
-    return js ? html : $(html);
-  }
-  var Extensions = {
-    init: init$9,
-    listener: listener,
-    show: show,
-    render: render
-  };
-
-  var _created = [];
-  var _loaded = [];
-  var _network = new create$p();
-
-  /**
-   * Запуск
-   */
-  function init$8() {
-    _loaded = Storage.get('plugins', '[]');
-    Settings.main().render().find('[data-component="plugins"]').unbind('hover:enter').on('hover:enter', function () {
-      Extensions.show();
-    });
-  }
-  function get() {
-    return _loaded.map(function (a) {
-      return a;
-    });
-  }
-  function modify() {
-    var list = Storage.get('plugins', '[]');
-    list = list.map(function (a) {
-      return typeof a == 'string' ? {
-        url: a,
-        status: 1
-      } : a;
-    });
-    list.forEach(function (a) {
-      a.url = (a.url + '').replace('cub.watch', object$2.cub_domain);
-    });
-    console.log('Plugins', 'modify:', list);
-    Storage.set('plugins', list);
-  }
-  function remove(plug) {
-    Arrays.remove(_loaded, plug);
-    console.log('Plugins', 'remove:', plug, 'index:', _loaded.indexOf(plug), 'from:', _loaded);
-    Storage.set('plugins', _loaded);
-  }
-  function add(plug) {
-    _loaded.push(plug);
-    console.log('Plugins', 'add:', plug);
-    Storage.set('plugins', _loaded);
-    push(plug);
-  }
-  function push(plug) {
-    var find = _created.find(function (a) {
-      return a == plug.url;
-    });
-    if (!find && plug.status == 1) {
-      _created.push(plug.url);
-      console.log('Plugins', 'push:', plug);
-      Utils$2.putScriptAsync([addPluginParams(plug.url)], false, function () {
-        Noty.show(Lang.translate('plugins_check_fail'), {
-          time: 8000
-        });
-      }, function () {
-        updatePluginDB(plug.url, addPluginParams(plug.url));
-        Noty.show(Lang.translate('plugins_add_success'));
-      }, false);
-    }
-  }
-  function save() {
-    console.log('Plugins', 'save:', _loaded);
-    Storage.set('plugins', _loaded);
-  }
-  function updatePluginDB(name, url) {
-    if (Account.hasPremium()) {
-      _network["native"](url, function (str) {
-        Cache.rewriteData('plugins', name, str).then(function () {
-          console.log('Plugins', 'update plugin cache:', name);
-        })["catch"](function (e) {
-          console.log('Plugins', 'add to cache fail:', name, typeof e == 'string' ? e : e ? e.message : 'no details');
-        });
-      }, false, false, {
-        dataType: 'text'
-      });
-    }
-  }
-  function createPluginDB(name) {
-    if (Account.hasPremium()) {
-      Cache.getData('plugins', name).then(function (code) {
-        if (code) {
-          var s = document.createElement('script');
-          s.type = 'text/javascript';
-          try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
-          } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
-          }
-          console.log('Plugins', 'add plugin from cache:', name);
-        } else console.log('Plugins', 'no find in cache:', name);
-      })["catch"](function (e) {
-        console.log('Plugins', 'include from cache fail:', name, typeof e == 'string' ? e : e.message);
-      });
-    }
-  }
-  function addPluginParams(url) {
-    var encode = url;
-    encode = encode.replace('cub.watch', object$2.cub_domain);
-    if (!/[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}/.test(encode)) {
-      encode = encode.replace(/\{storage_(\w+|\d+|_|-)\}/g, function (match, key) {
-        return encodeURIComponent(Base64.encode(localStorage.getItem(key) || ''));
-      });
-      var email = (localStorage.getItem('account_email') || '').trim();
-      if (Account.logged() && email) encode = Utils$2.addUrlComponent(encode, 'email=' + encodeURIComponent(Base64.encode(email)));
-      encode = Utils$2.addUrlComponent(encode, 'logged=' + encodeURIComponent(Account.logged() ? 'true' : 'false'));
-      encode = Utils$2.addUrlComponent(encode, 'reset=' + Math.random());
-      encode = Utils$2.rewriteIfHTTPS(encode);
-    }
-    return encode;
-  }
-  function loadBlackList(call) {
-    _network.silent('./plugins_black_list.json', function (list) {
-      call(list);
-    }, function () {
-      call([]);
-    });
-  }
-
-  /**
-   * Загрузка всех плагинов
-   */
-  function load(call) {
-    console.log('Plugins', 'start load');
-    modify();
-    loadBlackList(function (black_list) {
-      Account.plugins(function (plugins) {
-        var puts = window.lampa_settings.plugins_use ? plugins.filter(function (plugin) {
-          return plugin.status;
-        }).map(function (plugin) {
-          return plugin.url;
-        }).concat(Storage.get('plugins', '[]').filter(function (plugin) {
-          return plugin.status;
-        }).map(function (plugin) {
-          return plugin.url;
-        })) : [];
-        puts.push('./plugins/modification.js');
-        puts = puts.filter(function (element, index) {
-          return puts.indexOf(element) === index;
-        });
-        console.log('Plugins', 'load list:', puts);
-        black_list.push('lipp.xyz');
-        black_list.push('llpp.xyz');
-        black_list.push('scabrum.github.io');
-        console.log('Plugins', 'black list:', black_list);
-        black_list.forEach(function (b) {
-          puts = puts.filter(function (p) {
-            return p.indexOf(b) == -1;
-          });
-        });
-        console.log('Plugins', 'clear list:', puts);
-        var errors = [];
-        var original = {};
-        var include = [];
-        puts.forEach(function (url) {
-          var encode = addPluginParams(url);
-          include.push(encode);
-          original[encode] = url;
-        });
-        Utils$2.putScriptAsync(include, function () {
-          call();
-          if (errors.length) {
-            setTimeout(function () {
-              Noty.show(Lang.translate('plugins_no_loaded') + ' (' + errors.join(', ') + ')', {
-                time: 6000
-              });
-            }, 2000);
-          }
-        }, function (u) {
-          if (u.indexOf('modification.js') == -1) {
-            console.log('Plugins', 'error:', original[u]);
-            errors.push(original[u]);
-            createPluginDB(original[u]);
-          }
-        }, function (u) {
-          console.log('Plugins', 'include:', original[u]);
-          _created.push(original[u]);
-          updatePluginDB(original[u], u);
-        }, false);
-      });
-    });
-  }
-  var Plugins = {
-    init: init$8,
-    load: load,
-    remove: remove,
-    loaded: function loaded() {
-      return _created;
-    },
-    add: add,
-    get: get,
-    save: save,
-    push: push
-  };
 
   var VideoQuality = {
     get: function get() {
@@ -31298,7 +32040,7 @@
       sections: []
     };
     console.log('Tizen', 'start pick');
-    var status = new status$1(3);
+    var status = new status$2(3);
     status.onComplite = function (result) {
       if (result.popular) data.sections.push(result.popular);
       if (result.continues) data.sections.push(result.continues);
@@ -31429,6 +32171,7 @@
         if (step > 0) _this2.down();else if (active > 0) _this2.up();
       };
       scroll.onEnd = this.loadNext.bind(this);
+      if (this.onLinesBuild) this.onLinesBuild(data);
       data.forEach(this.append.bind(this));
       html.appendChild(scroll.render(true));
       Layer.update(html);
@@ -31711,7 +32454,7 @@
       _classCallCheck(this, CardClass);
       this.params = params;
     }
-    _createClass(CardClass, [{
+    return _createClass(CardClass, [{
       key: "create",
       value: function create() {
         this.build();
@@ -31780,7 +32523,6 @@
         return js ? this.card : $(this.card);
       }
     }]);
-    return CardClass;
   }();
 
   var Watched = /*#__PURE__*/function () {
@@ -31797,7 +32539,7 @@
       this.card = new CardClass(params);
       this.card.create();
     }
-    _createClass(Watched, [{
+    return _createClass(Watched, [{
       key: "destroy",
       value: function destroy() {
         this.card.destroy();
@@ -31808,7 +32550,6 @@
         return this.card.render(js);
       }
     }]);
-    return Watched;
   }();
 
   var network;
@@ -31882,52 +32623,180 @@
     init: init$5
   };
 
+  var BotClass = /*#__PURE__*/function () {
+    function BotClass(params) {
+      _classCallCheck(this, BotClass);
+      this.params = params;
+      this.build();
+      this.image();
+    }
+    return _createClass(BotClass, [{
+      key: "build",
+      value: function build() {
+        var _this = this;
+        this.card = Template$1.js('ad_bot');
+        this.img = this.card.querySelector('.ad-bot__img') || {};
+        this.card.querySelector('.ad-bot__title').innerText = this.params.title;
+        this.card.querySelector('.ad-bot__text').innerText = this.params.text;
+        this.card.querySelector('.ad-bot__more').innerText = Lang.translate('full_detail');
+        this.card.querySelector('.ad-bot__info').innerText = Lang.translate('ad_disable');
+        this.card.addEventListener('hover:enter', function () {
+          var tpl = Template$1.get('cub_premium');
+          tpl.find('.cub-premium__title').text(Lang.translate('title_notice'));
+          tpl.find('.cub-premium__descr').eq(0).empty().text(Lang.translate('ad_notice_' + _this.params.type));
+          Modal.open({
+            title: '',
+            size: 'medium',
+            mask: true,
+            html: tpl,
+            onBack: function onBack() {
+              Modal.close();
+              Controller.toggle('content');
+            }
+          });
+        });
+        this.visible();
+      }
+    }, {
+      key: "image",
+      value: function image() {
+        var _this2 = this;
+        this.img.onload = function () {
+          _this2.card.classList.add('img--loaded');
+        };
+        this.img.onerror = function () {
+          TMDB$1.broken();
+          console.log('Img', 'noload', _this2.img.src);
+          _this2.img.src = './img/img_broken.svg';
+        };
+      }
+    }, {
+      key: "visible",
+      value: function visible() {
+        if (this.params.poster) this.img.src = Api.img(this.params.poster);else if (this.params.img) this.img.src = this.params.img;else this.img.src = './img/img_broken.svg';
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        this.img.onerror = function () {};
+        this.img.onload = function () {};
+        this.img.src = '';
+        this.card.remove();
+        this.card = null;
+        this.img = null;
+      }
+    }, {
+      key: "render",
+      value: function render(js) {
+        return js ? this.card : $(this.card);
+      }
+    }]);
+  }();
+
   function init$4() {
+    if (Account.logged() && Lang.selected(['ru', 'uk', 'be', 'bg'])) {
+      var user = Storage.get('account_user', '{}');
+      if (user.premium && !Account.hasPremium()) setTimeout(push, 5000);
+    }
+  }
+  function push() {
+    var id = 'extend_premium';
+    if (Notice$1.classes.lampa.notices.find(function (n) {
+      return n.id == id;
+    })) return;
+    var notice = {
+      id: id,
+      from: 'cub',
+      title: {
+        ru: 'Продлите CUB Premium прямо сейчас!',
+        uk: 'Продовжіть CUB Premium прямо зараз!',
+        be: 'Працягнеце CUB Premium прама зараз!',
+        bg: 'Подновете CUB Premium точно сега!'
+      },
+      text: {
+        ru: 'Ваша подписка на CUB Premium истекла! Не упустите шанс продлить доступ к эксклюзивному контенту и дополнительным функциям. Обновите премиум-статус сейчас и наслаждайтесь всеми преимуществами CUB без ограничений!',
+        uk: 'Ваша передплата на CUB Premium закінчилася! Не пропустіть шанс продовжити доступ до ексклюзивного контенту та додаткових функцій. Оновіть преміум-статус зараз та насолоджуйтесь усіма перевагами CUB без обмежень!',
+        be: 'Ваша падпіска на CUB Premium скончылася! Не выпусціце шанец падоўжыць доступ да эксклюзіўнага кантэнту і дадатковым функцый. Абнавіце прэміум-статус зараз і атрымлівайце асалоду ад усімі перавагамі CUB без абмежаванняў!',
+        bg: 'Вашият абонамент за CUB Premium е изтекъл! Не пропускайте шанса си да подновите достъпа си до ексклузивно съдържание и допълнителни функции. Надстройте до премиум статус сега и се насладете на всички предимства на CUB без ограничения!'
+      },
+      time: Date.now(),
+      icon: 'https://' + object$2.cub_domain + '/img/icons/premium_two.svg'
+    };
+    Notice$1.pushNotice('lampa', notice, function () {}, function (er) {});
+  }
+  var Extend = {
+    init: init$4
+  };
+
+  function init$3() {
     Lang.add({
       ad_notice_tv_text_1: {
         ru: 'Будьте в курсе новых серий - получайте уведомления о переводах на свой смартфон!',
-        ua: 'Будьте в курсі нових серій - отримуйте сповіщення про переклади на свій смартфон!',
+        uk: 'Будьте в курсі нових серій - отримуйте сповіщення про переклади на свій смартфон!',
         be: 'Будзьце ў курсе новых серый - атрымлівайце апавяшчэння аб перакладах на свой смартфон!',
         bg: 'Бъдете в час с новите серии - получавайте уведомление за преводите на своят смартфон!'
       },
       ad_notice_tv_text_2: {
         ru: 'Никогда не пропускайте новую серию - получайте уведомления о переводах на свой смартфон!',
-        ua: 'Ніколи не пропускайте нову серію - отримуйте сповіщення про переклади на свій смартфон!',
+        uk: 'Ніколи не пропускайте нову серію - отримуйте сповіщення про переклади на свій смартфон!',
         be: 'Ніколі не прапускайце новую серыю - атрымлівайце апавяшчэння аб перакладах на свой смартфон!',
         bg: 'Бъдете в час с новите серии - получавайте уведомление за преводите на своят смартфон!'
       },
       ad_notice_tv_text_3: {
         ru: 'Оставайтесь в центре событий - получайте уведомления о переводах новых серий на свой смартфон!',
-        ua: 'Залишайтесь у центрі подій - отримуйте повідомлення про переведення нових серій на свій смартфон!',
+        uk: 'Залишайтесь у центрі подій - отримуйте повідомлення про переведення нових серій на свій смартфон!',
         be: 'Заставайцеся ў цэнтры падзей - атрымлівайце апавяшчэння аб перакладах новых серый на свой смартфон!',
         bg: 'Бъдете в центъра на събитията - получавайте уведомление за преводите на новите серии на своят смартфон!'
       },
       ad_notice_tv_text_4: {
         ru: 'Будьте первыми, кто узнает о переводах новых серий - получайте уведомления на свой смартфон!',
-        ua: 'Будьте першими, хто дізнається про переклади нових серій – отримуйте повідомлення на свій смартфон!',
+        uk: 'Будьте першими, хто дізнається про переклади нових серій – отримуйте повідомлення на свій смартфон!',
         be: 'Будзьце першымі, хто даведаецца аб перакладах новых серый - атрымлівайце апавяшчэння на свой смартфон!',
         bg: 'Бъдете първи, за да узнаете за превода на нови серии - получавайте уведомление на своят смартфон!'
       },
       ad_notice_tv_text_5: {
         ru: 'Не пропустите ни одной новой серии - получайте уведомления о переводах на свой смартфон и смотрите сериалы в любимом переводе!',
-        ua: 'Не пропустіть жодної нової серії – отримуйте повідомлення про переклади на свій смартфон та дивіться серіали у улюбленому перекладі!',
+        uk: 'Не пропустіть жодної нової серії – отримуйте повідомлення про переклади на свій смартфон та дивіться серіали у улюбленому перекладі!',
         be: 'Не прапусціце ніводнай новай серыі - атрымлівайце апавяшчэнні аб перакладах на свой смартфон і глядзіце серыялы ў любімым перакладзе!',
         bg: 'Не пропускайте нито една серия - получавайте уведомление за преводите на своят смартфон и гледайте сериалите с желаният превод!'
       },
       ad_notice_tv: {
         ru: 'Получение уведомлений о переводе сериала на свой смартфон - это удобный способ всегда оставаться в курсе и не пропустить ни одной серии. Вы больше не будете терять время на поиски новых серий и следить за релизами вручную. Просто подпишитесь на перевод и получайте уведомления о выходе новых серий на свой смартфон. Это сэкономит вам время и сделает просмотр сериалов еще более комфортным.',
-        ua: 'Отримання повідомлень про переведення серіалу на свій смартфон – це зручний спосіб завжди залишатися в курсі та не пропустити жодної серії. Ви більше не будете гаяти час на пошуки нових серій і стежити за релізами вручну. Просто підпишіться на переклад та отримуйте повідомлення про вихід нових серій на свій смартфон. Це заощадить вам час і зробить перегляд серіалів ще комфортнішим.',
+        uk: 'Отримання повідомлень про переведення серіалу на свій смартфон – це зручний спосіб завжди залишатися в курсі та не пропустити жодної серії. Ви більше не будете гаяти час на пошуки нових серій і стежити за релізами вручну. Просто підпишіться на переклад та отримуйте повідомлення про вихід нових серій на свій смартфон. Це заощадить вам час і зробить перегляд серіалів ще комфортнішим.',
         be: 'Атрыманне апавяшчэнняў аб пераводзе серыяла на свой смартфон - гэта зручны спосаб заўсёды заставацца ў курсе і не прапусціць ніводнай серыі. Вы больш не будзеце марнаваць час на пошукі новых серый і сачыць за рэлізамі ўручную. Проста падпішыцеся на пераклад і атрымлівайце апавяшчэнні аб выхадзе новых серый на свой смартфон. Гэта зэканоміць вам час і зробіць прагляд серыялаў яшчэ камфортнейшым.',
         bg: 'Получавайте уведомление за преведени сериали на своят смартфон - това е удобен начин винаги да си в час и да не пропуснеш нито една серия. Повече няма да губите време в търсене на нови излъчени серии. Това ще спести времето ви и ще направи прегледа на сериали още по-комфортно'
+      },
+      ad_bot_tv_title: {
+        ru: 'Уведомления на вашем смартфоне',
+        uk: 'Сповіщення на вашому смартфоні',
+        be: 'Апавешчанні на вашым смартфоне',
+        bg: 'Известия на вашия смартфон'
+      },
+      ad_bot_tv_text: {
+        ru: 'Будьте в курсе самых ожидаемых моментов! Теперь вы можете получать мгновенные уведомления о выходе новых серий и фильмов прямо на свой смартфон.',
+        uk: 'Будьте в курсі найочікуваніших моментів! Тепер ви можете отримувати миттєві сповіщення про виход нових серіалів і фільмів прямо на свій смартфон.',
+        be: 'Будзьце ў курсе самых чаканых момантаў! Цяпер вы можаце атрымліваць хуткія апавешчанні аб выходзе новых сэрыяў і фільмаў проста на свой смартфон.',
+        bg: 'Бъдете в течение на най-очакваните моменти! Сега можете да получавате мигновени известия за излизането на нови серии и филми директно на вашия смартфон.'
       }
     });
     Lampa.Listener.follow('line', function (event) {
-      if (event.type == 'create' && event.data.ad && !Account.hasPremium() && Lang.selected(['ru', 'uk', 'be'])) {
-        var item = new Watched({
-          card: event.data.results[0],
-          type: event.data.type
-        });
-        item.render(true).addEventListener('hover:focus', function (e) {
+      if (event.type == 'create' && event.data.ad && !Account.hasPremium() && Lang.selected(['ru', 'uk', 'be', 'bg']) && !Personal.confirm()) {
+        var item;
+        if (event.data.ad == 'bot') {
+          item = new BotClass({
+            card: event.data.results[0],
+            type: event.data.type,
+            title: Lang.translate('ad_bot_tv_title'),
+            text: Lang.translate('ad_bot_tv_text'),
+            poster: event.data.results[0].poster_path
+          });
+        } else {
+          item = new Watched({
+            card: event.data.results[0],
+            type: event.data.type
+          });
+        }
+        item.render(true).on('hover:focus', function (e) {
           event.scroll.update(e.target);
         });
         event.items.push(item);
@@ -31935,12 +32804,13 @@
       }
     });
     Premiere.init();
+    Extend.init();
   }
   var AdManager = {
-    init: init$4
+    init: init$3
   };
 
-  function init$3() {
+  function init$2() {
     if (Platform.screen('mobile')) {
       var bar = Template$1.get('navigation_bar', {});
       bar.find('.navigation-bar__item').on('click', function () {
@@ -31962,7 +32832,7 @@
     }
   }
   var NavigationBar = {
-    init: init$3
+    init: init$2
   };
 
   function Endless(onRender) {
@@ -32065,7 +32935,7 @@
       }
     });
   }
-  function init$2() {
+  function init$1() {
     if (window.lampa_settings.demo) {
       Lampa.Listener.follow('app', function (e) {
         if (e.type == 'ready') hide();
@@ -32073,7 +32943,7 @@
     }
   }
   var Demo = {
-    init: init$2
+    init: init$1
   };
 
   var html$1;
@@ -32082,7 +32952,7 @@
   var controll;
   var active = {};
   var graph = [];
-  function init$1() {
+  function init() {
     Settings.listener.follow('open', function (e) {
       if (e.name == 'server') {
         var btn = $("<div class=\"settings-param selector\" data-type=\"button\">\n                <div class=\"settings-param__name\">".concat(Lang.translate('speedtest_button'), "</div>\n            </div>"));
@@ -32255,63 +33125,9 @@
     active = {};
   }
   var Speedtest = {
-    init: init$1,
+    init: init,
     close: close,
     start: start
-  };
-
-  /**
-   * Короче, постоянно пишут (почему нет картинок?)
-   * Решил сделать автоматическую установку TMDB Proxy если регион RU
-   */
-  function init() {
-    if (Storage.get('vpn_checked_ready', 'false') || Storage.get('tmdb_proxy_api', '') || Storage.get('tmdb_proxy_image', '')) return;
-    var network = new create$p();
-    var extract = function extract(proto, call, error) {
-      network.silent(proto + '://geo.' + object$2.cub_domain, call, error, false, {
-        dataType: 'text'
-      });
-    };
-    var install = function install(country) {
-      console.log('VPN', 'country ' + country);
-      if (country.trim() == 'RU') {
-        //ну это наш клиент
-
-        var ready = Plugins.get().find(function (a) {
-          return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
-        });
-        if (!ready) {
-          console.log('VPN', 'install TMDB Proxy');
-          Plugins.add({
-            url: 'http://' + object$2.cub_domain + '/plugin/tmdb-proxy',
-            status: 1,
-            name: 'TMDB Proxy',
-            author: '@lampa'
-          });
-        }
-      }
-    };
-    var installed = Plugins.get().find(function (a) {
-      return (a.url + '').indexOf('plugin/tmdb-proxy') >= 0;
-    });
-    if (!installed) {
-      console.log('VPN', 'start install TMDB Proxy');
-      extract('https', install, function () {
-        //может не работает https
-
-        Storage.set('protocol', 'http');
-        console.log('VPN', 'disable HTTPS');
-        extract('http', install, function () {
-          console.log('VPN', 'domain not responding');
-
-          //хммм...., наверно к домену не подключается
-        });
-      });
-    }
-    Storage.set('vpn_checked_ready', true);
-  }
-  var VPN = {
-    init: init
   };
 
   /**
@@ -32347,9 +33163,9 @@
     window.lampa_settings.white_use = false;
   }
   window.Lampa = {
-    Listener: start$6(),
+    Listener: start$7(),
     Lang: Lang,
-    Subscribe: start$6,
+    Subscribe: start$7,
     Storage: Storage,
     Platform: Platform,
     Utils: Utils$2,
@@ -32400,9 +33216,9 @@
     Broadcast: Broadcast,
     Helper: Helper,
     InteractionMain: component,
-    InteractionCategory: component$h,
+    InteractionCategory: component$i,
     InteractionLine: create$j,
-    Status: status$1,
+    Status: status$2,
     Plugins: Plugins,
     Extensions: Extensions,
     Tizen: Tizen,
@@ -32429,7 +33245,8 @@
     Torserver: Torserver,
     Speedtest: Speedtest,
     Processing: Processing,
-    ParentalControl: ParentalControl
+    ParentalControl: ParentalControl,
+    VPN: VPN
   };
   function closeApp() {
     if (Platform.is('apple_tv')) window.location.assign('exit://exit');
@@ -32487,6 +33304,11 @@
       if (e.code == 8 || e.code == 27 || e.code == 461 || e.code == 10009 || e.code == 88) popupCloseApp();
     });
 
+    /** Отключаем правый клик */
+    if (window.innerWidth > 1280) window.addEventListener("contextmenu", function (e) {
+      return e.preventDefault();
+    });
+
     /** Если это тач дивайс */
 
     if (!Platform.screen('tv')) $('body').addClass('touch-device');
@@ -32497,7 +33319,7 @@
       var urlStyle = 'http://lampa.mx/css/app.css?v';
       //Для нового типа виджета берем сохраненный адрес загрузки
       if (Orsay.isNewWidget()) {
-        //Для фрейм загрузчика запишем полный url 
+        //Для фрейм загрузчика запишем полный url
         if (location.protocol != 'file:') {
           var newloaderUrl = location.href.replace(/[^/]*$/, '');
           if (newloaderUrl.slice(-1) == '/') {
@@ -32566,6 +33388,7 @@
 
     /** Инициализируем классы */
 
+    Personal.init();
     Settings.init();
     Select.init();
     Favorite.init();
@@ -32603,7 +33426,7 @@
 
     /** Чтоб не писали по 100 раз */
 
-    Storage.set('parser_torrent_type', 'jackett');
+    Storage.set('parser_torrent_type', Storage.get('parser_torrent_type') || 'jackett');
 
     /** Инфа */
 
@@ -32760,7 +33583,12 @@
         $('[data-name="protocol"]', e.body).remove();
       }
       if (e.name == 'server') {
-        check(Storage.field('torrserver_use_link') == 'one' ? 'torrserver_url' : 'torrserver_url_two');
+        var name = Storage.field('torrserver_use_link') == 'one' ? 'torrserver_url' : 'torrserver_url_two';
+        check(name);
+        if (!Account.hasPremium() && Lang.selected(['ru', 'be', 'uk']) && !Personal.confirm()) {
+          var ad = $("\n                    <div class=\"ad-server\">\n                        <div class=\"ad-server__text\">\n                            \u0410\u0440\u0435\u043D\u0434\u043E\u0432\u0430\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0443 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0435\u0437 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438 \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A.\n                        </div>\n                        <img src=\"https://i.ibb.co/VWSW4KG/qr-code-1.png\" class=\"ad-server__qr\">\n                        <div class=\"ad-server__label\">\u0420\u0435\u043A\u043B\u0430\u043C\u0430 - https://tsarea.us</div>\n                    </div>\n                ");
+          $('[data-name="torrserver_use_link"]', e.body).after(ad);
+        }
       } else torrent_net.clear();
       if (e.name == 'interface' && window.lampa_settings.lang_use) {
         $('.settings-param:eq(0)', e.body).on('hover:enter', function () {
@@ -32933,7 +33761,7 @@
     };
     if (['ru', 'en'].indexOf(code) >= 0) call();else {
       $.ajax({
-        url: (location.protocol == 'file:' ? 'https://yumata.github.io/lampa/' : './') + 'lang/' + code + '.js',
+        url: (location.protocol == 'file:' || Platform.is('nw') ? 'https://yumata.github.io/lampa/' : './') + 'lang/' + code + '.js',
         dataType: 'text',
         timeout: 10000,
         success: function success(data) {
