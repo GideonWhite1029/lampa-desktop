@@ -6,14 +6,16 @@ module.exports = {
     author: "ymata, GideonWhite1029",
     description: "Приложение для просмотров фильмов и сериалов",
     arch: ["x64", "ia32"],
-    platform: ["darwin", "linux", "win32"],
+    platform: ["win32", "linux", "darwin"],
     asar: true,
+    executableName: "lampa",
+    icon: "/icons/og.ico"
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'linux'],
+      platforms: ['win32', 'linux', 'darwin'],
     },
     {
       name: '@electron-forge/maker-squirrel',

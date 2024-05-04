@@ -7,7 +7,13 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
+    "package-x32-win32": "electron-forge package --arch='ia32' --platform='win32'",
+    "package-x64-win32": "electron-forge package --arch='x64' --platform='win32'",
+    "package-x64-linux": "electron-forge package --arch='x64' --platform='linux'",
     "make": "electron-forge make",
+    "make-x32-win32": "electron-forge make --arch='ia32' --platform='win32'",
+    "make-x64-win32": "electron-forge make --arch='x64' --platform='win32'",
+    "make-x64-linux": "electron-forge make --arch='x64' --platform='linux'",
     "publish": "electron-forge publish"
   },
   "devDependencies": {

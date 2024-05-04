@@ -5835,7 +5835,6 @@
       listener$g.send('fullscreen', {});
     });
     html$f.find('.player-panel__settings').on('hover:enter', settings);
-    html$f.find('.player-panel__pip,.player-panel__volume').toggleClass('hide', !Boolean(Platform.is('nw') || Platform.is('browser') || Platform.is('apple') && !Utils$2.isPWA()));
     html$f.find('.player-panel__pip').on('hover:enter', function () {
       listener$g.send('pip', {});
     });

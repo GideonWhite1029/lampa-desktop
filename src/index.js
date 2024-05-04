@@ -13,6 +13,7 @@ const createWindow = () => {
       experimentalFeatures: true,
       nodeIntegration: true
     },
+    icon: "icons/og.png"
   });
 
   mainWindow.setMenu(null)
