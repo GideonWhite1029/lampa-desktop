@@ -1,31 +1,31 @@
 {
   "name": "lampa",
   "productName": "Lampa",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Приложение для просмотров фильмов и сериалов",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "package-x32-win32": "electron-forge package --arch='ia32' --platform='win32'",
-    "package-x64-win32": "electron-forge package --arch='x64' --platform='win32'",
-    "package-x64-linux": "electron-forge package --arch='x64' --platform='linux'",
+    "package-x32-win32": "electron-forge package --arch=ia32 --platform=win32",
+    "package-x64-win32": "electron-forge package --arch=x64 --platform=win32",
+    "package-x64-linux": "electron-forge package --arch=x64 --platform=linux",
     "make": "electron-forge make",
-    "make-x32-win32": "electron-forge make --arch='ia32' --platform='win32'",
-    "make-x64-win32": "electron-forge make --arch='x64' --platform='win32'",
-    "make-x64-linux": "electron-forge make --arch='x64' --platform='linux'",
+    "make-x32-win32": "electron-forge make --arch=ia32 --platform=win32",
+    "make-x64-win32": "electron-forge make --arch=x64 --platform=win32",
+    "make-x64-linux": "electron-forge make --arch=x64 --platform=linux",
     "publish": "electron-forge publish"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^7.4.0",
-    "@electron-forge/maker-deb": "^7.4.0",
-    "@electron-forge/maker-rpm": "^7.4.0",
-    "@electron-forge/maker-squirrel": "^7.4.0",
-    "@electron-forge/maker-zip": "^7.4.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
-    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "30.0.2"
+    "electron": "32.1.2"
   },
   "author": {
     "name": "ymata, GideonWhite1029",
@@ -33,6 +33,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.1"
   }
 }

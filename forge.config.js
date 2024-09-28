@@ -44,5 +44,5 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
-  buildIdentifier: "com.lampa.mx"
+  buildIdentifier: "com.lampa.stream"
 };

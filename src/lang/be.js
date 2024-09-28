@@ -307,6 +307,7 @@ export default {
     title_actor: 'Акцёр',
     title_actress: 'Актрыса',
     title_person: 'Персона',
+    title_persons: 'Персоны',
     title_comments: 'Каментары',
     title_torrents: 'Торэнты',
     title_trailers: 'Трэйлеры',
@@ -1130,4 +1131,13 @@ export default {
     full_crew: 'Яшчэ',
     full_editing: 'Рэдагаванне',
     full_creator: 'Стваральнік',
+    player_normalization_step_none: 'Нулявая',
+
+    settings_cub_backup_export_descr: 'Захаваць наладкі ў воблака',
+    settings_cub_backup_import_descr: 'Аднавіць налады з аблокі',
+
+    settings_interface_sound: 'Сістэмныя гукі',
+    settings_interface_sound_play: 'Пераходы',
+    settings_interface_sound_level: 'Узровень гучнасці',
+    settings_interface_advanced_animation: 'Продвинутая анимация',
 }

@@ -4,7 +4,7 @@
     var connect_host = '{localhost}';
     var list_opened = false;
     function reguest(params, callback) {
-      if (params.ffprobe) {
+      if (params.ffprobe && params.path.split('.').pop() !== 'mp4') {
         setTimeout(function () {
           callback({
             streams: params.ffprobe

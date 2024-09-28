@@ -305,6 +305,7 @@ export default {
     title_actor: 'Ator',
     title_actress: 'Atriz',
     title_person: 'Pessoa',
+    title_persons: 'Pessoas',
     title_comments: 'Comentários',
     title_torrents: 'Torrents',
     title_trailers: 'Trailers',
@@ -1109,5 +1110,14 @@ export default {
 
     full_crew: 'Mais',
     full_editing: 'Edição',
-    full_creator: 'Criador'
+    full_creator: 'Criador',
+    player_normalization_step_none: 'Zero',
+
+    settings_cub_backup_export_descr: 'Salvar configurações na nuvem',
+    settings_cub_backup_import_descr: 'Restaurar configurações da nuvem',
+
+    settings_interface_sound: 'Sons do sistema',
+    settings_interface_sound_play: 'Transições',
+    settings_interface_sound_level: 'Nível de volume',
+    settings_interface_advanced_animation: 'Animação Avançada',
 }

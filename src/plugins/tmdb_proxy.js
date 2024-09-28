@@ -8,13 +8,18 @@
       path_image: Lampa.Account.hasPremium() ? 'imagetmdb.cub.red/' : 'imagetmdb.com/',
       path_api: 'apitmdb.' + (Lampa.Manifest && Lampa.Manifest.cub_domain ? Lampa.Manifest.cub_domain : 'cub.red') + '/3/'
     };
+    function filter(u) {
+      var s = u.slice(0, 8);
+      var e = u.slice(8).replace(/\/+/g, '/');
+      return s + e;
+    }
     Lampa.TMDB.image = function (url) {
       var base = Lampa.Utils.protocol() + 'image.tmdb.org/' + url;
-      return Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_image + url : base;
+      return filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_image + url : base);
     };
     Lampa.TMDB.api = function (url) {
       var base = Lampa.Utils.protocol() + 'api.themoviedb.org/3/' + url;
-      return Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_api + url : base;
+      return filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_api + url : base);
     };
     Lampa.Settings.listener.follow('open', function (e) {
       if (e.name == 'tmdb') {
