@@ -230,7 +230,7 @@ export default {
     torrent_item_mb: 'Mbps',
     torrent_serial_episode: '剧集',
     torrent_serial_season: '季',
-    torrent_serial_date: '退出',
+    torrent_serial_date: '推出',
     torrent_get_magnet: '请求磁力链接',
     torrent_remove_title: '删除',
     torrent_remove_descr: '种子将从您的列表中删除',
@@ -284,7 +284,8 @@ export default {
     title_actors: '演员',
     title_actor: '演员',
     title_actress: '女演员',
-    title_person: '个人',
+    title_person: '演员',
+    title_persons: '演员',
     title_comments: '评论',
     title_torrents: '种子',
     title_trailers: '预告片',
@@ -1062,7 +1063,7 @@ export default {
     parental_control_input_error: '您输入了错误的PIN码',
     title_worth_rewatch: '值得再看一遍',
 
-    ad_disable: '通过订阅 CUB Premium，您将忘记广告。',
+    ad_disable: '通过订阅 CUB Premium，您将不受广告打扰。',
     ad_after: '广告通过',
     ad: '广告',
     ad_skip: '跳过',
@@ -1070,9 +1071,25 @@ export default {
     settings_parser_prowlarr_link_descr: '提供 Prowlarr 服务器的链接',
     settings_parser_prowlarr_key_descr: '位于常规类别中的 Prowlarr 设置选项卡中',
     settings_player_torrent_type: '种子播放器类型',
-    settings_player_torrent_type_descr: '哪个玩家可以玩种子',
+    settings_player_torrent_type_descr: '哪个播放器可以播放种子中的视频',
 
     full_crew: '更多',
     full_editing: '编辑',
-    full_creator: '创建者'
+    full_creator: '创建者',
+    player_normalization_step_none: '零',
+
+    settings_cub_backup_export_descr: '将设置保存到云端',
+    settings_cub_backup_import_descr: '从云端恢复设置',
+
+    settings_interface_sound: '系统声音',
+    settings_interface_sound_play: '过渡',
+    settings_interface_sound_level: '音量级别',
+    settings_interface_advanced_animation: '高级动画',
+
+    confirm_open_player: '另一台设备正在请求访问播放器。想播放视频吗？',
+
+    pincode_use_remote: '使用遥控器输入代码，按箭头选择所需的号码。',
+    pincode_use_toggle: '按住“确定”按钮可更改布局。',
+
+    settings_parental_control_where: '在哪里请求 PIN 码',
 }

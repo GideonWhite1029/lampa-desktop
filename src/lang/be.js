@@ -307,6 +307,7 @@ export default {
     title_actor: 'Акцёр',
     title_actress: 'Актрыса',
     title_person: 'Персона',
+    title_persons: 'Персоны',
     title_comments: 'Каментары',
     title_torrents: 'Торэнты',
     title_trailers: 'Трэйлеры',
@@ -1130,4 +1131,30 @@ export default {
     full_crew: 'Яшчэ',
     full_editing: 'Рэдагаванне',
     full_creator: 'Стваральнік',
+    player_normalization_step_none: 'Нулявая',
+
+    settings_cub_backup_export_descr: 'Захаваць наладкі ў воблака',
+    settings_cub_backup_import_descr: 'Аднавіць налады з аблокі',
+
+    settings_interface_sound: 'Сістэмныя гукі',
+    settings_interface_sound_play: 'Пераходы',
+    settings_interface_sound_level: 'Узровень гучнасці',
+    settings_interface_advanced_animation: 'Продвинутая анимация',
+
+    discuss_rules_title: 'Сачыце за правіламі і паважайце іншых — ствараем камфорт разам!',
+    discuss_rules_rule_1: 'Не выкарыстоўвайце словы, якія складаюцца толькі з лічбаў.',
+    discuss_rules_rule_2: 'Пішыце на адной мове, выкарыстоўвайце словы з 5 і больш літараў.',
+    discuss_rules_rule_3: 'Выкарыстоўвайце знакі прыпынку і завяршайце сказы кропкамі.',
+    discuss_rules_rule_4: 'Аднайцеся ад незразумелых сімвалаў !?#%',
+    discuss_rules_rule_5: 'Пішыце поўныя сказы, выкарыстоўвайце сказы з 5 і больш слоў.',
+    discuss_rules_rule_6: 'Не выкарыстоўвайце занадта доўгія словы.',
+    discuss_rules_rule_7: 'Старайцеся ўпісацца ў 300 сімвалаў.',
+    discuss_voited: 'Дзякуй за вашу адзнаку! Ваш голас дапамагае паляпшаць кантэнт.',
+
+    confirm_open_player: 'Іншая прылада запытвае доступ да плэера. Жадаеце прайграць відэа?',
+
+    pincode_use_remote: 'Выкарыстоўвайце пульт для ўводу кода, націскаючы стрэлкі для выбару патрэбнай лічбы.',
+    pincode_use_toggle: 'Націсніце і ўтрымлівайце кнопку OK, каб змяніць раскладку.',
+
+    settings_parental_control_where: 'Дзе запытваць PIN-код',
 }

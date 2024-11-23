@@ -279,8 +279,9 @@ export default {
     title_company: 'חברה',
     title_actors: 'שחקנים',
     title_actor: 'שחקן',
-    title_actress: 'שחקנים',
+    title_actress: 'אַקטריסע',
     title_person: 'אדם',
+    title_persons: 'אנשים',
     title_comments: 'הערות',
     title_torrents: 'Torrents',
     title_trailers: 'טריילרים',
@@ -1022,5 +1023,21 @@ export default {
 
     full_crew: 'עוד',
     full_editing: 'עריכה',
-    full_creator: 'יוצר'
+    full_creator: 'יוצר',
+    player_normalization_step_none: 'אֶפֶס',
+
+    settings_cub_backup_export_descr: 'שמור הגדרות בענן',
+    settings_cub_backup_import_descr: 'שחזר הגדרות מהענן',
+
+    settings_interface_sound: 'צלילי מערכת',
+    settings_interface_sound_play: 'מעברים',
+    settings_interface_sound_level: 'רמת עוצמת הקול',
+    settings_interface_advanced_animation: 'אנימציה מתקדמת',
+
+    confirm_open_player: 'מכשיר אחר מבקש גישה לנגן. רוצה להפעיל את הסרטון?',
+
+    pincode_use_remote: 'השתמש בשלט הרחוק כדי להזין את הקוד, לחץ על החצים כדי לבחור את המספר הרצוי.',
+    pincode_use_toggle: 'לחץ והחזק את הלחצן אישור כדי לשנות את הפריסה.',
+
+    settings_parental_control_where: 'היכן לבקש קוד PIN',
 }
