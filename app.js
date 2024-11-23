@@ -14896,12 +14896,11 @@
       });
     } else if (Platform.desktop() && Storage.field(player_need) == 'other') {
       var path = Storage.field('player_nw_path');
-      var file = require('fs');
+      // var file = require('fs');
       data.url = data.url.replace('&preload', '&play').replace(/\s/g, '%20');
-      if (file.existsSync(path)) {
+      if (window.api.fileExists(path)) {
         Preroll.show(data, function () {
-          var spawn = require('child_process').spawn;
-          spawn(path, [data.url]);
+          window.api.spawnProcess(path, [data.url])
         });
       } else {
         Noty.show(Lang.translate('player_not_found') + ': ' + path);
@@ -20324,7 +20323,7 @@
           return a.popularity - b.popularity;
         });
         var persons = json.results.filter(function (p) {
-          return (p.known_for_department || '').toLowerCase() == 'acting' && p.known_for.length && p.popularity > 30;
+          return (p.known_for_department || '').toLowerCase() == 'acting' && p.known_for?.length && p.popularity > 30;
         }).slice(0, 5);
         var total = parts.length - parts_limit;
         var offset = Math.round(total / persons.length);
