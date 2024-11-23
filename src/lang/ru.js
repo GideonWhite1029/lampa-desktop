@@ -258,6 +258,7 @@ export default {
     settings_parental_control_demand_descr: 'Через какое время запрашивать PIN-код',
     settings_parental_control_enabled: 'Включено',
     settings_parental_control_disabled: 'Отключено',
+    settings_parental_control_where: 'Где запрашивать PIN-код',
 
     parental_control_input_new_code: 'Введите новый PIN-код',
     parental_control_confirm_new_code: 'Повторите PIN-код',
@@ -1138,5 +1139,20 @@ export default {
     ad_disable: 'Подписавшись на CUB Premium, вы забудете о рекламе.',
     ad_after: 'Реклама через',
     ad_skip: 'Пропустить',
-    ad_continue_after: 'Просмотр начнется через'
+    ad_continue_after: 'Просмотр начнется через',
+
+    discuss_rules_title: 'Следуйте правилам и уважайте других — создаём комфорт вместе!',
+    discuss_rules_rule_1: 'Не используйте слова, состоящие только из цифр.',
+    discuss_rules_rule_2: 'Пишите на одном языке, используйте слова из 5 и более букв.',
+    discuss_rules_rule_3: 'Используйте знаки препинания и завершайте предложения точками.',
+    discuss_rules_rule_4: 'Избегайте непонятных символов !?#%',
+    discuss_rules_rule_5: 'Пишите полные предложения, используйте предложение из 5 и более слов.',
+    discuss_rules_rule_6: 'Не используйте слишком длинные слова.',
+    discuss_rules_rule_7: 'Постарайтесь уместится в 300 символов.',
+    discuss_voited: 'Спасибо за вашу оценку! Ваш голос помогает улучшать контент.',
+
+    confirm_open_player: 'Другое устройство запрашивает доступ к плееру. Хотите воспроизвести видео?',
+
+    pincode_use_remote: 'Используйте пульт для ввода кода, нажимая стрелки для выбора нужной цифры.',
+    pincode_use_toggle: 'Нажмите и удерживайте кнопку OK, чтобы сменить раскладку.'
 }

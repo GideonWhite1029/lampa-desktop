@@ -13,13 +13,16 @@
       var e = u.slice(8).replace(/\/+/g, '/');
       return s + e;
     }
+    function email() {
+      return Lampa.Storage.get('account', '{}').email || '';
+    }
     Lampa.TMDB.image = function (url) {
       var base = Lampa.Utils.protocol() + 'image.tmdb.org/' + url;
-      return filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_image + url : base);
+      return Lampa.Utils.addUrlComponent(filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_image + url : base), 'email=' + encodeURIComponent(email()));
     };
     Lampa.TMDB.api = function (url) {
       var base = Lampa.Utils.protocol() + 'api.themoviedb.org/3/' + url;
-      return filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_api + url : base);
+      return Lampa.Utils.addUrlComponent(filter(Lampa.Storage.field('proxy_tmdb') ? Lampa.Utils.protocol() + tmdb_proxy.path_api + url : base), 'email=' + encodeURIComponent(email()));
     };
     Lampa.Settings.listener.follow('open', function (e) {
       if (e.name == 'tmdb') {

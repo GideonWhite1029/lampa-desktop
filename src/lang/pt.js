@@ -1120,4 +1120,11 @@ export default {
     settings_interface_sound_play: 'Transições',
     settings_interface_sound_level: 'Nível de volume',
     settings_interface_advanced_animation: 'Animação Avançada',
+
+    confirm_open_player: 'Outro dispositivo está solicitando acesso ao player. Quer reproduzir o vídeo?',
+
+    pincode_use_remote: 'Utilize o comando para introduzir o código, premindo as setas para selecionar o número pretendido.',
+    pincode_use_toggle: 'Prima e mantenha premido o botão OK para alterar o layout.',
+
+    settings_parental_control_where: 'Onde solicitar um código PIN',
 }

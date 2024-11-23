@@ -9,7 +9,7 @@ module.exports = {
     platform: ["win32", "linux", "darwin"],
     asar: true,
     executableName: "lampa",
-    icon: "/icons/og.ico"
+    icon: "icons/og.png"
   },
   rebuildConfig: {},
   makers: [
@@ -27,6 +27,15 @@ module.exports = {
         maintainer: 'GideonWhite1029',
         homepage: 'https://github.com/GideonWhite1029/lampa-desktop'
       },
+    },
+    {
+      name: '@electron-forge/maker-flatpak',
+      config: {
+        options: {
+          categories: ['Video'],
+          mimeType: ['video/h264']
+        }
+      }
     }
   ],
   plugins: [

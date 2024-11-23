@@ -10,10 +10,11 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
       experimentalFeatures: true,
       nodeIntegration: true
     },
-    icon: "icons/og.png"
+    icon: "/img/og.png"
   });
 
   mainWindow.setMenu(null)

@@ -462,7 +462,7 @@
       img_elm.src = station.bg_image_mobile;
       item.on('hover:focus hover:hover', function () {
         _this7.cover(station);
-        Lampa.Background.change(item.background);
+        if (item.background) Lampa.Background.change(item.background);else _this7.background();
         last = item;
       });
       item.on('hover:focus', function () {
