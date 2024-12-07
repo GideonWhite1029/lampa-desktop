@@ -1683,7 +1683,7 @@
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
     css_version: '2.4.6',
-    app_version: '2.2.1',
+    app_version: '2.2.2',
     cub_domain: 'cub.red'
   };
   var plugins$1 = [];
@@ -9503,7 +9503,7 @@
       status.need++;
       Api.sources.cub.discussGet(params, function (json) {
         status.append('discuss', json);
-      });
+      }, status.error.bind(status));
     }
   }
   function videos() {
@@ -14724,9 +14724,11 @@
       if (stream_url && !youtube) {
         var id = stream_url.split('?v=').pop();
         video.resize();
-        if (typeof YT == 'undefined') {
-          return object.append('<div class="player-video__youtube-needclick"><img src="https://img.youtube.com/vi/' + id + '/sddefault.jpg" /><div>' + Lang.translate('torrent_error_connect') + '</div></div>');
-        }
+        var nosuport = function nosuport() {
+          object.append('<div class="player-video__youtube-needclick"><img src="https://img.youtube.com/vi/' + id + '/sddefault.jpg" /><div>' + Lang.translate('torrent_error_connect') + '</div></div>');
+        };
+        if (typeof YT == 'undefined') return nosuport();
+        if (typeof YT.Player == 'undefined') return nosuport();
         if (needclick) {
           object.append('<div class="player-video__youtube-needclick"><img src="https://img.youtube.com/vi/' + id + '/sddefault.jpg" /><div>' + Lang.translate('loading') + '...' + '</div></div>');
           timetapplay = setTimeout(function () {
@@ -18325,17 +18327,20 @@
     });
   }
   var Vast = /*#__PURE__*/function () {
-    function Vast() {
+    function Vast(num, vast_url, vast_msg) {
       _classCallCheck(this, Vast);
       this.network = new create$f();
       this.listener = start$8();
       this.paused = false;
+      this.vast_url = vast_url;
+      this.vast_msg = vast_msg;
       if (loaded_data.time < Date.now() + 1000 * 60 * 60 * 1) this.load();else if (loaded_data.ad.length) setTimeout(this.start.bind(this), 100);else this.load();
     }
     return _createClass(Vast, [{
       key: "load",
       value: function load() {
         var _this = this;
+        if (this.vast_url) return setTimeout(this.start.bind(this), 100);
         var domain = object$2.cub_domain;
         this.network.silent(Utils$2.protocol() + domain + '/api/ad/vast', function (data) {
           loaded_data.time = Date.now();
@@ -18370,16 +18375,21 @@
       key: "start",
       value: function start() {
         var _this2 = this;
-        var block = this.get();
+        var block = this.vast_url ? {
+          url: this.vast_url,
+          name: 'plugin'
+        } : this.get();
         stat$1('launch', block.name);
         this.block = Template$1.js('ad_video_block');
         this.block.find('video').remove();
-        this.block.find('.ad-video-block__text').text(Lang.translate('ad') + ' - ' + Lang.translate('ad_disable'));
+        this.block.find('.ad-video-block__text').text(Lang.translate('ad') + ' - ' + Lang.translate('ad_disable')).toggleClass('hide', Boolean(this.vast_url));
         this.block.find('.ad-video-block__info').text('');
+        if (this.vast_msg) this.block.find('.ad-video-block__text').text(this.vast_msg).toggleClass('hide', false);
         var skip = this.block.find('.ad-video-block__skip');
         var progressbar = this.block.find('.ad-video-block__progress-fill');
         var player;
         var timer;
+        var playning = true;
         var adInterval;
         var adReadySkip;
         var adStarted;
@@ -18403,8 +18413,26 @@
             clearInterval(adInterval);
             _this3.destroy();
           });
+          player.on('AdPaused', function () {
+            console.log('Ad', 'event', 'PAUSE');
+            playning = false;
+          });
+          player.on('AdPlaying', function () {
+            console.log('Ad', 'event', 'PLAY');
+            playning = true;
+          });
+          player.on('AdVideoStart', function () {
+            console.log('Ad', 'event', 'VIDEO_START');
+            var video = player.container.find('video');
+            if (video) {
+              video.addEventListener('pause', function () {
+                console.log('Ad', 'event', 'PAUSE');
+                playning = false;
+              });
+            }
+          });
+          player.once('AdStarted', onAdStarted);
           player.load(block.url.replace('{RANDOM}', Math.round(Date.now() * Math.random())).replace('{TIME}', Date.now())).then(function () {
-            onAdStarted();
             return player.startAd();
           })["catch"](function (reason) {
             error((reason.message || '').indexOf('nobanner') >= 0 ? 500 : 100, reason.message);
@@ -18444,6 +18472,8 @@
             })["catch"](function () {
               error(200, 'Cant stop ads');
             });
+          } else {
+            if (playning) player.pauseAd();else player.resumeAd();
           }
         }
         this.block.on('click', enter.bind(this));
@@ -18478,11 +18508,13 @@
   }();
 
   var next = 0;
-  var imasdk;
+  var vast_api;
+  var vast_url;
+  var vast_msg;
   function init$m() {
     if (!(Platform.is('orsay') || Platform.is('netcast'))) {
-      Utils$2.putScriptAsync(['https://cdn.jsdelivr.net/npm/vast-player@latest/dist/vast-player.min.js'], false, false, function () {
-        imasdk = true;
+      Utils$2.putScriptAsync([Utils$2.protocol() + object$2.cub_domain + '/plugin/vast'], false, false, function () {
+        vast_api = true;
       });
     }
   }
@@ -18492,7 +18524,7 @@
   function video(vast, num, started, ended) {
     console.log('Ad', 'launch', vast ? 'vast' : 'video');
     var Blok = vast ? Vast : VideoBlock;
-    var item = new Blok(num);
+    var item = new Blok(num, vast_url, vast_msg);
     item.listener.follow('launch', started);
     item.listener.follow('ended', ended);
     if (vast) {
@@ -18511,6 +18543,7 @@
   function launch(call) {
     var enabled = Controller.enabled().name;
     next = Date.now() + 1000 * 60 * random(30, 80);
+    Background.theme('#454545');
     var html = $("\n        <div class=\"ad-preroll\">\n            <div class=\"ad-preroll__bg\"></div>\n            <div class=\"ad-preroll__text\">".concat(Lang.translate('ad'), "</div>\n            <div class=\"ad-preroll__over\"></div>\n        </div>\n    "));
     $('body').append(html);
     setTimeout(function () {
@@ -18523,8 +18556,10 @@
       html.find('.ad-preroll__over').addClass('animate');
       setTimeout(function () {
         Controller.toggle(enabled);
-        video(imasdk, 1, function () {
+        Background.theme('black');
+        video(vast_api, 1, function () {
           html.remove();
+          vast_url = false;
         }, function () {
           html.remove();
           Controller.toggle(enabled);
@@ -18545,6 +18580,11 @@
     var ac = Lampa.Activity.active();
     if (ac && ac.component == 'full' && ac.id == '1966') return launch(call);
     if (window.god_enabled) return launch(call);
+    if (data.vast_url && typeof data.vast_url == 'string' && vast_api && !Account.hasPremium()) {
+      vast_url = data.vast_url;
+      vast_msg = data.vast_msg;
+      return launch(call);
+    }
     if (!Account.hasPremium() && next < Date.now() && !(data.torrent_hash || data.youtube || data.iptv || data.continue_play) && !Personal.confirm()) {
       VPN.region(function (code) {
         if (code == 'ru') launch(call);else call();
@@ -19165,7 +19205,7 @@
           if (data.subtitles) PlayerVideo.customSubs(data.subtitles);
           PlayerInfo.set('name', data.title);
           if (!data.iptv) {
-            if (data.card) Footer.appendCard(card);else {
+            if (data.card) Footer.appendCard(data.card);else {
               Lampa.Activity.active().movie && Footer.appendCard(Lampa.Activity.active().movie);
             }
           }
@@ -19199,7 +19239,10 @@
         PlayerPanel.show(true);
         listener$4.send('ready', data);
       };
-      start$5(data, 'iptv', lauch);
+      var ads = function ads() {
+        if (data.vast_url) Preroll.show(data, lauch);else lauch();
+      };
+      start$5(data, 'iptv', ads);
     });
   }
 
@@ -24792,7 +24835,12 @@
     u.searchParams.set('query', params.search);
     if (!params.from_search) {
       var isSerial = !!(params.movie.first_air_date || params.movie.last_air_date);
-      u.searchParams.set('categories', (params.movie.number_of_seasons > 0 ? 5000 : 2000) + (params.movie.original_language == 'ja' ? ',5070' : ''));
+      if (params.movie.number_of_seasons > 0) {
+        u.searchParams.append('categories', '5000');
+      }
+      if (params.movie.original_language == 'ja') {
+        u.searchParams.append('categories', '5070');
+      }
       u.searchParams.set('type', isSerial ? 'tvsearch' : 'search');
     }
     network$3["native"](u.href, function (json) {
@@ -26827,7 +26875,7 @@
             results: []
           });
           comp.build(lines);
-          Layer.visible();
+          Layer.visible(comp.render(true));
         } else comp.empty();
       });
       return this.render();
@@ -35538,7 +35586,7 @@
         var name = Storage.field('torrserver_use_link') == 'one' ? 'torrserver_url' : 'torrserver_url_two';
         check(name);
         if (!Account.hasPremium() && Lang.selected(['ru', 'be', 'uk']) && !Personal.confirm()) {
-          var ad = $("\n                    <div class=\"ad-server\">\n                        <div class=\"ad-server__text\">\n                            \u0410\u0440\u0435\u043D\u0434\u043E\u0432\u0430\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0443 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0435\u0437 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438 \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A.\n                        </div>\n                        <img src=\"https://i.ibb.co/0MwCbNt/qr-code-3.png\" class=\"ad-server__qr\">\n                        <div class=\"ad-server__label\">\u0420\u0435\u043A\u043B\u0430\u043C\u0430 - https://tsarea.us</div>\n                    </div>\n                ");
+          var ad = $("\n                    <div class=\"ad-server\">\n                        <div class=\"ad-server__text\">\n                            \u0410\u0440\u0435\u043D\u0434\u043E\u0432\u0430\u0442\u044C \u0441\u0441\u044B\u043B\u043A\u0443 \u043D\u0430 \u0441\u0435\u0440\u0432\u0435\u0440 \u0431\u0435\u0437 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438 \u0438 \u043D\u0430\u0441\u0442\u0440\u043E\u0435\u043A.\n                        </div>\n                        <img src=\"https://i.ibb.co/6YsXH0H/qr-code-4-1.png\" class=\"ad-server__qr\">\n                        <div class=\"ad-server__label\">\u0420\u0435\u043A\u043B\u0430\u043C\u0430 - https://tsarea.tv</div>\n                    </div>\n                ");
           $('[data-name="torrserver_use_link"]', e.body).after(ad);
         }
       } else torrent_net.clear();
@@ -35583,7 +35631,6 @@
     });
     AppStatus.push('Connecting libraries');
     Utils$2.putScript(video_libs, function () {});
-    Utils$2.putScript([Utils$2.protocol() + object$2.cub_domain + '/plugin/black-friday'], function () {});
 
     /** Сообщаем о готовности */
 
@@ -35713,6 +35760,7 @@
       });
     }
     AppStatus.push('The application is fully loaded');
+    if (window.youtube_lazy_load) Utils$2.putScript([Utils$2.protocol() + 'youtube.com/iframe_api'], function () {});
 
     /** End */
   }
