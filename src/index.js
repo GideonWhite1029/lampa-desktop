@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
+const {UpdateSourceType, updateElectronApp} = require("update-electron-app");
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -28,6 +29,11 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
+  });
+
+  const { updateElectronApp } = require('update-electron-app');
+  updateElectronApp({
+    updateInterval: '1 hours'
   });
 });
 

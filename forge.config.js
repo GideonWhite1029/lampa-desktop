@@ -53,5 +53,19 @@ module.exports = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'GideonWhite1029',
+          name: 'lampa-desktop'
+        },
+        prerelease: false,
+        generateReleaseNotes: true,
+        draft: true
+      }
+    }
+  ],
   buildIdentifier: "com.lampa.stream"
 };

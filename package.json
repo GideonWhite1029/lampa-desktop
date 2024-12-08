@@ -1,8 +1,11 @@
 {
   "name": "lampa",
   "productName": "Lampa",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Приложение для просмотров фильмов и сериалов",
+  "repository": {
+    "url": "https://github.com/GideonWhite1029/lampa-desktop"
+  },
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,18 +14,21 @@
     "make-x64-win32": "electron-forge make --arch=x64 --platform=win32",
     "make-x64-linux": "electron-forge make --arch=x64 --platform=linux",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "publish-x32-win32": "electron-forge publish --arch=ia32 --platform=win32",
+    "publish-x64-win32": "electron-forge publish --arch=x64 --platform=win32",
+    "publish-x64-linux": "electron-forge publish --arch=x64 --platform=linux",
     "lint": "echo \"No linting configured\""
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.6.0",
     "@electron-forge/maker-deb": "^7.6.0",
+    "@electron-forge/maker-flatpak": "^7.6.0",
     "@electron-forge/maker-rpm": "^7.6.0",
     "@electron-forge/maker-squirrel": "^7.6.0",
     "@electron-forge/maker-zip": "^7.6.0",
-    "@electron-forge/maker-flatpak": "^7.6.0",
     "@electron-forge/plugin-auto-unpack-natives": "^7.6.0",
     "@electron-forge/plugin-fuses": "^7.6.0",
+    "@electron-forge/publisher-github": "^7.6.0",
     "@electron/fuses": "^1.8.0",
     "electron": "33.2.1"
   },
@@ -32,6 +38,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "update-electron-app": "^3.0.0"
   }
 }
