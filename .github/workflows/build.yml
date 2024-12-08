@@ -21,9 +21,13 @@ jobs:
         run: npm install
 
       - name: Publish x32 for Windows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run publish-x32-win32
 
       - name: Publish x64 for Windows
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run publish-x64-win32
 
   publish-x64-linux:
@@ -38,8 +42,15 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Flatpak dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak-builder binutils
+
       - name: Install dependencies
         run: npm install
 
       - name: Publish x64 for Linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run publish-x64-linux
