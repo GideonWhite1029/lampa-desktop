@@ -2432,16 +2432,23 @@
     }
   }
   function openPlayer(link, data) {
+    var updateTimeline = function updateTimeline(elem) {
+      if (elem.timeline) {
+        var new_timeline = Lampa.Timeline.view(elem.timeline.hash);
+        elem.timeline.time = Math.round(new_timeline.time);
+        elem.timeline.duration = Math.round(new_timeline.duration);
+        elem.timeline.percent = new_timeline.percent;
+        timeCallback[elem.timeline.hash] = elem;
+      }
+    };
     if (checkVersion(98, true)) {
       if (data.timeline) {
-        data.timeline.time = Math.round(data.timeline.time);
-        data.timeline.duration = Math.round(data.timeline.duration);
-
-        // Lampa.Noty.show('time: ' + data.timeline.time)
-
-        // console.log('Timecode', data.timeline)
-
-        timeCallback[data.timeline.hash] = data;
+        updateTimeline(data);
+      }
+      if (data.playlist) {
+        data.playlist.forEach(function (elem) {
+          updateTimeline(elem);
+        });
       }
     }
     if (checkVersion(10)) AndroidJS.openPlayer(link, JSON.stringify(data));else $('<a href="' + link + '"><a/>')[0].click();
@@ -18332,6 +18339,7 @@
       this.network = new create$f();
       this.listener = start$8();
       this.paused = false;
+      this.num = num;
       this.vast_url = vast_url;
       this.vast_msg = vast_msg;
       if (loaded_data.time < Date.now() + 1000 * 60 * 60 * 1) this.load();else if (loaded_data.ad.length) setTimeout(this.start.bind(this), 100);else this.load();
@@ -18355,9 +18363,16 @@
     }, {
       key: "get",
       value: function get() {
+        var list = loaded_data.ad;
+        if (this.num > 1 && loaded_data.selected) {
+          list = loaded_data.ad.filter(function (ad) {
+            return ad.name !== loaded_data.selected.name;
+          });
+        }
+
         // Шаг 1: Создаем "взвешенный массив"
         var weightedArray = [];
-        loaded_data.ad.forEach(function (ad) {
+        list.forEach(function (ad) {
           // Добавляем элемент в массив столько раз, каков его приоритет
           for (var i = 0; i < ad.priority; i++) {
             weightedArray.push(ad);
@@ -18369,7 +18384,8 @@
           return null; // Если нет приоритетов, вернуть null
         }
         var randomIndex = Math.floor(Math.random() * weightedArray.length);
-        return weightedArray[randomIndex];
+        loaded_data.selected = weightedArray[randomIndex];
+        return loaded_data.selected;
       }
     }, {
       key: "start",
@@ -18531,8 +18547,9 @@
       item.listener.follow('empty', function () {
         video(false, num, started, ended);
       });
+      var time = Date.now();
       item.listener.follow('error', function () {
-        video(false, num, started, ended);
+        if (Date.now() - time < 1000 * 5 && num == 1) video(true, num + 1, started, ended);else video(false, num, started, ended);
       });
     } else item.listener.follow('empty', ended);
     $.ajax({
@@ -18558,8 +18575,10 @@
         Controller.toggle(enabled);
         Background.theme('black');
         video(vast_api, 1, function () {
-          html.remove();
+          //html.remove()
+
           vast_url = false;
+          vast_msg = '';
         }, function () {
           html.remove();
           Controller.toggle(enabled);
