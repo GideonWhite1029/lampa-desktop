@@ -1,7 +1,7 @@
 {
   "name": "lampa",
   "productName": "Lampa",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Приложение для просмотров фильмов и сериалов",
   "repository": {
     "url": "https://github.com/GideonWhite1029/lampa-desktop"

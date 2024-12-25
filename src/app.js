@@ -1682,8 +1682,8 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '2.4.6',
-    app_version: '2.2.2',
+    css_version: '2.4.8',
+    app_version: '2.2.3',
     cub_domain: 'cub.red'
   };
   var plugins$1 = [];
@@ -1882,7 +1882,7 @@
     return new Subscribe();
   }
 
-  var html$1_ = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n        </div>\n\n        <div class=\"head__logo-icon head__logo-halloween hide\">\n            <div class=\"head__logo-halloween-fire\"></div>\n            <div class=\"head__logo-halloween-svg\">\n                <svg width=\"512\" height=\"494\" viewBox=\"0 0 512 494\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M247.135 95.8686C247.135 95.8686 253.636 43.2644 279.052 22.5773C304.467 1.89026 322.199 0.117081 322.199 0.117081L350.57 30.2611C350.57 30.2611 277.279 52.7213 272.55 120.693C268.413 189.256 247.135 95.8686 247.135 95.8686Z\" fill=\"#68AA00\"/>\n                    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M501.29 205.214C523.159 272.004 509.565 351.797 464.644 413.267C447.504 437.5 426.817 456.414 404.947 468.826C383.078 481.83 360.027 488.331 336.976 488.331C325.154 488.331 312.742 486.558 300.921 482.421L296.784 481.239L293.237 483.603C271.959 497.788 242.997 497.197 221.719 482.421L218.173 480.057L214.035 481.239C201.032 485.967 188.029 488.331 174.435 488.331C128.332 488.331 81.6383 460.552 46.7659 412.676C2.43651 351.206 -11.7489 271.413 10.1203 204.623C37.9 123.057 99.9612 105.325 147.246 105.325C180.316 105.325 207.326 113.717 213.37 115.595C214.132 115.831 214.56 115.965 214.626 115.965L218.764 117.147L222.31 114.782C243.588 100.006 272.55 99.4149 293.828 113.6L297.375 115.965L300.921 114.782C310.378 111.827 334.611 105.325 364.164 105.325C412.04 105.325 474.101 123.057 501.29 205.214ZM117.102 193.393L225.266 238.905C224.674 239.496 153.747 310.423 117.102 193.393ZM360.027 361.254L380.123 382.532L446.321 281.461L380.123 323.426L360.027 302.148L294.419 345.295L256.001 313.378L217.582 345.295L151.974 302.148L131.287 323.426L65.6797 281.461L131.287 382.532L151.974 361.254L217.582 404.401L256.001 372.484L294.419 404.401L360.027 361.254ZM401.401 193.393L293.237 238.905C293.237 239.496 364.755 310.423 401.401 193.393Z\" fill=\"#F27503\"/>\n                    <path d=\"M297.375 481.83L301.512 483.012C313.333 486.558 325.154 488.922 337.567 488.922C360.618 488.922 384.26 481.83 405.538 469.418C427.407 456.414 447.503 437.5 465.235 413.858C509.565 352.388 523.75 272.595 501.881 205.805C474.101 123.057 412.04 105.326 364.755 105.326C335.202 105.326 310.378 111.827 301.512 114.782L297.375 115.965C297.375 115.965 367.119 140.789 401.401 193.393C401.401 193.393 401.401 193.393 401.401 193.393C416.236 216.082 428.736 251.977 430.192 291.686L446.321 281.461L430.227 306.034C428.159 370.406 395.544 441.591 297.375 481.83Z\" fill=\"#D35C02\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\" style=\"width: 2.1em; height: 2.1em;\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
+  var html$1_ = "<div class=\"head\">\n    <div class=\"head__body\">\n        <div class=\"head__logo-icon\">\n            <img src=\"./img/logo-icon.svg\" />\n\n            <div class=\"head__logo-cap\">\n                <svg width=\"59\" height=\"46\" viewBox=\"0 0 59 46\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M20.5361 36.4721V32.6155C17.1449 32.6154 13.808 33.4671 10.8317 35.0924L8.51766 33.1592L9.78554 30.4412C11.7856 26.1578 12.8223 21.488 12.8227 16.7606C12.8228 13.3305 14.1854 10.0409 16.6109 7.61542C20.9763 3.25022 26.8969 0.797852 33.0703 0.79776C39.2438 0.797852 45.1643 3.25022 49.5297 7.61542L50.4254 8.51114V15.2603L29.2136 36.4721H20.5361Z\" fill=\"#C52C37\"/>\n                    <path d=\"M8.51958 33.1592L9.78747 30.4412C11.7869 26.1576 12.8229 21.4878 12.8227 16.7605C12.8227 13.3304 14.1854 10.0408 16.6109 7.61536C19.2135 5.01596 22.3951 3.07043 25.8949 1.93831C26.8241 1.82289 27.7595 1.76396 28.6959 1.76187C29.1627 1.76486 29.6288 1.80256 30.09 1.87468C38.9951 3.21295 42.5462 14.2113 36.4536 20.8467C31.7484 25.98 25.9354 31.6512 20.5361 35.1116V32.6154C17.1449 32.6153 13.808 33.4671 10.8317 35.0924L8.51958 33.1592Z\" fill=\"#ED4241\"/>\n                    <path d=\"M20.5361 36.4721L22.4644 45.1496C30.8254 43.7082 38.6036 39.9177 44.8909 34.2208C51.1781 28.524 55.7147 21.1559 57.971 12.9771L58.1388 12.3678L50.4254 8.51108L49.4564 10.3613C43.2372 22.2342 32.9806 31.4943 20.5361 36.4721Z\" fill=\"#C1CFE8\"/>\n                    <path d=\"M19.5719 32.6154H21.5003V30.0363C21.4991 26.1007 22.1334 22.1909 23.3785 18.4575L21.5465 17.8481C20.2363 21.778 19.5695 25.8937 19.5719 30.0363V32.6154Z\" fill=\"#C52C37\"/>\n                    <path d=\"M6.07349 44.1855C2.8785 44.1855 0.28845 41.5954 0.28845 38.4005C0.28845 35.2055 2.8785 32.6154 6.07349 32.6154C9.26847 32.6154 11.8585 35.2055 11.8585 38.4005C11.8585 41.5954 9.26847 44.1855 6.07349 44.1855Z\" fill=\"#C1CFE8\"/>\n                    <path d=\"M50.4254 8.51108L57.9392 12.2714C55.6184 18.7688 51.8258 24.6411 46.8579 29.429C41.8901 34.2168 35.8819 37.7903 29.3033 39.8698C28.5677 40.1008 27.7921 40.1764 27.0257 40.0919C26.2593 40.0073 25.5189 39.7644 24.8513 39.3786C24.1837 38.9928 23.6036 38.4725 23.1478 37.8506C22.6919 37.2288 22.3702 36.519 22.2031 35.7663C33.9115 30.6424 43.5242 21.6816 49.4564 10.3613L50.4254 8.51108ZM6.07347 32.6154C7.13506 32.6157 8.17586 32.9097 9.08073 33.4648C9.75727 34.5711 10.0419 35.8729 9.88893 37.1606C9.73591 38.4483 9.15411 39.6471 8.23715 40.5641C7.32018 41.4811 6.12139 42.0629 4.83367 42.2159C3.54594 42.3689 2.24419 42.0842 1.13787 41.4077C0.601807 40.5314 0.309057 39.5281 0.289791 38.5011C0.270524 37.474 0.525435 36.4604 1.02826 35.5647C1.53109 34.669 2.26364 33.9235 3.15045 33.4051C4.03726 32.8867 5.04626 32.6141 6.07347 32.6154Z\" fill=\"#D7E0EF\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__logo-icon head__logo-halloween hide\">\n            <div class=\"head__logo-halloween-fire\"></div>\n            <div class=\"head__logo-halloween-svg\">\n                <svg width=\"512\" height=\"494\" viewBox=\"0 0 512 494\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M247.135 95.8686C247.135 95.8686 253.636 43.2644 279.052 22.5773C304.467 1.89026 322.199 0.117081 322.199 0.117081L350.57 30.2611C350.57 30.2611 277.279 52.7213 272.55 120.693C268.413 189.256 247.135 95.8686 247.135 95.8686Z\" fill=\"#68AA00\"/>\n                    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M501.29 205.214C523.159 272.004 509.565 351.797 464.644 413.267C447.504 437.5 426.817 456.414 404.947 468.826C383.078 481.83 360.027 488.331 336.976 488.331C325.154 488.331 312.742 486.558 300.921 482.421L296.784 481.239L293.237 483.603C271.959 497.788 242.997 497.197 221.719 482.421L218.173 480.057L214.035 481.239C201.032 485.967 188.029 488.331 174.435 488.331C128.332 488.331 81.6383 460.552 46.7659 412.676C2.43651 351.206 -11.7489 271.413 10.1203 204.623C37.9 123.057 99.9612 105.325 147.246 105.325C180.316 105.325 207.326 113.717 213.37 115.595C214.132 115.831 214.56 115.965 214.626 115.965L218.764 117.147L222.31 114.782C243.588 100.006 272.55 99.4149 293.828 113.6L297.375 115.965L300.921 114.782C310.378 111.827 334.611 105.325 364.164 105.325C412.04 105.325 474.101 123.057 501.29 205.214ZM117.102 193.393L225.266 238.905C224.674 239.496 153.747 310.423 117.102 193.393ZM360.027 361.254L380.123 382.532L446.321 281.461L380.123 323.426L360.027 302.148L294.419 345.295L256.001 313.378L217.582 345.295L151.974 302.148L131.287 323.426L65.6797 281.461L131.287 382.532L151.974 361.254L217.582 404.401L256.001 372.484L294.419 404.401L360.027 361.254ZM401.401 193.393L293.237 238.905C293.237 239.496 364.755 310.423 401.401 193.393Z\" fill=\"#F27503\"/>\n                    <path d=\"M297.375 481.83L301.512 483.012C313.333 486.558 325.154 488.922 337.567 488.922C360.618 488.922 384.26 481.83 405.538 469.418C427.407 456.414 447.503 437.5 465.235 413.858C509.565 352.388 523.75 272.595 501.881 205.805C474.101 123.057 412.04 105.326 364.755 105.326C335.202 105.326 310.378 111.827 301.512 114.782L297.375 115.965C297.375 115.965 367.119 140.789 401.401 193.393C401.401 193.393 401.401 193.393 401.401 193.393C416.236 216.082 428.736 251.977 430.192 291.686L446.321 281.461L430.227 306.034C428.159 370.406 395.544 441.591 297.375 481.83Z\" fill=\"#D35C02\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__menu-icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 32 32\" xml:space=\"preserve\" style=\"width: 2.1em; height: 2.1em;\">\n                <path d=\"M29 8H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 28H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4zM29 18H3a2 2 0 0 1 0-4h26a2 2 0 0 1 0 4z\" fill=\"currentColor\"></path>\n            </svg>\n        </div>\n\n        <div class=\"head__title\"></div>\n        \n        <div class=\"head__actions\">\n            <div class=\"head__action head__settings selector open--search\">\n                <svg width=\"23\" height=\"22\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action head__settings selector open--broadcast\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>\n                    <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--settings\">\n                <svg width=\"28\" height=\"29\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                    <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--premium icon--blink\" data-blink-interval=\"45\">\n                <svg width=\"24\" height=\"23\" viewBox=\"0 0 24 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z\" stroke=\"currentColor\" stroke-width=\"2.2\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--feed\">\n                <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action selector open--notice notice--icon\">\n                <svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"/>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"/>\n                </svg>\n            </div>\n\n            <div class=\"head__action hide selector open--profile\">\n                <img />\n            </div>\n\n            <div class=\"head__action selector hide full-screen\">\n                <svg width=\"25\" height=\"23\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                    <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n                </svg>\n            </div>\n        </div>\n\n        <div class=\"head__split\"></div>\n\n        <div class=\"head__time\">\n            <div class=\"head__time-now time--clock\"></div>\n            <div>\n                <div class=\"head__time-date time--full\"></div>\n                <div class=\"head__time-week time--week\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
   var html$1Z = "<div class=\"wrap layer--height layer--width\">\n    <div class=\"wrap__left wrap__left--hidden layer--height\"></div>\n    <div class=\"wrap__content layer--height layer--width\"></div>\n</div>";
 
@@ -2672,10 +2672,20 @@
       briefly: current_day + ' ' + months_end[date.getMonth()] + ' ' + current_time
     };
   }
+
+  // function secondsToTimeHuman(sec_num) {
+  //     let hours   = Math.trunc(sec_num / 3600)
+  //     let minutes = Math.floor((sec_num - hours * 3600) / 60)
+
+  //     return (hours ? hours + ' '+Lang.translate('time_h')+' ' : '') + (minutes ? minutes + ' '+Lang.translate('time_m')+' ' : Math.round(sec_num) + ' '+Lang.translate('time_s'))
+  // }
+
   function secondsToTimeHuman(sec_num) {
     var hours = Math.trunc(sec_num / 3600);
-    var minutes = Math.floor((sec_num - hours * 3600) / 60);
-    return (hours ? hours + ' ' + Lang.translate('time_h') + ' ' : '') + (minutes ? minutes + ' ' + Lang.translate('time_m') + ' ' : Math.round(sec_num) + ' ' + Lang.translate('time_s'));
+    var minutes = Math.trunc(sec_num % 3600 / 60); // Остаток от деления используется для вычисления минут
+    var seconds = Math.round(sec_num % 60); // Остаток от деления для секунд
+
+    return (hours ? hours + ' ' + Lang.translate('time_h') + ' ' : '') + (minutes ? minutes + ' ' + Lang.translate('time_m') + ' ' : '') + (hours === 0 && minutes === 0 ? seconds + ' ' + Lang.translate('time_s') : '');
   }
   function strToTime(str) {
     var date = new Date(str);
@@ -3016,6 +3026,21 @@
     });
     return filtred;
   }
+  function buildUrl(baseUrl, path, queryParams) {
+    // Убираем все, что идет после хоста (например, /ts)
+    var host = baseUrl.split('/').slice(0, 3).join('/');
+
+    // Убираем лишние "/" в начале и конце пути
+    var url = host + '/' + path.replace(/^\/+/, '');
+
+    // Формируем строку запроса из массива объектов
+    var queryString = queryParams.map(function (param) {
+      return encodeURIComponent(param.name) + '=' + encodeURIComponent(param.value);
+    }).join('&');
+
+    // Добавляем строку запроса к URL, если есть параметры
+    return url + (queryString ? '?' + queryString : '');
+  }
   var Utils$2 = {
     secondsToTime: secondsToTime,
     secondsToTimeHuman: secondsToTimeHuman,
@@ -3059,7 +3084,8 @@
     gup: gup,
     dcma: dcma,
     inputDisplay: inputDisplay,
-    filterCardsByType: filterCardsByType
+    filterCardsByType: filterCardsByType,
+    buildUrl: buildUrl
   };
 
   var widgetAPI,
@@ -3068,7 +3094,7 @@
     loader$2,
     orsay_loaded,
     orsay_call = Date.now();
-  function init$H() {
+  function init$I() {
     $('body').append($("<div style=\"position: absolute; left: -1000px; top: -1000px;\">  \n    <object id=\"pluginObjectNNavi\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-NNAVI\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectTVMW\" border=\"0\" classid=\"clsid:SAMSUNG-INFOLINK-TVMW\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n    <object id=\"pluginObjectScreen\" border=0 classid=\"clsid:SAMSUNG-INFOLINK-SCREEN\" style=\"opacity: 0.0; background-color: #000; width: 1px; height: 1px;\"></object>\n</div>"));
     Utils$2.putScript(['$MANAGER_WIDGET/Common/API/Widget.js', '$MANAGER_WIDGET/Common/API/TVKeyValue.js', '$MANAGER_WIDGET/Common/API/Plugin.js', '$MANAGER_WIDGET/Common/webapi/1.0/webapis.js', '$MANAGER_WIDGET/Common/IME_XT9/ime.js', '$MANAGER_WIDGET/Common/IME_XT9/inputCommon/ime_input.js'], function () {
       try {
@@ -3151,7 +3177,7 @@
     if (widgetAPI) widgetAPI.sendReturnEvent();
   }
   var Orsay = {
-    init: init$H,
+    init: init$I,
     isNewWidget: isNewWidget,
     getLoaderUrl: getLoaderUrl,
     setLoaderUrl: setLoaderUrl,
@@ -3227,7 +3253,7 @@
       return createBase64WorkerFactory$1(base64, sourcemapArg, enableUnicodeArg);
   }
 
-  var WorkerFactory$2 = createBase64WorkerFactory('Lyogcm9sbHVwLXBsdWdpbi13ZWItd29ya2VyLWxvYWRlciAqLwooZnVuY3Rpb24gKCkgewogICd1c2Ugc3RyaWN0JzsKCiAgLyogZXNsaW50LWRpc2FibGUgbm8tYml0d2lzZSAtLSB1c2VkIGZvciBjYWxjdWxhdGlvbnMgKi8KICAvKiBlc2xpbnQtZGlzYWJsZSB1bmljb3JuL3ByZWZlci1xdWVyeS1zZWxlY3RvciAtLSBhaW1pbmcgYXQKICAgIGJhY2t3YXJkLWNvbXBhdGliaWxpdHkgKi8KICAvKioKICAqIFN0YWNrQmx1ciAtIGEgZmFzdCBhbG1vc3QgR2F1c3NpYW4gQmx1ciBGb3IgQ2FudmFzCiAgKgogICogSW4gY2FzZSB5b3UgZmluZCB0aGlzIGNsYXNzIHVzZWZ1bCAtIGVzcGVjaWFsbHkgaW4gY29tbWVyY2lhbCBwcm9qZWN0cyAtCiAgKiBJIGFtIG5vdCB0b3RhbGx5IHVuaGFwcHkgZm9yIGEgc21hbGwgZG9uYXRpb24gdG8gbXkgUGF5UGFsIGFjY291bnQKICAqIG1hcmlvQHF1YXNpbW9uZG8uZGUKICAqCiAgKiBPciBzdXBwb3J0IG1lIG9uIGZsYXR0cjoKICAqIHtAbGluayBodHRwczovL2ZsYXR0ci5jb20vdGhpbmcvNzI3OTEvU3RhY2tCbHVyLWEtZmFzdC1hbG1vc3QtR2F1c3NpYW4tQmx1ci1FZmZlY3QtZm9yLUNhbnZhc0phdmFzY3JpcHR9LgogICoKICAqIEBtb2R1bGUgU3RhY2tCbHVyCiAgKiBAYXV0aG9yIE1hcmlvIEtsaW5nZW1hbm4KICAqIENvbnRhY3Q6IG1hcmlvQHF1YXNpbW9uZG8uY29tCiAgKiBXZWJzaXRlOiB7QGxpbmsgaHR0cDovL3d3dy5xdWFzaW1vbmRvLmNvbS9TdGFja0JsdXJGb3JDYW52YXMvU3RhY2tCbHVyRGVtby5odG1sfQogICogVHdpdHRlcjogQHF1YXNpbW9uZG8KICAqCiAgKiBAY29weXJpZ2h0IChjKSAyMDEwIE1hcmlvIEtsaW5nZW1hbm4KICAqCiAgKiBQZXJtaXNzaW9uIGlzIGhlcmVieSBncmFudGVkLCBmcmVlIG9mIGNoYXJnZSwgdG8gYW55IHBlcnNvbgogICogb2J0YWluaW5nIGEgY29weSBvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24KICAqIGZpbGVzICh0aGUgIlNvZnR3YXJlIiksIHRvIGRlYWwgaW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQKICAqIHJlc3RyaWN0aW9uLCBpbmNsdWRpbmcgd2l0aG91dCBsaW1pdGF0aW9uIHRoZSByaWdodHMgdG8gdXNlLAogICogY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yIHNlbGwKICAqIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJtaXQgcGVyc29ucyB0byB3aG9tIHRoZQogICogU29mdHdhcmUgaXMgZnVybmlzaGVkIHRvIGRvIHNvLCBzdWJqZWN0IHRvIHRoZSBmb2xsb3dpbmcKICAqIGNvbmRpdGlvbnM6CiAgKgogICogVGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUKICAqIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Igc3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgogICoKICAqIFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFOWSBLSU5ELAogICogRVhQUkVTUyBPUiBJTVBMSUVELCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTCiAgKiBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFORAogICogTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQKICAqIEhPTERFUlMgQkUgTElBQkxFIEZPUiBBTlkgQ0xBSU0sIERBTUFHRVMgT1IgT1RIRVIgTElBQklMSVRZLAogICogV0hFVEhFUiBJTiBBTiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HCiAgKiBGUk9NLCBPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SCiAgKiBPVEhFUiBERUFMSU5HUyBJTiBUSEUgU09GVFdBUkUuCiAgKi8KCiAgdmFyIEJsdXJTdGFjayA9IGZ1bmN0aW9uIEJsdXJTdGFjaygpIHsKICAgIHRoaXMuciA9IDA7CiAgICB0aGlzLmcgPSAwOwogICAgdGhpcy5iID0gMDsKICAgIHRoaXMuYSA9IDA7CiAgICB0aGlzLm5leHQgPSBudWxsOwogIH07CiAgdmFyIG11bFRhYmxlID0gWzUxMiwgNTEyLCA0NTYsIDUxMiwgMzI4LCA0NTYsIDMzNSwgNTEyLCA0MDUsIDMyOCwgMjcxLCA0NTYsIDM4OCwgMzM1LCAyOTIsIDUxMiwgNDU0LCA0MDUsIDM2NCwgMzI4LCAyOTgsIDI3MSwgNDk2LCA0NTYsIDQyMCwgMzg4LCAzNjAsIDMzNSwgMzEyLCAyOTIsIDI3MywgNTEyLCA0ODIsIDQ1NCwgNDI4LCA0MDUsIDM4MywgMzY0LCAzNDUsIDMyOCwgMzEyLCAyOTgsIDI4NCwgMjcxLCAyNTksIDQ5NiwgNDc1LCA0NTYsIDQzNywgNDIwLCA0MDQsIDM4OCwgMzc0LCAzNjAsIDM0NywgMzM1LCAzMjMsIDMxMiwgMzAyLCAyOTIsIDI4MiwgMjczLCAyNjUsIDUxMiwgNDk3LCA0ODIsIDQ2OCwgNDU0LCA0NDEsIDQyOCwgNDE3LCA0MDUsIDM5NCwgMzgzLCAzNzMsIDM2NCwgMzU0LCAzNDUsIDMzNywgMzI4LCAzMjAsIDMxMiwgMzA1LCAyOTgsIDI5MSwgMjg0LCAyNzgsIDI3MSwgMjY1LCAyNTksIDUwNywgNDk2LCA0ODUsIDQ3NSwgNDY1LCA0NTYsIDQ0NiwgNDM3LCA0MjgsIDQyMCwgNDEyLCA0MDQsIDM5NiwgMzg4LCAzODEsIDM3NCwgMzY3LCAzNjAsIDM1NCwgMzQ3LCAzNDEsIDMzNSwgMzI5LCAzMjMsIDMxOCwgMzEyLCAzMDcsIDMwMiwgMjk3LCAyOTIsIDI4NywgMjgyLCAyNzgsIDI3MywgMjY5LCAyNjUsIDI2MSwgNTEyLCA1MDUsIDQ5NywgNDg5LCA0ODIsIDQ3NSwgNDY4LCA0NjEsIDQ1NCwgNDQ3LCA0NDEsIDQzNSwgNDI4LCA0MjIsIDQxNywgNDExLCA0MDUsIDM5OSwgMzk0LCAzODksIDM4MywgMzc4LCAzNzMsIDM2OCwgMzY0LCAzNTksIDM1NCwgMzUwLCAzNDUsIDM0MSwgMzM3LCAzMzIsIDMyOCwgMzI0LCAzMjAsIDMxNiwgMzEyLCAzMDksIDMwNSwgMzAxLCAyOTgsIDI5NCwgMjkxLCAyODcsIDI4NCwgMjgxLCAyNzgsIDI3NCwgMjcxLCAyNjgsIDI2NSwgMjYyLCAyNTksIDI1NywgNTA3LCA1MDEsIDQ5NiwgNDkxLCA0ODUsIDQ4MCwgNDc1LCA0NzAsIDQ2NSwgNDYwLCA0NTYsIDQ1MSwgNDQ2LCA0NDIsIDQzNywgNDMzLCA0MjgsIDQyNCwgNDIwLCA0MTYsIDQxMiwgNDA4LCA0MDQsIDQwMCwgMzk2LCAzOTIsIDM4OCwgMzg1LCAzODEsIDM3NywgMzc0LCAzNzAsIDM2NywgMzYzLCAzNjAsIDM1NywgMzU0LCAzNTAsIDM0NywgMzQ0LCAzNDEsIDMzOCwgMzM1LCAzMzIsIDMyOSwgMzI2LCAzMjMsIDMyMCwgMzE4LCAzMTUsIDMxMiwgMzEwLCAzMDcsIDMwNCwgMzAyLCAyOTksIDI5NywgMjk0LCAyOTIsIDI4OSwgMjg3LCAyODUsIDI4MiwgMjgwLCAyNzgsIDI3NSwgMjczLCAyNzEsIDI2OSwgMjY3LCAyNjUsIDI2MywgMjYxLCAyNTldOwogIHZhciBzaGdUYWJsZSA9IFs5LCAxMSwgMTIsIDEzLCAxMywgMTQsIDE0LCAxNSwgMTUsIDE1LCAxNSwgMTYsIDE2LCAxNiwgMTYsIDE3LCAxNywgMTcsIDE3LCAxNywgMTcsIDE3LCAxOCwgMTgsIDE4LCAxOCwgMTgsIDE4LCAxOCwgMTgsIDE4LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjRdOwoKICAvKioKICAgKiBAcGFyYW0ge0ltYWdlRGF0YX0gaW1hZ2VEYXRhCiAgICogQHBhcmFtIHtJbnRlZ2VyfSB0b3BYCiAgICogQHBhcmFtIHtJbnRlZ2VyfSB0b3BZCiAgICogQHBhcmFtIHtJbnRlZ2VyfSB3aWR0aAogICAqIEBwYXJhbSB7SW50ZWdlcn0gaGVpZ2h0CiAgICogQHBhcmFtIHtGbG9hdH0gcmFkaXVzCiAgICogQHJldHVybnMge0ltYWdlRGF0YX0KICAgKi8KICBmdW5jdGlvbiBwcm9jZXNzSW1hZ2VEYXRhUkdCKGltYWdlRGF0YSwgdG9wWCwgdG9wWSwgd2lkdGgsIGhlaWdodCwgcmFkaXVzKSB7CiAgICB2YXIgcGl4ZWxzID0gaW1hZ2VEYXRhID8gaW1hZ2VEYXRhLmRhdGEgOiBbXTsKICAgIHZhciBkaXYgPSAyICogcmFkaXVzICsgMTsKICAgIC8vIGNvbnN0IHc0ID0gd2lkdGggPDwgMjsKICAgIHZhciB3aWR0aE1pbnVzMSA9IHdpZHRoIC0gMTsKICAgIHZhciBoZWlnaHRNaW51czEgPSBoZWlnaHQgLSAxOwogICAgdmFyIHJhZGl1c1BsdXMxID0gcmFkaXVzICsgMTsKICAgIHZhciBzdW1GYWN0b3IgPSByYWRpdXNQbHVzMSAqIChyYWRpdXNQbHVzMSArIDEpIC8gMjsKICAgIHZhciBzdGFja1N0YXJ0ID0gbmV3IEJsdXJTdGFjaygpOwogICAgdmFyIHN0YWNrID0gc3RhY2tTdGFydDsKICAgIHZhciBzdGFja0VuZDsKICAgIGZvciAodmFyIGkgPSAxOyBpIDwgZGl2OyBpKyspIHsKICAgICAgc3RhY2sgPSBzdGFjay5uZXh0ID0gbmV3IEJsdXJTdGFjaygpOwogICAgICBpZiAoaSA9PT0gcmFkaXVzUGx1czEpIHsKICAgICAgICBzdGFja0VuZCA9IHN0YWNrOwogICAgICB9CiAgICB9CiAgICBzdGFjay5uZXh0ID0gc3RhY2tTdGFydDsKICAgIHZhciBzdGFja0luID0gbnVsbDsKICAgIHZhciBzdGFja091dCA9IG51bGw7CiAgICB2YXIgbXVsU3VtID0gbXVsVGFibGVbcmFkaXVzXTsKICAgIHZhciBzaGdTdW0gPSBzaGdUYWJsZVtyYWRpdXNdOwogICAgdmFyIHAsIHJiczsKICAgIHZhciB5dyA9IDAsCiAgICAgIHlpID0gMDsKICAgIGZvciAodmFyIHkgPSAwOyB5IDwgaGVpZ2h0OyB5KyspIHsKICAgICAgdmFyIHByID0gcGl4ZWxzW3lpXSwKICAgICAgICBwZyA9IHBpeGVsc1t5aSArIDFdLAogICAgICAgIHBiID0gcGl4ZWxzW3lpICsgMl0sCiAgICAgICAgck91dFN1bSA9IHJhZGl1c1BsdXMxICogcHIsCiAgICAgICAgZ091dFN1bSA9IHJhZGl1c1BsdXMxICogcGcsCiAgICAgICAgYk91dFN1bSA9IHJhZGl1c1BsdXMxICogcGIsCiAgICAgICAgclN1bSA9IHN1bUZhY3RvciAqIHByLAogICAgICAgIGdTdW0gPSBzdW1GYWN0b3IgKiBwZywKICAgICAgICBiU3VtID0gc3VtRmFjdG9yICogcGI7CiAgICAgIHN0YWNrID0gc3RhY2tTdGFydDsKICAgICAgZm9yICh2YXIgX2k1ID0gMDsgX2k1IDwgcmFkaXVzUGx1czE7IF9pNSsrKSB7CiAgICAgICAgc3RhY2suciA9IHByOwogICAgICAgIHN0YWNrLmcgPSBwZzsKICAgICAgICBzdGFjay5iID0gcGI7CiAgICAgICAgc3RhY2sgPSBzdGFjay5uZXh0OwogICAgICB9CiAgICAgIHZhciBySW5TdW0gPSAwLAogICAgICAgIGdJblN1bSA9IDAsCiAgICAgICAgYkluU3VtID0gMDsKICAgICAgZm9yICh2YXIgX2k2ID0gMTsgX2k2IDwgcmFkaXVzUGx1czE7IF9pNisrKSB7CiAgICAgICAgcCA9IHlpICsgKCh3aWR0aE1pbnVzMSA8IF9pNiA/IHdpZHRoTWludXMxIDogX2k2KSA8PCAyKTsKICAgICAgICByU3VtICs9IChzdGFjay5yID0gcHIgPSBwaXhlbHNbcF0pICogKHJicyA9IHJhZGl1c1BsdXMxIC0gX2k2KTsKICAgICAgICBnU3VtICs9IChzdGFjay5nID0gcGcgPSBwaXhlbHNbcCArIDFdKSAqIHJiczsKICAgICAgICBiU3VtICs9IChzdGFjay5iID0gcGIgPSBwaXhlbHNbcCArIDJdKSAqIHJiczsKICAgICAgICBySW5TdW0gKz0gcHI7CiAgICAgICAgZ0luU3VtICs9IHBnOwogICAgICAgIGJJblN1bSArPSBwYjsKICAgICAgICBzdGFjayA9IHN0YWNrLm5leHQ7CiAgICAgIH0KICAgICAgc3RhY2tJbiA9IHN0YWNrU3RhcnQ7CiAgICAgIHN0YWNrT3V0ID0gc3RhY2tFbmQ7CiAgICAgIGZvciAodmFyIHggPSAwOyB4IDwgd2lkdGg7IHgrKykgewogICAgICAgIHBpeGVsc1t5aV0gPSByU3VtICogbXVsU3VtID4+IHNoZ1N1bTsKICAgICAgICBwaXhlbHNbeWkgKyAxXSA9IGdTdW0gKiBtdWxTdW0gPj4gc2hnU3VtOwogICAgICAgIHBpeGVsc1t5aSArIDJdID0gYlN1bSAqIG11bFN1bSA+PiBzaGdTdW07CiAgICAgICAgclN1bSAtPSByT3V0U3VtOwogICAgICAgIGdTdW0gLT0gZ091dFN1bTsKICAgICAgICBiU3VtIC09IGJPdXRTdW07CiAgICAgICAgck91dFN1bSAtPSBzdGFja0luLnI7CiAgICAgICAgZ091dFN1bSAtPSBzdGFja0luLmc7CiAgICAgICAgYk91dFN1bSAtPSBzdGFja0luLmI7CiAgICAgICAgcCA9IHl3ICsgKChwID0geCArIHJhZGl1cyArIDEpIDwgd2lkdGhNaW51czEgPyBwIDogd2lkdGhNaW51czEpIDw8IDI7CiAgICAgICAgckluU3VtICs9IHN0YWNrSW4uciA9IHBpeGVsc1twXTsKICAgICAgICBnSW5TdW0gKz0gc3RhY2tJbi5nID0gcGl4ZWxzW3AgKyAxXTsKICAgICAgICBiSW5TdW0gKz0gc3RhY2tJbi5iID0gcGl4ZWxzW3AgKyAyXTsKICAgICAgICByU3VtICs9IHJJblN1bTsKICAgICAgICBnU3VtICs9IGdJblN1bTsKICAgICAgICBiU3VtICs9IGJJblN1bTsKICAgICAgICBzdGFja0luID0gc3RhY2tJbi5uZXh0OwogICAgICAgIHJPdXRTdW0gKz0gcHIgPSBzdGFja091dC5yOwogICAgICAgIGdPdXRTdW0gKz0gcGcgPSBzdGFja091dC5nOwogICAgICAgIGJPdXRTdW0gKz0gcGIgPSBzdGFja091dC5iOwogICAgICAgIHJJblN1bSAtPSBwcjsKICAgICAgICBnSW5TdW0gLT0gcGc7CiAgICAgICAgYkluU3VtIC09IHBiOwogICAgICAgIHN0YWNrT3V0ID0gc3RhY2tPdXQubmV4dDsKICAgICAgICB5aSArPSA0OwogICAgICB9CiAgICAgIHl3ICs9IHdpZHRoOwogICAgfQogICAgZm9yICh2YXIgX3gyID0gMDsgX3gyIDwgd2lkdGg7IF94MisrKSB7CiAgICAgIHlpID0gX3gyIDw8IDI7CiAgICAgIHZhciBfcHIyID0gcGl4ZWxzW3lpXSwKICAgICAgICBfcGcyID0gcGl4ZWxzW3lpICsgMV0sCiAgICAgICAgX3BiMiA9IHBpeGVsc1t5aSArIDJdLAogICAgICAgIF9yT3V0U3VtMiA9IHJhZGl1c1BsdXMxICogX3ByMiwKICAgICAgICBfZ091dFN1bTIgPSByYWRpdXNQbHVzMSAqIF9wZzIsCiAgICAgICAgX2JPdXRTdW0yID0gcmFkaXVzUGx1czEgKiBfcGIyLAogICAgICAgIF9yU3VtMiA9IHN1bUZhY3RvciAqIF9wcjIsCiAgICAgICAgX2dTdW0yID0gc3VtRmFjdG9yICogX3BnMiwKICAgICAgICBfYlN1bTIgPSBzdW1GYWN0b3IgKiBfcGIyOwogICAgICBzdGFjayA9IHN0YWNrU3RhcnQ7CiAgICAgIGZvciAodmFyIF9pNyA9IDA7IF9pNyA8IHJhZGl1c1BsdXMxOyBfaTcrKykgewogICAgICAgIHN0YWNrLnIgPSBfcHIyOwogICAgICAgIHN0YWNrLmcgPSBfcGcyOwogICAgICAgIHN0YWNrLmIgPSBfcGIyOwogICAgICAgIHN0YWNrID0gc3RhY2submV4dDsKICAgICAgfQogICAgICB2YXIgX3JJblN1bTIgPSAwLAogICAgICAgIF9nSW5TdW0yID0gMCwKICAgICAgICBfYkluU3VtMiA9IDA7CiAgICAgIGZvciAodmFyIF9pOCA9IDEsIHlwID0gd2lkdGg7IF9pOCA8PSByYWRpdXM7IF9pOCsrKSB7CiAgICAgICAgeWkgPSB5cCArIF94MiA8PCAyOwogICAgICAgIF9yU3VtMiArPSAoc3RhY2suciA9IF9wcjIgPSBwaXhlbHNbeWldKSAqIChyYnMgPSByYWRpdXNQbHVzMSAtIF9pOCk7CiAgICAgICAgX2dTdW0yICs9IChzdGFjay5nID0gX3BnMiA9IHBpeGVsc1t5aSArIDFdKSAqIHJiczsKICAgICAgICBfYlN1bTIgKz0gKHN0YWNrLmIgPSBfcGIyID0gcGl4ZWxzW3lpICsgMl0pICogcmJzOwogICAgICAgIF9ySW5TdW0yICs9IF9wcjI7CiAgICAgICAgX2dJblN1bTIgKz0gX3BnMjsKICAgICAgICBfYkluU3VtMiArPSBfcGIyOwogICAgICAgIHN0YWNrID0gc3RhY2submV4dDsKICAgICAgICBpZiAoX2k4IDwgaGVpZ2h0TWludXMxKSB7CiAgICAgICAgICB5cCArPSB3aWR0aDsKICAgICAgICB9CiAgICAgIH0KICAgICAgeWkgPSBfeDI7CiAgICAgIHN0YWNrSW4gPSBzdGFja1N0YXJ0OwogICAgICBzdGFja091dCA9IHN0YWNrRW5kOwogICAgICBmb3IgKHZhciBfeTIgPSAwOyBfeTIgPCBoZWlnaHQ7IF95MisrKSB7CiAgICAgICAgcCA9IHlpIDw8IDI7CiAgICAgICAgcGl4ZWxzW3BdID0gX3JTdW0yICogbXVsU3VtID4+IHNoZ1N1bTsKICAgICAgICBwaXhlbHNbcCArIDFdID0gX2dTdW0yICogbXVsU3VtID4+IHNoZ1N1bTsKICAgICAgICBwaXhlbHNbcCArIDJdID0gX2JTdW0yICogbXVsU3VtID4+IHNoZ1N1bTsKICAgICAgICBfclN1bTIgLT0gX3JPdXRTdW0yOwogICAgICAgIF9nU3VtMiAtPSBfZ091dFN1bTI7CiAgICAgICAgX2JTdW0yIC09IF9iT3V0U3VtMjsKICAgICAgICBfck91dFN1bTIgLT0gc3RhY2tJbi5yOwogICAgICAgIF9nT3V0U3VtMiAtPSBzdGFja0luLmc7CiAgICAgICAgX2JPdXRTdW0yIC09IHN0YWNrSW4uYjsKICAgICAgICBwID0gX3gyICsgKChwID0gX3kyICsgcmFkaXVzUGx1czEpIDwgaGVpZ2h0TWludXMxID8gcCA6IGhlaWdodE1pbnVzMSkgKiB3aWR0aCA8PCAyOwogICAgICAgIF9yU3VtMiArPSBfckluU3VtMiArPSBzdGFja0luLnIgPSBwaXhlbHNbcF07CiAgICAgICAgX2dTdW0yICs9IF9nSW5TdW0yICs9IHN0YWNrSW4uZyA9IHBpeGVsc1twICsgMV07CiAgICAgICAgX2JTdW0yICs9IF9iSW5TdW0yICs9IHN0YWNrSW4uYiA9IHBpeGVsc1twICsgMl07CiAgICAgICAgc3RhY2tJbiA9IHN0YWNrSW4ubmV4dDsKICAgICAgICBfck91dFN1bTIgKz0gX3ByMiA9IHN0YWNrT3V0LnI7CiAgICAgICAgX2dPdXRTdW0yICs9IF9wZzIgPSBzdGFja091dC5nOwogICAgICAgIF9iT3V0U3VtMiArPSBfcGIyID0gc3RhY2tPdXQuYjsKICAgICAgICBfckluU3VtMiAtPSBfcHIyOwogICAgICAgIF9nSW5TdW0yIC09IF9wZzI7CiAgICAgICAgX2JJblN1bTIgLT0gX3BiMjsKICAgICAgICBzdGFja091dCA9IHN0YWNrT3V0Lm5leHQ7CiAgICAgICAgeWkgKz0gd2lkdGg7CiAgICAgIH0KICAgIH0KICAgIHJldHVybiBpbWFnZURhdGE7CiAgfQogIG9ubWVzc2FnZSA9IGZ1bmN0aW9uIG9ubWVzc2FnZShlKSB7CiAgICB2YXIgZGF0YSA9IGUuZGF0YTsKICAgIHZhciBpbWFnZURhdGE7CiAgICB0cnkgewogICAgICBpbWFnZURhdGEgPSBwcm9jZXNzSW1hZ2VEYXRhUkdCKGRhdGEuaW1hZ2VEYXRhLCBkYXRhLnRvcFgsIGRhdGEudG9wWSwgZGF0YS53aWR0aCwgZGF0YS5oZWlnaHQsIGRhdGEucmFkaXVzKTsKICAgICAgcG9zdE1lc3NhZ2UoaW1hZ2VEYXRhKTsKICAgIH0gY2F0Y2ggKGUpIHt9CiAgfTsKCn0pKCk7Cgo=', null, false);
+  var WorkerFactory$2 = createBase64WorkerFactory('Lyogcm9sbHVwLXBsdWdpbi13ZWItd29ya2VyLWxvYWRlciAqLwooZnVuY3Rpb24gKCkgewogICd1c2Ugc3RyaWN0JzsKCiAgLyogZXNsaW50LWRpc2FibGUgbm8tYml0d2lzZSAtLSB1c2VkIGZvciBjYWxjdWxhdGlvbnMgKi8KICAvKiBlc2xpbnQtZGlzYWJsZSB1bmljb3JuL3ByZWZlci1xdWVyeS1zZWxlY3RvciAtLSBhaW1pbmcgYXQNCiAgICBiYWNrd2FyZC1jb21wYXRpYmlsaXR5ICovCiAgLyoqDQogICogU3RhY2tCbHVyIC0gYSBmYXN0IGFsbW9zdCBHYXVzc2lhbiBCbHVyIEZvciBDYW52YXMNCiAgKg0KICAqIEluIGNhc2UgeW91IGZpbmQgdGhpcyBjbGFzcyB1c2VmdWwgLSBlc3BlY2lhbGx5IGluIGNvbW1lcmNpYWwgcHJvamVjdHMgLQ0KICAqIEkgYW0gbm90IHRvdGFsbHkgdW5oYXBweSBmb3IgYSBzbWFsbCBkb25hdGlvbiB0byBteSBQYXlQYWwgYWNjb3VudA0KICAqIG1hcmlvQHF1YXNpbW9uZG8uZGUNCiAgKg0KICAqIE9yIHN1cHBvcnQgbWUgb24gZmxhdHRyOg0KICAqIHtAbGluayBodHRwczovL2ZsYXR0ci5jb20vdGhpbmcvNzI3OTEvU3RhY2tCbHVyLWEtZmFzdC1hbG1vc3QtR2F1c3NpYW4tQmx1ci1FZmZlY3QtZm9yLUNhbnZhc0phdmFzY3JpcHR9Lg0KICAqDQogICogQG1vZHVsZSBTdGFja0JsdXINCiAgKiBAYXV0aG9yIE1hcmlvIEtsaW5nZW1hbm4NCiAgKiBDb250YWN0OiBtYXJpb0BxdWFzaW1vbmRvLmNvbQ0KICAqIFdlYnNpdGU6IHtAbGluayBodHRwOi8vd3d3LnF1YXNpbW9uZG8uY29tL1N0YWNrQmx1ckZvckNhbnZhcy9TdGFja0JsdXJEZW1vLmh0bWx9DQogICogVHdpdHRlcjogQHF1YXNpbW9uZG8NCiAgKg0KICAqIEBjb3B5cmlnaHQgKGMpIDIwMTAgTWFyaW8gS2xpbmdlbWFubg0KICAqDQogICogUGVybWlzc2lvbiBpcyBoZXJlYnkgZ3JhbnRlZCwgZnJlZSBvZiBjaGFyZ2UsIHRvIGFueSBwZXJzb24NCiAgKiBvYnRhaW5pbmcgYSBjb3B5IG9mIHRoaXMgc29mdHdhcmUgYW5kIGFzc29jaWF0ZWQgZG9jdW1lbnRhdGlvbg0KICAqIGZpbGVzICh0aGUgIlNvZnR3YXJlIiksIHRvIGRlYWwgaW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQNCiAgKiByZXN0cmljdGlvbiwgaW5jbHVkaW5nIHdpdGhvdXQgbGltaXRhdGlvbiB0aGUgcmlnaHRzIHRvIHVzZSwNCiAgKiBjb3B5LCBtb2RpZnksIG1lcmdlLCBwdWJsaXNoLCBkaXN0cmlidXRlLCBzdWJsaWNlbnNlLCBhbmQvb3Igc2VsbA0KICAqIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJtaXQgcGVyc29ucyB0byB3aG9tIHRoZQ0KICAqIFNvZnR3YXJlIGlzIGZ1cm5pc2hlZCB0byBkbyBzbywgc3ViamVjdCB0byB0aGUgZm9sbG93aW5nDQogICogY29uZGl0aW9uczoNCiAgKg0KICAqIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Npb24gbm90aWNlIHNoYWxsIGJlDQogICogaW5jbHVkZWQgaW4gYWxsIGNvcGllcyBvciBzdWJzdGFudGlhbCBwb3J0aW9ucyBvZiB0aGUgU29mdHdhcmUuDQogICoNCiAgKiBUSEUgU09GVFdBUkUgSVMgUFJPVklERUQgIkFTIElTIiwgV0lUSE9VVCBXQVJSQU5UWSBPRiBBTlkgS0lORCwNCiAgKiBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9UIExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMNCiAgKiBPRiBNRVJDSEFOVEFCSUxJVFksIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFIEFORA0KICAqIE5PTklORlJJTkdFTUVOVC4gSU4gTk8gRVZFTlQgU0hBTEwgVEhFIEFVVEhPUlMgT1IgQ09QWVJJR0hUDQogICogSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhFUiBMSUFCSUxJVFksDQogICogV0hFVEhFUiBJTiBBTiBBQ1RJT04gT0YgQ09OVFJBQ1QsIFRPUlQgT1IgT1RIRVJXSVNFLCBBUklTSU5HDQogICogRlJPTSwgT1VUIE9GIE9SIElOIENPTk5FQ1RJT04gV0lUSCBUSEUgU09GVFdBUkUgT1IgVEhFIFVTRSBPUg0KICAqIE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4NCiAgKi8KCiAgdmFyIEJsdXJTdGFjayA9IGZ1bmN0aW9uIEJsdXJTdGFjaygpIHsKICAgIHRoaXMuciA9IDA7CiAgICB0aGlzLmcgPSAwOwogICAgdGhpcy5iID0gMDsKICAgIHRoaXMuYSA9IDA7CiAgICB0aGlzLm5leHQgPSBudWxsOwogIH07CiAgdmFyIG11bFRhYmxlID0gWzUxMiwgNTEyLCA0NTYsIDUxMiwgMzI4LCA0NTYsIDMzNSwgNTEyLCA0MDUsIDMyOCwgMjcxLCA0NTYsIDM4OCwgMzM1LCAyOTIsIDUxMiwgNDU0LCA0MDUsIDM2NCwgMzI4LCAyOTgsIDI3MSwgNDk2LCA0NTYsIDQyMCwgMzg4LCAzNjAsIDMzNSwgMzEyLCAyOTIsIDI3MywgNTEyLCA0ODIsIDQ1NCwgNDI4LCA0MDUsIDM4MywgMzY0LCAzNDUsIDMyOCwgMzEyLCAyOTgsIDI4NCwgMjcxLCAyNTksIDQ5NiwgNDc1LCA0NTYsIDQzNywgNDIwLCA0MDQsIDM4OCwgMzc0LCAzNjAsIDM0NywgMzM1LCAzMjMsIDMxMiwgMzAyLCAyOTIsIDI4MiwgMjczLCAyNjUsIDUxMiwgNDk3LCA0ODIsIDQ2OCwgNDU0LCA0NDEsIDQyOCwgNDE3LCA0MDUsIDM5NCwgMzgzLCAzNzMsIDM2NCwgMzU0LCAzNDUsIDMzNywgMzI4LCAzMjAsIDMxMiwgMzA1LCAyOTgsIDI5MSwgMjg0LCAyNzgsIDI3MSwgMjY1LCAyNTksIDUwNywgNDk2LCA0ODUsIDQ3NSwgNDY1LCA0NTYsIDQ0NiwgNDM3LCA0MjgsIDQyMCwgNDEyLCA0MDQsIDM5NiwgMzg4LCAzODEsIDM3NCwgMzY3LCAzNjAsIDM1NCwgMzQ3LCAzNDEsIDMzNSwgMzI5LCAzMjMsIDMxOCwgMzEyLCAzMDcsIDMwMiwgMjk3LCAyOTIsIDI4NywgMjgyLCAyNzgsIDI3MywgMjY5LCAyNjUsIDI2MSwgNTEyLCA1MDUsIDQ5NywgNDg5LCA0ODIsIDQ3NSwgNDY4LCA0NjEsIDQ1NCwgNDQ3LCA0NDEsIDQzNSwgNDI4LCA0MjIsIDQxNywgNDExLCA0MDUsIDM5OSwgMzk0LCAzODksIDM4MywgMzc4LCAzNzMsIDM2OCwgMzY0LCAzNTksIDM1NCwgMzUwLCAzNDUsIDM0MSwgMzM3LCAzMzIsIDMyOCwgMzI0LCAzMjAsIDMxNiwgMzEyLCAzMDksIDMwNSwgMzAxLCAyOTgsIDI5NCwgMjkxLCAyODcsIDI4NCwgMjgxLCAyNzgsIDI3NCwgMjcxLCAyNjgsIDI2NSwgMjYyLCAyNTksIDI1NywgNTA3LCA1MDEsIDQ5NiwgNDkxLCA0ODUsIDQ4MCwgNDc1LCA0NzAsIDQ2NSwgNDYwLCA0NTYsIDQ1MSwgNDQ2LCA0NDIsIDQzNywgNDMzLCA0MjgsIDQyNCwgNDIwLCA0MTYsIDQxMiwgNDA4LCA0MDQsIDQwMCwgMzk2LCAzOTIsIDM4OCwgMzg1LCAzODEsIDM3NywgMzc0LCAzNzAsIDM2NywgMzYzLCAzNjAsIDM1NywgMzU0LCAzNTAsIDM0NywgMzQ0LCAzNDEsIDMzOCwgMzM1LCAzMzIsIDMyOSwgMzI2LCAzMjMsIDMyMCwgMzE4LCAzMTUsIDMxMiwgMzEwLCAzMDcsIDMwNCwgMzAyLCAyOTksIDI5NywgMjk0LCAyOTIsIDI4OSwgMjg3LCAyODUsIDI4MiwgMjgwLCAyNzgsIDI3NSwgMjczLCAyNzEsIDI2OSwgMjY3LCAyNjUsIDI2MywgMjYxLCAyNTldOwogIHZhciBzaGdUYWJsZSA9IFs5LCAxMSwgMTIsIDEzLCAxMywgMTQsIDE0LCAxNSwgMTUsIDE1LCAxNSwgMTYsIDE2LCAxNiwgMTYsIDE3LCAxNywgMTcsIDE3LCAxNywgMTcsIDE3LCAxOCwgMTgsIDE4LCAxOCwgMTgsIDE4LCAxOCwgMTgsIDE4LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDE5LCAxOSwgMTksIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIwLCAyMCwgMjAsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIxLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMiwgMjIsIDIyLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyMywgMjMsIDIzLCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjQsIDI0LCAyNCwgMjRdOwoKICAvKioNCiAgICogQHBhcmFtIHtJbWFnZURhdGF9IGltYWdlRGF0YQ0KICAgKiBAcGFyYW0ge0ludGVnZXJ9IHRvcFgNCiAgICogQHBhcmFtIHtJbnRlZ2VyfSB0b3BZDQogICAqIEBwYXJhbSB7SW50ZWdlcn0gd2lkdGgNCiAgICogQHBhcmFtIHtJbnRlZ2VyfSBoZWlnaHQNCiAgICogQHBhcmFtIHtGbG9hdH0gcmFkaXVzDQogICAqIEByZXR1cm5zIHtJbWFnZURhdGF9DQogICAqLwogIGZ1bmN0aW9uIHByb2Nlc3NJbWFnZURhdGFSR0IoaW1hZ2VEYXRhLCB0b3BYLCB0b3BZLCB3aWR0aCwgaGVpZ2h0LCByYWRpdXMpIHsKICAgIHZhciBwaXhlbHMgPSBpbWFnZURhdGEgPyBpbWFnZURhdGEuZGF0YSA6IFtdOwogICAgdmFyIGRpdiA9IDIgKiByYWRpdXMgKyAxOwogICAgLy8gY29uc3QgdzQgPSB3aWR0aCA8PCAyOwogICAgdmFyIHdpZHRoTWludXMxID0gd2lkdGggLSAxOwogICAgdmFyIGhlaWdodE1pbnVzMSA9IGhlaWdodCAtIDE7CiAgICB2YXIgcmFkaXVzUGx1czEgPSByYWRpdXMgKyAxOwogICAgdmFyIHN1bUZhY3RvciA9IHJhZGl1c1BsdXMxICogKHJhZGl1c1BsdXMxICsgMSkgLyAyOwogICAgdmFyIHN0YWNrU3RhcnQgPSBuZXcgQmx1clN0YWNrKCk7CiAgICB2YXIgc3RhY2sgPSBzdGFja1N0YXJ0OwogICAgdmFyIHN0YWNrRW5kOwogICAgZm9yICh2YXIgaSA9IDE7IGkgPCBkaXY7IGkrKykgewogICAgICBzdGFjayA9IHN0YWNrLm5leHQgPSBuZXcgQmx1clN0YWNrKCk7CiAgICAgIGlmIChpID09PSByYWRpdXNQbHVzMSkgewogICAgICAgIHN0YWNrRW5kID0gc3RhY2s7CiAgICAgIH0KICAgIH0KICAgIHN0YWNrLm5leHQgPSBzdGFja1N0YXJ0OwogICAgdmFyIHN0YWNrSW4gPSBudWxsOwogICAgdmFyIHN0YWNrT3V0ID0gbnVsbDsKICAgIHZhciBtdWxTdW0gPSBtdWxUYWJsZVtyYWRpdXNdOwogICAgdmFyIHNoZ1N1bSA9IHNoZ1RhYmxlW3JhZGl1c107CiAgICB2YXIgcCwgcmJzOwogICAgdmFyIHl3ID0gMCwKICAgICAgeWkgPSAwOwogICAgZm9yICh2YXIgeSA9IDA7IHkgPCBoZWlnaHQ7IHkrKykgewogICAgICB2YXIgcHIgPSBwaXhlbHNbeWldLAogICAgICAgIHBnID0gcGl4ZWxzW3lpICsgMV0sCiAgICAgICAgcGIgPSBwaXhlbHNbeWkgKyAyXSwKICAgICAgICByT3V0U3VtID0gcmFkaXVzUGx1czEgKiBwciwKICAgICAgICBnT3V0U3VtID0gcmFkaXVzUGx1czEgKiBwZywKICAgICAgICBiT3V0U3VtID0gcmFkaXVzUGx1czEgKiBwYiwKICAgICAgICByU3VtID0gc3VtRmFjdG9yICogcHIsCiAgICAgICAgZ1N1bSA9IHN1bUZhY3RvciAqIHBnLAogICAgICAgIGJTdW0gPSBzdW1GYWN0b3IgKiBwYjsKICAgICAgc3RhY2sgPSBzdGFja1N0YXJ0OwogICAgICBmb3IgKHZhciBfaTUgPSAwOyBfaTUgPCByYWRpdXNQbHVzMTsgX2k1KyspIHsKICAgICAgICBzdGFjay5yID0gcHI7CiAgICAgICAgc3RhY2suZyA9IHBnOwogICAgICAgIHN0YWNrLmIgPSBwYjsKICAgICAgICBzdGFjayA9IHN0YWNrLm5leHQ7CiAgICAgIH0KICAgICAgdmFyIHJJblN1bSA9IDAsCiAgICAgICAgZ0luU3VtID0gMCwKICAgICAgICBiSW5TdW0gPSAwOwogICAgICBmb3IgKHZhciBfaTYgPSAxOyBfaTYgPCByYWRpdXNQbHVzMTsgX2k2KyspIHsKICAgICAgICBwID0geWkgKyAoKHdpZHRoTWludXMxIDwgX2k2ID8gd2lkdGhNaW51czEgOiBfaTYpIDw8IDIpOwogICAgICAgIHJTdW0gKz0gKHN0YWNrLnIgPSBwciA9IHBpeGVsc1twXSkgKiAocmJzID0gcmFkaXVzUGx1czEgLSBfaTYpOwogICAgICAgIGdTdW0gKz0gKHN0YWNrLmcgPSBwZyA9IHBpeGVsc1twICsgMV0pICogcmJzOwogICAgICAgIGJTdW0gKz0gKHN0YWNrLmIgPSBwYiA9IHBpeGVsc1twICsgMl0pICogcmJzOwogICAgICAgIHJJblN1bSArPSBwcjsKICAgICAgICBnSW5TdW0gKz0gcGc7CiAgICAgICAgYkluU3VtICs9IHBiOwogICAgICAgIHN0YWNrID0gc3RhY2submV4dDsKICAgICAgfQogICAgICBzdGFja0luID0gc3RhY2tTdGFydDsKICAgICAgc3RhY2tPdXQgPSBzdGFja0VuZDsKICAgICAgZm9yICh2YXIgeCA9IDA7IHggPCB3aWR0aDsgeCsrKSB7CiAgICAgICAgcGl4ZWxzW3lpXSA9IHJTdW0gKiBtdWxTdW0gPj4gc2hnU3VtOwogICAgICAgIHBpeGVsc1t5aSArIDFdID0gZ1N1bSAqIG11bFN1bSA+PiBzaGdTdW07CiAgICAgICAgcGl4ZWxzW3lpICsgMl0gPSBiU3VtICogbXVsU3VtID4+IHNoZ1N1bTsKICAgICAgICByU3VtIC09IHJPdXRTdW07CiAgICAgICAgZ1N1bSAtPSBnT3V0U3VtOwogICAgICAgIGJTdW0gLT0gYk91dFN1bTsKICAgICAgICByT3V0U3VtIC09IHN0YWNrSW4ucjsKICAgICAgICBnT3V0U3VtIC09IHN0YWNrSW4uZzsKICAgICAgICBiT3V0U3VtIC09IHN0YWNrSW4uYjsKICAgICAgICBwID0geXcgKyAoKHAgPSB4ICsgcmFkaXVzICsgMSkgPCB3aWR0aE1pbnVzMSA/IHAgOiB3aWR0aE1pbnVzMSkgPDwgMjsKICAgICAgICBySW5TdW0gKz0gc3RhY2tJbi5yID0gcGl4ZWxzW3BdOwogICAgICAgIGdJblN1bSArPSBzdGFja0luLmcgPSBwaXhlbHNbcCArIDFdOwogICAgICAgIGJJblN1bSArPSBzdGFja0luLmIgPSBwaXhlbHNbcCArIDJdOwogICAgICAgIHJTdW0gKz0gckluU3VtOwogICAgICAgIGdTdW0gKz0gZ0luU3VtOwogICAgICAgIGJTdW0gKz0gYkluU3VtOwogICAgICAgIHN0YWNrSW4gPSBzdGFja0luLm5leHQ7CiAgICAgICAgck91dFN1bSArPSBwciA9IHN0YWNrT3V0LnI7CiAgICAgICAgZ091dFN1bSArPSBwZyA9IHN0YWNrT3V0Lmc7CiAgICAgICAgYk91dFN1bSArPSBwYiA9IHN0YWNrT3V0LmI7CiAgICAgICAgckluU3VtIC09IHByOwogICAgICAgIGdJblN1bSAtPSBwZzsKICAgICAgICBiSW5TdW0gLT0gcGI7CiAgICAgICAgc3RhY2tPdXQgPSBzdGFja091dC5uZXh0OwogICAgICAgIHlpICs9IDQ7CiAgICAgIH0KICAgICAgeXcgKz0gd2lkdGg7CiAgICB9CiAgICBmb3IgKHZhciBfeDIgPSAwOyBfeDIgPCB3aWR0aDsgX3gyKyspIHsKICAgICAgeWkgPSBfeDIgPDwgMjsKICAgICAgdmFyIF9wcjIgPSBwaXhlbHNbeWldLAogICAgICAgIF9wZzIgPSBwaXhlbHNbeWkgKyAxXSwKICAgICAgICBfcGIyID0gcGl4ZWxzW3lpICsgMl0sCiAgICAgICAgX3JPdXRTdW0yID0gcmFkaXVzUGx1czEgKiBfcHIyLAogICAgICAgIF9nT3V0U3VtMiA9IHJhZGl1c1BsdXMxICogX3BnMiwKICAgICAgICBfYk91dFN1bTIgPSByYWRpdXNQbHVzMSAqIF9wYjIsCiAgICAgICAgX3JTdW0yID0gc3VtRmFjdG9yICogX3ByMiwKICAgICAgICBfZ1N1bTIgPSBzdW1GYWN0b3IgKiBfcGcyLAogICAgICAgIF9iU3VtMiA9IHN1bUZhY3RvciAqIF9wYjI7CiAgICAgIHN0YWNrID0gc3RhY2tTdGFydDsKICAgICAgZm9yICh2YXIgX2k3ID0gMDsgX2k3IDwgcmFkaXVzUGx1czE7IF9pNysrKSB7CiAgICAgICAgc3RhY2suciA9IF9wcjI7CiAgICAgICAgc3RhY2suZyA9IF9wZzI7CiAgICAgICAgc3RhY2suYiA9IF9wYjI7CiAgICAgICAgc3RhY2sgPSBzdGFjay5uZXh0OwogICAgICB9CiAgICAgIHZhciBfckluU3VtMiA9IDAsCiAgICAgICAgX2dJblN1bTIgPSAwLAogICAgICAgIF9iSW5TdW0yID0gMDsKICAgICAgZm9yICh2YXIgX2k4ID0gMSwgeXAgPSB3aWR0aDsgX2k4IDw9IHJhZGl1czsgX2k4KyspIHsKICAgICAgICB5aSA9IHlwICsgX3gyIDw8IDI7CiAgICAgICAgX3JTdW0yICs9IChzdGFjay5yID0gX3ByMiA9IHBpeGVsc1t5aV0pICogKHJicyA9IHJhZGl1c1BsdXMxIC0gX2k4KTsKICAgICAgICBfZ1N1bTIgKz0gKHN0YWNrLmcgPSBfcGcyID0gcGl4ZWxzW3lpICsgMV0pICogcmJzOwogICAgICAgIF9iU3VtMiArPSAoc3RhY2suYiA9IF9wYjIgPSBwaXhlbHNbeWkgKyAyXSkgKiByYnM7CiAgICAgICAgX3JJblN1bTIgKz0gX3ByMjsKICAgICAgICBfZ0luU3VtMiArPSBfcGcyOwogICAgICAgIF9iSW5TdW0yICs9IF9wYjI7CiAgICAgICAgc3RhY2sgPSBzdGFjay5uZXh0OwogICAgICAgIGlmIChfaTggPCBoZWlnaHRNaW51czEpIHsKICAgICAgICAgIHlwICs9IHdpZHRoOwogICAgICAgIH0KICAgICAgfQogICAgICB5aSA9IF94MjsKICAgICAgc3RhY2tJbiA9IHN0YWNrU3RhcnQ7CiAgICAgIHN0YWNrT3V0ID0gc3RhY2tFbmQ7CiAgICAgIGZvciAodmFyIF95MiA9IDA7IF95MiA8IGhlaWdodDsgX3kyKyspIHsKICAgICAgICBwID0geWkgPDwgMjsKICAgICAgICBwaXhlbHNbcF0gPSBfclN1bTIgKiBtdWxTdW0gPj4gc2hnU3VtOwogICAgICAgIHBpeGVsc1twICsgMV0gPSBfZ1N1bTIgKiBtdWxTdW0gPj4gc2hnU3VtOwogICAgICAgIHBpeGVsc1twICsgMl0gPSBfYlN1bTIgKiBtdWxTdW0gPj4gc2hnU3VtOwogICAgICAgIF9yU3VtMiAtPSBfck91dFN1bTI7CiAgICAgICAgX2dTdW0yIC09IF9nT3V0U3VtMjsKICAgICAgICBfYlN1bTIgLT0gX2JPdXRTdW0yOwogICAgICAgIF9yT3V0U3VtMiAtPSBzdGFja0luLnI7CiAgICAgICAgX2dPdXRTdW0yIC09IHN0YWNrSW4uZzsKICAgICAgICBfYk91dFN1bTIgLT0gc3RhY2tJbi5iOwogICAgICAgIHAgPSBfeDIgKyAoKHAgPSBfeTIgKyByYWRpdXNQbHVzMSkgPCBoZWlnaHRNaW51czEgPyBwIDogaGVpZ2h0TWludXMxKSAqIHdpZHRoIDw8IDI7CiAgICAgICAgX3JTdW0yICs9IF9ySW5TdW0yICs9IHN0YWNrSW4uciA9IHBpeGVsc1twXTsKICAgICAgICBfZ1N1bTIgKz0gX2dJblN1bTIgKz0gc3RhY2tJbi5nID0gcGl4ZWxzW3AgKyAxXTsKICAgICAgICBfYlN1bTIgKz0gX2JJblN1bTIgKz0gc3RhY2tJbi5iID0gcGl4ZWxzW3AgKyAyXTsKICAgICAgICBzdGFja0luID0gc3RhY2tJbi5uZXh0OwogICAgICAgIF9yT3V0U3VtMiArPSBfcHIyID0gc3RhY2tPdXQucjsKICAgICAgICBfZ091dFN1bTIgKz0gX3BnMiA9IHN0YWNrT3V0Lmc7CiAgICAgICAgX2JPdXRTdW0yICs9IF9wYjIgPSBzdGFja091dC5iOwogICAgICAgIF9ySW5TdW0yIC09IF9wcjI7CiAgICAgICAgX2dJblN1bTIgLT0gX3BnMjsKICAgICAgICBfYkluU3VtMiAtPSBfcGIyOwogICAgICAgIHN0YWNrT3V0ID0gc3RhY2tPdXQubmV4dDsKICAgICAgICB5aSArPSB3aWR0aDsKICAgICAgfQogICAgfQogICAgcmV0dXJuIGltYWdlRGF0YTsKICB9CiAgb25tZXNzYWdlID0gZnVuY3Rpb24gb25tZXNzYWdlKGUpIHsKICAgIHZhciBkYXRhID0gZS5kYXRhOwogICAgdmFyIGltYWdlRGF0YTsKICAgIHRyeSB7CiAgICAgIGltYWdlRGF0YSA9IHByb2Nlc3NJbWFnZURhdGFSR0IoZGF0YS5pbWFnZURhdGEsIGRhdGEudG9wWCwgZGF0YS50b3BZLCBkYXRhLndpZHRoLCBkYXRhLmhlaWdodCwgZGF0YS5yYWRpdXMpOwogICAgICBwb3N0TWVzc2FnZShpbWFnZURhdGEpOwogICAgfSBjYXRjaCAoZSkge30KICB9OwoKfSkoKTsKCg==', null, false);
   /* eslint-enable */
 
   var WorkerFactory$1 = createBase64WorkerFactory('Lyogcm9sbHVwLXBsdWdpbi13ZWItd29ya2VyLWxvYWRlciAqLwooZnVuY3Rpb24gKCkgewogICAgJ3VzZSBzdHJpY3QnOwoKICAgIGZ1bmN0aW9uIHBhcnNlKHN0cmluZywgZW1wdHkpIHsKICAgICAgdmFyIGpzb24gPSBlbXB0eSB8fCB7fTsKICAgICAgaWYgKHN0cmluZykgewogICAgICAgIHRyeSB7CiAgICAgICAgICBqc29uID0gSlNPTi5wYXJzZShzdHJpbmcpOwogICAgICAgIH0gY2F0Y2ggKGUpIHt9CiAgICAgIH0KICAgICAgcmV0dXJuIGpzb247CiAgICB9CiAgICBmdW5jdGlvbiBzdHJpbmdpZnkoZGF0YSkgewogICAgICByZXR1cm4gSlNPTi5zdHJpbmdpZnkoZGF0YSk7CiAgICB9CiAgICBvbm1lc3NhZ2UgPSBmdW5jdGlvbiBvbm1lc3NhZ2UoZSkgewogICAgICB2YXIgbXNnID0gZS5kYXRhOwogICAgICBpZiAobXNnLnR5cGUgPT0gJ3N0cmluZ2lmeScpIHsKICAgICAgICBwb3N0TWVzc2FnZShzdHJpbmdpZnkobXNnLmRhdGEpKTsKICAgICAgfSBlbHNlIGlmIChtc2cudHlwZSA9PSAncGFyc2UnKSB7CiAgICAgICAgcG9zdE1lc3NhZ2UocGFyc2UobXNnLmRhdGEsIG1zZy5lbXB0eSkpOwogICAgICB9CiAgICB9OwoKfSkoKTsKCg==', null, false);
@@ -5006,7 +5032,7 @@
     }
     e.preventDefault();
   }
-  function init$G() {
+  function init$H() {
     window.addEventListener("keydown", function (e) {
       lastdown = keyCode(e);
       if (!timer$8) {
@@ -5050,7 +5076,7 @@
   }
   var Keypad = {
     listener: listener$k,
-    init: init$G,
+    init: init$H,
     enable: enable$1,
     disable: disable
   };
@@ -5058,7 +5084,7 @@
   var keydown_time = 0;
   var move_time = 0;
   var touch = false;
-  function init$F() {
+  function init$G() {
     Keypad.listener.follow('keydown', function () {
       keydown_time = Date.now();
       move_time = 0;
@@ -5132,14 +5158,14 @@
     return Date.now() - keydown_time < 500 ? false : touch || Platform.is('browser') || Platform.tv() || Platform.desktop() || Date.now() - move_time < 500;
   }
   var DeviceInput = {
-    init: init$F,
+    init: init$G,
     canClick: canClick
   };
 
   var html$j;
   var scroll$3;
   var active$6;
-  function init$E() {
+  function init$F() {
     html$j = Template$1.get('selectbox');
     scroll$3 = new create$g({
       mask: true,
@@ -5248,7 +5274,7 @@
     return html$j;
   }
   var Select = {
-    init: init$E,
+    init: init$F,
     show: show$9,
     hide: hide$2,
     close: close$7,
@@ -5266,7 +5292,7 @@
     timer: false,
     prev: ''
   };
-  function init$D() {
+  function init$E() {
     Keypad.listener.follow('keydown', function (e) {
       if (!playning()) return;
       PlayerPanel.rewind();
@@ -5417,7 +5443,7 @@
   }
   var PlayerIPTV = {
     listener: listener$j,
-    init: init$D,
+    init: init$E,
     start: start$7,
     playning: playning,
     channel: channel$1,
@@ -5742,7 +5768,7 @@
   var already_requested = false;
   var last_time_requested = 0;
   var personal_codes = {};
-  function init$C() {
+  function init$D() {
     Params.trigger('parental_control', false);
     Params.select('parental_control_time', {
       'always': '#{settings_parental_control_param_time_always}',
@@ -6084,7 +6110,7 @@
     return Storage.field('parental_control');
   }
   var ParentalControl = {
-    init: init$C,
+    init: init$D,
     query: query,
     personal: personal,
     enabled: enabled$1,
@@ -6101,7 +6127,7 @@
   /**
    * Запуск
    */
-  function init$B() {
+  function init$C() {
     html$i = Template$1.get('settings');
     body$3 = html$i.find('.settings__body');
     html$i.find('.settings__layer').on('click', function (e) {
@@ -6197,7 +6223,7 @@
   }
   var Settings = {
     listener: listener$i,
-    init: init$B,
+    init: init$C,
     render: render$g,
     update: update$b,
     create: create$p,
@@ -6365,6 +6391,7 @@
       console.log('Socket', 'close', event.code);
       clearTimeout(timeout);
       listener$g.send('close', {});
+      timeping = Math.max(1000 * 60 * 5, timeping);
       console.log('Socket', 'try connect after', Math.round(timeping) / 1000, 'sec.');
       setTimeout(connect$1, Math.round(timeping));
       timeping *= 2;
@@ -7546,7 +7573,7 @@
   var html$g = $('<div class="processing hide"><div><div class="processing__loader"></div><div class="processing__text"></div></div></div>'),
     text = html$g.find('.processing__text');
   var processing = [];
-  function init$A() {
+  function init$B() {
     update$9();
   }
   function update$9() {
@@ -7559,7 +7586,7 @@
       requestAnimationFrame(update$9);
     } else html$g.addClass('hide');
   }
-  function push$3(id, percent) {
+  function push$4(id, percent) {
     var find = processing.find(function (a) {
       return a.id == id;
     });
@@ -7577,21 +7604,42 @@
     return js ? html$g[0] : html$g;
   }
   var Processing = {
-    init: init$A,
-    push: push$3,
+    init: init$B,
+    push: push$4,
     render: render$d
   };
 
   var html$f;
   var last$3;
   var activi = false;
-  function init$z() {
+  function observe$2() {
+    if (typeof MutationObserver == 'undefined') return;
+    var observer = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        var mutation = mutations[i];
+        if (mutation.type == 'childList' && !mutation.removedNodes.length) {
+          var selectors = Array.from(mutation.target.querySelectorAll('.selector'));
+          selectors.forEach(function (s) {
+            $(s).unbind('hover:focus hover:hover hover:touch').on('hover:focus hover:hover hover:touch', function (e) {
+              last$3 = e.target;
+            });
+          });
+        }
+      }
+    });
+    observer.observe(html$f[0], {
+      childList: true,
+      subtree: true
+    });
+  }
+  function init$A() {
     html$f = Template$1.get('head');
     html$f.find('.head__actions').prepend(Processing.render());
     Utils$2.time(html$f);
-    html$f.find('.selector').data('controller', 'head').on('hover:focus', function (event) {
+    html$f.find('.selector').data('controller', 'head').on('hover:focus hover:hover hover:touch', function (event) {
       last$3 = event.target;
     });
+    observe$2();
     html$f.find('.open--settings').on('hover:enter', function () {
       ParentalControl.personal('settings', function () {
         Controller.toggle('settings');
@@ -7689,7 +7737,7 @@
   var Head = {
     render: render$c,
     title: title$1,
-    init: init$z
+    init: init$A
   };
 
   var callback_cancel, controller_enabled, loader$1, timer$6;
@@ -7753,7 +7801,7 @@
   /**
    * Запуск
    */
-  function init$y() {
+  function init$z() {
     if (!window.lampa_settings.account_use) return;
     Settings.listener.follow('open', function (e) {
       body$2 = null;
@@ -8587,7 +8635,7 @@
   }
   var Account = {
     listener: listener$d,
-    init: init$y,
+    init: init$z,
     working: working,
     canSync: canSync,
     get: get$c,
@@ -8614,7 +8662,10 @@
     logoff: logoff,
     persons: persons,
     addDiscuss: addDiscuss,
-    voiteDiscuss: voiteDiscuss
+    voiteDiscuss: voiteDiscuss,
+    updateUser: function updateUser() {
+      getUser();
+    }
   };
   Object.defineProperty(Account, 'hasPremium', {
     value: function value() {
@@ -8878,7 +8929,7 @@
   /**
    * Запуск
    */
-  function init$x() {
+  function init$y() {
     read$1();
   }
   var Favorite = {
@@ -8888,7 +8939,7 @@
     remove: remove$3,
     toggle: toggle$7,
     get: get$b,
-    init: init$x,
+    init: init$y,
     clear: clear$8,
     continues: continues,
     full: full$3,
@@ -8927,7 +8978,7 @@
   /**
    * Запуск
    */
-  function init$w() {
+  function init$x() {
     data$2 = Storage.cache('recomends_scan', 300, []);
     setInterval(function () {
       var history = Favorite.get({
@@ -8999,7 +9050,7 @@
     return items;
   }
   var Recomends = {
-    init: init$w,
+    init: init$x,
     get: get$a
   };
 
@@ -10145,7 +10196,7 @@
   /**
    * Запуск
    */
-  function init$v() {
+  function init$w() {
     data$1 = Storage.cache('timetable', limit$2, []);
     setInterval(extract$1, 1000 * 60 * (2));
     setInterval(favorites, 1000 * 60 * 10);
@@ -10373,7 +10424,7 @@
     return cards;
   }
   var TimeTable = {
-    init: init$v,
+    init: init$w,
     get: get$8,
     add: add$9,
     all: all$1,
@@ -11020,9 +11071,9 @@
   var html$e;
   var scroll$1;
   var active$5 = 0;
-  var items$1 = [];
+  var items$2 = [];
   var listener$b = start$8();
-  function init$u() {
+  function init$v() {
     html$e = Template$1.js('player_footer');
     scroll$1 = new create$g({
       nopadding: true,
@@ -11034,7 +11085,7 @@
     html$e.find('.player-footer__body').append(scroll$1.render(true));
     Controller.add('player_footer', {
       toggle: function toggle() {
-        items$1[active$5].toggle();
+        items$2[active$5].toggle();
         open$4();
       },
       up: close$4,
@@ -11094,21 +11145,21 @@
       active$5 = 0;
       close$4();
     } else {
-      items$1[active$5].toggle();
-      scroll$1.update(items$1[active$5].render(true));
+      items$2[active$5].toggle();
+      scroll$1.update(items$2[active$5].render(true));
     }
   }
   function down() {
     active$5++;
-    active$5 = Math.min(active$5, items$1.length - 1);
-    scroll$1.update(items$1[active$5].render(true));
-    items$1[active$5].toggle();
+    active$5 = Math.min(active$5, items$2.length - 1);
+    scroll$1.update(items$2[active$5].render(true));
+    items$2[active$5].toggle();
   }
   function appendClass(classElement) {
     classElement.onUp = up;
     classElement.onDown = down;
     classElement.onToggle = function () {
-      scroll$1.render(true).style.height = items$1[active$5].render(true).offsetHeight;
+      scroll$1.render(true).style.height = items$2[active$5].render(true).offsetHeight;
     };
     classElement.onEnter = function () {
       close$4();
@@ -11119,7 +11170,7 @@
     classElement.onLeft = function () {};
     classElement.onMenu = function () {};
     scroll$1.append(classElement.render(true));
-    items$1.push(classElement);
+    items$2.push(classElement);
   }
   function appendCard(card) {
     var card_html = Template$1.js('player_footer_card');
@@ -11158,19 +11209,19 @@
     item.create();
   }
   function available() {
-    return items$1.length;
+    return items$2.length;
   }
   function destroy$7() {
-    Arrays.destroy(items$1);
+    Arrays.destroy(items$2);
     active$5 = 0;
     scroll$1.reset();
-    items$1 = [];
+    items$2 = [];
   }
   function render$b() {
     return html$e;
   }
   var Footer = {
-    init: init$u,
+    init: init$v,
     listener: listener$b,
     appendCard: appendCard,
     appendContinue: appendContinue,
@@ -11196,7 +11247,7 @@
   var translates = {};
   var last_settings_action;
   var last_panel_focus;
-  function init$t() {
+  function init$u() {
     html$d = Template$1.get('player_panel');
     elems$1 = {
       peding: $('.player-panel__peding', html$d),
@@ -12134,7 +12185,7 @@
     return html$d;
   }
   var PlayerPanel = {
-    init: init$t,
+    init: init$u,
     listener: listener$a,
     render: render$a,
     toggle: toggle$6,
@@ -15006,7 +15057,7 @@
     }]);
   }();
 
-  var Item = /*#__PURE__*/function () {
+  var Item$1 = /*#__PURE__*/function () {
     function Item(data, params) {
       _classCallCheck(this, Item);
       this.data = data;
@@ -15288,7 +15339,7 @@
         });
       }
     }]);
-  }(Item);
+  }(Item$1);
 
   var Recomend = /*#__PURE__*/function (_Extension) {
     function Recomend(data, params) {
@@ -15429,7 +15480,7 @@
         }
       }
     }]);
-  }(Item);
+  }(Item$1);
 
   var Nature = /*#__PURE__*/function () {
     function Nature() {
@@ -15942,7 +15993,7 @@
         }
       }
     }]);
-  }(Item);
+  }(Item$1);
 
   var Line = /*#__PURE__*/function () {
     function Line(data, params) {
@@ -16321,7 +16372,7 @@
 
   var extensions;
   var listener$8 = start$8();
-  function init$s() {
+  function init$t() {
     ParentalControl.add('extensions', {
       title: 'settings_main_plugins'
     });
@@ -16352,7 +16403,7 @@
     return js ? html : $(html);
   }
   var Extensions = {
-    init: init$s,
+    init: init$t,
     listener: listener$8,
     show: show$7,
     render: render$9
@@ -16366,7 +16417,7 @@
   /**
    * Запуск
    */
-  function init$r() {
+  function init$s() {
     _loaded = Storage.get('plugins', '[]');
     Settings.main().render().find('[data-component="plugins"]').unbind('hover:enter').on('hover:enter', function () {
       ParentalControl.personal('extensions', function () {
@@ -16402,9 +16453,9 @@
     _loaded.push(plug);
     console.log('Plugins', 'add:', plug);
     Storage.set('plugins', _loaded);
-    push$2(plug);
+    push$3(plug);
   }
-  function push$2(plug) {
+  function push$3(plug) {
     var find = _created.find(function (a) {
       return a == plug.url;
     });
@@ -16576,7 +16627,7 @@
     });
   }
   var Plugins = {
-    init: init$r,
+    init: init$s,
     load: load$2,
     remove: remove$2,
     loaded: function loaded() {
@@ -16585,7 +16636,7 @@
     add: add$8,
     get: get$7,
     save: save$2,
-    push: push$2
+    push: push$3
   };
 
   /**
@@ -16628,7 +16679,7 @@
       dataType: 'text'
     });
   };
-  function init$q() {
+  function init$r() {
     if (Storage.get('vpn_checked_ready', 'false') || Storage.get('tmdb_proxy_api', '') || Storage.get('tmdb_proxy_image', '')) return;
     var install = function install(country) {
       console.log('VPN', 'country ' + country);
@@ -16669,7 +16720,7 @@
     Storage.set('vpn_checked_ready', true);
   }
   var VPN = {
-    init: init$q,
+    init: init$r,
     region: region
   };
 
@@ -16699,7 +16750,7 @@
   var hls_parser;
   var click_nums = 0;
   var click_timer;
-  function init$p() {
+  function init$q() {
     html$c = Template$1.get('player_video');
     display = html$c.find('.player-video__display');
     paused = html$c.find('.player-video__paused');
@@ -17740,7 +17791,7 @@
     return html$c;
   }
   var PlayerVideo = {
-    init: init$p,
+    init: init$q,
     listener: listener$7,
     url: url$4,
     render: render$8,
@@ -18051,7 +18102,7 @@
   var network$6 = new create$f();
   var elems;
   var error, stat_timer;
-  function init$o() {
+  function init$p() {
     html$b = Template$1.get('player_info');
     html$b.find('.player-info__body').prepend(HeadBackward('Плеер'));
     elems = {
@@ -18175,7 +18226,7 @@
     return html$b;
   }
   var PlayerInfo = {
-    init: init$o,
+    init: init$p,
     listener: listener$6,
     render: render$7,
     set: set$2,
@@ -18295,7 +18346,7 @@
   };
 
   var status$1 = false;
-  function init$n() {
+  function init$o() {
     $.ajax({
       url: "./personal.lampa",
       dataType: 'text',
@@ -18308,7 +18359,7 @@
     return status$1;
   }
   var Personal = {
-    init: init$n,
+    init: init$o,
     confirm: confirm
   };
 
@@ -18369,6 +18420,7 @@
             return ad.name !== loaded_data.selected.name;
           });
         }
+        if (list.length === 0) list = loaded_data.ad;
 
         // Шаг 1: Создаем "взвешенный массив"
         var weightedArray = [];
@@ -18527,7 +18579,7 @@
   var vast_api;
   var vast_url;
   var vast_msg;
-  function init$m() {
+  function init$n() {
     if (!(Platform.is('orsay') || Platform.is('netcast'))) {
       Utils$2.putScriptAsync([Utils$2.protocol() + object$2.cub_domain + '/plugin/vast'], false, false, function () {
         vast_api = true;
@@ -18611,7 +18663,7 @@
     } else call();
   }
   var Preroll = {
-    init: init$m,
+    init: init$n,
     show: show$5
   };
 
@@ -18637,7 +18689,7 @@
    * Подписываемся на события
    */
 
-  function init$l() {
+  function init$m() {
     PlayerPanel.init();
     PlayerVideo.init();
     PlayerInfo.init();
@@ -19323,7 +19375,7 @@
     return $('body').find('.player').length ? true : false;
   }
   var Player = {
-    init: init$l,
+    init: init$m,
     listener: listener$4,
     play: play$1,
     playlist: playlist,
@@ -19366,7 +19418,7 @@
   /**
    * Запуск
    */
-  function init$k() {
+  function init$l() {
     Storage.listener.follow('change', function (event) {
       if (event.name == 'background' || event.name == 'background_type') resize();
     });
@@ -19578,7 +19630,7 @@
     render: render$5,
     change: change,
     update: resize,
-    init: init$k,
+    init: init$l,
     immediately: immediately,
     theme: theme
   };
@@ -19587,7 +19639,7 @@
   var need_update = false;
   var need_visible = false;
   var canianimate = typeof requestAnimationFrame !== 'undefined';
-  function init$j() {
+  function init$k() {
     $(window).on('resize', function () {
       clearTimeout(timer$2);
       timer$2 = setTimeout(function () {
@@ -19806,7 +19858,7 @@
   var Layer = {
     update: update$5,
     visible: visible,
-    init: init$j
+    init: init$k
   };
 
   function create$g() {
@@ -20167,7 +20219,7 @@
     }
   };
 
-  function init$i() {
+  function init$j() {
     var agent = navigator.userAgent.toLowerCase();
     if (typeof webOS !== 'undefined' && webOS.platform.tv === true) {
       Storage.set('platform', 'webos');
@@ -20306,7 +20358,7 @@
     }
   }
   var Platform = {
-    init: init$i,
+    init: init$j,
     get: get$5,
     any: any,
     is: is,
@@ -22529,6 +22581,46 @@
       });
       Controller.toggle('content');
     };
+    this.addInfoButton = function (add_information) {
+      var footer = html.find('.empty__footer');
+      if (!footer.length) {
+        footer = $('<div class="empty__footer"></div>');
+        html.append(footer);
+      }
+      var button = $('<div class="simple-button selector">' + Lang.translate('extensions_info') + '</div>');
+      button.on('hover:enter', function () {
+        var controller = Controller.enabled().name;
+        var html = $('<div></div>');
+        var line = function line(name, value) {
+          html.append($("<div class=\"console__line selector\"><span class=\"console__time\">".concat(name, "</span> - <span>").concat(value, "</span></div>")));
+        };
+        line('Protocol', window.location.protocol);
+        line('Host', window.location.host);
+        line('Platform', Platform.get());
+        line('Safe connection', Storage.field('protocol') == 'https' ? 'Yes' : 'No');
+        line('Connection', Utils$2.protocol());
+        line('TMDB Proxy', Storage.field('tmdb_proxy') ? 'Yes' : 'No');
+        line('TMDB Proxy plugin', Plugins.loaded().find(function (u) {
+          return /\/plugin\/tmdb-proxy/.test(u);
+        }) ? 'Yes' : 'No');
+        line('Premium', Account.hasPremium() ? 'Yes' : 'No');
+        if (add_information) {
+          add_information.forEach(function (info) {
+            line(info[0], info[1]);
+          });
+        }
+        Modal.open({
+          title: Lang.translate('extensions_info'),
+          html: html,
+          size: 'medium',
+          onBack: function onBack() {
+            Modal.close();
+            Controller.toggle(controller);
+          }
+        });
+      });
+      footer.append(button);
+    };
     this.append = function (add) {
       html.append(add);
     };
@@ -23169,7 +23261,9 @@
         });
       }
       var empty = new create$a();
-      scroll.append(empty.render(button));
+      if (button) empty.append(button);
+      empty.addInfoButton([['Movie id', object.id], ['DCMA', Utils$2.dcma(object.method, object.id) ? 'Yes' : 'No']]);
+      scroll.append(empty.render(true));
       this.start = empty.start;
       this.activity.loader(false);
       this.activity.toggle();
@@ -23331,6 +23425,7 @@
       }
       var empty = new create$a();
       if (button) empty.append(button);
+      empty.addInfoButton();
       html.appendChild(empty.render(true));
       this.start = empty.start;
       this.activity.loader(false);
@@ -23493,6 +23588,7 @@
   function component$h(object) {
     var comp = new component$i(object);
     comp.create = function () {
+      this.activity.loader(true);
       Api.list(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
@@ -24107,7 +24203,7 @@
       }
     }
   }
-  function init$h() {
+  function init$i() {
     memorys = Storage.cache('helper', 300, {});
     Settings.listener.follow('open', function (e) {
       if (e.name == 'more') {
@@ -24122,7 +24218,7 @@
   }
   var Helper = {
     show: show$4,
-    init: init$h
+    init: init$i
   };
 
   var SERVER = {};
@@ -24601,7 +24697,7 @@
 
   var url;
   var network$3 = new create$f();
-  function init$g() {
+  function init$h() {
     var source = {
       title: Lang.translate('title_parser'),
       search: function search(params, oncomplite) {
@@ -24681,15 +24777,17 @@
         }
       }
     };
+    function addSource() {
+      var reg = Platform.is('android') ? true : Torserver.url();
+      if (Storage.field('parse_in_search') && reg) Search.addSource(source);
+    }
     Storage.listener.follow('change', function (e) {
-      if (e.name == 'parse_in_search') {
+      if (e.name == 'parse_in_search' || e.name == 'torrserver_url' || e.name == 'torrserver_url_two' || e.name == 'torrserver_use_link') {
         Search.removeSource(source);
-        if (Storage.field('parse_in_search')) Search.addSource(source);
+        addSource();
       }
     });
-    if (Storage.field('parse_in_search')) {
-      Search.addSource(source);
-    }
+    addSource();
   }
   function get$3() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -24848,21 +24946,37 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
-    var u = new URL('/api/v1/search', url);
-    network$3.timeout(1000 * Storage.field('parse_timeout'));
-    u.searchParams.set('apikey', Storage.field('prowlarr_key'));
-    u.searchParams.set('query', params.search);
+    var q = [];
+    q.push({
+      name: 'apikey',
+      value: Storage.field('prowlarr_key')
+    });
+    q.push({
+      name: 'query',
+      value: params.search
+    });
     if (!params.from_search) {
       var isSerial = !!(params.movie.first_air_date || params.movie.last_air_date);
       if (params.movie.number_of_seasons > 0) {
-        u.searchParams.append('categories', '5000');
+        q.push({
+          name: 'categories',
+          value: '5000'
+        });
       }
       if (params.movie.original_language == 'ja') {
-        u.searchParams.append('categories', '5070');
+        q.push({
+          name: 'categories',
+          value: '5070'
+        });
       }
-      u.searchParams.set('type', isSerial ? 'tvsearch' : 'search');
+      q.push({
+        name: 'type',
+        value: isSerial ? 'tvsearch' : 'search'
+      });
     }
-    network$3["native"](u.href, function (json) {
+    var u = Utils$2.buildUrl(url, '/api/v1/search', q);
+    network$3.timeout(1000 * Storage.field('parse_timeout'));
+    network$3["native"](u, function (json) {
       if (Array.isArray(json)) {
         oncomplite({
           Results: json.filter(function (e) {
@@ -24883,7 +24997,7 @@
           })
         });
       } else {
-        onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
+        onerror(Lang.translate('torrent_parser_request_error') + ' (' + JSON.stringify(json) + ')');
       }
     }, function () {
       onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
@@ -24894,27 +25008,31 @@
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
     network$3.timeout(1000 * Storage.field('parse_timeout'));
-    var u = new URL('/search/', url);
-    u.searchParams.set('query', params.search);
-    network$3["native"](u.href, function (json) {
-      oncomplite({
-        Results: json.map(function (e) {
-          var hash = Utils$2.hash(e.Title);
-          return {
-            Title: e.Title,
-            Tracker: e.Tracker,
-            size: e.Size,
-            PublishDate: Utils$2.strToTime(e.CreateDate),
-            Seeders: parseInt(e.Seed),
-            Peers: parseInt(e.Peer),
-            MagnetUri: e.Magnet,
-            viewed: viewed(hash),
-            CategoryDesc: e.Categories,
-            bitrate: '-',
-            hash: hash
-          };
-        })
-      });
+    var u = Utils$2.buildUrl(url, '/search/', [{
+      name: 'query',
+      value: params.search
+    }]);
+    network$3["native"](u, function (json) {
+      if (Array.isArray(json)) {
+        oncomplite({
+          Results: json.map(function (e) {
+            var hash = Utils$2.hash(e.Title);
+            return {
+              Title: e.Title,
+              Tracker: e.Tracker,
+              size: e.Size,
+              PublishDate: Utils$2.strToTime(e.CreateDate),
+              Seeders: parseInt(e.Seed),
+              Peers: parseInt(e.Peer),
+              MagnetUri: e.Magnet,
+              viewed: viewed(hash),
+              CategoryDesc: e.Categories,
+              bitrate: '-',
+              hash: hash
+            };
+          })
+        });
+      } else onerror(Lang.translate('torrent_parser_request_error') + ' (' + JSON.stringify(json) + ')');
     }, function (a, c) {
       onerror(Lang.translate('torrent_parser_no_responce') + ' (' + url + ')');
     });
@@ -24941,7 +25059,7 @@
     network$3.clear();
   }
   var Parser = {
-    init: init$g,
+    init: init$h,
     get: get$3,
     torlook: torlook,
     jackett: jackett,
@@ -26278,6 +26396,7 @@
   function component$9(object) {
     var comp = new component$i(object);
     comp.create = function () {
+      this.activity.loader(true);
       Api.collections(object, this.build.bind(this), this.empty.bind(this));
     };
     return comp;
@@ -27535,7 +27654,7 @@
           source: Utils$2.gup('source') || 'cub'
         }
       };
-    } else {
+    } else if (!(Platform.is('orsay') || Platform.is('netcast'))) {
       try {
         var params = new URLSearchParams(window.location.search);
         if (params.has('component')) {
@@ -27553,7 +27672,7 @@
   /**
    * Запуск
    */
-  function init$f() {
+  function init$g() {
     content = Template$1.js('activitys');
     slides = content.querySelector('.activitys__slides');
     maxsave = Storage.get('pages_save_total', 5);
@@ -27661,7 +27780,7 @@
    * Добавить новую активность
    * @param {{component:string}} object 
    */
-  function push$1(object) {
+  function push$2(object) {
     limit();
     create$3(object);
     activites.push(object);
@@ -27841,19 +27960,19 @@
         component: 'iptv',
         page: 1
       };
-      push$1(active);
+      push$2(active);
     } else if (window.start_deep_link) {
-      push$1(window.start_deep_link);
+      push$2(window.start_deep_link);
     } else if (active && start_from === "last") {
       if (active.page) active.page = 1;
-      push$1(active);
+      push$2(active);
     } else {
       var _start_from$split = start_from.split('@'),
         _start_from$split2 = _slicedToArray(_start_from$split, 2),
         action = _start_from$split2[0],
         type = _start_from$split2[1];
       if (action == 'favorite') {
-        push$1({
+        push$2({
           url: '',
           title: Lang.translate(type == 'bookmarks' ? 'settings_input_links' : 'title_history'),
           component: type == 'bookmarks' ? 'bookmarks' : 'favorite',
@@ -27861,14 +27980,14 @@
           page: 1
         });
       } else if (action == 'mytorrents') {
-        push$1({
+        push$2({
           url: '',
           title: Lang.translate('title_mytorrents'),
           component: 'mytorrents',
           page: 1
         });
       } else {
-        push$1({
+        push$2({
           url: '',
           title: Lang.translate('title_main') + ' - ' + Storage.field('source').toUpperCase(),
           component: 'main',
@@ -27929,12 +28048,12 @@
       object: made
     });
     activites.pop();
-    push$1(clear ? replace : object);
+    push$2(clear ? replace : object);
   }
   var Activity$1 = {
-    init: init$f,
+    init: init$g,
     listener: listener$3,
-    push: push$1,
+    push: push$2,
     back: back$3,
     render: render$3,
     backward: backward,
@@ -28388,7 +28507,7 @@
           if (Platform.is('android') && Platform.screen('tv')) input.attr('disabled', 'true');
         });
         input.on('focus', function () {
-          Keypad.disable();
+          if (!Platform.is('apple_tv')) Keypad.disable();
           time_focus = Date.now();
         });
         input.on('keyup', function (e) {
@@ -28843,7 +28962,7 @@
   /**
    * Запуск
    */
-  function init$e() {
+  function init$f() {
     if (Platform.is('tizen')) {
       select$1('player', {
         'inner': '#{settings_param_player_inner}',
@@ -29010,14 +29129,18 @@
     if (Arrays.getKeys(selector).indexOf(Storage.get('parse_lang', 'df')) == -1) Storage.set('parse_lang', 'df');
     select$1('parse_lang', selector, 'df');
     select$1('tmdb_lang', Lang.codes(), 'ru');
-    var agent = navigator.userAgent.toLowerCase();
-    var versi = agent.match(/chrome\/(\d+)/);
-    versi = versi ? parseInt(versi[1]) : 60;
-    versi = isNaN(versi) ? 60 : versi;
+
+    // баг со старыми телеками, неправильно работает Utils.protocol()
+    // let agent = navigator.userAgent.toLowerCase()
+    // let versi = agent.match(/chrome\/(\d+)/)
+
+    // versi = versi ? parseInt(versi[1]) : 60
+    // versi = isNaN(versi) ? 60 : versi
+
     select$1('protocol', {
       'http': '#{settings_param_no}',
       'https': '#{settings_param_yes}'
-    }, versi >= 60 ? 'https' : 'http');
+    }, 'https');
   }
 
   /**
@@ -29423,7 +29546,7 @@
   select$1('tmdb_proxy_image', '', '');
   var Params = {
     listener: listener$1,
-    init: init$e,
+    init: init$f,
     bind: bind,
     update: update$2,
     field: field$1,
@@ -29786,7 +29909,7 @@
   var listener = start$8();
   var readed$1 = {};
   var workers = {};
-  function init$d() {
+  function init$e() {
     sync('online_view', 'array_string');
     sync('torrents_view', 'array_string');
     sync('search_history', 'array_string');
@@ -29914,7 +30037,7 @@
   }
   var Storage = {
     listener: listener,
-    init: init$d,
+    init: init$e,
     get: get,
     set: set,
     field: field,
@@ -29977,6 +30100,12 @@
         name: 'עִברִית',
         lang_choice_title: 'ברוך הבא',
         lang_choice_subtitle: 'בחר את השפה שלך'
+      },
+      cs: {
+        code: "cs",
+        name: "Čeština",
+        lang_choice_title: "Vítejte",
+        lang_choice_subtitle: "Vyberte svůj jazyk"
       }
     }
   };
@@ -32907,7 +33036,7 @@
   var sort_item;
   var sort_timer;
   var visible_timer;
-  function init$c() {
+  function init$d() {
     html$4 = Template$1.get('menu');
     scroll = new create$g({
       mask: true,
@@ -33255,7 +33384,7 @@
   }
   var Menu = {
     render: render$2,
-    init: init$c,
+    init: init$d,
     ready: ready
   };
 
@@ -33317,7 +33446,7 @@
 
   var html$3;
   var object;
-  function init$b() {
+  function init$c() {
     html$3 = Template$1.get('iframe');
   }
   function show$1() {
@@ -33346,19 +33475,19 @@
     return html$3;
   }
   var Iframe = {
-    init: init$b,
+    init: init$c,
     show: show$1,
     close: close$1,
     render: render
   };
 
-  var items = {};
+  var items$1 = {};
   var times = 0;
   var html$2;
   var scroll_tabs;
   var scroll_body;
   var last_tab;
-  function init$a() {
+  function init$b() {
     Keypad.listener.follow('keydown', function (e) {
       if (e.code == 38 || e.code == 29460) {
         var enable = Controller.enabled();
@@ -33407,8 +33536,8 @@
   function show(name) {
     scroll_body.clear();
     scroll_body.reset();
-    if (items[name]) {
-      items[name].forEach(function (element) {
+    if (items$1[name]) {
+      items$1[name].forEach(function (element) {
         var item = $(element);
         item.on('hover:focus', function (e) {
           scroll_body.update($(e.target));
@@ -33466,15 +33595,15 @@
     scroll_tabs = new create$g({
       horizontal: true
     });
-    for (var i in items) tab(i, items[i]);
+    for (var i in items$1) tab(i, items$1[i]);
     html$2.find('.console__tabs').append(HeadBackward(Lang.translate('menu_console'))).append(scroll_tabs.render());
     html$2.find('.console__body').append(scroll_body.render());
     scroll_body.height(html$2.find('.console__tabs'));
     $('body').append(html$2);
   }
   function add(name, message) {
-    if (!items[name]) items[name] = [];
-    var where = items[name];
+    if (!items$1[name]) items$1[name] = [];
+    var where = items$1[name];
     var time = Utils$2.parseTime(Date.now()).time;
     try {
       Arrays.insert(where, 0, '<div class="console__line selector"><span class="console__time">' + time + '</span> - <span>' + message + '</span></div>');
@@ -33542,7 +33671,7 @@
     });
   }
   var Console = {
-    init: init$a
+    init: init$b
   };
 
   function create$1() {
@@ -33592,7 +33721,7 @@
   /**
    * Запуск
    */
-  function init$9() {
+  function init$a() {
     if (Storage.field('cloud_use')) status(1);
     Settings.listener.follow('open', function (e) {
       body = null;
@@ -33798,7 +33927,7 @@
     }
   }
   var Cloud = {
-    init: init$9
+    init: init$a
   };
 
   function create() {
@@ -33861,7 +33990,7 @@
   /**
    * Запуск
    */
-  function init$8() {
+  function init$9() {
     if (typeof tizen !== 'undefined') {
       setInterval(lauchPick, 1000 * 60 * 10);
       lauchPick();
@@ -33993,7 +34122,7 @@
     }
   }
   var Tizen = {
-    init: init$8
+    init: init$9
   };
 
   function component(object) {
@@ -34020,6 +34149,7 @@
       }
       var empty = new create$a();
       if (button) empty.append(button);
+      empty.addInfoButton();
       html.appendChild(empty.render(true));
       this.start = empty.start;
       this.activity.loader(false);
@@ -34200,7 +34330,7 @@
     open: open$1
   };
 
-  function init$7() {
+  function init$8() {
     if (!Platform.is('webos')) return;
     var field = $("<div class=\"settings-folder selector\" data-component=\"webos_launcher\">\n        <div class=\"settings-folder__icon\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" viewBox=\"0 0 32 32\" xml:space=\"preserve\">\n                <g transform=\"matrix(1.06,0,0,1.06,-0.9600000000000009,-0.9600000000000009)\">\n                    <path d=\"m26.59 31h-21.18c-2.431 0-4.41-1.979-4.41-4.41v-21.18c0-2.431 1.979-4.41 4.41-4.41h21.18c2.431 0 4.41 1.979 4.41 4.41v21.18c0 2.431-1.979 4.41-4.41 4.41zm-21.18-28c-1.329 0-2.41 1.081-2.41 2.41v21.18c0 1.329 1.081 2.41 2.41 2.41h21.18c1.329 0 2.41-1.081 2.41-2.41v-21.18c0-1.329-1.081-2.41-2.41-2.41z\" fill=\"#fff\"></path>\n                    <path d=\"m21.129 24h-10.258c-1.583 0-2.871-1.288-2.871-2.871v-6.167c0-.925.449-1.798 1.202-2.336l5.129-3.664c.998-.712 2.339-.712 3.337 0l5.129 3.665c.754.537 1.203 1.41 1.203 2.335v6.167c0 1.583-1.288 2.871-2.871 2.871zm-5.635-13.41-5.129 3.664c-.229.163-.365.428-.365.708v6.167c0 .48.391.871.871.871h10.259c.479 0 .87-.391.87-.871v-6.167c0-.281-.136-.545-.364-.708l-5.129-3.665c-.303-.215-.71-.215-1.013.001z\" fill=\"#fff\"></path>\n                </g>\n            </svg>\n        </div>\n        <div class=\"settings-folder__name\">".concat(Lang.translate('settings_webos_launcher'), "</div>\n    </div>"));
     Settings.main().render().find('[data-component="more"]').after(field);
@@ -34249,7 +34379,7 @@
     });
   }
   var WebOSLauncher = {
-    init: init$7
+    init: init$8
   };
 
   function open(callSelected) {
@@ -34428,7 +34558,7 @@
   }();
 
   var network;
-  function init$6() {
+  function init$7() {
     network = new create$f();
     Socket.listener.follow('message', function (e) {
       if (e.method == 'premiere') update(e.data);
@@ -34495,7 +34625,7 @@
     });
   }
   var Premiere = {
-    init: init$6
+    init: init$7
   };
 
   var BotClass = /*#__PURE__*/function () {
@@ -34568,13 +34698,13 @@
     }]);
   }();
 
-  function init$5() {
+  function init$6() {
     if (Account.logged() && Lang.selected(['ru', 'uk', 'be', 'bg'])) {
       var user = Storage.get('account_user', '{}');
-      if (user.premium && !Account.hasPremium()) setTimeout(push, 5000);
+      if (user.premium && !Account.hasPremium()) setTimeout(push$1, 5000);
     }
   }
-  function push() {
+  function push$1() {
     var id = 'extend_premium';
     if (Notice$1.classes.lampa.notices.find(function (n) {
       return n.id == id;
@@ -34600,10 +34730,10 @@
     Notice$1.pushNotice('lampa', notice, function () {}, function (er) {});
   }
   var Extend = {
-    init: init$5
+    init: init$6
   };
 
-  function init$4() {
+  function init$5() {
     Lang.add({
       ad_notice_tv_text_1: {
         ru: 'Будьте в курсе новых серий - получайте уведомления о переводах на свой смартфон!',
@@ -34683,10 +34813,10 @@
     Preroll.init();
   }
   var AdManager = {
-    init: init$4
+    init: init$5
   };
 
-  function init$3() {
+  function init$4() {
     if (Platform.screen('mobile')) {
       var bar = Template$1.get('navigation_bar', {});
       bar.find('.navigation-bar__item').on('click', function () {
@@ -34708,7 +34838,7 @@
     }
   }
   var NavigationBar = {
-    init: init$3
+    init: init$4
   };
 
   function Endless(onRender) {
@@ -34811,7 +34941,7 @@
       }
     });
   }
-  function init$2() {
+  function init$3() {
     if (window.lampa_settings.demo) {
       Lampa.Listener.follow('app', function (e) {
         if (e.type == 'ready') hide();
@@ -34819,7 +34949,7 @@
     }
   }
   var Demo = {
-    init: init$2
+    init: init$3
   };
 
   var html$1;
@@ -34828,7 +34958,7 @@
   var controll;
   var active = {};
   var graph = [];
-  function init$1() {
+  function init$2() {
     Settings.listener.follow('open', function (e) {
       if (e.name == 'server') {
         var btn = $("<div class=\"settings-param selector\" data-type=\"button\">\n                <div class=\"settings-param__name\">".concat(Lang.translate('speedtest_button'), "</div>\n            </div>"));
@@ -35001,7 +35131,7 @@
     active = {};
   }
   var Speedtest = {
-    init: init$1,
+    init: init$2,
     close: close,
     start: start
   };
@@ -35056,7 +35186,7 @@
   }();
   var AppStatus = new Status();
 
-  function init() {
+  function init$1() {
     var components = ['tmdb', 'plugins'];
     var titles = ['card_interfice_type'];
     var params = ['light_version', 'card_interfice_type', 'card_interfice_reactions', 'player_timecode', 'pages_save_total', 'device_name', 'playlist_next', 'background_type', 'card_views_type', 'hide_outside_the_screen', 'card_interfice_cover', 'card_interfice_poster', 'start_page', 'source', 'card_quality', 'card_episodes', 'player'];
@@ -35107,7 +35237,56 @@
     Lampa.Settings.listener.follow('open', window.iptvClearSettingsFunction);
   }
   var Iptv = {
-    init: init
+    init: init$1
+  };
+
+  var bell;
+  var items = [];
+  function Item(params) {
+    var _this = this;
+    Arrays.extend(params, {
+      icon: "<svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"></path>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"></path>\n            </svg>",
+      type: 'info',
+      text: '',
+      time: 5000
+    });
+    var element = $("<div class=\"bell__item bell__item--".concat(params.type, "\">\n        <div class=\"bell__item-icon\">").concat(params.icon, "</div>\n        <div class=\"bell__item-text\">").concat(params.text, "</div>    \n    </div>"));
+    setTimeout(function () {
+      element.removeClass('show');
+      setTimeout(function () {
+        var slide = $("<div class=\"bell__item-slide\"></div>");
+        slide.css('height', element.outerHeight() + 'px');
+        element.after(slide);
+        element.remove();
+        Arrays.remove(items, _this);
+        slide.animate({
+          height: 0
+        }, 300, function () {
+          slide.remove();
+        });
+        if (items.length == 0) {
+          bell.removeClass('show');
+        }
+      }, 300);
+    }, params.time);
+    bell.find('.bell__wrap').append(element);
+    setTimeout(function () {
+      element.addClass('show');
+    }, 100);
+    items.push(this);
+    Sound$1.play('bell');
+  }
+  function init() {
+    bell = $("<div class=\"bell\">\n        <div class=\"bell__wrap\"></div>\n    </div>");
+    $('body').append(bell);
+  }
+  function push(params) {
+    new Item(params);
+    bell.addClass('show');
+  }
+  var Bell = {
+    init: init,
+    push: push
   };
 
   /**
@@ -35235,7 +35414,8 @@
       Speedtest: Speedtest,
       Processing: Processing,
       ParentalControl: ParentalControl,
-      VPN: VPN
+      VPN: VPN,
+      Bell: Bell
     };
   }
   function closeApp() {
@@ -35400,6 +35580,7 @@
     Background.init();
     Head.init();
     Notice$1.init();
+    Bell.init();
     Menu.init();
     Activity$1.init();
     Screensaver$2.init();
@@ -35629,6 +35810,16 @@
           });
         }).find('.settings-param__value').text(Lang.translate(Lang.codes()[Storage.get('language', 'ru')]));
       }
+      if (e.name == 'main' && Platform.is('apple_tv')) {
+        var append = e.body.find('.appletv-setting');
+        if (!append.length) {
+          append = $("<div class=\"settings-folder selector appletv-setting\">\n                    <div class=\"settings-folder__icon\">\n                        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 512 512\" style=\"enable-background:new 0 0 512 512\" xml:space=\"preserve\"><path d=\"M407 0H105C47.103 0 0 47.103 0 105v302c0 57.897 47.103 105 105 105h302c57.897 0 105-47.103 105-105V105C512 47.103 464.897 0 407 0zM163.393 193.211c9.844-12.975 23.53-13.038 23.53-13.038s2.035 12.199-7.744 23.95c-10.442 12.548-22.312 10.494-22.312 10.494s-2.228-9.868 6.526-21.406zm21.581 136.569c-8.754 0-15.559-5.899-24.783-5.899-9.399 0-18.727 6.119-24.801 6.119C117.987 330 96 292.326 96 262.043c0-29.795 18.611-45.425 36.066-45.425 11.348 0 20.154 6.544 26.053 6.544 5.065 0 14.464-6.961 26.698-6.961 21.06 0 29.344 14.985 29.344 14.985s-16.204 8.284-16.204 28.386c0 22.677 20.185 30.492 20.185 30.492s-14.109 39.716-33.168 39.716zM296.2 327.4c-5.2 1.6-10.668 2.4-16.4 2.4-17.8 0-27.2-9.8-27.2-25.8v-60.2h-13.8v-20.6h13.8v-34h26.8v34h22v20.6h-22V295c0 7.25 4.1 10.2 10 10.2 5.6 0 13-3.131 14.6-3.8l5.4 21.2c-3.6 1.6-8 3.2-13.2 4.8zm84.398.6h-29l-38.6-104.8h27.6l26.6 83 26.8-83h25.2l-38.6 104.8z\" fill=\"#fff\"></path></svg>\n                    </div>\n                    <div class=\"settings-folder__name\">".concat(Lang.translate('menu_settings'), "</div>\n                </div>"));
+          e.body.find('.scroll__body > div').append(append);
+        }
+        append.unbind('hover:enter').on('hover:enter', function () {
+          window.open('lampa://showadvancedmenu');
+        });
+      }
     });
     AppStatus.push('Subscriptions are successful');
 
@@ -35777,9 +35968,13 @@
       Sound$1.add('enter', {
         url: 'https://yumata.github.io/lampa/sound/hover.ogg'
       });
+      Sound$1.add('bell', {
+        url: 'https://yumata.github.io/lampa/sound/bell.ogg'
+      });
     }
     AppStatus.push('The application is fully loaded');
     if (window.youtube_lazy_load) Utils$2.putScript([Utils$2.protocol() + 'youtube.com/iframe_api'], function () {});
+    Utils$2.putScript([Utils$2.protocol() + object$2.cub_domain + '/plugin/christmas'], function () {});
 
     /** End */
   }
