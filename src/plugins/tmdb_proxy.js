@@ -1,12 +1,13 @@
 (function () {
     'use strict';
 
+    var domain = Lampa.Manifest && Lampa.Manifest.cub_domain ? Lampa.Manifest.cub_domain : 'cub.red';
     var tmdb_proxy = {
       name: 'TMDB Proxy',
       version: '1.0.3',
       description: 'Проксирование постеров и API сайта TMDB',
-      path_image: Lampa.Account.hasPremium() ? 'imagetmdb.cub.red/' : 'imagetmdb.com/',
-      path_api: 'apitmdb.' + (Lampa.Manifest && Lampa.Manifest.cub_domain ? Lampa.Manifest.cub_domain : 'cub.red') + '/3/'
+      path_image: Lampa.Account.hasPremium() ? 'imagetmdb.' + domain + '/' : 'imagetmdb.com/',
+      path_api: 'apitmdb.' + domain + '/3/'
     };
     function filter(u) {
       var s = u.slice(0, 8);

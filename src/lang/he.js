@@ -1040,4 +1040,38 @@ export default {
     pincode_use_toggle: 'לחץ והחזק את הלחצן אישור כדי לשנות את הפריסה.',
 
     settings_parental_control_where: 'היכן לבקש קוד PIN',
+    title_fire: 'אֵשׁ!',
+    title_top_100: '100 המובילים',
+
+    player_normalization_type_title: 'סוג נירמול',
+    player_normalization_type_all: 'הכל',
+    player_normalization_type_up: 'רק הגבהה',
+    player_normalization_type_down: 'רק הנמכה',
+    storage_quota_exceeded: 'מכסת האחסון חרגה. נקה את המטמון ונסה שוב.',
+    settings_cub_domain: 'דומיין ראשי',
+
+    title_ai_assistant: 'עוזר AI',
+    title_facts: 'עובדות מעניינות',
+    ai_search_start_typing: 'שאלו את עוזר ה-AI אילו סרטים אתם רוצים למצוא. למשל: "סרטים על חלל"',
+    ai_search_limit: 'חרגת ממגבלת הבקשות. נסה שוב מאוחר יותר. עם מנוי CUB Premium המגבלות יגדלו ולא תצטרך להמתין!',
+    ai_subscribe_title: 'פתחו אפשרויות נוספות עם AI',
+    ai_subscribe_descr: 'עשו מנוי ל-CUB Premium והגדילו את מספר הבקשות ל-AI. יחד עם AI נמצא עבורכם את הסרטים הטובים ביותר שאפשר.',
+
+    dmca_title: 'תוכן חסום',
+    dmca_descr: 'חומר זה אינו זמין לצפייה. הוא נחסם לבקשת בעל זכויות היוצרים בהתאם לחוק זכויות היוצרים.',
+
+    loading_progress_step_0: 'הכנה',
+    loading_progress_step_1: 'טעינת שפות',
+    loading_progress_step_2: 'חיפוש מראות',
+    loading_progress_step_3: 'הכנת הרחבות',
+    loading_progress_step_4: 'כמעט סיימנו',
+    loading_progress_step_5: 'ממש בקרוב',
+
+    install_extension_rule_1: 'התקנת תוסף צד שלישי',
+    install_extension_rule_2: 'תוספים נוצרים על ידי מפתחים עצמאיים, ו-LAMPA אינה בודקת את תוכנם. על ידי התקנתם, אתה מסכים כי:',
+    install_extension_rule_3: '- חלק מהתוספים עשויים לבקש גישה לנתונים שלך או לעבוד עם מקורות לא מאומתים.',
+    install_extension_rule_4: '- אם התוסף שהתקנת מפר זכויות יוצרים או חוקים אחרים, האחריות המלאה על השימוש בו חלה עליך.',
+    install_extension_rule_5: '- התקן תוספים רק ממקורות מהימנים. אם יש לך ספקות לגבי אבטחתו או חוקיותו של תוסף, עדיף להימנע מהתקנתו.',
+    install_extension_rule_6: 'LAMPA אינה תומכת ואינה מאשרת תוספים הקשורים לתוכן פיראטי.',
+    install_extension_rule_7: 'בהמשך, אתה מאשר שאתה מבין את הסיכונים הללו.'
 }

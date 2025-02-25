@@ -1142,4 +1142,38 @@ export default {
     pincode_use_toggle: 'Press and hold the OK button to change the layout.',
 
     settings_parental_control_where: 'Where to request a PIN code',
+    title_fire: 'Fire!',
+    title_top_100: 'Top 100',
+
+    player_normalization_type_title: 'Normalization Type',
+    player_normalization_type_all: 'All',
+    player_normalization_type_up: 'Only Increase',
+    player_normalization_type_down: 'Only Decrease',
+    storage_quota_exceeded: 'Storage quota exceeded. Clear cache and try again.',
+    settings_cub_domain: 'Primary domain',
+
+    title_ai_assistant: 'AI Assistant',
+    title_facts: 'Interesting Facts',
+    ai_search_start_typing: 'Ask the AI Assistant what movies you want to find. For example: "Movies about space"',
+    ai_search_limit: 'Request limit exceeded. Please try again later. With a CUB Premium subscription, limits will be increased, and you won’t have to wait!',
+    ai_subscribe_title: 'Unlock More Opportunities with AI',
+    ai_subscribe_descr: 'Subscribe to CUB Premium and increase the number of requests to AI. Together with AI, we’ll find the best movies for you.',
+
+    dmca_title: 'Content blocked',
+    dmca_descr: 'This material is not available for viewing. It has been blocked at the request of the copyright holder in accordance with copyright law.',
+
+    loading_progress_step_0: 'Preparation',
+    loading_progress_step_1: 'Loading languages',
+    loading_progress_step_2: 'Searching for mirrors',
+    loading_progress_step_3: 'Preparing extensions',
+    loading_progress_step_4: 'Almost there',
+    loading_progress_step_5: 'Coming soon',
+
+    install_extension_rule_1: 'Installing a third-party plugin',
+    install_extension_rule_2: 'Plugins are created by independent developers, and LAMPA does not verify their content. By installing them, you agree that:',
+    install_extension_rule_3: '- Some plugins may request access to your data or work with unverified sources.',
+    install_extension_rule_4: '- If the plugin you install violates copyright or other laws, you are fully responsible for its use.',
+    install_extension_rule_5: '- Install only plugins from trusted sources. If you have any doubts about the security or legality of a plugin, it is better to refrain from installing it.',
+    install_extension_rule_6: 'LAMPA does not support or endorse plugins related to pirated content.',
+    install_extension_rule_7: 'By proceeding, you confirm that you understand these risks.'
 }

@@ -573,12 +573,12 @@
     }
     return _createClass(Api, null, [{
       key: "get",
-      value: function get(method) {
+      value: function get(method, catch_error) {
         var _this = this;
         return new Promise(function (resolve, reject) {
           var account = Lampa.Storage.get('account', '{}');
-          if (!account.token) return resolve();
-          _this.network.silent(_this.api_url + method, resolve, resolve, false, {
+          if (!account.token) return catch_error ? reject(Lang.translate('account_login_failed')) : resolve();
+          _this.network.silent(_this.api_url + method, resolve, catch_error ? reject : resolve, false, {
             headers: {
               token: account.token,
               profile: account.profile.id
@@ -603,32 +603,43 @@
           var account = Lampa.Storage.get('account', '{}');
           if (!account.token) return reject(Lampa.Lang.translate('account_login_failed'));
           _this2.network.timeout(20000);
-          _this2.network[window.god_enabled ? 'native' : 'silent'](url, function (str) {
-            var file = new File([str], "playlist.m3u", {
-              type: "text/plain"
-            });
-            var formData = new FormData($('<form></form>')[0]);
-            formData.append("file", file, "playlist.m3u");
-            $.ajax({
-              url: _this2.api_url + 'lampa',
-              type: 'POST',
-              data: formData,
-              async: true,
-              cache: false,
-              contentType: false,
-              timeout: 20000,
-              enctype: 'multipart/form-data',
-              processData: false,
-              headers: {
-                token: account.token,
-                profile: account.profile.id
-              },
-              success: function success(j) {
-                if (j.secuses) resolve(j);else reject(Lampa.Lang.translate('account_export_fail_600') + ' (' + (j.text || j.message) + ')');
-              },
-              error: reject
-            });
-          }, reject, false, {
+          _this2.network["native"](url, function (str) {
+            try {
+              var file = new File([str], "playlist.m3u", {
+                type: "text/plain"
+              });
+              var formData = new FormData($('<form></form>')[0]);
+              formData.append("file", file, "playlist.m3u");
+              $.ajax({
+                url: _this2.api_url + 'lampa',
+                type: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                timeout: 20000,
+                enctype: 'multipart/form-data',
+                processData: false,
+                headers: {
+                  token: account.token,
+                  profile: account.profile.id
+                },
+                success: function success(j) {
+                  if (j.secuses) resolve(j);else reject(Lampa.Lang.translate('account_export_fail_600') + ' (' + (j.text || j.message) + ')');
+                },
+                error: function error(e) {
+                  e.from_error = 'M3U Function (Failed upload to CUB)';
+                  reject(e);
+                }
+              });
+            } catch (e) {
+              e.from_error = 'M3U Function';
+              reject(e);
+            }
+          }, function (e) {
+            e.from_error = 'M3U Function (Failed to download file)';
+            reject(e);
+          }, false, {
             dataType: 'text'
           });
         });
@@ -656,7 +667,7 @@
           _this4.network.timeout(20000);
           _this4.network[window.god_enabled ? 'native' : 'silent'](url, function (str) {
             if (typeof str != 'string' || str.substr(0, 7).toUpperCase() !== "#EXTM3U") {
-              return reject(Lampa.Lang.translate('torrent_parser_request_error'));
+              return reject(Lampa.Lang.translate('torrent_parser_request_error') + ' [M3UClient Function (The file is not M3U)]');
             }
             var list;
             var catchup;
@@ -729,9 +740,12 @@
                 secuses: true
               });
             } else {
-              reject(Lampa.Lang.translate('torrent_parser_empty'));
+              reject(Lampa.Lang.translate('torrent_parser_empty') + ' [M3UClient Function (Parsing m3u failed)]');
             }
-          }, reject, false, {
+          }, function (e) {
+            e.from_error = 'M3UClient Function (Failed to load)';
+            reject(e);
+          }, false, {
             dataType: 'text'
           });
         });
@@ -768,11 +782,14 @@
             if (params && params.loading == 'lampa' || data.custom) {
               _this5[Lampa.Account.logged() ? 'm3u' : 'm3uClient'](data.url).then(secuses)["catch"](error);
             } else {
-              _this5.get('playlist/' + id).then(secuses)["catch"](function () {
+              _this5.get('playlist/' + id, true).then(secuses)["catch"](function () {
                 _this5.m3u(data.url).then(secuses)["catch"](error);
               });
             }
-          })["catch"](reject);
+          })["catch"](function (e) {
+            e.from_error = 'Playlist Function (Something went wrong)';
+            reject(e);
+          });
         });
       }
     }, {
@@ -2633,7 +2650,7 @@
         this.listener.send('loading');
         Api.playlist(playlist).then(this.build.bind(this))["catch"](function (e) {
           var msg = '';
-          if (typeof e == 'string') msg = e;else if (typeof e.status !== 'undefined') msg = Lampa.Lang.translate('torrent_error_connect') + ': ' + e.status;else if (typeof e.message !== 'undefined') msg = e.message;
+          if (typeof e == 'string') msg = e;else if (typeof e.responseJSON !== 'undefined' && e.responseJSON.text) msg = Lampa.Lang.translate('torrent_error_connect') + ': ' + e.responseJSON.text + (e.responseJSON.code ? ' [' + e.responseJSON.code + ']' : '');else if (typeof e.status !== 'undefined') msg = Lampa.Lang.translate('torrent_error_connect') + ': [' + e.status + ']' + (e.from_error ? ' [' + e.from_error + ']' : '');else if (typeof e.message !== 'undefined') msg = e.message;
           _this4.empty = new Lampa.Empty({
             descr: '<div style="width: 60%; margin:0 auto; line-height: 1.4">' + Lampa.Lang.translate('iptv_noload_playlist') + (msg ? '<br><br>' + msg : '') + '</div>'
           });
@@ -4188,7 +4205,7 @@
       }
     });
   }
-  var Lang = {
+  var Lang$1 = {
     init: init
   };
 
@@ -4354,7 +4371,7 @@
         $('.navigation-bar__body [data-action="search"]').addClass('hide');
       }
     }
-    Lang.init();
+    Lang$1.init();
     Templates.init();
     Settings.init();
     EPG.init();

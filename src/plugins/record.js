@@ -244,8 +244,10 @@
         filtred = _this.data.stations;
         _this.build();
       })["catch"](function (e) {
+        console.log('Radio', 'error', e.message);
         _this.data = {
-          stations: []
+          stations: [],
+          genre: []
         };
         _this.build();
       });
@@ -256,6 +258,8 @@
     };
     this.build = function () {
       var _this2 = this;
+      this.activity.loader(false);
+      console.log('Radio', 'build start');
       html.append(Lampa.Template.js('radio_content'));
       scroll = new Lampa.Scroll({
         mask: true,
@@ -268,12 +272,15 @@
       html.find('.radio-content__list').append(scroll.render(true));
       html.find('.radio-content__cover').append(Lampa.Template.js('radio_cover'));
       scroll.minus(html.find('.radio-content__head'));
+      console.log('Radio', 'build catalog');
       this.buildCatalog();
+      console.log('Radio', 'build search');
       this.buildSearch();
+      console.log('Radio', 'build add');
       this.buildAdd();
+      console.log('Radio', 'display');
       this.display();
       Lampa.Layer.update(html);
-      this.activity.loader(false);
     };
     this.clearButtons = function (category, search) {
       var btn_catalog = html.find('.button--catalog');
@@ -291,24 +298,29 @@
       var btn = html.find('.button--catalog');
       var items = [];
       var favs = Favorites.get().length;
+      console.log('Radio', 'loaded favorites', favs);
       items.push({
         title: Lampa.Lang.translate('settings_input_links'),
         ghost: !favs,
         noenter: !favs,
         favorite: true
       });
+      console.log('Radio', 'build stations', this.data.stations.length);
       if (this.data.stations.length) {
         items.push({
           title: Lampa.Lang.translate('settings_param_jackett_interview_all'),
           all: true
         });
-        this.data.genre.forEach(function (g) {
-          items.push({
-            title: g.name,
-            id: g.id
+        if (this.data.genre) {
+          this.data.genre.forEach(function (g) {
+            items.push({
+              title: g.name,
+              id: g.id
+            });
           });
-        });
+        }
       }
+      console.log('Radio', 'build favorites');
       if (favs) {
         filtred = Favorites.get();
         this.clearButtons(items[0].title, false);

@@ -223,13 +223,13 @@
         /*
         if(file){
             let path = file.slice(0, file.lastIndexOf('/')) + '/'
-              if(file.split('/').pop().replace('.mp4','') !== max_quality){
+             if(file.split('/').pop().replace('.mp4','') !== max_quality){
                 file = path + max_quality + '.mp4'
             }
-              quality = {}
-              let mass = [1080,720,480,360]
+             quality = {}
+             let mass = [1080,720,480,360]
                 mass = mass.slice(mass.indexOf(max_quality))
-                  mass.forEach((n)=>{
+                 mass.forEach((n)=>{
                     quality[n + 'p'] = path + n + '.mp4'
                 })
             

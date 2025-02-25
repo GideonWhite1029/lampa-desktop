@@ -76,6 +76,7 @@ export default {
     settings_cub_sync_recomends: 'Синхронизация рекомендаций',
     settings_cub_sync_timecodes: 'Синхронизация тайм-кодов',
     settings_cub_signin_button: 'Выполнить вход',
+    settings_cub_domain: 'Основной домен',
 
     settings_input_links: 'Избранное',
 
@@ -454,6 +455,10 @@ export default {
     title_left:'Осталось',
     title_parental_control: 'Родительский контроль',
     title_worth_rewatch: 'Стоит пересмотреть',
+    title_fire: 'Огонь!',
+    title_top_100: 'Топ 100',
+    title_ai_assistant: 'AI-ассистент',
+    title_facts: 'Интересные факты',
 
     reactions_none: 'Нет реакций',
     reactions_fire: 'Супер',
@@ -910,6 +915,10 @@ export default {
     player_normalization_step_medium: 'Среднее',
     player_normalization_step_hight: 'Высокое',
     player_normalization: 'Нормализация',
+    player_normalization_type_title: 'Тип нормализации',
+    player_normalization_type_all: 'Все',
+    player_normalization_type_up: 'Только повышение',
+    player_normalization_type_down: 'Только понижение',
     player_youtube_no_played: 'К сожалению, это видео не доступно в вашем регионе, возможно, оно было заблокировано или удалено.',
     player_youtube_start_play: 'Для начала проигрывания видео, нажмите кнопку "Плей"',
 
@@ -1154,5 +1163,30 @@ export default {
     confirm_open_player: 'Другое устройство запрашивает доступ к плееру. Хотите воспроизвести видео?',
 
     pincode_use_remote: 'Используйте пульт для ввода кода, нажимая стрелки для выбора нужной цифры.',
-    pincode_use_toggle: 'Нажмите и удерживайте кнопку OK, чтобы сменить раскладку.'
+    pincode_use_toggle: 'Нажмите и удерживайте кнопку OK, чтобы сменить раскладку.',
+
+    storage_quota_exceeded: 'Превышен лимит хранилища. Удалите кеш и повторите попытку.',
+
+    ai_search_start_typing: 'Спросите у AI-ассистента, какие фильмы вы хотите найти. Например: "Фильмы про космос"',
+    ai_search_limit: 'Лимит запросов превышен. Попробуйте повторить запрос позже. С подпиской CUB Premium лимиты будут увеличены, и вам не придется ждать!',
+    ai_subscribe_title: 'Откройте бошьше возможностей с AI',
+    ai_subscribe_descr: 'Оформите подписку CUB Premium и увеличте количество запросов к AI. Вместе с AI мы подберем вам лучшие фильмы которые только сможем.',
+
+    dmca_title: 'Контент заблокирован',
+    dmca_descr: 'Данный материал недоступен для просмотра. Он был заблокирован по просьбе правообладателя в соответствии с законодательством об авторских правах.',
+
+    loading_progress_step_0: 'Подготовка',
+    loading_progress_step_1: 'Загрузка языков',
+    loading_progress_step_2: 'Поиск зеркал',
+    loading_progress_step_3: 'Подготовка расширений',
+    loading_progress_step_4: 'Осталось немного',
+    loading_progress_step_5: 'Уже скоро',
+
+    install_extension_rule_1: 'Установка стороннего плагина',
+    install_extension_rule_2: 'Плагины создаются независимыми разработчиками, и LAMPA не проверяет их содержимое. Устанавливая их, вы соглашаетесь с тем, что:',
+    install_extension_rule_3: '- Некоторые плагины могут запрашивать доступ к вашим данным или работать с непроверенными источниками.',
+    install_extension_rule_4: '- Если устанавливаемый вами плагин нарушает авторские права или другие законы, вся ответственность за его использование лежит на вас.',
+    install_extension_rule_5: '- Устанавливайте только плагины из доверенных источников. Если вы сомневаетесь в безопасности или законности плагина, лучше откажитесь от его установки.',
+    install_extension_rule_6: 'LAMPA не поддерживает и не одобряет плагины, связанные с пиратским контентом.',
+    install_extension_rule_7: 'Продолжая, вы подтверждаете, что понимаете эти риски.',
 }
