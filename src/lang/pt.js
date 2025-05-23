@@ -47,7 +47,7 @@ export default {
     full_directing: 'Dirigir',
 
     settings_cub_sync: 'Sincronização',
-    settings_cub_sync_descr: 'Sincronização com serviço CUB: favoritos, histórico de navegação, tags e retomar reprodução. Website: www.cub.red',
+    settings_cub_sync_descr: 'Sincronização com serviço CUB: favoritos, histórico de navegação, tags e retomar reprodução.',
     settings_cub_account: 'Conta',
     settings_cub_logged_in_as: 'Logado como',
     settings_cub_profile: 'Perfil',
@@ -703,6 +703,7 @@ export default {
 
 	settings_param_player_inner: 'Lampa',
     settings_param_player_outside: 'Externo',
+    settings_param_player_inner_tvos: 'Interno',
     settings_param_yes: 'Sim',
     settings_param_no: 'Não',
     settings_param_interface_size_small: 'Menor',
@@ -743,7 +744,7 @@ export default {
     helper_torrents_view: 'Mantenha pressionada a tecla (OK) para redefinir o tempo de visualizado e exibir o menu',
 	 
 	fav_sync_title: 'Sincronização dos favoritos',
-    fav_sync_text: 'Conecte a sincronização e visualize em qualquer dispositivo os seus favoritos. <br><br>Para isso, registe-se no site www.cub.red, crie um perfil e faça login na aplicação.',
+    fav_sync_text: 'Conecte a sincronização e visualize em qualquer dispositivo os seus favoritos. <br><br>Para isso, registe-se no site {site}, crie um perfil e faça login na aplicação.',
     fav_sync_site: 'Site',
     fav_remove_title: 'Remover do histórico',
     fav_remove_descr: 'Eliminar cartão selecionado',
@@ -759,6 +760,7 @@ export default {
     timetable_empty: 'Esta secção exibirá as datas de lançamento dos novos episódios.',
 
 	player_quality: 'Qualidade',
+    player_flow: 'Fluxo',
     player_tracks: 'Faixas de áudio',
     player_disabled: 'Desativado',
     player_unknown: 'Desconhecido',
@@ -820,7 +822,7 @@ export default {
 	notice_new_quality: 'Nova qualidade disponível',
     notice_quality: 'Qualidade',
     notice_new_episode: 'Novo episódio',
-    notice_none: 'Ainda não tem notificações, registe-se em <b>www.cub.red</b> para acompanhar novos episódios e lançamentos.',
+    notice_none: 'Ainda não tem notificações, registe-se em <b>{site}</b> para acompanhar novos episódios e lançamentos.',
     notice_in_quality: 'Como',
     notice_none_account: 'Você ainda não tem notificações, marque a série e aguarde as notificações de novos episódios.',
     notice_none_system: 'Você não tem nenhuma notificação. Nós iremos notificá-lo quando novas notificações estiverem disponíveis.',
@@ -844,15 +846,15 @@ export default {
     account_import_fail: 'Erro de importação',
     account_imported: 'Importado',
     account_reload_after: 'Reinicializar após 5 segundos.',
-    account_create: 'Descubra mais oportunidades com uma conta CUB. Registe-se em <span class="account-modal__site">www.cub.red</span> e tenha acesso para sincronizar seus favoritos, tempos visualizados e outros recursos da conta CUB.',
+    account_create: 'Descubra mais oportunidades com uma conta CUB. Registe-se em <span class="account-modal__site">{site}</span> e tenha acesso para sincronizar seus favoritos, tempos visualizados e outros recursos da conta CUB.',
     account_premium: 'Descubra mais recursos com uma conta CUB Premium. Aumentando limites e acesso a recursos adicionais do serviço.',
     account_premium_more: 'Saiba mais sobre CUB Premium',
-    account_limited: 'Você atingiu o limite máximo. Aumente o limite com uma conta CUB Premium. Saiba mais em <span class="account-modal__site">www.cub.red/premium</span>',
+    account_limited: 'Você atingiu o limite máximo. Aumente o limite com uma conta CUB Premium. Saiba mais em <span class="account-modal__site">{site}/premium</span>',
     
     account_code_enter: 'Digite um código de seis dígitos',
     account_code_error: 'Você inseriu um código incorreto ou desatualizado',
     account_code_wrong: 'Você especificou um formato incorreto',
-    account_code_where: 'Acesse o site <span class="account-add-device__site">cub.red/add</span> e insira o código fornecido lá.',
+    account_code_where: 'Acesse o site <span class="account-add-device__site">{site}/add</span> e insira o código fornecido lá.',
     account_code_input: 'Inserir código',
     settings_cub_signin_button: 'Fazer login',
 

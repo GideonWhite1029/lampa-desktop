@@ -23,7 +23,7 @@
   function _createForOfIteratorHelper(r, e) {
     var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
     if (!t) {
-      if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) {
+      if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e) {
         t && (r = t);
         var n = 0,
           F = function () {};
@@ -2796,11 +2796,11 @@
         var o,
           h = new i(n);
         for (a = 0; a < n; ++a) h[a] = h[a - 1] + s[a - 1] << 1;
-        if (e) {
+        {
           o = new i(1 << n);
           var f = 15 - n;
           for (a = 0; a < r; ++a) if (t[a]) for (var l = a << 4 | t[a], p = n - t[a], v = h[t[a] - 1]++ << p, u = v | (1 << p) - 1; v <= u; ++v) o[d[v] >>> f] = l;
-        } else for (o = new i(r), a = 0; a < r; ++a) t[a] && (o[a] = d[h[t[a] - 1]++] >>> 15 - t[a]);
+        }
         return o;
       },
       w = new n(288);
@@ -2810,8 +2810,8 @@
     for (v = 280; v < 288; ++v) w[v] = 8;
     var y = new n(32);
     for (v = 0; v < 32; ++v) y[v] = 5;
-    var m = g(w, 9, 1),
-      b = g(y, 5, 1),
+    var m = g(w, 9),
+      b = g(y, 5),
       T = function T(t) {
         for (var n = t[0], i = 1; i < t.length; ++i) t[i] > n && (n = t[i]);
         return n;
@@ -2850,7 +2850,6 @@
       S = function S(t, n, i) {
         var e = new Error(n || F[t]);
         if (e.code = t, !i) throw e;
-        return e;
       },
       x = function () {
         function t(t) {
@@ -2912,7 +2911,7 @@
                     d += 3 * M;
                     var H = T(G),
                       O = (1 << H) - 1,
-                      P = g(G, H, 1);
+                      P = g(G, H);
                     for (_ = 0; _ < N;) {
                       var R = P[E(t, d, O)];
                       d += 15 & R;
@@ -2925,7 +2924,7 @@
                     }
                     var q = A.subarray(0, B),
                       J = A.subarray(B);
-                    F = T(q), x = T(J), w = g(q, F, 1), y = g(J, x, 1);
+                    F = T(q), x = T(J), w = g(q, F), y = g(J, x);
                   } else S(1);
                   if (d > I) {
                     f && S(0);
@@ -3571,7 +3570,7 @@
   };
 
   function init() {
-    var domain = Lampa.Manifest.cub_domain;
+    var domain = Lampa.Manifest.cub_site || 'cub.rip';
     Lampa.Lang.add({
       iptv_noprogram: {
         ru: 'Нет программы',

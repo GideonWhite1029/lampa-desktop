@@ -1783,6 +1783,7 @@ body.light--version .menu__item {
 @media screen and (max-width: 480px) {
   .settings__body {
     height: auto !important;
+    font-size: 1.15em;
   }
 }
 .settings__body > * {
@@ -1963,6 +1964,12 @@ body.light--version .menu__item {
 }
 .settings-input--free .settings-input__content {
   margin: 0 auto;
+}
+.settings-input--focus .settings-input__content {
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+      -ms-flex-pack: start;
+          justify-content: start;
 }
 
 body.settings--open .settings__layer {
@@ -6041,6 +6048,9 @@ body.selectbox--open .selectbox__layer {
   body.size--bigger .card-more {
     font-size: 1.14em;
   }
+  body.size--bigger .card.card--collection + .card-more {
+    width: 14.3em;
+  }
 }
 .loading-layer {
   position: fixed;
@@ -9673,6 +9683,12 @@ body.platform--netcast .torrent-item__ffprobe > div::before {
   .search-box__keypad {
     width: 100%;
   }
+}
+.search-box--focus {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
 
 body.system--keyboard .search-box .simple-keyboard-input {
