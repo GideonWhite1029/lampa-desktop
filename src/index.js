@@ -98,5 +98,9 @@ if (!gotTheLock) {
 }
 
 process.on('uncaughtException', (error) => {
-  console.error('Необработанная ошибка:', error);
+  log.error('Необработанная ошибка:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  log.error('Необработанное отклонение промиса:', promise, 'причина:', reason);
 });
