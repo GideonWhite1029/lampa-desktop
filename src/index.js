@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('node:path');
-const { updateElectronApp } = require('update-electron-app');
+const { updateElectronApp, UpdateSourceType} = require('update-electron-app');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -67,8 +67,12 @@ app.whenReady().then(async () => {
 
   try {
     updateElectronApp({
-      updateInterval: '1 hour',
-      logger: require('electron-log')
+        updateSource: {
+            type: UpdateSourceType.ElectronPublicUpdateService,
+            repo: 'GideonWhite1029/lampa-desktop'
+        },
+        updateInterval: '1 hour',
+        logger: require('electron-log')
     });
   } catch (error) {
     console.error('Ошибка при настройке автообновлений:', error);
