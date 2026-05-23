@@ -1,10 +1,13 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, session, ipcMain } = require('electron');
 const path = require('node:path');
 const { updateElectronApp, UpdateSourceType} = require('update-electron-app');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+// Разрешаем autoplay без user gesture (нужно для YouTube трейлеров)
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 
 let mainWindow;
 
@@ -19,12 +22,13 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
-      sandbox: false
+      sandbox: false,
+      allowRunningInsecureContent: true,
+      webSecurity: false
     },
     icon: path.join(__dirname, 'img', 'og.png'),
     show: false,
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    webSecurity: true
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default'
   });
 
   mainWindow.setMenu(null)
@@ -57,7 +61,32 @@ const createWindow = () => {
 };
 
 app.whenReady().then(async () => {
+  // Подменяем User-Agent чтобы YouTube не блокировал iframe в Electron
+  const chromeUA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] = chromeUA;
+    callback({ requestHeaders: details.requestHeaders });
+  });
+
   createWindow();
+
+  // Открываем YouTube трейлер в отдельном окне как настоящий браузер
+  ipcMain.on('open-youtube', (event, videoId) => {
+    const ytWin = new BrowserWindow({
+      width: 1280,
+      height: 720,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        webSecurity: false,
+        allowRunningInsecureContent: true
+      },
+      autoHideMenuBar: true
+    });
+    ytWin.setMenu(null);
+    const url = 'https://www.youtube.com/watch?v=' + videoId;
+    ytWin.loadURL(url);
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -10139,7 +10139,7 @@
 
   function YouTube$1(call_video) {
     var stream_url, loaded;
-    var needclick = true; //Platform.screen('mobile') || navigator.userAgent.toLowerCase().indexOf("android") >= 0
+    var needclick = false; //Platform.screen('mobile') || navigator.userAgent.toLowerCase().indexOf("android") >= 0
 
     var object = $('<div class="player-video__youtube"><div class="player-video__youtube-player" id="youtube-player"></div><div class="player-video__youtube-line-top"></div><div class="player-video__youtube-line-bottom"></div><div class="player-video__youtube-noplayed hide">' + Lang.translate('player_youtube_no_played') + '</div></div>');
     var video = object[0];
@@ -10337,7 +10337,8 @@
             'playsinline': 1,
             'rel': 0,
             'suggestedQuality': 'hd1080',
-            'setPlaybackQuality': 'hd1080'
+            'setPlaybackQuality': 'hd1080',
+            'origin': 'https://www.youtube.com'
           },
           videoId: id,
           events: {
@@ -27840,6 +27841,9 @@
               _this.toggle();
               if (Platform.is('android') && Storage.field('player_launch_trailers') == 'youtube' && a.youtube) {
                 Android.openYoutube(a.id);
+              } else if (a.youtube && window.api && window.api.openYoutube) {
+                // Electron desktop: открываем YouTube в отдельном окне чтобы обойти ошибку 153
+                window.api.openYoutube(a.id);
               } else {
                 var playlist = al_lang.filter(function (v) {
                   return !v.separator;

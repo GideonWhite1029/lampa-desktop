@@ -1,7 +1,8 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
 const { spawn } = require('child_process');
 contextBridge.exposeInMainWorld('api', {
     fileExists: (path) => fs.existsSync(path),
     spawnProcess: (path, args) => spawn(path, args),
+    openYoutube: (videoId) => ipcRenderer.send('open-youtube', videoId),
 });
