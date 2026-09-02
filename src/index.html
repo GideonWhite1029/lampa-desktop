@@ -8,23 +8,53 @@
     <link rel="stylesheet" href="./vender/scrollbar/jquery.scrollbar.css">
     <link rel="stylesheet" href="./vender/keypad/style.css">
 
-    <link rel="stylesheet" href="css/app.css?v=2.84">
+    <script>
+        // Load the Lampa core (app.css + app.js) chosen by the main process:
+        // the bundled copy, or a newer one downloaded by src/lampa-core.js.
+        (function () {
+            var assets = (window.__lampaAssets && window.__lampaAssets.js)
+                ? window.__lampaAssets
+                : { js: 'app.js', css: 'css/app.css?v=4.56' };
+
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = assets.css;
+            document.head.appendChild(link);
+
+            window.__loadLampaCore = function () {
+                var s = document.createElement('script');
+                s.src = assets.js;
+                s.onerror = function () {
+                    if (assets.js === 'app.js') return;
+                    // Downloaded core failed to load — fall back to the bundled one.
+                    var f = document.createElement('script');
+                    f.src = 'app.js';
+                    document.body.appendChild(f);
+                };
+                document.body.appendChild(s);
+            };
+        })();
+    </script>
 </head>
-<body>
+<body style="background: #1d1f20;">
+    <script>
+        window.youtube_lazy_load = true
+    </script>
+
     <div class="welcome"></div>
 
     <div id="app">
 
     </div>
-    
+
 
     <script src="./vender/jquery/jquery.js"></script>
     <script src="./vender/notify/notify.js"></script>
     <script src="./vender/scrollbar/jquery.scrollbar.js"></script>
     <script src="./vender/navigator/navigator.js"></script>
     <script src="./vender/keypad/keypad.js"></script>
-    <script src="http://www.youtube.com/iframe_api" async></script>
 
-    <script src="app.js"></script>
+    <script>window.__loadLampaCore()</script>
+    <script src="desktop-settings.js"></script>
 </body>
 </html>

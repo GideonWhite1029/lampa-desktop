@@ -1,0 +1,57 @@
+name: Sync Lampa Sources
+
+on:
+  schedule:
+    - cron: '17 4 * * *'   # daily, 04:17 UTC
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Upstream Lampa build repo'
+        default: 'yumata/lampa'
+      branch:
+        description: 'Upstream branch'
+        default: 'main'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-lampa
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Sync Lampa sources
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/update-lampa.mjs --repo "${{ inputs.repo || 'yumata/lampa' }}" --branch "${{ inputs.branch || 'main' }}"
+
+      - name: Commit & push
+        if: steps.sync.outputs.changed == '1'
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src
+          git commit -m "chore(lampa): sync core to ${{ steps.sync.outputs.version }} (${{ steps.sync.outputs.count }} files)"
+          git push
+
+      - name: Trigger build
+        if: steps.sync.outputs.changed == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run build.yml --ref main
+
+      - name: Report
+        run: |
+          echo "Lampa version: ${{ steps.sync.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Changed files: ${{ steps.sync.outputs.count }}" >> "$GITHUB_STEP_SUMMARY"

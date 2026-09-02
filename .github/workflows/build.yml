@@ -1,51 +1,105 @@
 name: Build And Publish App
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  publish-x32-win32:
-    name: Publish x32 and x64 for Windows
+  windows:
+    name: Windows (x86 + x64)
     runs-on: windows-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Ensure WiX Toolset v3 (for the MSI maker)
+        shell: pwsh
+        run: |
+          $candle = Get-ChildItem 'C:\Program Files (x86)\WiX Toolset*\bin\candle.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $candle) {
+            choco install wixtoolset --version=3.14.1 -y --no-progress
+            $candle = Get-ChildItem 'C:\Program Files (x86)\WiX Toolset*\bin\candle.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+          }
+          Add-Content $env:GITHUB_PATH $candle.Directory.FullName
+          "WIX=$($candle.Directory.Parent.FullName)\" | Add-Content $env:GITHUB_ENV
 
-      - name: Publish x32 for Windows
+      - run: npm ci
+
+      - name: Build & publish
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run publish-x32-win32
+        run: |
+          npm run publish-x32-win32
+          npm run publish-x64-win32
 
-      - name: Publish x64 for Windows
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run publish-x64-win32
+      - name: Build only (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          npm run make-x32-win32
+          npm run make-x64-win32
 
-  publish-x64-linux:
-    name: Publish x64 for Linux
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lampa-windows
+          path: out/make/**
+          if-no-files-found: warn
+
+  linux:
+    name: Linux (x64)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install packaging tools (deb / rpm / AppImage)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fakeroot dpkg rpm libfuse2 squashfs-tools zsync
 
-      - name: Publish x64 for Linux
+      - name: Install Flatpak toolchain
+        run: |
+          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder elfutils
+          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y --noninteractive flathub \
+            org.freedesktop.Platform//24.08 \
+            org.freedesktop.Sdk//24.08 \
+            org.electronjs.Electron2.BaseApp//24.08
+
+      - run: npm ci
+
+      - name: Build & publish
+        if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run publish-x64-linux
+
+      - name: Build only (PR)
+        if: github.event_name == 'pull_request'
+        run: npm run make-x64-linux
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lampa-linux
+          path: out/make/**
+          if-no-files-found: warn
