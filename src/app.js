@@ -2072,8 +2072,8 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '3.3.2',
-    app_version: '3.3.2',
+    css_version: '3.3.3',
+    app_version: '3.3.3',
     cub_site: 'cub.best',
     apk_link_download: 'https://github.com/lampa-app/LAMPA/releases/download/v1.12.3/app-lite-release.apk'
   };
@@ -2579,7 +2579,7 @@
 
   var html$1E = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>db3b4f917b38139d107d4f883b30de9b</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-08-31 09:46</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>ee7802db5a5dbec3aeb896e2ac18e434</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-06 10:58</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1C = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -15682,23 +15682,17 @@
         width: Math.round(nw * sx) + 'px',
         height: Math.round(nh * sy) + 'px',
         marginLeft: Math.round(window.innerWidth / 2 - nw * sx / 2) + 'px',
-        marginTop: Math.round(window.innerHeight / 2 - nh * sy / 2) + 'px',
-        transform: 'none'
+        marginTop: Math.round(window.innerHeight / 2 - nh * sy / 2) + 'px'
       };
     } else {
       var sz = {
         width: Math.round(window.innerWidth) + 'px',
         height: Math.round(window.innerHeight) + 'px',
-        transform: sx == 1.00 && sy == 1.00 ? 'none' : 'scaleX(' + sx + ') scaleY(' + sy + ')'
+        transform: sx == 1.00 && sy == 1.00 ? 'unset' : 'scaleX(' + sx + ') scaleY(' + sy + ')'
       };
     }
 
-    _video.style['width'] = sz.width;
-    _video.style['height'] = sz.height;
-    _video.style['-webkit-transform'] = sz.transform;
-    _video.style['transform'] = sz.transform;
-    _video.style['margin-left'] = sz.marginLeft || '0px';
-    _video.style['margin-top'] = sz.marginTop || '0px';
+    $(_video).css(sz);
     need_scale = false;
   }
   /**
@@ -23990,7 +23984,7 @@
         var any = false;
         markers.forEach(function (marker) {
           var marker_data = markers_object[marker];
-          var status = marker_data.pass_count > 0 ? 'status--pass' : marker_data.live ? 'status--live' : marker_data.error ? 'status--error' : '';
+          var status = marker_data.pass_count > 0 ? 'status--pass' : marker_data.live ? 'status--live' : marker_data.bad ? 'status--bad' : marker_data.error ? 'status--error' : '';
 
           if (status !== marker_data.status_now) {
             marker_data.status_prev = marker_data.status_now;
@@ -24014,36 +24008,48 @@
   function updateStatus(marker) {
     var marker_data = markers_object[marker];
     if (!marker_data.element) return;
-    var status = marker_data.pass_count > 0 ? 'status--pass' : marker_data.live ? 'status--live' : marker_data.error ? 'status--error' : '';
-    marker_data.element.classList.remove('status--error', 'status--live', 'status--pass');
+    var status = marker_data.pass_count > 0 ? 'status--pass' : marker_data.live ? 'status--live' : marker_data.bad ? 'status--bad' : marker_data.error ? 'status--error' : '';
+    marker_data.element.classList.remove('status--error', 'status--live', 'status--pass', 'status--bad');
     if (status) marker_data.element.classList.add(status);
+  }
+
+  function bad(who) {
+    markers_object[who].error = false;
+    markers_object[who].live = false;
+    markers_object[who].bad = true;
+    update$6();
   }
 
   function error$1(who) {
     markers_object[who].error = true;
     markers_object[who].live = false;
+    markers_object[who].bad = false;
     update$6();
   }
 
   function pass(who) {
-    markers_object[who].pass_count = Math.min(markers_object[who].pass_count + 1, 20);
+    var add = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+    markers_object[who].pass_count = Math.min(markers_object[who].pass_count + add, 20);
     update$6();
   }
 
   function live(who) {
     markers_object[who].error = false;
     markers_object[who].live = true;
+    markers_object[who].bad = false;
     update$6();
   }
 
   function normal(who) {
     markers_object[who].error = false;
     markers_object[who].live = false;
+    markers_object[who].bad = false;
     update$6();
   }
 
   var Markers = {
     init: init$S,
+    bad: bad,
     error: error$1,
     pass: pass,
     live: live,
@@ -24072,7 +24078,7 @@
     used_mirrors = (used_mirrors + 1) % mirrors.length;
     var socket_url = ws + mirror + pt;
     if (window.lampa_settings.socket_url) socket_url = window.lampa_settings.socket_url;
-    clearInterval(ping);
+    clearTimeout(ping);
     clearTimeout(timeout$1);
     timeout$1 = setTimeout(function () {
       console.log('Socket', 'timeout close');
@@ -24110,6 +24116,7 @@
     socket.addEventListener('message', function (event) {
       if (event.data == 'pong') {
         socket.alive = true;
+        Markers.live('socket');
         return;
       }
 
@@ -24122,8 +24129,8 @@
           Controller.toContent();
           Activity.push(result.data);
         } else if (result.method == 'timeline') {
-          result.data.received = true; //чтоб снова не остправлять и не зациклить
-
+          //чтоб снова не остправлять и не зациклить
+          result.data.received = true;
           var account = Account$1.Permit.account;
 
           if (Account$1.Permit.sync && account.profile && account.profile.id == result.data.profile) {
@@ -24210,7 +24217,7 @@
         }
       }
 
-      Markers.pass('socket');
+      Markers.pass('socket', 5);
       listener$9.send('message', result);
     });
     Timer.add(1000, function () {
@@ -24224,13 +24231,15 @@
     }, false, true);
     Timer.add(1000 * 30, function () {
       if (socket && socket.readyState == 1) {
+        clearTimeout(ping);
         socket.alive = false;
-        setTimeout(function () {
-          if (!socket.alive) {
+        socket.send('ping');
+        ping = setTimeout(function () {
+          if (!socket.alive && socket.readyState == 1) {
             console.log('Socket', 'ping timeout, maybe connection lost');
+            Markers.bad('socket');
           }
         }, 15000);
-        socket.send('ping');
       }
     }, false, true);
   }
@@ -45555,7 +45564,16 @@
     document.addEventListener('visibilitychange', function () {
       // Если фокус не был на странице больше часа, то обновляем активность
       if (Date.now() - focustime > 1000 * 60 * 60 * 6) refresh(true);
-      resetFocusTime();
+      console.log('Activity', 'refresh by visibility change', 'visibilityState:', document.visibilityState, 'diff:', (Date.now() - focustime) / 1000);
+      focustime = Date.now();
+    }); // Дублирование для Android, где visibilitychange может не сработать
+
+    Timer.add(1000, function () {
+      if (Date.now() - focustime > 1000 * 60 * 60 * 6) {
+        refresh(true);
+        console.log('Activity', 'refresh by focus time');
+        focustime = Date.now();
+      }
     });
     PlayerVideo.listener.follow('timeupdate', resetFocusTime);
     Keypad.listener.follow('keydown', resetFocusTime);
@@ -45566,7 +45584,9 @@
 
 
   function resetFocusTime() {
-    focustime = Date.now();
+    setTimeout(function () {
+      focustime = Date.now();
+    }, 5000);
   }
   /**
    * Обновить активность или все активности
@@ -56066,8 +56086,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-08-31 09:46');
-    console.log('App', 'hash', 'db3b4f917b38139d107d4f883b30de9b');
+    console.log('App', 'build date:', '2026-09-06 10:58');
+    console.log('App', 'hash', 'ee7802db5a5dbec3aeb896e2ac18e434');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу

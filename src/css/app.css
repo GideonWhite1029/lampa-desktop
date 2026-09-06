@@ -1420,6 +1420,9 @@ body.light--version .wrap__left {
 .head__markers-item.status--live {
   background: #76e67a;
 }
+.head__markers-item.status--bad {
+  background: #f8d183;
+}
 .head__markers-item.status--error {
   background: #ff6868;
 }
