@@ -2579,7 +2579,7 @@
 
   var html$1E = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>804a7c4c97c73fb489d0e16c5e717eb0</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-06 13:41</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>b452af5d004188099ceef843d5514ad2</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-07 17:36</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1C = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -7843,14 +7843,21 @@
 
   function add$e(object, success, fail) {
     var send_data = object.data ? Arrays.clone(object.data) : false;
-    if (send_data && send_data.movie) send_data.movie = Utils$1.clearCard(send_data.movie);
+    var category = 'movie';
+
+    if (send_data && send_data.movie) {
+      category = send_data.movie.name ? 'tv' : 'movie';
+      send_data.movie = Utils$1.clearCard(send_data.movie);
+    }
+
     var json = {
       action: 'add',
       link: object.link,
       title: '[LAMPA] ' + (object.title + '').replace('??', '?'),
       poster: object.poster,
       data: send_data ? JSON.stringify(send_data) : '',
-      save_to_db: true
+      save_to_db: true,
+      category: category
     };
     var data = JSON.stringify(json);
     clear$d();
@@ -7866,14 +7873,21 @@
 
   function hash$1(object, success, fail) {
     var send_data = object.data ? Arrays.clone(object.data) : false;
-    if (send_data && send_data.movie) send_data.movie = Utils$1.clearCard(send_data.movie);
+    var category = 'movie';
+
+    if (send_data && send_data.movie) {
+      category = send_data.movie.name ? 'tv' : 'movie';
+      send_data.movie = Utils$1.clearCard(send_data.movie);
+    }
+
     var json = {
       action: 'add',
       link: object.link,
       title: '[LAMPA] ' + (object.title + '').replace('??', '?'),
       poster: object.poster,
       data: send_data ? JSON.stringify(send_data) : '',
-      save_to_db: Storage.get('torrserver_savedb', 'false')
+      save_to_db: Storage.get('torrserver_savedb', 'false'),
+      category: category
     };
     var data = JSON.stringify(json);
     clear$d();
@@ -15688,7 +15702,8 @@
       var sz = {
         width: Math.round(window.innerWidth) + 'px',
         height: Math.round(window.innerHeight) + 'px',
-        transform: sx == 1.00 && sy == 1.00 ? 'unset' : 'scaleX(' + sx + ') scaleY(' + sy + ')'
+        transform: sx == 1.00 && sy == 1.00 || need_scale == 'fill' ? 'unset' : 'scaleX(' + sx + ') scaleY(' + sy + ')',
+        objectFit: need_scale == 'fill' ? 'fill' : 'contain'
       };
     }
 
@@ -41958,6 +41973,11 @@
   // `torrserver_search_type`: 'rutor' | 'torznab' | 'both' (default 'both').
 
 
+  function normalizeTorrServerSize(size) {
+    if (!size) return '';
+    return String(size).replace(/\s*GCiB\b/gi, ' GB').replace(/\s*MCiB\b/gi, ' MB').replace(/\s*KCiB\b/gi, ' KB');
+  }
+
   function torrserver() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var base_url = arguments.length > 1 ? arguments[1] : undefined;
@@ -41967,23 +41987,24 @@
     var mode = Storage.field('torrserver_search_type') || 'both';
 
     function mapResult(e, source_rank) {
-      var hash = Utils$1.hash(e.Title); // Some torznab indexers expose only a .torrent download URL via `Link`
+      var hash = Utils$1.hash(e.Title);
+      var timeValue = Utils$1.strToTime(e.CreateDate); // Some torznab indexers expose only a .torrent download URL via `Link`
       // and no magnet. If the link itself is a magnet URI, fall back to it.
 
       var magnet = e.Magnet || (/^magnet:/i.test(e.Link || '') ? e.Link : '');
       return {
         Title: e.Title,
         Tracker: e.Tracker,
-        size: e.Size,
-        Size: Utils$1.sizeToBytes(e.Size),
+        size: normalizeTorrServerSize(e.Size),
+        Size: Utils$1.sizeToBytes(normalizeTorrServerSize(e.Size)),
         PublishDate: Utils$1.strToTime(e.CreateDate),
+        PublisTime: timeValue,
         Seeders: parseInt(e.Seed),
         Peers: parseInt(e.Peer),
         MagnetUri: magnet,
         Link: e.Link,
         viewed: viewed(hash),
         CategoryDesc: e.Categories,
-        bitrate: '-',
         checked_at: Date.now(),
         source_rank: source_rank,
         hash: hash
@@ -56086,8 +56107,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-09-06 13:41');
-    console.log('App', 'hash', '804a7c4c97c73fb489d0e16c5e717eb0');
+    console.log('App', 'build date:', '2026-09-07 17:36');
+    console.log('App', 'hash', 'b452af5d004188099ceef843d5514ad2');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу
