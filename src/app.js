@@ -2579,7 +2579,7 @@
 
   var html$1E = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>b452af5d004188099ceef843d5514ad2</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-07 17:36</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>e9d007d3f7a46448c1aae4bbd067c68a</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-08 15:57</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1C = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -38813,7 +38813,13 @@
           })]); // Создаем коллекцию
 
           if (!adult_block && data.collection && data.collection.results && data.collection.results.length) {
-            data.collection.title = Lang.translate('title_collection');
+            data.collection.title = Lang.translate('title_collection'); // Сортируем по году от меньшего к большему
+
+            data.collection.results.sort(function (a, b) {
+              var yearA = a.release_date ? a.release_date.split('-')[0] : a.first_air_date ? a.first_air_date.split('-')[0] : '0';
+              var yearB = b.release_date ? b.release_date.split('-')[0] : b.first_air_date ? b.first_air_date.split('-')[0] : '0';
+              return parseInt(yearA) - parseInt(yearB);
+            });
 
             _this.rows.push(['cards', data.collection]);
           } // Создаем рекомендации
@@ -40248,6 +40254,10 @@
   var callback_back;
   var autostart_timer;
   var autostart_progress;
+  var TORRENT_PRELOAD_POLL_MS = 1000;
+  var TORRENT_PRELOAD_REQUEST_TIMEOUT_MS = 2000;
+  var TORRENT_PRELOAD_STALL_MS = 8000;
+  var TORRENT_PRELOAD_DEADLINE_MS = 30000;
   var formats = ['asf', 'wmv', 'divx', 'avi', 'mp4', 'm4v', 'mov', '3gp', '3g2', 'mkv', 'trp', 'tp', 'mts', 'mpg', 'mpeg', 'dat', 'vob', 'rm', 'rmvb', 'm2ts', 'ts'];
   var formats_individual = ['vob', 'm2ts'];
 
@@ -40441,26 +40451,89 @@
     return subtitles.length ? subtitles : false;
   }
 
+  function torrentPlayUrl(url) {
+    return typeof url === 'string' ? url.replace('&preload', '&play') : url;
+  }
+
+  function isExternalAndroidTorrent(data) {
+    if (!Platform.is('android')) return false; // A one-shot player selected from the file context menu must win over the
+    // persisted default. Player.runas() keeps that choice private to player.js,
+    // so torrent.js also carries it on the media item until Player.play().
+
+    if (data.launch_player === 'lampa' || data.launch_player === 'inner') return false;
+    if (data.launch_player === 'android') return true;
+    return Storage.field('player_torrent') === 'android';
+  }
+
   function preload(data, run) {
     var has_server = Torserver.ip() && data.url.indexOf(Torserver.ip()) > -1;
     var has_preload = data.url.indexOf('&preload') > -1;
-    var need_preload = has_server && has_preload;
+    var need_preload = has_server && has_preload; // An external Android player consumes TorrServer's &play endpoint directly and
+    // performs its own buffering. Holding ACTION_VIEW behind the frontend 95% gate
+    // can otherwise leave the Files screen open forever when peers are slow/stalled.
+
+    if (need_preload && isExternalAndroidTorrent(data)) {
+      data.url = torrentPlayUrl(data.url);
+      run();
+      return;
+    }
 
     if (need_preload) {
       var checkout;
+      var deadline;
       var network = new Request();
       var first = true;
-      Loading$1.start(function () {
-        clearInterval(checkout);
+      var finished = false;
+      var in_flight = false;
+      var last_preloaded = -1;
+      var last_progress_at = Date.now();
+
+      var cleanup = function cleanup() {
+        clearTimeout(checkout);
+        clearTimeout(deadline);
         network.clear();
         Loading$1.stop();
-      }, '', {
+      };
+
+      var finish = function finish(fallback) {
+        if (finished) return;
+        finished = true;
+        cleanup(); // A deadline/stall/error fallback must not hand the player the control
+        // endpoint. &play starts the stream while TorrServer keeps buffering.
+
+        if (fallback) data.url = torrentPlayUrl(data.url);
+        run();
+      };
+
+      var cancel = function cancel() {
+        if (finished) return;
+        finished = true;
+        cleanup();
+      };
+
+      Loading$1.start(cancel, '', {
         media: data
       });
 
+      var schedule = function schedule() {
+        if (finished) return;
+        clearTimeout(checkout);
+        checkout = setTimeout(update, TORRENT_PRELOAD_POLL_MS);
+      };
+
       var update = function update() {
-        network.timeout(2000);
+        if (finished || in_flight) return;
+
+        if (Date.now() - last_progress_at >= TORRENT_PRELOAD_STALL_MS) {
+          finish(true);
+          return;
+        }
+
+        in_flight = true;
+        network.timeout(TORRENT_PRELOAD_REQUEST_TIMEOUT_MS);
         network.silent(first ? data.url : data.url.replace('&preload', '&stat'), function (res) {
+          if (finished) return;
+          in_flight = false;
           var pb = res.preloaded_bytes || 0,
               ps = res.preload_size || 0,
               sp = res.download_speed ? Utils$1.bytesToSize(res.download_speed * 8, true) : '0.0',
@@ -40469,21 +40542,33 @@
           var progress = Math.min(100, pb * 100 / ps);
 
           if (progress >= 95 || isNaN(progress)) {
-            Loading$1.stop();
-            clearInterval(checkout);
-            run();
+            finish(false);
           } else {
+            if (pb > last_preloaded) {
+              last_preloaded = pb;
+              last_progress_at = Date.now();
+            }
+
             Loading$1.setProgress(progress, {
               speed: sp,
               active_peers: active_peers,
               total_peers: total_peers
             });
+            schedule();
           }
+        }, function () {
+          if (finished) return;
+          in_flight = false;
+          schedule();
         });
         first = false;
-      };
+      }; // Independent of request callbacks: even a request implementation that never
+      // reports timeout/error cannot keep this gate alive without bound.
 
-      checkout = setInterval(update, 1000);
+
+      deadline = setTimeout(function () {
+        return finish(true);
+      }, TORRENT_PRELOAD_DEADLINE_MS);
       update();
     } else run();
   }
@@ -40719,6 +40804,7 @@
             Controller.toggle(enabled);
 
             if (a.player) {
+              element.launch_player = a.player;
               Player.runas(a.player);
               item.trigger('hover:enter');
             }
@@ -48679,7 +48765,7 @@
     full_episode_days_left: 'Осталось дней',
     full_trailer_official: 'Официальный',
     full_trailer_no_official: 'Неофициальный',
-    full_season: 'Cезон',
+    full_season: 'Сезон',
     full_episode: 'Эпизод',
     full_directing: 'Режиссура',
     full_writing: 'Сценарий',
@@ -48726,7 +48812,7 @@
     settings_interface_animation_descr: 'Анимация карточек и контента',
     settings_interface_attenuation: 'Затухание',
     settings_interface_attenuation_descr: 'Плавное затухание карточек снизу и сверху',
-    settings_interface_scroll: 'Тип скролинга',
+    settings_interface_scroll: 'Тип скроллинга',
     settings_interface_view_card: 'Тип просмотра карточек',
     settings_interface_view_card_descr: 'По мере скроллинга ленты карточки будут подгружаться постепенно или загружаться все',
     settings_interface_lang: 'Язык интерфейса',
@@ -49597,7 +49683,7 @@
     player_segments_value_none: 'Не пропускать',
     player_segments_value_auto: 'Автопропуск',
     player_segments_value_user: 'Пользовательский',
-    player_segments_skiped: 'Cегмент пропущен',
+    player_segments_skiped: 'Сегмент пропущен',
     player_segments_skip_now: 'Пропустить',
     player_segments_skip_in: 'Пропуск через',
     player_segments_skip_intro: 'Пропустить заставку',
@@ -49664,9 +49750,9 @@
     account_premium: 'Раскройте новые горизонты с аккаунтом CUB Premium! Наслаждайтесь увеличенными лимитами и обогащенным функционалом сервиса. Перейдите на сайт <span class="account-modal__site">{site}/premium</span> и узнайте больше о преимуществах премиум аккаунта.',
     account_premium_more: 'Подробнее о CUB Premium',
     account_limited: 'Вы достигли максимального лимита. Увеличьте лимит с аккаунтом CUB Premium. Подробнее на сайте <span class="account-modal__site">{site}/premium</span>',
-    account_premium_include_1: 'Увеличение количество закладок',
+    account_premium_include_1: 'Увеличение количества закладок',
     account_premium_include_2: 'Увеличение истории просмотров',
-    account_premium_include_3: 'Увеличение количество тайм-кодов',
+    account_premium_include_3: 'Увеличение количества тайм-кодов',
     account_premium_include_4: 'Количество профилей на аккаунт',
     account_premium_include_5: 'Уведомления',
     account_premium_include_6: 'Синхронизация данных',
@@ -49805,7 +49891,7 @@
     input_detection_touch: 'Хотите переключить на сенсорное управление?',
     input_detection_mouse: 'Хотите переключить на управление мышью?',
     input_detection_remote: 'Хотите переключить на управление пультом?',
-    https_text: 'Вы используйте протокол HTTPS, c которым Lampa работает некорректно. Для корректной работы приложения используйте адрес с протоколом HTTP',
+    https_text: 'Вы используете протокол HTTPS, с которым Lampa работает некорректно. Для корректной работы приложения используйте адрес с протоколом HTTP',
     premiere_author_recomend_1: 'Закажите пиццу и готовьтесь к драйву.',
     premiere_author_recomend_2: 'Вечеринка только начинается.',
     premiere_author_recomend_3: 'Подготовьтесь к адреналину.',
@@ -49849,8 +49935,8 @@
     storage_quota_exceeded: 'Превышен лимит хранилища. Удалите кеш и повторите попытку.',
     ai_search_start_typing: 'Спросите у AI-ассистента, какие фильмы вы хотите найти. Например: "Фильмы про космос"',
     ai_search_limit: 'Лимит запросов превышен. Попробуйте повторить запрос позже. С подпиской CUB Premium лимиты будут увеличены, и вам не придется ждать!',
-    ai_subscribe_title: 'Откройте бошьше возможностей с AI',
-    ai_subscribe_descr: 'Оформите подписку CUB Premium и увеличте количество запросов к AI. Вместе с AI мы подберем вам лучшие фильмы которые только сможем.',
+    ai_subscribe_title: 'Откройте больше возможностей с AI',
+    ai_subscribe_descr: 'Оформите подписку CUB Premium и увеличьте количество запросов к AI. Вместе с AI мы подберем вам лучшие фильмы которые только сможем.',
     dmca_title: 'Контент заблокирован',
     dmca_descr: 'Данный материал недоступен для просмотра. Он был заблокирован по просьбе правообладателя в соответствии с законодательством об авторских правах.',
     dmca_title_lgbt: 'Контент ограничен',
@@ -56107,8 +56193,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-09-07 17:36');
-    console.log('App', 'hash', 'b452af5d004188099ceef843d5514ad2');
+    console.log('App', 'build date:', '2026-09-08 15:57');
+    console.log('App', 'hash', 'e9d007d3f7a46448c1aae4bbd067c68a');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу
