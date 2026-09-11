@@ -2579,7 +2579,7 @@
 
   var html$1E = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>e9d007d3f7a46448c1aae4bbd067c68a</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-08 15:57</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>939a2eab2bbd160a0b7485fe9c561587</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-10 12:59</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1C = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -40254,10 +40254,6 @@
   var callback_back;
   var autostart_timer;
   var autostart_progress;
-  var TORRENT_PRELOAD_POLL_MS = 1000;
-  var TORRENT_PRELOAD_REQUEST_TIMEOUT_MS = 2000;
-  var TORRENT_PRELOAD_STALL_MS = 8000;
-  var TORRENT_PRELOAD_DEADLINE_MS = 30000;
   var formats = ['asf', 'wmv', 'divx', 'avi', 'mp4', 'm4v', 'mov', '3gp', '3g2', 'mkv', 'trp', 'tp', 'mts', 'mpg', 'mpeg', 'dat', 'vob', 'rm', 'rmvb', 'm2ts', 'ts'];
   var formats_individual = ['vob', 'm2ts'];
 
@@ -40451,89 +40447,42 @@
     return subtitles.length ? subtitles : false;
   }
 
-  function torrentPlayUrl(url) {
-    return typeof url === 'string' ? url.replace('&preload', '&play') : url;
-  }
-
-  function isExternalAndroidTorrent(data) {
-    if (!Platform.is('android')) return false; // A one-shot player selected from the file context menu must win over the
-    // persisted default. Player.runas() keeps that choice private to player.js,
-    // so torrent.js also carries it on the media item until Player.play().
-
-    if (data.launch_player === 'lampa' || data.launch_player === 'inner') return false;
-    if (data.launch_player === 'android') return true;
-    return Storage.field('player_torrent') === 'android';
-  }
-
   function preload(data, run) {
     var has_server = Torserver.ip() && data.url.indexOf(Torserver.ip()) > -1;
     var has_preload = data.url.indexOf('&preload') > -1;
-    var need_preload = has_server && has_preload; // An external Android player consumes TorrServer's &play endpoint directly and
-    // performs its own buffering. Holding ACTION_VIEW behind the frontend 95% gate
-    // can otherwise leave the Files screen open forever when peers are slow/stalled.
-
-    if (need_preload && isExternalAndroidTorrent(data)) {
-      data.url = torrentPlayUrl(data.url);
-      run();
-      return;
-    }
+    var need_preload = has_server && has_preload;
 
     if (need_preload) {
       var checkout;
-      var deadline;
       var network = new Request();
       var first = true;
-      var finished = false;
-      var in_flight = false;
-      var last_preloaded = -1;
-      var last_progress_at = Date.now();
+      var stopped = false;
+      var last_bytes = 0;
+      var last_change = Date.now();
 
-      var cleanup = function cleanup() {
+      var stop = function stop() {
+        stopped = true;
         clearTimeout(checkout);
-        clearTimeout(deadline);
         network.clear();
         Loading$1.stop();
       };
 
-      var finish = function finish(fallback) {
-        if (finished) return;
-        finished = true;
-        cleanup(); // A deadline/stall/error fallback must not hand the player the control
-        // endpoint. &play starts the stream while TorrServer keeps buffering.
-
-        if (fallback) data.url = torrentPlayUrl(data.url);
-        run();
-      };
-
-      var cancel = function cancel() {
-        if (finished) return;
-        finished = true;
-        cleanup();
-      };
-
-      Loading$1.start(cancel, '', {
+      Loading$1.start(stop, '', {
         media: data
       });
 
-      var schedule = function schedule() {
-        if (finished) return;
-        clearTimeout(checkout);
-        checkout = setTimeout(update, TORRENT_PRELOAD_POLL_MS);
+      var next = function next() {
+        if (stopped) return;
+
+        if (Date.now() - last_change > 30000) {
+          stop();
+        } else checkout = setTimeout(update, 1000);
       };
 
       var update = function update() {
-        if (finished || in_flight) return;
-
-        if (Date.now() - last_progress_at >= TORRENT_PRELOAD_STALL_MS) {
-          finish(true);
-          return;
-        }
-
-        in_flight = true;
-        network.timeout(TORRENT_PRELOAD_REQUEST_TIMEOUT_MS);
+        network.timeout(2000);
         network.silent(first ? data.url : data.url.replace('&preload', '&stat'), function (res) {
-          if (finished) return;
-          in_flight = false;
+          if (stopped) return;
           var pb = res.preloaded_bytes || 0,
               ps = res.preload_size || 0,
               sp = res.download_speed ? Utils$1.bytesToSize(res.download_speed * 8, true) : '0.0',
@@ -40542,11 +40491,12 @@
           var progress = Math.min(100, pb * 100 / ps);
 
           if (progress >= 95 || isNaN(progress)) {
-            finish(false);
+            stop();
+            run();
           } else {
-            if (pb > last_preloaded) {
-              last_preloaded = pb;
-              last_progress_at = Date.now();
+            if (pb > last_bytes) {
+              last_bytes = pb;
+              last_change = Date.now();
             }
 
             Loading$1.setProgress(progress, {
@@ -40554,21 +40504,12 @@
               active_peers: active_peers,
               total_peers: total_peers
             });
-            schedule();
+            next();
           }
-        }, function () {
-          if (finished) return;
-          in_flight = false;
-          schedule();
-        });
+        }, next);
         first = false;
-      }; // Independent of request callbacks: even a request implementation that never
-      // reports timeout/error cannot keep this gate alive without bound.
+      };
 
-
-      deadline = setTimeout(function () {
-        return finish(true);
-      }, TORRENT_PRELOAD_DEADLINE_MS);
       update();
     } else run();
   }
@@ -40804,7 +40745,6 @@
             Controller.toggle(enabled);
 
             if (a.player) {
-              element.launch_player = a.player;
               Player.runas(a.player);
               item.trigger('hover:enter');
             }
@@ -45681,7 +45621,7 @@
         console.log('Activity', 'refresh by focus time');
         focustime = Date.now();
       }
-    });
+    }, false, true);
     PlayerVideo.listener.follow('timeupdate', resetFocusTime);
     Keypad.listener.follow('keydown', resetFocusTime);
   }
@@ -56193,8 +56133,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-09-08 15:57');
-    console.log('App', 'hash', 'e9d007d3f7a46448c1aae4bbd067c68a');
+    console.log('App', 'build date:', '2026-09-10 12:59');
+    console.log('App', 'hash', '939a2eab2bbd160a0b7485fe9c561587');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу
