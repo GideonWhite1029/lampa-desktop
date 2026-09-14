@@ -2073,7 +2073,7 @@
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
     css_version: '3.3.4',
-    app_version: '3.3.3',
+    app_version: '3.3.4',
     cub_site: 'cub.best',
     apk_link_download: 'https://github.com/lampa-app/LAMPA/releases/download/v1.12.3/app-lite-release.apk'
   };
@@ -2579,7 +2579,7 @@
 
   var html$1E = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>939a2eab2bbd160a0b7485fe9c561587</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-10 12:59</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1D = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>5d5c416922cc2f7a027f2584d41f9847</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-09-12 17:44</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1C = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -4199,6 +4199,68 @@
     }
   }
 
+  function putScriptOfMirrors(items, complite, error, success, show_logs) {
+    var mirrors = Lampa.Manifest && Lampa.Manifest.cub_mirrors || [];
+    var l = typeof show_logs !== 'undefined' ? show_logs : true;
+    var p = 0;
+
+    function nextItem() {
+      if (p >= items.length) {
+        if (complite) complite();
+        return;
+      }
+
+      var url = items[p++];
+
+      if (!url) {
+        nextItem();
+        return;
+      }
+
+      var current = mirrors.find(function (m) {
+        return url.includes(m);
+      });
+
+      if (!current || !mirrors.length) {
+        putScriptAsync([url], nextItem, function (u) {
+          if (error) error(u);
+        }, function (u) {
+          if (success) success(u);
+        }, show_logs);
+        return;
+      }
+
+      var idx = mirrors.indexOf(current);
+      var ordered = mirrors.slice(idx).concat(mirrors.slice(0, idx));
+      var i = 0;
+      var loaded = false;
+
+      function tryMirror() {
+        if (i >= ordered.length) {
+          if (l) console.warn('Script', 'all mirrors failed:', url);
+          if (error) error(url);
+          nextItem();
+          return;
+        }
+
+        var mirror = ordered[i++];
+        var tryUrl = url.replace(current, mirror);
+        if (l) console.log('Script', 'mirror try [' + i + '/' + ordered.length + ']:', tryUrl);
+        putScriptAsync([tryUrl], null, function () {
+          if (!loaded) tryMirror();
+        }, function (u) {
+          loaded = true;
+          if (success) success(u);
+          nextItem();
+        }, show_logs);
+      }
+
+      tryMirror();
+    }
+
+    nextItem();
+  }
+
   function putStyle(items, complite, error) {
     var p = 0;
 
@@ -4815,6 +4877,7 @@
     sizeToBytes: sizeToBytes,
     putScript: putScript,
     putScriptAsync: putScriptAsync,
+    putScriptOfMirrors: putScriptOfMirrors,
     putStyle: putStyle,
     clearTitle: clearTitle,
     cardImgBackground: cardImgBackground,
@@ -17831,8 +17894,24 @@
     Socket.listener.follow('open', function () {
       if (Date.now() - window.app_time_end > 1000 * 60 * 5) update$b();
     });
+    Socket.listener.follow('send', function (e) {
+      if (e.method == 'timeline') send$1(e.data);
+    });
     Storage.listener.follow('clear', function () {
       refrash();
+    });
+  }
+  /**
+   * Отправить прогресс просмотра на сервер
+   * @param {object} data - данные для отправки
+   * @param {object} data.params - параметры прогресса
+   * @returns {void}
+   */
+
+
+  function send$1(data) {
+    Api$1.load('timeline/update', {}, data.params).then(function (result) {})["catch"](function (e) {
+      console.log('Account', 'timeline send error', e);
     });
   }
   /**
@@ -23772,7 +23851,10 @@
     if (typeof params.time !== 'undefined') road.time = params.time;
     if (typeof params.duration !== 'undefined') road.duration = params.duration;
     if (typeof params.profile !== 'undefined') road.profile = params.profile;
-    if (typeof params.updated !== 'undefined') road.updated = params.updated;
+    if (typeof params.updated !== 'undefined') road.updated = params.updated; // округляем время и длительность до целых секунд
+
+    road.time = Math.round(road.time);
+    road.duration = Math.round(road.duration);
     Storage.set(filename(), viewed$1);
     var layers = [].concat(Activity.renderLayers());
     layers.push($(document));
@@ -24261,10 +24343,14 @@
 
   function send(method, data) {
     var name_devise = Platform.get() ? Platform.get() : navigator.userAgent.toLowerCase().indexOf('mobile') > -1 ? 'mobile' : navigator.userAgent.toLowerCase().indexOf('x11') > -1 ? 'chrome' : 'other';
+    listener$9.send('send', {
+      method: method,
+      data: data
+    });
     data.device_id = _uid;
     data.name = Utils$1.capitalizeFirstLetter(name_devise) + ' - ' + Storage.field('device_name');
     data.method = method;
-    data.version = 1;
+    data.version = 2;
     data.account = Storage.get('account', '{}');
     data.premium = Account$1.hasPremium();
     data.terminal = Storage.get('terminal_access', '');
@@ -25461,36 +25547,55 @@
     }, {
       key: "load",
       value: function load() {
-        var _this = this;
-
         var pos = 0;
+        var self = this;
 
         var request = function request() {
           var domain = object$2.cub_mirrors[pos];
+          if (!domain) return;
+          var url = Utils$1.protocol() + domain + '/api/ad/get/' + self.params.api;
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url, true);
+          xhr.timeout = 10000;
 
-          if (domain) {
-            $.ajax({
-              url: Utils$1.protocol() + domain + '/api/ad/get/' + _this.params.api,
-              type: 'GET',
-              dataType: 'json',
-              timeout: 10000,
-              success: function success(data) {
+          xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                var data = JSON.parse(xhr.responseText);
+
                 if (data.ad && Arrays.isArray(data.ad)) {
-                  _this.data_loaded.ad = data.ad;
-                  console.log('Ad', 'manager ' + _this.params.api, 'loaded', _this.data_loaded.ad.length);
+                  self.data_loaded.ad = data.ad;
+                  console.log('Ad', 'manager ' + self.params.api, 'loaded', self.data_loaded.ad.length);
                 } else {
-                  console.log('Ad', 'manager ' + _this.params.api, 'wrong format from', domain);
+                  console.log('Ad', 'manager ' + self.params.api, 'wrong format from', domain);
                   pos++;
                   request();
                 }
-              },
-              error: function error() {
-                console.log('Ad', 'manager ' + _this.params.api, 'no load from', domain);
+              } catch (e) {
+                console.log('Ad', 'manager ' + self.params.api, 'parse error from', domain);
                 pos++;
                 request();
               }
-            });
-          }
+            } else {
+              console.log('Ad', 'manager ' + self.params.api, 'no load from', domain);
+              pos++;
+              request();
+            }
+          };
+
+          xhr.onerror = function () {
+            console.log('Ad', 'manager ' + self.params.api, 'no load from', domain);
+            pos++;
+            request();
+          };
+
+          xhr.ontimeout = function () {
+            console.log('Ad', 'manager ' + self.params.api, 'timeout from', domain);
+            pos++;
+            request();
+          };
+
+          xhr.send();
         };
 
         request();
@@ -25535,17 +25640,17 @@
     }, {
       key: "filter",
       value: function filter(view) {
-        var _this2 = this;
+        var _this = this;
 
         view = view.filter(function (v) {
-          return !_this2.played.prerolls.find(function (pr) {
+          return !_this.played.prerolls.find(function (pr) {
             return pr == v.name;
           });
         });
 
         if (!window.lampa_settings.developer.ads) {
           view = view.filter(function (v) {
-            return _this2.whitoutGenres(v.whitout_genre) !== true;
+            return _this.whitoutGenres(v.whitout_genre) !== true;
           });
           view = view.filter(function (v) {
             return v.screen == (Platform.screen('tv') ? 'tv' : 'mobile') || v.screen == 'all';
@@ -48268,6 +48373,11 @@
     sync('online_last_balanser', 'object_string');
     sync('user_clarifys', 'object_object');
     sync('torrents_filter_data', 'object_object');
+    Socket.listener.follow('send', function (e) {
+      if (e.method == 'storage') {
+        Api$1.load('storage/update', {}, e.data.params)["catch"](function (e) {});
+      }
+    });
   }
   /**
    * Загрузка кеша из IndexedDB
@@ -54410,7 +54520,7 @@
       window.iptvClearFunction();
     }, 10);
     Lampa.Settings.listener.follow('open', window.iptvClearSettingsFunction);
-    Utils$1.putScript([Utils$1.protocol() + object$2.cub_domain + '/plugin/iptv'], function () {
+    Utils$1.putScriptOfMirrors([Utils$1.protocol() + object$2.cub_domain + '/plugin/iptv'], function () {
       console.log('IPTV', 'load from lampa', 'complite');
     }, function () {
       console.log('IPTV', 'load from lampa', 'error');
@@ -55156,7 +55266,7 @@
 
 
     if (window.location.hostname !== 'localhost' && !window.lampa_settings.iptv) include.push(Utils$1.protocol() + object$2.cub_domain + '/plugin/shots');
-    Utils$1.putScriptAsync(include, function () {});
+    Utils$1.putScriptOfMirrors(include, function () {});
   }
 
   var ServiceLibs = {
@@ -55525,7 +55635,7 @@
     });
 
     if (enabled.length) {
-      Utils$1.putScript(enabled.map(function (e) {
+      Utils$1.putScriptOfMirrors(enabled.map(function (e) {
         return Utils$1.protocol() + object$2.cub_domain + '/plugin/' + e.name;
       }), function () {});
     }
@@ -56133,8 +56243,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-09-10 12:59');
-    console.log('App', 'hash', '939a2eab2bbd160a0b7485fe9c561587');
+    console.log('App', 'build date:', '2026-09-12 17:44');
+    console.log('App', 'hash', '5d5c416922cc2f7a027f2584d41f9847');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу
