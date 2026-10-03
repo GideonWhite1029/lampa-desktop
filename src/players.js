@@ -41,6 +41,8 @@ const CANDIDATES = () => {
       [pf86, 'VideoLAN', 'VLC', 'vlc.exe'],
       [pf, 'MPC-HC', 'mpc-hc64.exe'],
       [pf86, 'MPC-HC', 'mpc-hc.exe'],
+      [pf, 'MPC-HC', 'mpc-hc.exe'],
+      [pf86, 'MPC-HC', 'mpc-hc64.exe'],
       [pf, 'MPC-BE', 'mpc-be64.exe'],
       [pf, 'mpv', 'mpv.exe'],
       [pf, 'mpv.net', 'mpvnet.exe'],
@@ -115,6 +117,13 @@ const launch = (cmd, args, onEvent) => {
   const safeArgs = Array.isArray(args) ? args.filter((a) => typeof a === 'string') : [];
   if (hasDangerousArg(safeArgs)) {
     return { error: 'Player arguments contain a disallowed option' };
+  }
+  // MPC normally redirects to an existing instance and exits immediately. Lampa
+  // tracks this child to save the timecode on close, so it needs its own instance.
+  // Keep this in the desktop bridge: app.js can be replaced by core auto-updates.
+  if (process.platform === 'win32' && /^mpc-(hc|be)(64)?\.exe$/i.test(path.basename(cmd))
+      && !safeArgs.some((arg) => arg.toLowerCase() === '/new')) {
+    safeArgs.push('/new');
   }
   const exec = IN_FLATPAK ? 'flatpak-spawn' : cmd;
   const execArgs = IN_FLATPAK ? ['--host', cmd, ...safeArgs] : safeArgs;
