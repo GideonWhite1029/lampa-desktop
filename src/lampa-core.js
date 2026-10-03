@@ -9,6 +9,7 @@
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const { app } = require('electron');
 const log = require('electron-log');
 const store = require('./store');
@@ -81,6 +82,22 @@ const fetchText = async (url, timeoutMs = 15000) => {
 
 const rawBase = (cfg) => `https://raw.githubusercontent.com/${cfg.repo}/${cfg.branch}/`;
 
+// Cross-checks downloaded content against the git blob hash reported by the
+// GitHub Contents API (an independent endpoint from raw.githubusercontent.com),
+// so tampering/MITM on the raw-content path alone cannot slip code past us.
+const verifyIntegrity = async (cfg, filePath, content) => {
+  const api = `https://api.github.com/repos/${cfg.repo}/contents/${filePath}?ref=${cfg.branch}`;
+  const res = await fetch(api, { headers: { 'User-Agent': 'lampa-desktop', Accept: 'application/vnd.github+json' } });
+  if (!res.ok) throw new Error(`integrity check HTTP ${res.status} for ${filePath}`);
+  const meta = await res.json();
+  const expected = String(meta.sha || '');
+  const actual = crypto.createHash('sha1')
+    .update(`blob ${Buffer.byteLength(content, 'utf-8')}\0`)
+    .update(Buffer.from(content, 'utf-8'))
+    .digest('hex');
+  if (!expected || expected !== actual) throw new Error(`integrity mismatch for ${filePath}`);
+};
+
 /**
  * @returns {Promise<{status:string, version?:string, from?:string}>}
  *   status: 'disabled' | 'up-to-date' | 'updated' | 'error'
@@ -132,6 +149,16 @@ const checkAndUpdate = async () => {
   const cssOk = css.length > 100000 && css.includes('.welcome');
   if (!jsOk || !cssOk) {
     log.warn('[lampa-core] sanity check failed, discarding download');
+    return { status: 'error' };
+  }
+
+  try {
+    await Promise.all([
+      verifyIntegrity(cfg, 'app.min.js', js),
+      verifyIntegrity(cfg, 'css/app.css', css)
+    ]);
+  } catch (error) {
+    log.warn('[lampa-core] integrity verification failed:', error.message);
     return { status: 'error' };
   }
 
