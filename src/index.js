@@ -13,6 +13,8 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+app.commandLine.appendSwitch('enable-blink-features', 'AudioVideoTracks');
+
 let mainWindow;
 let miniPlayerPrev = null;
 let psbId = null;

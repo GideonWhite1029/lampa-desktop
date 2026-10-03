@@ -62,6 +62,20 @@
 
       Lampa.SettingsApi.addParam({
         component: 'desktop_app',
+        param: {
+          name: 'desktop_audio_lang',
+          type: 'select',
+          values: { ru: 'Русский', uk: 'Українська', en: 'English', off: 'Не выбирать' },
+          'default': 'ru'
+        },
+        field: {
+          name: 'Озвучка торрентов',
+          description: 'Предпочитаемый язык в окне выбора озвучки (выбор запоминается для раздачи, сменить — долгое нажатие на серии). AC3/DTS перекодируются через TorrServer (нужна сборка TorrServer-gst)'
+        }
+      });
+
+      Lampa.SettingsApi.addParam({
+        component: 'desktop_app',
         param: { name: 'desktop_lampa_autoupdate', type: 'trigger', 'default': true },
         field: {
           name: 'Автообновление ядра Lampa',
