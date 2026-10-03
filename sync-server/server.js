@@ -3,6 +3,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
+const crypto = require('node:crypto');
 
 const args = process.argv.slice(2);
 const arg = (name, def) => {
@@ -14,6 +15,37 @@ const PORT = parseInt(arg('port', process.env.LAMPA_SYNC_PORT || '8095'), 10);
 const DATA_DIR = arg('data', process.env.LAMPA_SYNC_DATA ||
   path.join(process.env.APPDATA || path.join(os.homedir(), '.config'), 'lampa-sync'));
 const STATE_FILE = path.join(DATA_DIR, 'state.json');
+const TOKEN_FILE = path.join(DATA_DIR, 'token');
+const HOST = arg('host', process.env.LAMPA_SYNC_HOST || '127.0.0.1');
+const MAX_TIMELINE = 50000;
+const MAX_FAV = 50000;
+const MAX_KV = 5000;
+const MAX_KV_VALUE = 256 * 1024;
+const SECRET_KEY = /^settings:.*(key|password|login|auth|token)/i;
+const UNSAFE_KEY = /(^|:)(__proto__|constructor|prototype)$/;
+
+function loadToken() {
+  const given = arg('token', process.env.LAMPA_SYNC_TOKEN || '');
+  if (given) return given;
+  try {
+    const saved = fs.readFileSync(TOKEN_FILE, 'utf-8').trim();
+    if (saved) return saved;
+  } catch (error) {
+  }
+  const token = crypto.randomBytes(24).toString('hex');
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(TOKEN_FILE, token + '\n', { mode: 0o600 });
+  return token;
+}
+const TOKEN = loadToken();
+const TOKEN_BUF = Buffer.from(TOKEN);
+
+function authorized(req, url) {
+  const header = String(req.headers.authorization || '');
+  const given = header.startsWith('Bearer ') ? header.slice(7) : url.searchParams.get('token') || '';
+  const buf = Buffer.from(given);
+  return buf.length === TOKEN_BUF.length && crypto.timingSafeEqual(buf, TOKEN_BUF);
+}
 const SRC_DIR = path.join(__dirname, '..', 'src');
 const BUNDLE = ['desktop-resume.js', 'desktop-audio.js', 'lampa-sync.js'];
 const MAX_BODY = 20 * 1024 * 1024;
@@ -78,6 +110,7 @@ try {
 } catch (error) {
   if (error.code !== 'ENOENT') console.warn('[sync] state unreadable, starting empty:', error.message);
 }
+for (const key of Object.keys(state.kv)) if (SECRET_KEY.test(key)) delete state.kv[key];
 
 let saveTimer = null;
 const save = () => {
@@ -101,6 +134,7 @@ function merge(body) {
     const road = timeline[hash];
     if (!road || typeof road !== 'object' || !/^-?\d+$/.test(hash)) continue;
     const cur = state.timeline[hash];
+    if (!cur && Object.keys(state.timeline).length >= MAX_TIMELINE) continue;
     if (cur && num(cur.v.updated) >= num(road.updated)) continue;
     state.timeline[hash] = {
       v: {
@@ -112,9 +146,10 @@ function merge(body) {
   }
 
   for (const f of Array.isArray(body.fav) ? body.fav : []) {
-    if (!f || !WHERE.has(f.where) || f.id == null) continue;
+    if (!f || !WHERE.has(f.where) || f.id == null || UNSAFE_KEY.test(`:${f.id}`)) continue;
     const key = `${f.where}:${f.id}`;
     const cur = state.fav[key];
+    if (!cur && Object.keys(state.fav).length >= MAX_FAV) continue;
     if (cur && num(cur.t) >= num(f.t)) continue;
     state.fav[key] = { where: f.where, id: f.id, on: !!f.on, t: num(f.t), s: bump() };
     if (f.on && f.card && typeof f.card === 'object') state.cards[f.id] = f.card;
@@ -123,8 +158,10 @@ function merge(body) {
   const kv = body.kv && typeof body.kv === 'object' ? body.kv : {};
   for (const key of Object.keys(kv)) {
     const item = kv[key];
-    if (!item || !KV_NS.has(key.split(':')[0])) continue;
+    if (!item || !KV_NS.has(key.split(':')[0]) || UNSAFE_KEY.test(key) || SECRET_KEY.test(key)) continue;
+    if (JSON.stringify(item.v === undefined ? null : item.v).length > MAX_KV_VALUE) continue;
     const cur = state.kv[key];
+    if (!cur && Object.keys(state.kv).length >= MAX_KV) continue;
     if (cur && num(cur.u) >= num(item.u)) continue;
     state.kv[key] = { v: item.v, u: num(item.u), s: bump() };
   }
@@ -151,7 +188,7 @@ function changesSince(since) {
 
 const cors = {
   'access-control-allow-origin': '*',
-  'access-control-allow-headers': '*',
+  'access-control-allow-headers': 'authorization, content-type',
   'access-control-allow-methods': 'GET, POST, OPTIONS'
 };
 
@@ -170,6 +207,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'GET' && url.pathname === '/lampa.js') {
+    if (!authorized(req, url)) return send(res, 401, { error: 'unauthorized' });
     try {
       const code = BUNDLE.map((f) => `/* ${f} */\n` + fs.readFileSync(path.join(SRC_DIR, f), 'utf-8')).join('\n;\n');
       return send(res, 200, code, 'application/javascript; charset=utf-8');
@@ -179,6 +217,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === 'POST' && url.pathname === '/sync') {
+    if (!authorized(req, url)) return send(res, 401, { error: 'unauthorized' });
     let size = 0;
     const chunks = [];
     req.on('data', (c) => {
@@ -205,9 +244,14 @@ const server = http.createServer((req, res) => {
   send(res, 404, { error: 'not found' });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  const lan = Object.values(os.networkInterfaces()).flat()
-    .filter((i) => i && i.family === 'IPv4' && !i.internal).map((i) => i.address);
-  console.log(`[sync] listening on :${PORT}, data ${STATE_FILE}`);
-  lan.forEach((ip) => console.log(`[sync] Lampa for TV/phone: http://${ip}:${PORT}/  (plugin only: /lampa.js)`));
+server.listen(PORT, HOST, () => {
+  console.log(`[sync] listening on ${HOST}:${PORT}, data ${STATE_FILE}`);
+  console.log(`[sync] token: ${TOKEN}  (file: ${TOKEN_FILE})`);
+  const open = HOST === '0.0.0.0' || HOST === '::';
+  const hosts = open
+    ? Object.values(os.networkInterfaces()).flat()
+        .filter((i) => i && i.family === 'IPv4' && !i.internal).map((i) => i.address)
+    : [HOST];
+  hosts.forEach((ip) => console.log(`[sync] Lampa for TV/phone: http://${ip}:${PORT}/  (plugin only: http://${ip}:${PORT}/lampa.js?token=<token>)`));
+  if (!open) console.log('[sync] reachable from this machine only; use --host 0.0.0.0 to serve other devices');
 });

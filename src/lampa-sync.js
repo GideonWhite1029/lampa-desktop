@@ -10,13 +10,13 @@
 
   var SETTINGS = [
     'parser_use', 'parser_torrent_type', 'parse_lang', 'parse_in_search',
-    'jackett_url', 'jackett_key', 'jackett_url_two', 'jackett_key_two', 'prowlarr_url', 'prowlarr_key',
+    'jackett_url', 'jackett_url_two', 'prowlarr_url',
     'torrserver_tracktimecode', 'torrserver_savedb', 'torrserver_preload',
-    'torrserver_auth', 'torrserver_login', 'torrserver_password',
     'desktop_audio_lang', 'player_timecode', 'playlist_next', 'tmdb_lang', 'language'
   ];
 
   var script = document.currentScript && document.currentScript.src || '';
+  var scriptToken = (/[?&]token=([^&#]+)/.exec(script) || [])[1] || '';
   var origin = /^https?:\/\//.test(script) ? script.split('/').slice(0, 3).join('/') : '';
 
   try {
@@ -41,6 +41,10 @@
   function serverUrl() {
     var custom = Lampa.Storage.get('lampa_sync_url', '');
     return String(custom || origin || 'http://127.0.0.1:8095').replace(/\/+$/, '');
+  }
+
+  function syncToken() {
+    return String(Lampa.Storage.get('lampa_sync_token', '') || (scriptToken && decodeURIComponent(scriptToken)) || '');
   }
 
   function outboxEmpty() {
@@ -248,6 +252,7 @@
     var xhr = new XMLHttpRequest();
     xhr.open('POST', serverUrl() + '/sync', true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + syncToken());
     xhr.timeout = 20000;
     xhr.onload = function () {
       busy = false;

@@ -76,6 +76,24 @@
 
       Lampa.SettingsApi.addParam({
         component: 'desktop_app',
+        param: { name: 'lampa_sync_url', type: 'input', values: '', 'default': '', placeholder: 'http://127.0.0.1:8095' },
+        field: {
+          name: 'Сервер синхронизации',
+          description: 'Адрес sync-server. Пусто — http://127.0.0.1:8095'
+        }
+      });
+
+      Lampa.SettingsApi.addParam({
+        component: 'desktop_app',
+        param: { name: 'lampa_sync_token', type: 'input', values: '', 'default': '', placeholder: 'токен' },
+        field: {
+          name: 'Токен синхронизации',
+          description: 'Токен из вывода sync-server (или файла token в его каталоге данных)'
+        }
+      });
+
+      Lampa.SettingsApi.addParam({
+        component: 'desktop_app',
         param: { name: 'desktop_lampa_autoupdate', type: 'trigger', 'default': true },
         field: {
           name: 'Автообновление ядра Lampa',
