@@ -27,7 +27,7 @@ npm start         # запуск в режиме разработки
 
 | ОС | Артефакты |
 |----|-----------|
-| Windows (x86, x64) | Squirrel `Setup.exe` + `nupkg` + `RELEASES`, `.msi` (WiX), портативный `.zip` |
+| Windows (x64) | Squirrel `Setup.exe` + `nupkg` + `RELEASES`, `.msi` (WiX), портативный `.zip` |
 | Linux (x64) | `.deb`, `.rpm`, `.AppImage`, `.flatpak`, портативный `.zip` |
 
 Тяжёлые мейкеры можно отключить для локальной сборки переменными окружения:
@@ -36,12 +36,12 @@ npm start         # запуск в режиме разработки
 
 CI (`.github/workflows`):
 
-- `build.yml` — на каждый push в `main` собирает и публикует Windows (x86/x64) и Linux (x64) в draft-релиз; на PR — только сборка с артефактами. Раннеры сами ставят WiX, flatpak-builder + рантаймы, squashfs-tools.
+- `build.yml` — на каждый push в `main` собирает и публикует Windows (x64) и Linux (x64) в draft-релиз; на PR — только сборка с артефактами. Раннеры сами ставят WiX и squashfs-tools. Flatpak в CI отключён (`LAMPA_SKIP_FLATPAK`), локально собирается как раньше.
 - `update-lampa.yml` — ежедневно синхронизирует `src/` с `yumata/lampa` (`node scripts/update-lampa.mjs`), коммитит изменения и запускает `build.yml`.
 
 ## Задачи
 
-- [x] Поддержка x64 и x32 (для Linux только x64)
+- [x] Поддержка x64 (32-битной сборки Electron 44 под Windows больше нет)
 - [x] Поддержка Linux
 - [x] Автоматическое обновление приложения и ядра Lampa
 - [x] Внешние плееры, PiP, мини-плеер

@@ -11,11 +11,9 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make-x32-win32": "electron-forge make --arch=ia32 --platform=win32",
     "make-x64-win32": "electron-forge make --arch=x64 --platform=win32",
     "make-x64-linux": "electron-forge make --arch=x64 --platform=linux",
     "make": "electron-forge make",
-    "publish-x32-win32": "electron-forge publish --arch=ia32 --platform=win32",
     "publish-x64-win32": "electron-forge publish --arch=x64 --platform=win32",
     "publish-x64-linux": "electron-forge publish --arch=x64 --platform=linux",
     "lint": "echo \"No linting configured\""

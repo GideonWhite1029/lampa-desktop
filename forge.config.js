@@ -91,6 +91,8 @@ if (!skip('WIX')) {
     config: {
       name: 'Lampa',
       manufacturer: 'GideonWhite1029',
+      language: 1049,
+      cultures: 'ru-RU',
       exe: 'lampa',
       icon: 'icons/og.ico',
       shortcutFolderName: 'Lampa',
@@ -107,7 +109,7 @@ module.exports = {
   packagerConfig: {
     author: "ymata, GideonWhite1029",
     description: "Приложение для просмотров фильмов и сериалов",
-    arch: ["x64", "ia32"],
+    arch: ["x64"],
     platform: ["win32", "linux", "darwin"],
     asar: true,
     executableName: "lampa",
