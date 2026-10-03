@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   windows:
-    name: Windows (x86 + x64)
+    name: Windows (x64)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -45,25 +45,23 @@ jobs:
         if: github.event_name != 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm run publish-x32-win32
-          npm run publish-x64-win32
+        run: npm run publish-x64-win32
 
       - name: Build only (PR)
         if: github.event_name == 'pull_request'
-        run: |
-          npm run make-x32-win32
-          npm run make-x64-win32
+        run: npm run make-x64-win32
 
       - uses: actions/upload-artifact@v4
         with:
           name: lampa-windows
-          path: out/make/**
+          path: out/**/make/**
           if-no-files-found: warn
 
   linux:
     name: Linux (x64)
     runs-on: ubuntu-latest
+    env:
+      LAMPA_SKIP_FLATPAK: '1'
     steps:
       - uses: actions/checkout@v4
 
@@ -76,15 +74,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends fakeroot dpkg rpm libfuse2 squashfs-tools zsync
-
-      - name: Install Flatpak toolchain
-        run: |
-          sudo apt-get install -y --no-install-recommends flatpak flatpak-builder elfutils
-          sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          sudo flatpak install -y --noninteractive flathub \
-            org.freedesktop.Platform//24.08 \
-            org.freedesktop.Sdk//24.08 \
-            org.electronjs.Electron2.BaseApp//24.08
 
       - run: npm ci
 
@@ -101,5 +90,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: lampa-linux
-          path: out/make/**
+          path: out/**/make/**
           if-no-files-found: warn
