@@ -9,7 +9,8 @@
  * Actions, writes `changed` / `version` to $GITHUB_OUTPUT.
  */
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, resolve, sep } from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { appendFile } from 'node:fs/promises';
 
@@ -23,6 +24,10 @@ const getArg = (name, def) => {
 };
 const REPO = getArg('repo', 'yumata/lampa');
 const BRANCH = getArg('branch', 'main');
+if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(REPO) || !/^(?!.*\.\.)[A-Za-z0-9_.-]+(\/[A-Za-z0-9_.-]+)*$/.test(BRANCH)) {
+  console.error('invalid --repo / --branch');
+  process.exit(1);
+}
 const RAW = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
 const API_TREE = `https://api.github.com/repos/${REPO}/git/trees/${BRANCH}?recursive=1`;
 
@@ -41,6 +46,9 @@ const fetchBuf = async (url) => {
   if (!res.ok) throw new Error(`HTTP ${res.status} ${url}`);
   return Buffer.from(await res.arrayBuffer());
 };
+
+// git blob id of a file: sha1("blob <size>\0" + bytes)
+const blobSha = (buf) => createHash('sha1').update(`blob ${buf.length}\0`).update(buf).digest('hex');
 
 const sameBytes = async (file, buf) => {
   try {
@@ -62,12 +70,22 @@ const main = async () => {
   const changed = [];
   for (const entry of wanted) {
     const localRel = REMAP[entry.path] || entry.path;
-    const localAbs = join(SRC, localRel);
+    const localAbs = resolve(SRC, localRel);
+    if (!localAbs.startsWith(SRC + sep)) {
+      console.warn(`skip ${entry.path}: resolves outside src/`);
+      continue;
+    }
     let buf;
     try {
       buf = await fetchBuf(RAW + entry.path);
     } catch (error) {
       console.warn(`skip ${entry.path}: ${error.message}`);
+      continue;
+    }
+    // The tree listing and the raw download are separate requests; only accept bytes that
+    // match the blob id the tree reported, so a half-pushed or tampered file is never committed.
+    if (blobSha(buf) !== entry.sha) {
+      console.warn(`skip ${entry.path}: content does not match tree blob ${entry.sha}`);
       continue;
     }
     if (await sameBytes(localAbs, buf)) continue;

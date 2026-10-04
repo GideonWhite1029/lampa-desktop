@@ -24,9 +24,9 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
 
@@ -34,15 +34,20 @@ jobs:
         id: sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/update-lampa.mjs --repo "${{ inputs.repo || 'yumata/lampa' }}" --branch "${{ inputs.branch || 'main' }}"
+          LAMPA_REPO: ${{ inputs.repo || 'yumata/lampa' }}
+          LAMPA_BRANCH: ${{ inputs.branch || 'main' }}
+        run: node scripts/update-lampa.mjs --repo "$LAMPA_REPO" --branch "$LAMPA_BRANCH"
 
       - name: Commit & push
         if: steps.sync.outputs.changed == '1'
+        env:
+          SYNC_VERSION: ${{ steps.sync.outputs.version }}
+          SYNC_COUNT: ${{ steps.sync.outputs.count }}
         run: |
           git config user.name  'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add src
-          git commit -m "chore(lampa): sync core to ${{ steps.sync.outputs.version }} (${{ steps.sync.outputs.count }} files)"
+          git commit -m "chore(lampa): sync core to $SYNC_VERSION ($SYNC_COUNT files)"
           git push
 
       - name: Trigger build
@@ -52,6 +57,9 @@ jobs:
         run: gh workflow run build.yml --ref main
 
       - name: Report
+        env:
+          SYNC_VERSION: ${{ steps.sync.outputs.version }}
+          SYNC_COUNT: ${{ steps.sync.outputs.count }}
         run: |
-          echo "Lampa version: ${{ steps.sync.outputs.version }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "Changed files: ${{ steps.sync.outputs.count }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Lampa version: $SYNC_VERSION" >> "$GITHUB_STEP_SUMMARY"
+          echo "Changed files: $SYNC_COUNT" >> "$GITHUB_STEP_SUMMARY"
