@@ -42,5 +42,10 @@
     "electron-log": "^5.4.4",
     "electron-squirrel-startup": "^1.0.1",
     "update-electron-app": "^3.3.0"
+  },
+  "overrides": {
+    "@reforged/maker-appimage": {
+      "@electron/rebuild": "^4.2.0"
+    }
   }
 }
