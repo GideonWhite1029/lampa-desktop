@@ -45,7 +45,8 @@
   },
   "overrides": {
     "@reforged/maker-appimage": {
-      "@electron/rebuild": "^4.2.0"
+      "@electron/rebuild": "^4.2.0",
+      "@electron-forge/maker-base": "^8.0.1"
     }
   }
 }
