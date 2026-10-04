@@ -38,9 +38,27 @@
     setTimeout(function () { whenReady(cb); }, 300);
   }
 
+  // The bearer token travels in every request, so plain http is only acceptable on loopback
+  // or a private/LAN network; anything else must use https.
+  function isLocalHost(host) {
+    host = host.toLowerCase().replace(/^\[|\]$/g, '');
+    if (host === 'localhost' || host === '::1' || /\.(local|lan|home|internal)$/.test(host)) return true;
+    if (host.indexOf('.') < 0 && host.indexOf(':') < 0) return true;
+    var m = /^(\d+)\.(\d+)\.\d+\.\d+$/.exec(host);
+    if (!m) return host.indexOf(':') >= 0 && /^(fe80|fc|fd)/.test(host);
+    var a = +m[1], b = +m[2];
+    return a === 127 || a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) ||
+      (a === 169 && b === 254) || (a === 100 && b >= 64 && b <= 127);
+  }
+
   function serverUrl() {
     var custom = Lampa.Storage.get('lampa_sync_url', '');
-    return String(custom || origin || 'http://127.0.0.1:8095').replace(/\/+$/, '');
+    var url = String(custom || origin || 'http://127.0.0.1:8095').replace(/\/+$/, '');
+    var m = /^(https?):\/\/([^\/?#@]+)$/i.exec(url);
+    if (!m) return '';
+    var host = m[2].replace(/:\d+$/, '');
+    if (m[1].toLowerCase() === 'http' && !isLocalHost(host)) return '';
+    return url;
   }
 
   function syncToken() {
@@ -135,7 +153,7 @@
       return;
     }
     for (var ns in KV) {
-      if (KV[ns] === e.name) {
+      if (Object.prototype.hasOwnProperty.call(KV, ns) && KV[ns] === e.name) {
         collectKv();
         if (Object.keys(outbox.kv).length) schedulePush();
         return;
@@ -206,6 +224,7 @@
     Object.keys(kv).forEach(function (id) {
       var ns = id.split(':')[0];
       var key = id.slice(ns.length + 1);
+      if (!kv[id] || key === '__proto__' || key === 'constructor' || key === 'prototype') return;
 
       if (ns === 'settings') {
         if (SETTINGS.indexOf(key) < 0 || (su[key] || 0) >= kv[id].u) return;
@@ -215,7 +234,7 @@
         return;
       }
 
-      var name = KV[ns];
+      var name = Object.prototype.hasOwnProperty.call(KV, ns) ? KV[ns] : null;
       if (!name) return;
       var all = touched[name] || Lampa.Storage.get(name, '{}') || {};
       var cur = all[key];
@@ -242,6 +261,11 @@
 
   function sync() {
     if (busy) return schedulePush();
+    var base = serverUrl();
+    if (!base) {
+      console.log('LampaSync', 'refusing to sync: server URL must be http(s) on a local network, or https');
+      return;
+    }
     busy = true;
     clearTimeout(pushTimer);
 
@@ -250,7 +274,7 @@
     var since = parseInt(Lampa.Storage.get('lampa_sync_cursor', '0'), 10) || 0;
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', serverUrl() + '/sync', true);
+    xhr.open('POST', base + '/sync', true);
     xhr.setRequestHeader('Content-Type', 'text/plain');
     xhr.setRequestHeader('Authorization', 'Bearer ' + syncToken());
     xhr.timeout = 20000;

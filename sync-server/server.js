@@ -21,19 +21,27 @@ const MAX_TIMELINE = 50000;
 const MAX_FAV = 50000;
 const MAX_KV = 5000;
 const MAX_KV_VALUE = 256 * 1024;
+const MAX_CARD = 256 * 1024;
+const MIN_TOKEN = 16;
 const SECRET_KEY = /^settings:.*(key|password|login|auth|token)/i;
 const UNSAFE_KEY = /(^|:)(__proto__|constructor|prototype)$/;
 
 function loadToken() {
   const given = arg('token', process.env.LAMPA_SYNC_TOKEN || '');
-  if (given) return given;
+  if (given) {
+    if (given.length < MIN_TOKEN) {
+      console.error(`[sync] refusing to start: --token must be at least ${MIN_TOKEN} characters`);
+      process.exit(1);
+    }
+    return given;
+  }
   try {
     const saved = fs.readFileSync(TOKEN_FILE, 'utf-8').trim();
     if (saved) return saved;
   } catch (error) {
   }
   const token = crypto.randomBytes(24).toString('hex');
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
   fs.writeFileSync(TOKEN_FILE, token + '\n', { mode: 0o600 });
   return token;
 }
@@ -99,7 +107,7 @@ function serveStatic(pathname, res) {
     return false;
   }
   const cache = /\.(html|js|css|json)$/i.test(file) ? 'no-cache' : 'max-age=86400';
-  res.writeHead(200, Object.assign({ 'content-type': type, 'cache-control': cache }, cors));
+  res.writeHead(200, Object.assign({ 'content-type': type, 'cache-control': cache, 'x-content-type-options': 'nosniff' }, cors));
   res.end(data);
   return true;
 }
@@ -116,9 +124,9 @@ let saveTimer = null;
 const save = () => {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
     const tmp = `${STATE_FILE}.tmp`;
-    fs.writeFileSync(tmp, JSON.stringify(state));
+    fs.writeFileSync(tmp, JSON.stringify(state), { mode: 0o600 });
     fs.renameSync(tmp, STATE_FILE);
   }, 500);
 };
@@ -146,13 +154,14 @@ function merge(body) {
   }
 
   for (const f of Array.isArray(body.fav) ? body.fav : []) {
-    if (!f || !WHERE.has(f.where) || f.id == null || UNSAFE_KEY.test(`:${f.id}`)) continue;
+    if (!f || !WHERE.has(f.where) || UNSAFE_KEY.test(`:${f.id}`)) continue;
+    if (!(typeof f.id === 'number' && isFinite(f.id)) && !(typeof f.id === 'string' && f.id && f.id.length <= 64)) continue;
     const key = `${f.where}:${f.id}`;
     const cur = state.fav[key];
     if (!cur && Object.keys(state.fav).length >= MAX_FAV) continue;
     if (cur && num(cur.t) >= num(f.t)) continue;
     state.fav[key] = { where: f.where, id: f.id, on: !!f.on, t: num(f.t), s: bump() };
-    if (f.on && f.card && typeof f.card === 'object') state.cards[f.id] = f.card;
+    if (f.on && f.card && typeof f.card === 'object' && JSON.stringify(f.card).length <= MAX_CARD) state.cards[f.id] = f.card;
   }
 
   const kv = body.kv && typeof body.kv === 'object' ? body.kv : {};
@@ -193,12 +202,25 @@ const cors = {
 };
 
 const send = (res, status, body, type = 'application/json; charset=utf-8') => {
-  res.writeHead(status, Object.assign({ 'content-type': type, 'cache-control': 'no-store' }, cors));
+  res.writeHead(status, Object.assign({ 'content-type': type, 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' }, cors));
   res.end(typeof body === 'string' ? body : JSON.stringify(body));
 };
 
+// When bound to loopback only, refuse requests whose Host header isn't a loopback name:
+// that is what a DNS-rebinding page in the user's browser would send.
+const LOOPBACK_BOUND = /^(127\.\d+\.\d+\.\d+|localhost|::1)$/i.test(HOST);
+const LOOPBACK_HOST = /^(localhost|127\.\d+\.\d+\.\d+|\[::1\])(:\d+)?$/i;
+
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, 'http://x');
+  if (LOOPBACK_BOUND && !LOOPBACK_HOST.test(String(req.headers.host || ''))) {
+    return send(res, 403, { error: 'forbidden host' });
+  }
+  let url;
+  try {
+    url = new URL(req.url, 'http://x');
+  } catch (error) {
+    return send(res, 400, { error: 'bad request' });
+  }
 
   if (req.method === 'OPTIONS') return send(res, 204, '');
 
@@ -254,4 +276,5 @@ server.listen(PORT, HOST, () => {
     : [HOST];
   hosts.forEach((ip) => console.log(`[sync] Lampa for TV/phone: http://${ip}:${PORT}/  (plugin only: http://${ip}:${PORT}/lampa.js?token=<token>)`));
   if (!open) console.log('[sync] reachable from this machine only; use --host 0.0.0.0 to serve other devices');
+  else console.warn('[sync] WARNING: listening on all interfaces over plain HTTP; the token is sent unencrypted, so use only on a trusted LAN (or put it behind an HTTPS proxy)');
 });

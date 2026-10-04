@@ -4,6 +4,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lampa</title>
+    <!-- Remote plugins need scripts/styles/connections from anywhere, so only the directives
+         that can never be needed are enforced: no plugins/embeds, no <base> hijacking. -->
+    <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'">
 
     <link rel="stylesheet" href="./vender/scrollbar/jquery.scrollbar.css">
     <link rel="stylesheet" href="./vender/keypad/style.css">

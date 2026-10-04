@@ -34,7 +34,9 @@ const load = () => {
   if (cache) return cache;
   let parsed = {};
   try {
-    parsed = JSON.parse(fs.readFileSync(FILE, 'utf-8')) || {};
+    // Drop "__proto__" keys so a hand-edited file can't swap the prototype of the merged config.
+    parsed = JSON.parse(fs.readFileSync(FILE, 'utf-8'), (key, value) => (key === '__proto__' ? undefined : value)) || {};
+    if (typeof parsed !== 'object' || Array.isArray(parsed)) parsed = {};
   } catch (error) {
     parsed = {};
   }
@@ -50,7 +52,10 @@ const save = () => {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try {
-      fs.writeFileSync(FILE, JSON.stringify(cache, null, 2));
+      // Owner-only and atomic: the file holds proxy settings and the trusted-player list.
+      const tmp = `${FILE}.tmp`;
+      fs.writeFileSync(tmp, JSON.stringify(cache, null, 2), { mode: 0o600 });
+      fs.renameSync(tmp, FILE);
     } catch (error) {
       // best-effort; a missing userData dir or read-only FS should not crash the app
     }

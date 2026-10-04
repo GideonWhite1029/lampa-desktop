@@ -36,43 +36,95 @@ const openExternalIfHttp = (url) => {
   else log.warn('Blocked attempt to open non-http(s) URL:', url);
 };
 
-// IPC: node shims consumed by Lampa's own external-player code.
-// Lampa calls require('fs').existsSync(...) synchronously, so this must be sync.
-ipcMain.on('node-fs:existsSync', (event, filePath) => {
-  let result = false;
+// Only the app's own top-level page may talk to the privileged handlers below. Sub-frames
+// (remote embeds / iframes) and any other webContents are refused.
+const isTrustedSender = (event) => {
   try {
-    result = typeof filePath === 'string' && fs.existsSync(filePath);
+    const frame = event.senderFrame;
+    return !!mainWindow && event.sender === mainWindow.webContents &&
+      !!frame && !frame.parent && frame.url.startsWith('file:');
   } catch (error) {
-    result = false;
+    return false;
   }
-  event.returnValue = result;
+};
+
+// `ipcMain.on` handler for synchronous calls: `event.returnValue` must always be set or the
+// renderer blocks forever, so rejected callers get `fallback`.
+const onSync = (channel, fallback, handler) => ipcMain.on(channel, (event, ...args) => {
+  if (!isTrustedSender(event)) {
+    log.warn(`[ipc] rejected ${channel} from untrusted sender`);
+    event.returnValue = fallback;
+    return;
+  }
+  event.returnValue = handler(event, ...args);
 });
 
-ipcMain.on('node-cp:spawn', (event, payload) => {
+const onInvoke = (channel, handler) => ipcMain.handle(channel, (event, ...args) => {
+  if (!isTrustedSender(event)) {
+    log.warn(`[ipc] rejected ${channel} from untrusted sender`);
+    throw new Error('untrusted sender');
+  }
+  return handler(event, ...args);
+});
+
+// IPC: node shims consumed by Lampa's own external-player code.
+// Lampa calls require('fs').existsSync(...) synchronously, so this must be sync.
+// Answers only for player executables, so it can't be used to probe the filesystem.
+onSync('node-fs:existsSync', false, (event, filePath) => {
+  try {
+    return typeof filePath === 'string' && players.isAllowed(filePath) && fs.existsSync(filePath);
+  } catch (error) {
+    return false;
+  }
+});
+
+// A player that is named right but sits outside the usual install directories is only
+// started after the user confirms it in a native dialog the page cannot drive.
+let trustPromptOpen = false;
+const askToTrustPlayer = async (cmd) => {
+  if (trustPromptOpen || !mainWindow) return;
+  trustPromptOpen = true;
+  try {
+    const { response } = await dialog.showMessageBox(mainWindow, {
+      type: 'warning',
+      buttons: ['Разрешить', 'Отмена'],
+      defaultId: 1,
+      cancelId: 1,
+      message: 'Запустить этот файл как внешний плеер?',
+      detail: `${cmd}\n\nФайл находится вне стандартных каталогов установки. Разрешайте, только если это ваш плеер.`
+    });
+    if (response === 0) players.trust(cmd);
+  } finally {
+    trustPromptOpen = false;
+  }
+};
+
+onSync('node-cp:spawn', { error: 'untrusted sender' }, (event, payload) => {
   const { cmd, args } = payload || {};
   const sender = event.sender;
   const res = players.launch(cmd, args, (id, data) => {
     if (!sender.isDestroyed()) sender.send(`node-cp:event:${id}`, data);
   });
   if (res.error) log.warn('Rejected player spawn:', res.error);
-  event.returnValue = res;
+  if (res.untrusted) askToTrustPlayer(cmd);
+  return res;
 });
 
-ipcMain.on('node-cp:kill', (event, { id, signal } = {}) => players.kill(id, signal));
+ipcMain.on('node-cp:kill', (event, { id, signal } = {}) => {
+  if (isTrustedSender(event)) players.kill(id, signal);
+});
 
 // Pre-fill Lampa's empty external-player path with whatever is installed.
-ipcMain.on('desktop:defaultPlayerPath', (event) => {
-  event.returnValue = players.detectDefaultPath();
-});
+onSync('desktop:defaultPlayerPath', '', () => players.detectDefaultPath());
 
-ipcMain.handle('desktop:detectPlayers', () => players.detectAll());
+onInvoke('desktop:detectPlayers', () => players.detectAll());
 
 // IPC: Lampa core (app.js + app.css) self-update.
 // index.html asks (synchronously, before it injects any tags) which app.js/app.css to load.
-ipcMain.on('lampa:assets', (event) => {
+onSync('lampa:assets', { js: 'app.js', css: 'css/app.css?v=4.56', version: '0' }, () => {
   const a = lampaCore.activeAssets();
   lampaCoreLoadedVersion = a.version;
-  event.returnValue = a.source === 'downloaded'
+  return a.source === 'downloaded'
     ? { js: pathToFileURL(a.js).href, css: pathToFileURL(a.css).href, version: a.version }
     : { js: 'app.js', css: 'css/app.css?v=4.56', version: a.version };
 });
@@ -92,15 +144,15 @@ const runCoreCheck = () => lampaCore.checkAndUpdate()
   .then((result) => { applyCoreUpdate(result); return result; })
   .catch((error) => { log.warn('[lampa-core] check error:', error && error.message); return { status: 'error' }; });
 
-ipcMain.handle('desktop:checkLampaCore', async () => runCoreCheck());
-ipcMain.handle('desktop:lampaCoreInfo', () => ({
+onInvoke('desktop:checkLampaCore', async () => runCoreCheck());
+onInvoke('desktop:lampaCoreInfo', () => ({
   autoUpdate: lampaCore.isAutoUpdate(),
   active: lampaCore.activeAssets().version,
   source: lampaCore.activeAssets().source
 }));
 
 // Read/write the desktop-only options surfaced inside Lampa's Settings ("Приложение").
-ipcMain.handle('desktop:config', () => {
+onInvoke('desktop:config', () => {
   const net = store.get('network') || {};
   const core = lampaCore.activeAssets();
   return {
@@ -114,16 +166,33 @@ ipcMain.handle('desktop:config', () => {
 
 // '' (none), 'system', or scheme://host[:port] with a known proxy scheme.
 const isValidProxyRule = (value) =>
-  value === '' || value === 'system' ||
-  /^(https?|socks|socks4|socks5):\/\/[^\s/]+$/i.test(value);
+  typeof value === 'string' && (value === '' || value === 'system' ||
+  /^(https?|socks|socks4|socks5):\/\/[A-Za-z0-9._\-\[\]:]{1,255}$/i.test(value));
 
-ipcMain.handle('desktop:set', (event, patch) => {
+// A proxy sees (and can rewrite) all app traffic, so a change coming from the page has to be
+// confirmed in a native dialog; remote Lampa plugins run in that page.
+const confirmProxyChange = async (proxy) => {
+  if (!mainWindow) return false;
+  const { response } = await dialog.showMessageBox(mainWindow, {
+    type: 'warning',
+    buttons: ['Применить', 'Отмена'],
+    defaultId: 1,
+    cancelId: 1,
+    message: 'Изменить прокси для всего трафика приложения?',
+    detail: proxy
+  });
+  return response === 0;
+};
+
+onInvoke('desktop:set', async (event, patch) => {
   patch = patch || {};
   if (typeof patch.doh === 'boolean') store.merge('network', { doh: patch.doh });
   if (typeof patch.proxy === 'string') {
     const proxy = patch.proxy.trim();
-    if (isValidProxyRule(proxy)) store.merge('network', { proxy });
-    else log.warn('[net] ignored malformed proxy rule from renderer:', proxy);
+    const current = (store.get('network') || {}).proxy || '';
+    if (!isValidProxyRule(proxy)) log.warn('[net] ignored malformed proxy rule from renderer');
+    else if (proxy === current || proxy === '' || await confirmProxyChange(proxy)) store.merge('network', { proxy });
+    else log.info('[net] proxy change declined by user');
   }
   if (typeof patch.lampaAutoUpdate === 'boolean') lampaCore.setAutoUpdate(patch.lampaAutoUpdate);
   applyNetworkConfig();
@@ -181,12 +250,15 @@ const createWindow = () => {
       contextIsolation: true,
       sandbox: true,
       spellcheck: false,
-      backgroundThrottling: false
+      backgroundThrottling: false,
+      webSecurity: true,
+      webviewTag: false,
+      allowRunningInsecureContent: false,
+      navigateOnDragDrop: false
     },
     icon: path.join(__dirname, 'img', 'og.png'),
     show: false,
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    webSecurity: true
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default'
   });
 
   if (w.maximized) mainWindow.maximize();
@@ -264,7 +336,7 @@ const applyNetworkConfig = () => {
     log.warn('[net] configureHostResolver failed:', error && error.message);
   }
 
-  if (net.proxy && typeof net.proxy === 'string') {
+  if (net.proxy && isValidProxyRule(net.proxy)) {
     const { session } = require('electron');
     const rules = net.proxy === 'system'
       ? { mode: 'system' }
@@ -290,16 +362,39 @@ app.on('web-contents-created', (event, contents) => {
 app.whenReady().then(async () => {
   applyNetworkConfig();
 
-  // Let Lampa's localhost timecode polling (VLC / MPC web APIs) read cross-origin from file://.
   const { session } = require('electron');
+
+  // Deny every permission prompt (camera, microphone, geolocation, notifications, ...) except
+  // the few the app's own page needs. Electron grants all of them by default, including to
+  // remote iframes.
+  const GRANTED = new Set(['fullscreen', 'clipboard-sanitized-write', 'pointerLock']);
+  const fromAppPage = (url) => typeof url === 'string' && url.startsWith('file:');
+  session.defaultSession.setPermissionRequestHandler((wc, permission, callback, details) =>
+    callback(GRANTED.has(permission) && fromAppPage(details && details.requestingUrl)));
+  session.defaultSession.setPermissionCheckHandler((wc, permission, requestingOrigin, details) =>
+    GRANTED.has(permission) && fromAppPage((details && details.requestingUrl) || requestingOrigin));
+
+  // Let Lampa's localhost timecode polling (VLC / MPC web APIs) read cross-origin from file://.
+  // Only for requests made by the app's own top-level page: a remote iframe or plugin frame
+  // must not get to read local services (TorrServer, routers, dev servers) this way.
+  const LOCAL_URL = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?\//i;
+  const fromAppFrame = (details) => {
+    try {
+      const frame = details.frame;
+      return !!frame && !frame.parent && frame.url.startsWith('file:');
+    } catch (error) {
+      return false;
+    }
+  };
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(details.url)) {
-      callback({
-        responseHeaders: Object.assign({}, details.responseHeaders, {
-          'access-control-allow-origin': ['*'],
-          'access-control-allow-headers': ['*']
-        })
-      });
+    if (LOCAL_URL.test(details.url) && fromAppFrame(details)) {
+      const headers = Object.assign({}, details.responseHeaders);
+      for (const name of Object.keys(headers)) {
+        if (/^access-control-allow-(origin|headers)$/i.test(name)) delete headers[name];
+      }
+      headers['access-control-allow-origin'] = ['*'];
+      headers['access-control-allow-headers'] = ['*'];
+      callback({ responseHeaders: headers });
     } else {
       callback({ responseHeaders: details.responseHeaders });
     }
