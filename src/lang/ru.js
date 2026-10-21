@@ -1235,6 +1235,10 @@ export default {
     extensions_hpu_video: 'Видео',
     extensions_hpu_control: 'Управление',
     extensions_hpu_other: 'Разное',
+    extensions_price_free: 'Бесплатно',
+    extensions_price_shareware: 'Условно бесплатно',
+    extensions_price_paid: 'Платно',
+    full_add_source: 'Добавить источник',
     extensions_hpu_: 'Остальное',
 
     speedtest_connect: 'подключение',

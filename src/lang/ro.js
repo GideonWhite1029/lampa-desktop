@@ -1025,6 +1025,10 @@ export default {
     extensions_hpu_video: 'Video',
     extensions_hpu_control: 'Control',
     extensions_hpu_other: 'Diverse',
+    extensions_price_free: 'Gratuit',
+    extensions_price_shareware: 'Freemium',
+    extensions_price_paid: 'Plătit',
+    full_add_source: 'Adaugă sursă',
     extensions_hpu_: 'Altele',
 
     title_author: 'Autor',

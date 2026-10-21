@@ -1026,6 +1026,10 @@ export default {
     extensions_hpu_video: 'Видео',
     extensions_hpu_control: 'Контрол',
     extensions_hpu_other: 'Разни',
+    extensions_price_free: 'Безплатно',
+    extensions_price_shareware: 'Условно безплатно',
+    extensions_price_paid: 'Платено',
+    full_add_source: 'Добави източник',
     extensions_hpu_: 'Други',
 
     title_author: 'Автор',
