@@ -1,6 +1,1114 @@
 (function () {
   'use strict';
 
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+
+      if (enumerableOnly) {
+        symbols = symbols.filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        });
+      }
+
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(Object(source), true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(Object(source)).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
+  }
+
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function (obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function (obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
+
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
+    }
+  }
+
+  function _asyncToGenerator(fn) {
+    return function () {
+      var self = this,
+          args = arguments;
+      return new Promise(function (resolve, reject) {
+        var gen = fn.apply(self, args);
+
+        function _next(value) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+        }
+
+        function _throw(err) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+        }
+
+        _next(undefined);
+      });
+    };
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+      constructor: {
+        value: subClass,
+        writable: true,
+        configurable: true
+      }
+    });
+    if (superClass) _setPrototypeOf(subClass, superClass);
+  }
+
+  function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+      return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _getPrototypeOf(o);
+  }
+
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
+  }
+
+  function _isNativeReflectConstruct() {
+    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+    if (Reflect.construct.sham) return false;
+    if (typeof Proxy === "function") return true;
+
+    try {
+      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function _assertThisInitialized(self) {
+    if (self === void 0) {
+      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+
+    return self;
+  }
+
+  function _possibleConstructorReturn(self, call) {
+    if (call && (typeof call === "object" || typeof call === "function")) {
+      return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
+    }
+
+    return _assertThisInitialized(self);
+  }
+
+  function _createSuper(Derived) {
+    var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+    return function _createSuperInternal() {
+      var Super = _getPrototypeOf(Derived),
+          result;
+
+      if (hasNativeReflectConstruct) {
+        var NewTarget = _getPrototypeOf(this).constructor;
+
+        result = Reflect.construct(Super, arguments, NewTarget);
+      } else {
+        result = Super.apply(this, arguments);
+      }
+
+      return _possibleConstructorReturn(this, result);
+    };
+  }
+
+  function _superPropBase(object, property) {
+    while (!Object.prototype.hasOwnProperty.call(object, property)) {
+      object = _getPrototypeOf(object);
+      if (object === null) break;
+    }
+
+    return object;
+  }
+
+  function _get(target, property, receiver) {
+    if (typeof Reflect !== "undefined" && Reflect.get) {
+      _get = Reflect.get;
+    } else {
+      _get = function _get(target, property, receiver) {
+        var base = _superPropBase(target, property);
+
+        if (!base) return;
+        var desc = Object.getOwnPropertyDescriptor(base, property);
+
+        if (desc.get) {
+          return desc.get.call(receiver);
+        }
+
+        return desc.value;
+      };
+    }
+
+    return _get(target, property, receiver || target);
+  }
+
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  }
+
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+  }
+
+  function _iterableToArrayLimit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+
+    var _s, _e;
+
+    try {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"] != null) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  function _createForOfIteratorHelper(o, allowArrayLike) {
+    var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+
+    if (!it) {
+      if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+        if (it) o = it;
+        var i = 0;
+
+        var F = function () {};
+
+        return {
+          s: F,
+          n: function () {
+            if (i >= o.length) return {
+              done: true
+            };
+            return {
+              done: false,
+              value: o[i++]
+            };
+          },
+          e: function (e) {
+            throw e;
+          },
+          f: F
+        };
+      }
+
+      throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+
+    var normalCompletion = true,
+        didErr = false,
+        err;
+    return {
+      s: function () {
+        it = it.call(o);
+      },
+      n: function () {
+        var step = it.next();
+        normalCompletion = step.done;
+        return step;
+      },
+      e: function (e) {
+        didErr = true;
+        err = e;
+      },
+      f: function () {
+        try {
+          if (!normalCompletion && it.return != null) it.return();
+        } finally {
+          if (didErr) throw err;
+        }
+      }
+    };
+  }
+
+  /**
+   * Copyright (c) 2014-present, Facebook, Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+  var runtime = function (exports) {
+
+    var Op = Object.prototype;
+    var hasOwn = Op.hasOwnProperty;
+
+    var defineProperty = Object.defineProperty || function (obj, key, desc) {
+      obj[key] = desc.value;
+    };
+
+    var undefined$1; // More compressible than void 0.
+
+    var $Symbol = typeof Symbol === "function" ? Symbol : {};
+    var iteratorSymbol = $Symbol.iterator || "@@iterator";
+    var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+    var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+    function define(obj, key, value) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+      return obj[key];
+    }
+
+    try {
+      // IE 8 has a broken Object.defineProperty that only works on DOM objects.
+      define({}, "");
+    } catch (err) {
+      define = function define(obj, key, value) {
+        return obj[key] = value;
+      };
+    }
+
+    function wrap(innerFn, outerFn, self, tryLocsList) {
+      // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+      var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+      var generator = Object.create(protoGenerator.prototype);
+      var context = new Context(tryLocsList || []); // The ._invoke method unifies the implementations of the .next,
+      // .throw, and .return methods.
+
+      defineProperty(generator, "_invoke", {
+        value: makeInvokeMethod(innerFn, self, context)
+      });
+      return generator;
+    }
+
+    exports.wrap = wrap; // Try/catch helper to minimize deoptimizations. Returns a completion
+    // record like context.tryEntries[i].completion. This interface could
+    // have been (and was previously) designed to take a closure to be
+    // invoked without arguments, but in all the cases we care about we
+    // already have an existing method we want to call, so there's no need
+    // to create a new function object. We can even get away with assuming
+    // the method takes exactly one argument, since that happens to be true
+    // in every case, so we don't have to touch the arguments object. The
+    // only additional allocation required is the completion record, which
+    // has a stable shape and so hopefully should be cheap to allocate.
+
+    function tryCatch(fn, obj, arg) {
+      try {
+        return {
+          type: "normal",
+          arg: fn.call(obj, arg)
+        };
+      } catch (err) {
+        return {
+          type: "throw",
+          arg: err
+        };
+      }
+    }
+
+    var GenStateSuspendedStart = "suspendedStart";
+    var GenStateSuspendedYield = "suspendedYield";
+    var GenStateExecuting = "executing";
+    var GenStateCompleted = "completed"; // Returning this object from the innerFn has the same effect as
+    // breaking out of the dispatch switch statement.
+
+    var ContinueSentinel = {}; // Dummy constructor functions that we use as the .constructor and
+    // .constructor.prototype properties for functions that return Generator
+    // objects. For full spec compliance, you may wish to configure your
+    // minifier not to mangle the names of these two functions.
+
+    function Generator() {}
+
+    function GeneratorFunction() {}
+
+    function GeneratorFunctionPrototype() {} // This is a polyfill for %IteratorPrototype% for environments that
+    // don't natively support it.
+
+
+    var IteratorPrototype = {};
+    define(IteratorPrototype, iteratorSymbol, function () {
+      return this;
+    });
+    var getProto = Object.getPrototypeOf;
+    var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+
+    if (NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+      // This environment has a native %IteratorPrototype%; use it instead
+      // of the polyfill.
+      IteratorPrototype = NativeIteratorPrototype;
+    }
+
+    var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype);
+    GeneratorFunction.prototype = GeneratorFunctionPrototype;
+    defineProperty(Gp, "constructor", {
+      value: GeneratorFunctionPrototype,
+      configurable: true
+    });
+    defineProperty(GeneratorFunctionPrototype, "constructor", {
+      value: GeneratorFunction,
+      configurable: true
+    });
+    GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"); // Helper for defining the .next, .throw, and .return methods of the
+    // Iterator interface in terms of a single ._invoke method.
+
+    function defineIteratorMethods(prototype) {
+      ["next", "throw", "return"].forEach(function (method) {
+        define(prototype, method, function (arg) {
+          return this._invoke(method, arg);
+        });
+      });
+    }
+
+    exports.isGeneratorFunction = function (genFun) {
+      var ctor = typeof genFun === "function" && genFun.constructor;
+      return ctor ? ctor === GeneratorFunction || // For the native GeneratorFunction constructor, the best we can
+      // do is to check its .name property.
+      (ctor.displayName || ctor.name) === "GeneratorFunction" : false;
+    };
+
+    exports.mark = function (genFun) {
+      if (Object.setPrototypeOf) {
+        Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+      } else {
+        genFun.__proto__ = GeneratorFunctionPrototype;
+        define(genFun, toStringTagSymbol, "GeneratorFunction");
+      }
+
+      genFun.prototype = Object.create(Gp);
+      return genFun;
+    }; // Within the body of any async function, `await x` is transformed to
+    // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+    // `hasOwn.call(value, "__await")` to determine if the yielded value is
+    // meant to be awaited.
+
+
+    exports.awrap = function (arg) {
+      return {
+        __await: arg
+      };
+    };
+
+    function AsyncIterator(generator, PromiseImpl) {
+      function invoke(method, arg, resolve, reject) {
+        var record = tryCatch(generator[method], generator, arg);
+
+        if (record.type === "throw") {
+          reject(record.arg);
+        } else {
+          var result = record.arg;
+          var value = result.value;
+
+          if (value && _typeof(value) === "object" && hasOwn.call(value, "__await")) {
+            return PromiseImpl.resolve(value.__await).then(function (value) {
+              invoke("next", value, resolve, reject);
+            }, function (err) {
+              invoke("throw", err, resolve, reject);
+            });
+          }
+
+          return PromiseImpl.resolve(value).then(function (unwrapped) {
+            // When a yielded Promise is resolved, its final value becomes
+            // the .value of the Promise<{value,done}> result for the
+            // current iteration.
+            result.value = unwrapped;
+            resolve(result);
+          }, function (error) {
+            // If a rejected Promise was yielded, throw the rejection back
+            // into the async generator function so it can be handled there.
+            return invoke("throw", error, resolve, reject);
+          });
+        }
+      }
+
+      var previousPromise;
+
+      function enqueue(method, arg) {
+        function callInvokeWithMethodAndArg() {
+          return new PromiseImpl(function (resolve, reject) {
+            invoke(method, arg, resolve, reject);
+          });
+        }
+
+        return previousPromise = // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, // Avoid propagating failures to Promises returned by later
+        // invocations of the iterator.
+        callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg();
+      } // Define the unified helper method that is used to implement .next,
+      // .throw, and .return (see defineIteratorMethods).
+
+
+      defineProperty(this, "_invoke", {
+        value: enqueue
+      });
+    }
+
+    defineIteratorMethods(AsyncIterator.prototype);
+    define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+      return this;
+    });
+    exports.AsyncIterator = AsyncIterator; // Note that simple async functions are implemented on top of
+    // AsyncIterator objects; they just return a Promise for the value of
+    // the final result produced by the iterator.
+
+    exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+      if (PromiseImpl === void 0) PromiseImpl = Promise;
+      var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl);
+      return exports.isGeneratorFunction(outerFn) ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function (result) {
+        return result.done ? result.value : iter.next();
+      });
+    };
+
+    function makeInvokeMethod(innerFn, self, context) {
+      var state = GenStateSuspendedStart;
+      return function invoke(method, arg) {
+        if (state === GenStateExecuting) {
+          throw new Error("Generator is already running");
+        }
+
+        if (state === GenStateCompleted) {
+          if (method === "throw") {
+            throw arg;
+          } // Be forgiving, per GeneratorResume behavior specified since ES2015:
+          // ES2015 spec, step 3: https://262.ecma-international.org/6.0/#sec-generatorresume
+          // Latest spec, step 2: https://tc39.es/ecma262/#sec-generatorresume
+
+
+          return doneResult();
+        }
+
+        context.method = method;
+        context.arg = arg;
+
+        while (true) {
+          var delegate = context.delegate;
+
+          if (delegate) {
+            var delegateResult = maybeInvokeDelegate(delegate, context);
+
+            if (delegateResult) {
+              if (delegateResult === ContinueSentinel) continue;
+              return delegateResult;
+            }
+          }
+
+          if (context.method === "next") {
+            // Setting context._sent for legacy support of Babel's
+            // function.sent implementation.
+            context.sent = context._sent = context.arg;
+          } else if (context.method === "throw") {
+            if (state === GenStateSuspendedStart) {
+              state = GenStateCompleted;
+              throw context.arg;
+            }
+
+            context.dispatchException(context.arg);
+          } else if (context.method === "return") {
+            context.abrupt("return", context.arg);
+          }
+
+          state = GenStateExecuting;
+          var record = tryCatch(innerFn, self, context);
+
+          if (record.type === "normal") {
+            // If an exception is thrown from innerFn, we leave state ===
+            // GenStateExecuting and loop back for another invocation.
+            state = context.done ? GenStateCompleted : GenStateSuspendedYield;
+
+            if (record.arg === ContinueSentinel) {
+              continue;
+            }
+
+            return {
+              value: record.arg,
+              done: context.done
+            };
+          } else if (record.type === "throw") {
+            state = GenStateCompleted; // Dispatch the exception by looping back around to the
+            // context.dispatchException(context.arg) call above.
+
+            context.method = "throw";
+            context.arg = record.arg;
+          }
+        }
+      };
+    } // Call delegate.iterator[context.method](context.arg) and handle the
+    // result, either by returning a { value, done } result from the
+    // delegate iterator, or by modifying context.method and context.arg,
+    // setting context.delegate to null, and returning the ContinueSentinel.
+
+
+    function maybeInvokeDelegate(delegate, context) {
+      var methodName = context.method;
+      var method = delegate.iterator[methodName];
+
+      if (method === undefined$1) {
+        // A .throw or .return when the delegate iterator has no .throw
+        // method, or a missing .next method, always terminate the
+        // yield* loop.
+        context.delegate = null; // Note: ["return"] must be used for ES3 parsing compatibility.
+
+        if (methodName === "throw" && delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined$1;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        if (methodName !== "return") {
+          context.method = "throw";
+          context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method");
+        }
+
+        return ContinueSentinel;
+      }
+
+      var record = tryCatch(method, delegate.iterator, context.arg);
+
+      if (record.type === "throw") {
+        context.method = "throw";
+        context.arg = record.arg;
+        context.delegate = null;
+        return ContinueSentinel;
+      }
+
+      var info = record.arg;
+
+      if (!info) {
+        context.method = "throw";
+        context.arg = new TypeError("iterator result is not an object");
+        context.delegate = null;
+        return ContinueSentinel;
+      }
+
+      if (info.done) {
+        // Assign the result of the finished delegate to the temporary
+        // variable specified by delegate.resultName (see delegateYield).
+        context[delegate.resultName] = info.value; // Resume execution at the desired location (see delegateYield).
+
+        context.next = delegate.nextLoc; // If context.method was "throw" but the delegate handled the
+        // exception, let the outer generator proceed normally. If
+        // context.method was "next", forget context.arg since it has been
+        // "consumed" by the delegate iterator. If context.method was
+        // "return", allow the original .return call to continue in the
+        // outer generator.
+
+        if (context.method !== "return") {
+          context.method = "next";
+          context.arg = undefined$1;
+        }
+      } else {
+        // Re-yield the result returned by the delegate method.
+        return info;
+      } // The delegate iterator is finished, so forget it and continue with
+      // the outer generator.
+
+
+      context.delegate = null;
+      return ContinueSentinel;
+    } // Define Generator.prototype.{next,throw,return} in terms of the
+    // unified ._invoke helper method.
+
+
+    defineIteratorMethods(Gp);
+    define(Gp, toStringTagSymbol, "Generator"); // A Generator should always return itself as the iterator object when the
+    // @@iterator function is called on it. Some browsers' implementations of the
+    // iterator prototype chain incorrectly implement this, causing the Generator
+    // object to not be returned from this call. This ensures that doesn't happen.
+    // See https://github.com/facebook/regenerator/issues/274 for more details.
+
+    define(Gp, iteratorSymbol, function () {
+      return this;
+    });
+    define(Gp, "toString", function () {
+      return "[object Generator]";
+    });
+
+    function pushTryEntry(locs) {
+      var entry = {
+        tryLoc: locs[0]
+      };
+
+      if (1 in locs) {
+        entry.catchLoc = locs[1];
+      }
+
+      if (2 in locs) {
+        entry.finallyLoc = locs[2];
+        entry.afterLoc = locs[3];
+      }
+
+      this.tryEntries.push(entry);
+    }
+
+    function resetTryEntry(entry) {
+      var record = entry.completion || {};
+      record.type = "normal";
+      delete record.arg;
+      entry.completion = record;
+    }
+
+    function Context(tryLocsList) {
+      // The root entry object (effectively a try statement without a catch
+      // or a finally block) gives us a place to store values thrown from
+      // locations where there is no enclosing try statement.
+      this.tryEntries = [{
+        tryLoc: "root"
+      }];
+      tryLocsList.forEach(pushTryEntry, this);
+      this.reset(true);
+    }
+
+    exports.keys = function (val) {
+      var object = Object(val);
+      var keys = [];
+
+      for (var key in object) {
+        keys.push(key);
+      }
+
+      keys.reverse(); // Rather than returning an object with a next method, we keep
+      // things simple and return the next function itself.
+
+      return function next() {
+        while (keys.length) {
+          var key = keys.pop();
+
+          if (key in object) {
+            next.value = key;
+            next.done = false;
+            return next;
+          }
+        } // To avoid creating an additional object, we just hang the .value
+        // and .done properties off the next function object itself. This
+        // also ensures that the minifier will not anonymize the function.
+
+
+        next.done = true;
+        return next;
+      };
+    };
+
+    function values(iterable) {
+      if (iterable != null) {
+        var iteratorMethod = iterable[iteratorSymbol];
+
+        if (iteratorMethod) {
+          return iteratorMethod.call(iterable);
+        }
+
+        if (typeof iterable.next === "function") {
+          return iterable;
+        }
+
+        if (!isNaN(iterable.length)) {
+          var i = -1,
+              next = function next() {
+            while (++i < iterable.length) {
+              if (hasOwn.call(iterable, i)) {
+                next.value = iterable[i];
+                next.done = false;
+                return next;
+              }
+            }
+
+            next.value = undefined$1;
+            next.done = true;
+            return next;
+          };
+
+          return next.next = next;
+        }
+      }
+
+      throw new TypeError(_typeof(iterable) + " is not iterable");
+    }
+
+    exports.values = values;
+
+    function doneResult() {
+      return {
+        value: undefined$1,
+        done: true
+      };
+    }
+
+    Context.prototype = {
+      constructor: Context,
+      reset: function reset(skipTempReset) {
+        this.prev = 0;
+        this.next = 0; // Resetting context._sent for legacy support of Babel's
+        // function.sent implementation.
+
+        this.sent = this._sent = undefined$1;
+        this.done = false;
+        this.delegate = null;
+        this.method = "next";
+        this.arg = undefined$1;
+        this.tryEntries.forEach(resetTryEntry);
+
+        if (!skipTempReset) {
+          for (var name in this) {
+            // Not sure about the optimal order of these conditions:
+            if (name.charAt(0) === "t" && hasOwn.call(this, name) && !isNaN(+name.slice(1))) {
+              this[name] = undefined$1;
+            }
+          }
+        }
+      },
+      stop: function stop() {
+        this.done = true;
+        var rootEntry = this.tryEntries[0];
+        var rootRecord = rootEntry.completion;
+
+        if (rootRecord.type === "throw") {
+          throw rootRecord.arg;
+        }
+
+        return this.rval;
+      },
+      dispatchException: function dispatchException(exception) {
+        if (this.done) {
+          throw exception;
+        }
+
+        var context = this;
+
+        function handle(loc, caught) {
+          record.type = "throw";
+          record.arg = exception;
+          context.next = loc;
+
+          if (caught) {
+            // If the dispatched exception was caught by a catch block,
+            // then let that catch block handle the exception normally.
+            context.method = "next";
+            context.arg = undefined$1;
+          }
+
+          return !!caught;
+        }
+
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+          var record = entry.completion;
+
+          if (entry.tryLoc === "root") {
+            // Exception thrown outside of any try block that could handle
+            // it, so set the completion value of the entire function to
+            // throw the exception.
+            return handle("end");
+          }
+
+          if (entry.tryLoc <= this.prev) {
+            var hasCatch = hasOwn.call(entry, "catchLoc");
+            var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+            if (hasCatch && hasFinally) {
+              if (this.prev < entry.catchLoc) {
+                return handle(entry.catchLoc, true);
+              } else if (this.prev < entry.finallyLoc) {
+                return handle(entry.finallyLoc);
+              }
+            } else if (hasCatch) {
+              if (this.prev < entry.catchLoc) {
+                return handle(entry.catchLoc, true);
+              }
+            } else if (hasFinally) {
+              if (this.prev < entry.finallyLoc) {
+                return handle(entry.finallyLoc);
+              }
+            } else {
+              throw new Error("try statement without catch or finally");
+            }
+          }
+        }
+      },
+      abrupt: function abrupt(type, arg) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+
+          if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) {
+            var finallyEntry = entry;
+            break;
+          }
+        }
+
+        if (finallyEntry && (type === "break" || type === "continue") && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc) {
+          // Ignore the finally entry if control is not jumping to a
+          // location outside the try/catch block.
+          finallyEntry = null;
+        }
+
+        var record = finallyEntry ? finallyEntry.completion : {};
+        record.type = type;
+        record.arg = arg;
+
+        if (finallyEntry) {
+          this.method = "next";
+          this.next = finallyEntry.finallyLoc;
+          return ContinueSentinel;
+        }
+
+        return this.complete(record);
+      },
+      complete: function complete(record, afterLoc) {
+        if (record.type === "throw") {
+          throw record.arg;
+        }
+
+        if (record.type === "break" || record.type === "continue") {
+          this.next = record.arg;
+        } else if (record.type === "return") {
+          this.rval = this.arg = record.arg;
+          this.method = "return";
+          this.next = "end";
+        } else if (record.type === "normal" && afterLoc) {
+          this.next = afterLoc;
+        }
+
+        return ContinueSentinel;
+      },
+      finish: function finish(finallyLoc) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+
+          if (entry.finallyLoc === finallyLoc) {
+            this.complete(entry.completion, entry.afterLoc);
+            resetTryEntry(entry);
+            return ContinueSentinel;
+          }
+        }
+      },
+      "catch": function _catch(tryLoc) {
+        for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+          var entry = this.tryEntries[i];
+
+          if (entry.tryLoc === tryLoc) {
+            var record = entry.completion;
+
+            if (record.type === "throw") {
+              var thrown = record.arg;
+              resetTryEntry(entry);
+            }
+
+            return thrown;
+          }
+        } // The context.catch method must only be called with a location
+        // argument that corresponds to a known catch block.
+
+
+        throw new Error("illegal catch attempt");
+      },
+      delegateYield: function delegateYield(iterable, resultName, nextLoc) {
+        this.delegate = {
+          iterator: values(iterable),
+          resultName: resultName,
+          nextLoc: nextLoc
+        };
+
+        if (this.method === "next") {
+          // Deliberately forget the last sent value so that we don't
+          // accidentally pass it on to the delegate.
+          this.arg = undefined$1;
+        }
+
+        return ContinueSentinel;
+      }
+    }; // Regardless of whether this script is executing as a CommonJS module
+    // or not, return the runtime object so that we can declare the variable
+    // regeneratorRuntime in the outer scope, which allows this module to be
+    // injected easily by `bin/regenerator --include-runtime script.js`.
+
+    return exports;
+  }( // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+  (typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" ? module.exports : {});
+
+  try {
+    regeneratorRuntime = runtime;
+  } catch (accidentalStrictMode) {
+    // This module should not be running in strict mode, so the above
+    // assignment should always work unless something is misconfigured. Just
+    // in case runtime.js accidentally runs in strict mode, in modern engines
+    // we can explicitly access globalThis. In older engines we can escape
+    // strict mode using a global Function call. This could conceivably fail
+    // if a Content Security Policy forbids using Function, but in that case
+    // the proper solution is to fix the accidental strict mode problem. If
+    // you've misconfigured your bundler to force strict mode and applied a
+    // CSP to forbid Function, and you're not willing to fix either of those
+    // problems, please detail your unique predicament in a GitHub issue.
+    if ((typeof globalThis === "undefined" ? "undefined" : _typeof(globalThis)) === "object") {
+      globalThis.regeneratorRuntime = runtime;
+    } else {
+      Function("r", "regeneratorRuntime = r")(runtime);
+    }
+  }
+
   if (!Object.assign) {
     Object.defineProperty(Object, 'assign', {
       enumerable: false,
@@ -1343,340 +2451,6 @@
     }(t || (t = {}));
   }();
 
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
-    if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-
-      if (enumerableOnly) {
-        symbols = symbols.filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        });
-      }
-
-      keys.push.apply(keys, symbols);
-    }
-
-    return keys;
-  }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-        });
-      }
-    }
-
-    return target;
-  }
-
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
-  }
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  function _inherits(subClass, superClass) {
-    if (typeof superClass !== "function" && superClass !== null) {
-      throw new TypeError("Super expression must either be null or a function");
-    }
-
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        writable: true,
-        configurable: true
-      }
-    });
-    if (superClass) _setPrototypeOf(subClass, superClass);
-  }
-
-  function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-      return o.__proto__ || Object.getPrototypeOf(o);
-    };
-    return _getPrototypeOf(o);
-  }
-
-  function _setPrototypeOf(o, p) {
-    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-      o.__proto__ = p;
-      return o;
-    };
-
-    return _setPrototypeOf(o, p);
-  }
-
-  function _isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !Reflect.construct) return false;
-    if (Reflect.construct.sham) return false;
-    if (typeof Proxy === "function") return true;
-
-    try {
-      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (typeof call === "object" || typeof call === "function")) {
-      return call;
-    } else if (call !== void 0) {
-      throw new TypeError("Derived constructors may only return object or undefined");
-    }
-
-    return _assertThisInitialized(self);
-  }
-
-  function _createSuper(Derived) {
-    var hasNativeReflectConstruct = _isNativeReflectConstruct();
-
-    return function _createSuperInternal() {
-      var Super = _getPrototypeOf(Derived),
-          result;
-
-      if (hasNativeReflectConstruct) {
-        var NewTarget = _getPrototypeOf(this).constructor;
-
-        result = Reflect.construct(Super, arguments, NewTarget);
-      } else {
-        result = Super.apply(this, arguments);
-      }
-
-      return _possibleConstructorReturn(this, result);
-    };
-  }
-
-  function _superPropBase(object, property) {
-    while (!Object.prototype.hasOwnProperty.call(object, property)) {
-      object = _getPrototypeOf(object);
-      if (object === null) break;
-    }
-
-    return object;
-  }
-
-  function _get(target, property, receiver) {
-    if (typeof Reflect !== "undefined" && Reflect.get) {
-      _get = Reflect.get;
-    } else {
-      _get = function _get(target, property, receiver) {
-        var base = _superPropBase(target, property);
-
-        if (!base) return;
-        var desc = Object.getOwnPropertyDescriptor(base, property);
-
-        if (desc.get) {
-          return desc.get.call(receiver);
-        }
-
-        return desc.value;
-      };
-    }
-
-    return _get(target, property, receiver || target);
-  }
-
-  function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-  }
-
-  function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-  }
-
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-  }
-
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-  }
-
-  function _iterableToArray(iter) {
-    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-  }
-
-  function _iterableToArrayLimit(arr, i) {
-    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-    if (_i == null) return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-
-    var _s, _e;
-
-    try {
-      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"] != null) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-  }
-
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-
-    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-
-  function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-
-  function _createForOfIteratorHelper(o, allowArrayLike) {
-    var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
-
-    if (!it) {
-      if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-        if (it) o = it;
-        var i = 0;
-
-        var F = function () {};
-
-        return {
-          s: F,
-          n: function () {
-            if (i >= o.length) return {
-              done: true
-            };
-            return {
-              done: false,
-              value: o[i++]
-            };
-          },
-          e: function (e) {
-            throw e;
-          },
-          f: F
-        };
-      }
-
-      throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-    }
-
-    var normalCompletion = true,
-        didErr = false,
-        err;
-    return {
-      s: function () {
-        it = it.call(o);
-      },
-      n: function () {
-        var step = it.next();
-        normalCompletion = step.done;
-        return step;
-      },
-      e: function (e) {
-        didErr = true;
-        err = e;
-      },
-      f: function () {
-        try {
-          if (!normalCompletion && it.return != null) it.return();
-        } finally {
-          if (didErr) throw err;
-        }
-      }
-    };
-  }
-
   /**
    * @this {Promise}
    */
@@ -2084,8 +2858,8 @@
   var object$2 = {
     author: 'Yumata',
     github: 'https://github.com/yumata/lampa-source',
-    css_version: '3.4.1',
-    app_version: '3.4.1',
+    css_version: '3.4.4',
+    app_version: '3.4.4',
     cub_site: 'cub.best',
     apk_link_download: 'https://github.com/lampa-app/LAMPA/releases/download/v1.12.3/app-lite-release.apk'
   };
@@ -2507,7 +3281,7 @@
 
   var html$2l = "<div>\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"internal_torrclient\" data-children=\"internal_torrclient\">\n        <div class=\"settings-param__name\">#{settings_server_client}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_server_client_descr}</div>\n    </div>\n\n    <div data-parent=\"internal_torrclient\">\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"torrserver_use_link\">\n            <div class=\"settings-param__name\">#{settings_server_link}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_links}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_one}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_one_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_url_two\" placeholder=\"#{settings_server_placeholder}\">\n            <div class=\"settings-param__name\">#{settings_server_link_two}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_link_two_descr}</div>\n            <div class=\"settings-param__status\"></div>\n        </div>\n    \n    \n        <div class=\"settings-param-title\"><span>#{settings_server_additionally}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_savedb\">\n            <div class=\"settings-param__name\">#{settings_server_base}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_base_descr}</div>\n        </div>\n        \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_preload\">\n            <div class=\"settings-param__name\">#{settings_server_preload}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_preload_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_gts\">\n            <div class=\"settings-param__name\">#{settings_server_gts}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_gts_descr}</div>\n        </div>\n\n\t\t<div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_tracktimecode\">\n            <div class=\"settings-param__name\">#{settings_server_tracktimecode}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_server_tracktimecode_descr}</div>\n        </div>\n\n        <div class=\"settings-param-title\"><span>#{settings_server_auth}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"torrserver_auth\" data-children=\"login\">\n            <div class=\"settings-param__name\">#{settings_server_password_use}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n        \n        <div data-parent=\"login\">\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_login\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_login}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n\n            <div class=\"settings-param selector\" data-type=\"input\" data-name=\"torrserver_password\" data-string=\"true\" placeholder=\"#{settings_server_not_specified}\">\n                <div class=\"settings-param__name\">#{settings_server_password}</div>\n                <div class=\"settings-param__value\"></div>\n            </div>\n        </div>\n    </div>\n</div>";
 
-  var html$2k = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_torrent\">\n        <div class=\"settings-param__name\">#{settings_player_torrent_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_torrent_type_descr}</div>\n    </div>\n\n    <div class=\"is--infuse hide\" data-infuse-launch>\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"infuse_launch_mode\">\n            <div class=\"settings-param__name\">#{settings_infuse_launch_mode}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_infuse_launch_mode_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\" data-children=\"player_type\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n    \n    <div data-parent=\"player_type\" data-visible-value-in=\"vlc, mpc\" class=\"hide is--nw\">\n        <div class=\"settings-param-title\"><span>#{settings_player_external_header}</span></div>\n    \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_external_fullscreen\">\n            <div class=\"settings-param__name\">#{settings_player_external_fullscreen}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_lang\">\n            <div class=\"settings-param__name\">#{settings_player_subs_lang}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_lang_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
+  var html$2k = "<div>\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player\">\n        <div class=\"settings-param__name\">#{settings_player_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_iptv\">\n        <div class=\"settings-param__name\">#{settings_player_iptv_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_iptv_type_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--player\" data-type=\"select\" data-name=\"player_torrent\">\n        <div class=\"settings-param__name\">#{settings_player_torrent_type}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_torrent_type_descr}</div>\n    </div>\n\n    <div class=\"is--infuse hide\" data-infuse-launch>\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"infuse_launch_mode\">\n            <div class=\"settings-param__name\">#{settings_infuse_launch_mode}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_infuse_launch_mode_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param selector is--android\" data-type=\"select\" data-name=\"player_launch_trailers\">\n        <div class=\"settings-param__name\">#{settings_player_launch_trailers}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n    \n    <div class=\"settings-param selector is--android\" data-type=\"button\" data-name=\"reset_player\" data-static=\"true\">\n        <div class=\"settings-param__name\">#{settings_player_reset}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_reset_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector is--nw\" data-type=\"input\" data-name=\"player_nw_path\" placeholder=\"\" data-children=\"player_type\">\n        <div class=\"settings-param__name\">#{settings_player_path}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_path_descr}</div>\n    </div>\n    \n    <div data-parent=\"player_type\" data-visible-value-in=\"vlc, mpc\" class=\"hide is--nw\">\n        <div class=\"settings-param-title\"><span>#{settings_player_external_header}</span></div>\n    \n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_external_fullscreen\">\n            <div class=\"settings-param__name\">#{settings_player_external_fullscreen}</div>\n            <div class=\"settings-param__value\"></div>\n        </div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"player_normalization\">\n        <div class=\"settings-param__name\">#{settings_player_normalization}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_normalization_descr}</div>\n    </div>\n    \n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"playlist_next\">\n        <div class=\"settings-param__name\">#{settings_player_next_episode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_next_episode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_timecode\">\n        <div class=\"settings-param__name\">#{settings_player_timecode}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_timecode_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_scale_method\">\n        <div class=\"settings-param__name\">#{settings_player_scale}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_scale_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_hls_method\">\n        <div class=\"settings-param__name\">#{settings_player_hls_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_hls_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"player_rewind\">\n        <div class=\"settings-param__name\">#{settings_player_rewind_title}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_rewind_descr}</div>\n    </div>\n    \n    <div class=\"is--has_subs\">\n        <div class=\"settings-param-title\"><span>#{settings_player_subs}</span></div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_start\">\n            <div class=\"settings-param__name\">#{settings_player_subs_use}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_use_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_lang\">\n            <div class=\"settings-param__name\">#{settings_player_subs_lang}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_lang_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_source\">\n            <div class=\"settings-param__name\">#{settings_player_subs_source}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_source_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"select\" data-name=\"subtitles_ass_mode\">\n            <div class=\"settings-param__name\">#{settings_player_subs_ass_mode}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_ass_mode_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_ass_fonts\">\n            <div class=\"settings-param__name\">#{settings_player_subs_ass_fonts}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_ass_fonts_descr}</div>\n        </div>\n\n        <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"subtitles_ass_readable\">\n            <div class=\"settings-param__name\">#{settings_player_subs_ass_readable}</div>\n            <div class=\"settings-param__value\"></div>\n            <div class=\"settings-param__descr\">#{settings_player_subs_ass_readable_descr}</div>\n        </div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"video_quality_default\">\n        <div class=\"settings-param__name\">#{settings_player_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_player_quality_descr}</div>\n    </div>\n</div>";
 
   var html$2j = "<div>\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"start_page\">\n        <div class=\"settings-param__name\">#{settings_rest_start}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_start_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"source\">\n        <div class=\"settings-param__name\">#{settings_rest_source_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_source_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"protocol\">\n        <div class=\"settings-param__name\">#{settings_rest_protocol_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_protocol_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"request_caching\">\n        <div class=\"settings-param__name\">#{settings_request_caching_use}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_request_caching_descr}</div>\n    </div>\n\n    <div class=\"settings-param-title\"><span>#{settings_rest_screensaver}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"screensaver\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_use}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_type\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_type}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"screensaver_time\">\n        <div class=\"settings-param__name\">#{settings_rest_screensaver_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    \n    <div class=\"settings-param-title\"><span>#{more}</span></div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"pages_save_total\">\n        <div class=\"settings-param__name\">#{settings_rest_pages}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_pages_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"time_offset\">\n        <div class=\"settings-param__name\">#{settings_rest_time}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"navigation_type\">\n        <div class=\"settings-param__name\">#{settings_rest_navigation}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"select\" data-name=\"keyboard_type\">\n        <div class=\"settings-param__name\">#{settings_rest_keyboard}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_quality\">\n        <div class=\"settings-param__name\">#{settings_rest_card_quality}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_quality_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"toggle\" data-name=\"card_episodes\">\n        <div class=\"settings-param__name\">#{settings_rest_card_episodes}</div>\n        <div class=\"settings-param__value\"></div>\n        <div class=\"settings-param__descr\">#{settings_rest_card_episodes_descr}</div>\n    </div>\n\n    <div class=\"settings-param selector\" data-type=\"input\" data-name=\"device_name\" placeholder=\"#{settings_rest_device_placeholder}\">\n        <div class=\"settings-param__name\">#{settings_rest_device}</div>\n        <div class=\"settings-param__value\"></div>\n    </div>\n</div>";
 
@@ -2591,7 +3365,7 @@
 
   var html$1H = "<div class=\"files\">\n    <div class=\"files__left\">\n        <div class=\"full-start__poster selector\">\n            <img src=\"{img}\" class=\"full-start__img\" />\n        </div>\n\n        <div class=\"files__info\">\n            <div class=\"files__title\">{title}</div>\n            <div class=\"files__title-original\">{original_title}</div>\n        </div>\n    </div>\n    <div class=\"files__body\">\n        \n    </div>\n</div>";
 
-  var html$1G = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>12e9349f37e709ba5f53fa091a3a5496</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-10-27 09:52</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
+  var html$1G = "<div class=\"about\">\n    <div>#{about_text}</div>\n\n\n    <div class=\"overhide\">\n        <div class=\"about__contacts\">\n            <div>\n                <small>#{about_channel}</small><br>\n                @lampa_channel\n            </div>\n\n            <div>\n                <small>#{about_group}</small><br>\n                @lampa_group\n            </div>\n\n            <div>\n                <small>#{about_version}</small><br>\n                <span class=\"version_app\"></span>\n            </div>\n\n            <div class=\"hide platform_android\">\n                <small>#{about_version} Android APK</small><br>\n                <span class=\"version_android\"></span>\n            </div>\n\n            <div>\n                <small>Hash</small><br>\n                <span>cf2ea590a5db557d4ebb80f869c7c01a</span>\n            </div>\n\n            <div>\n                <small>Builded</small><br>\n                <span>2026-10-28 11:51</span>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"about__rules\">\n        <h3>#{termsofuse_t_01}</h3>\n\n        <p>#{termsofuse_t_02}</p>\n\n        <ol>\n            <li>\n                <h6>#{termsofuse_t_03}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_04}</p></li>\n\n                    <li><p>#{termsofuse_t_05}</p></li>\n\n                    <li><p>#{termsofuse_t_06}</p></li>\n\n                    <li><p>#{termsofuse_t_07}</p></li>\n                </ol>\n                \n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_08}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_09}</p></li>\n                    <li><p>#{termsofuse_t_10}</p></li>\n                </ol>\n            </li>\n\n            <li>\n                <h6>#{termsofuse_t_11}</h6>\n\n                <ol>\n                    <li><p>#{termsofuse_t_12}</p></li>\n                    <li><p>#{termsofuse_t_13}</p></li>\n                </ol>\n            </li>\n        </ol>\n    </div>\n</div>";
 
   var html$1F = "<div class=\"error\">\n    <div class=\"error__ico\"></div>\n    <div class=\"error__body\">\n        <div class=\"error__title\">{title}</div>\n        <div class=\"error__text\">{text}</div>\n    </div>\n</div>";
 
@@ -2719,7 +3493,7 @@
 
   var html$H = "<div class=\"account-modal-split\">\n    <div class=\"account-modal-split__qr\">\n        <img class=\"account-modal-split__qr-img hide\" />\n        <div class=\"account-modal-split__qr-code\"></div>\n        <div class=\"account-modal-split__qr-text\">#{account_qr_code}</div>\n    </div>\n\n    <div class=\"account-modal-split__info\">\n        <div class=\"account-modal-split__title\">#{account_add_device_title}</div>\n        <div class=\"account-modal-split__text\">#{account_add_device_text}</div>\n\n        <div class=\"account-modal-split__code\">\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n            <div class=\"account-modal-split__code-num\"><span></span></div>\n        </div>\n\n        <div class=\"account-modal-split__keyboard\">\n            <div class=\"simple-keyboard\"></div>\n        </div>\n    </div>\n</div>";
 
-  var html$G = "<div class=\"account-modal-split account-modal-split--device-code\">\n    <div class=\"account-modal-split__qr\">\n        <div class=\"account-modal-split__qr-code\"></div>\n        <div class=\"account-modal-split__qr-text\">#{account_device_code_qr}</div>\n    </div>\n\n    <div class=\"account-modal-split__info\">\n        <div class=\"account-modal-split__title\">#{account_add_device_title}</div>\n        <div class=\"account-modal-split__text\">#{account_device_code_text}</div>\n\n        <div class=\"account-modal-split__device-code\">----&nbsp;----</div>\n        <div class=\"account-modal-split__status\">#{account_device_code_wait}</div>\n\n        <div class=\"simple-button simple-button--inline selector account-modal-split__manual\">#{account_device_code_manual}</div>\n    </div>\n</div>";
+  var html$G = "<div class=\"account-modal-split account-modal-split--device-code\">\n    <div class=\"account-modal-split__qr\">\n        <div class=\"account-modal-split__qr-code\"></div>\n        <div class=\"account-modal-split__qr-text\">#{account_device_code_qr}</div>\n    </div>\n\n    <div class=\"account-modal-split__info\">\n        <div class=\"account-modal-split__title\">#{account_add_device_title}</div>\n        <div class=\"account-modal-split__text\">#{account_device_code_text}</div>\n\n        <div class=\"account-modal-split__device-code\">----&nbsp;----</div>\n        <div class=\"account-modal-split__status\">#{account_device_code_wait}</div>\n\n        <div class=\"simple-button simple-button--inline selector account-modal-split__open\">#{account_device_code_open}</div>\n        <div class=\"simple-button simple-button--inline selector account-modal-split__manual\">#{account_device_code_manual}</div>\n    </div>\n</div>";
 
   var html$F = "<div class=\"feed-item layer--visible\">\n    <div class=\"feed-item__head\">\n        <div class=\"feed-item__icon\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n            </svg>\n        </div>\n        <div class=\"feed-item__label\"></div>\n    </div>\n\n    <div class=\"feed-item__right\">\n        <div class=\"feed-item__poster-box\">\n            <img class=\"feed-item__poster-img\" />\n        </div>\n    </div>\n\n    <div class=\"feed-item__body\">\n        <div class=\"feed-item__title\"></div>\n        <div class=\"feed-item__info\"></div>\n        <div class=\"feed-item__descr\"></div>\n        <div class=\"feed-item__tags\"></div>\n        <div class=\"feed-item__buttons\"></div>\n    </div>\n</div>";
 
@@ -2747,7 +3521,7 @@
 
   var html$t = "<div class=\"watched-history selector\">\n    <div class=\"watched-history__icon\">\n        <svg><use xlink:href=\"#sprite-viewed\"></use></svg>\n    </div>\n    <div class=\"watched-history__body\">\n        \n    </div>\n</div>";
 
-  var html$s = "\n<svg style=\"display: none;\" id=\"sprites\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 39 39\">\n    <symbol id=\"sprite-home\" viewBox=\"0 0 39 38\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.457 2.53174C18.6771 1.65561 20.321 1.65561 21.541 2.53174L35.8486 12.8062C36.7642 13.4636 37.3066 14.5227 37.3066 15.6499V32.8345C37.3066 34.7675 35.7396 36.3345 33.8066 36.3345H5.19141C3.25841 36.3345 1.69141 34.7675 1.69141 32.8345V15.6499C1.69141 14.5227 2.23389 13.4637 3.14941 12.8062L17.457 2.53174Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-feed\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-movie\" viewBox=\"0 0 40 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.8574 15.9922V30.3311C37.8574 32.2641 36.2904 33.8311 34.3574 33.8311H5.35742C3.42443 33.8311 1.85742 32.2641 1.85742 30.3311V15.9922H37.8574Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M5.35742 1.73096H34.3574C36.2904 1.73096 37.8574 3.29796 37.8574 5.23096V10.4312H1.85742V5.23096C1.85742 3.29796 3.42443 1.73096 5.35742 1.73096Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"11.6924\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 11.6924 1.41992)\" fill=\"currentColor\"/>\n        <rect x=\"20.8115\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 20.8115 1.41992)\" fill=\"currentColor\"/>\n        <rect x=\"29.9307\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 29.9307 1.41992)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-tv\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"8.58545\" width=\"35.501\" height=\"22.8032\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"13.8877\" y=\"1.70264\" width=\"2.9873\" height=\"9.61475\" rx=\"1.49365\" transform=\"rotate(-30 13.8877 1.70264)\" fill=\"currentColor\"/>\n        <rect x=\"22.3926\" y=\"0.208984\" width=\"2.9873\" height=\"9.61475\" rx=\"1.49365\" transform=\"rotate(30 22.3926 0.208984)\" fill=\"currentColor\"/>\n        <rect x=\"9.02832\" y=\"35.6714\" width=\"20.8105\" height=\"3.03857\" rx=\"1.51929\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-catalog\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"13.2769\" width=\"35.501\" height=\"23.9331\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"4.72461\" y=\"6.08398\" width=\"29.7656\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"7.55957\" y=\"0.391113\" width=\"24.0957\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-filter\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6.9043\" y=\"8.02637\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <rect x=\"6.9043\" y=\"17.9648\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <rect x=\"6.9043\" y=\"27.9033\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <circle cx=\"26.0732\" cy=\"9.521\" r=\"3.42188\" fill=\"currentColor\"/>\n        <circle cx=\"21.6035\" cy=\"29.3979\" r=\"3.42188\" fill=\"currentColor\"/>\n        <circle cx=\"13.6904\" cy=\"19.4595\" r=\"3.42188\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-hd\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"9.11133\" y=\"12.77\" width=\"2.96094\" height=\"14.2765\" rx=\"1\" fill=\"currentColor\"/>\n        <rect x=\"15.7627\" y=\"12.77\" width=\"3.01162\" height=\"14.2765\" rx=\"1\" fill=\"currentColor\"/>\n        <rect x=\"10.6455\" y=\"18.0308\" width=\"6.98432\" height=\"3.07105\" fill=\"currentColor\"/>\n        <path d=\"M25.5996 14.27C27.5326 14.27 29.0996 15.837 29.0996 17.77V22.0464C29.0996 23.9794 27.5326 25.5464 25.5996 25.5464H22.4365V14.27H25.5996Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-anime\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M4.10938 7.84473L0.540039 11.2682C0.540039 11.2682 11.5933 14.2557 18.8397 14.3477C26.6781 14.4473 38.6752 11.2682 38.6752 11.2682L34.53 7.84473C32.1503 8.76586 25.1138 10.8878 18.8397 10.8021C12.9311 10.7213 6.76589 8.9335 4.10938 7.84473Z\" fill=\"currentColor\"/>\n        <path d=\"M10.521 23.8809C12.591 19.2814 13.2995 15.2089 13.395 13.7476L17.2589 14.132C16.9954 15.6892 15.9509 20.2695 13.8811 26.134C11.8113 31.9984 8.41913 36.9621 6.98177 38.7109L4.19629 34.8766C5.442 33.1278 8.45093 28.4803 10.521 23.8809Z\" fill=\"currentColor\"/>\n        <path d=\"M29.2622 23.8809C27.1922 19.2814 26.4837 15.2089 26.3882 13.7476L22.5243 14.132C22.7878 15.6892 23.8323 20.2695 25.9021 26.134C27.9719 31.9984 31.3641 36.9621 32.8014 38.7109L35.5869 34.8766C34.3412 33.1278 31.3323 28.4803 29.2622 23.8809Z\" fill=\"currentColor\"/>\n        <path d=\"M19.3691 5.729C15.4022 5.729 11.823 3.76481 10.5293 2.78271L13.179 0.495059C14.1612 1.35753 16.9543 2.78271 19.3691 2.78271C21.784 2.78271 24.4579 1.2138 25.2004 0.495059L28.6869 2.78271C27.7287 3.4774 23.3361 5.729 19.3691 5.729Z\" fill=\"currentColor\"/>\n        <path d=\"M19.4619 27.8662C15.4949 27.8662 11.9158 25.902 10.6221 24.9199L13.2718 22.6323C14.254 23.4947 17.047 24.9199 19.4619 24.9199C21.8768 24.9199 24.5507 23.351 25.2932 22.6323L28.7797 24.9199C27.8214 25.6146 23.4289 27.8662 19.4619 27.8662Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-favorite\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.35742 9.66309H19.2881C21.7734 9.66309 23.7881 11.6778 23.7881 14.1631V36.3369L13.4658 31.4375L12.8232 31.1328L12.1797 31.4375L1.85742 36.3369V14.1631C1.85742 11.6778 3.87214 9.66309 6.35742 9.66309Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M33.167 0.216797C36.3373 0.377414 38.8584 2.99877 38.8584 6.20898V30.7559L26.3936 24.8389L25.2881 25.3633V22.042L26.3936 21.5176L27.6797 22.1289L35.8584 26.0107V6.20898C35.8584 4.55213 34.5153 3.20899 32.8584 3.20898H19.9277C18.2709 3.20898 16.9277 4.55213 16.9277 6.20898V8.16309H13.9277V6.20898C13.9277 2.89528 16.614 0.208984 19.9277 0.208984H32.8584L33.167 0.216797Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-folder\" viewBox=\"0 0 40 33\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.70496 0.230957H18.4739C19.6491 0.230957 20.7664 0.371722 21.7895 0.919702L21.8825 0.973746C22.6441 1.40484 23.3002 2.03828 23.8054 2.9696H33.4076C35.0315 2.9696 36.507 3.6332 37.5753 4.70026V4.70654C38.1235 5.2522 38.5586 5.90064 38.8558 6.61471C39.153 7.32878 39.3064 8.09447 39.3072 8.86792V26.9349C39.307 27.7094 39.1539 28.4762 38.8567 29.1914C38.5595 29.9065 38.124 30.556 37.5753 31.1026C37.0288 31.6513 36.3793 32.0867 35.6641 32.3839C34.9489 32.6811 34.1821 32.8343 33.4076 32.8345H6.70496C5.9307 32.8341 5.16412 32.6809 4.44917 32.3837C3.73421 32.0865 3.08494 31.6511 2.53856 31.1026L2.45058 31.0083C1.39699 29.9143 0.807841 28.455 0.806641 26.9362V6.12928C0.806641 4.51047 1.47025 3.03621 2.5373 1.9679V1.96162C3.08389 1.41305 3.73341 0.97779 4.4486 0.680803C5.16378 0.383816 5.93056 0.230944 6.70496 0.230957ZM24.7606 5.8666L25.5323 8.78245H36.4077C36.3861 8.0166 36.0706 7.28842 35.5267 6.74889C35.2489 6.46961 34.9187 6.2479 34.5551 6.0965C34.1915 5.94509 33.8015 5.86697 33.4076 5.8666H24.7606ZM36.409 11.6795H24.5005C23.8997 11.6795 23.3379 11.3011 23.1305 10.7004L21.5469 5.00692C21.2704 4.20758 20.9059 3.74758 20.4811 3.49872L20.4195 3.4673C19.9168 3.19834 19.2343 3.12796 18.4739 3.12796H6.70496C5.88173 3.12796 5.1314 3.4673 4.58594 4.01151C4.30615 4.2889 4.08412 4.61899 3.93267 4.9827C3.78123 5.34642 3.70339 5.73655 3.70364 6.13053V26.9349C3.70364 27.7292 4.01659 28.4557 4.52184 28.9936L4.5872 29.0539C5.1314 29.5981 5.88173 29.9375 6.70496 29.9375H33.4076C34.2309 29.9375 34.9812 29.5981 35.5254 29.0539C36.0696 28.5097 36.409 27.7594 36.409 26.9349V19.0784V11.6795Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-history\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.16992 16.8159H6.80176C7.7299 16.8159 8.48242 17.5684 8.48242 18.4966C8.48249 21.0815 10.5782 23.1772 13.1631 23.1772H26.0527C28.6376 23.1772 30.7333 21.0815 30.7334 18.4966C30.7334 17.5684 31.4859 16.8159 32.4141 16.8159H34.0459C35.8753 16.816 37.3583 18.299 37.3584 20.1284V32.7095C37.3584 35.1948 35.3437 37.2104 32.8584 37.2104H6.35742C3.8723 37.2104 1.85769 35.1955 1.85742 32.7104V20.1284C1.85749 18.299 3.34051 16.816 5.16992 16.8159Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"11.4727\" y=\"14.4282\" width=\"16.2695\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n        <rect x=\"6.72852\" y=\"6.87207\" width=\"25.7598\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n        <rect x=\"8.66016\" y=\"0.208984\" width=\"21.8965\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-subscribes\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"13.0947\" width=\"35.501\" height=\"23.9331\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"4.72461\" y=\"5.90186\" width=\"29.7656\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"7.55957\" y=\"0.208984\" width=\"24.0957\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"23.3701\" y=\"18.9653\" width=\"3.06348\" height=\"12.3091\" rx=\"1.53174\" transform=\"rotate(30 23.3701 18.9653)\" fill=\"currentColor\"/>\n        <rect x=\"13.1934\" y=\"25.2788\" width=\"3.06348\" height=\"8.31331\" rx=\"1.53174\" transform=\"rotate(-45 13.1934 25.2788)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-calendar\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"5.68799\" width=\"35.501\" height=\"31.522\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.35059\" y=\"0.208984\" width=\"3.0166\" height=\"9.56055\" rx=\"1.5083\" fill=\"currentColor\"/>\n        <rect x=\"28.8486\" y=\"0.208984\" width=\"3.0166\" height=\"9.56055\" rx=\"1.5083\" fill=\"currentColor\"/>\n        <rect x=\"7.35059\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"7.35059\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"16.7744\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"16.7744\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"26.1992\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"26.1992\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-minipc\" viewBox=\"0 0 39 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.82422\" y=\"2.43555\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.16992\" y=\"9.91699\" width=\"24.8086\" height=\"6.42773\" rx=\"3\" fill=\"currentColor\"/>\n        <rect x=\"7.16992\" y=\"27.7261\" width=\"10.4561\" height=\"3.12256\" rx=\"1.56128\" fill=\"currentColor\"/>\n        <rect x=\"28.833\" y=\"27.7261\" width=\"3.14551\" height=\"3.12256\" rx=\"1.56128\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-settings\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n    </symbol>\n\n    <symbol id=\"sprite-info\" viewBox=\"0 0 512 512\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n    </symbol>\n\n    <symbol id=\"sprite-console\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.625\" y=\"8.99316\" width=\"23.9668\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"14.7573\" width=\"19.2646\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"21.1284\" width=\"23.9668\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"26.8921\" width=\"20.0986\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-edit\" viewBox=\"0 0 30 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.2989 5.27973L2.60834 20.9715C2.52933 21.0507 2.47302 21.1496 2.44528 21.258L0.706081 28.2386C0.680502 28.3422 0.682069 28.4507 0.710632 28.5535C0.739195 28.6563 0.793788 28.75 0.869138 28.8255C0.984875 28.9409 1.14158 29.0057 1.30498 29.0059C1.35539 29.0058 1.4056 28.9996 1.45449 28.9873L8.43509 27.2479C8.54364 27.2206 8.64271 27.1643 8.72172 27.0851L24.4137 11.3944L18.2989 5.27973ZM28.3009 3.14018L26.5543 1.39363C25.3869 0.226285 23.3524 0.227443 22.1863 1.39363L20.0469 3.53318L26.1614 9.64766L28.3009 7.50816C28.884 6.9253 29.2052 6.14945 29.2052 5.32432C29.2052 4.49919 28.884 3.72333 28.3009 3.14018Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-person\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M8.55957 30.6004C9.15198 25.0219 13.8722 20.6763 19.6077 20.6763C25.3434 20.6763 30.0636 25.0222 30.6557 30.6006\" stroke=\"currentColor\" stroke-width=\"3\" stroke-miterlimit=\"10\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n        <circle cx=\"19.6084\" cy=\"14.7578\" r=\"5.44238\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-fullscreen\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n    </symbol>\n\n    <symbol id=\"sprite-menu\" viewBox=\"0 0 39 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"0.357422\" y=\"0.763672\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n        <rect x=\"0.357422\" y=\"23.2793\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n        <rect x=\"0.357422\" y=\"12.0215\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-search\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n        <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-broadcast\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"></path>\n        <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"></circle>\n    </symbol>\n\n    <symbol id=\"sprite-bell\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"></path>\n        <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-play\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"></circle>\n        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-dots\" viewBox=\"0 0 38 10\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"4.88968\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n        <circle cx=\"18.9746\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n        <circle cx=\"33.0596\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-reaction\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-book\" viewBox=\"0 0 25 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.07617 1.77832H19.0068C21.4921 1.77832 23.5068 3.79304 23.5068 6.27832V35.9238L13.3086 29.8564L12.542 29.4004L11.7744 29.8564L1.57617 35.9238V6.27832C1.57617 3.79304 3.59089 1.77832 6.07617 1.77832Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-torrent\" viewBox=\"0 0 47 47\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M23.4082 0.577148C10.7252 0.577148 0.408203 10.8941 0.408203 23.5771C0.408203 36.2601 10.7252 46.5771 23.4082 46.5771C36.0912 46.5771 46.4082 36.2601 46.4082 23.5771C46.4082 10.8941 36.0912 0.577148 23.4082 0.577148ZM38.9082 29.5401C35.8082 29.5401 34.0082 27.1401 34.0082 27.1401C34.0082 27.1401 32.5082 33.5771 25.4082 33.5771C24.0082 33.5771 21.8082 32.7401 21.8082 32.7401L25.9782 42.3831C25.1352 42.4971 24.2822 42.5771 23.4082 42.5771C21.2512 42.5771 19.1862 42.2001 17.2532 41.5381L7.6452 15.4281C7.6452 15.4281 6.9452 14.2281 8.0452 13.9281C9.1452 13.6281 13.4452 12.7281 13.4452 12.7281C13.4452 12.7281 14.9202 12.2341 15.2452 13.2281C15.7452 14.5281 19.3082 24.3401 19.3082 24.3401C19.3082 24.3401 21.0082 27.5771 25.8082 27.5771C30.5082 27.5771 31.7082 24.1401 31.5082 23.6401C30.3082 20.6401 26.5152 11.7781 26.5152 11.7781C26.5152 11.7781 25.9152 10.6781 27.3152 10.3781C28.7152 10.0781 31.1152 9.67815 31.1152 9.67815C31.1152 9.67815 32.2202 9.51515 32.7152 10.4781C33.4532 11.9151 37.9082 21.7401 37.9082 21.7401C37.9082 21.7401 39.0082 24.6401 41.2082 24.6401C41.6722 24.6401 42.0422 24.5941 42.3602 24.5361C42.2782 26.1711 42.0122 27.7571 41.5432 29.2581C40.9492 29.4441 40.1642 29.5401 38.9082 29.5401Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-trailer\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-backward\" viewBox=\"0 0 25 41\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"0.101807\" y=\"20.6182\" width=\"28.7098\" height=\"5.9619\" rx=\"2.98095\" transform=\"rotate(-45 0.101807 20.6182)\" fill=\"currentColor\"></rect>\n        <rect width=\"28.7098\" height=\"5.9619\" rx=\"2.98095\" transform=\"matrix(0.707107 0.707107 0.707107 -0.707107 0.101807 20.7075)\" fill=\"currentColor\"></rect>\n    </symbol>\n\n    <symbol id=\"sprite-star\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-viewed\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-top\" viewBox=\"0 0 60 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M57 3H48V0H12V3H3C1.2 3 0 4.2 0 6V13.2C0 20.1 5.1 25.8 12 26.7V27C12 35.7 18 42.9 26.1 44.7L24 51H17.1C15.9 51 14.7 51.9 14.4 53.1L12 60H48L45.6 53.1C45.3 51.9 44.1 51 42.9 51H36L33.9 44.7C42 42.9 48 35.7 48 27V26.7C54.9 25.8 60 20.1 60 13.2V6C60 4.2 58.8 3 57 3ZM12 20.7C8.7 19.8 6 16.8 6 13.2V9H12V20.7ZM36 30L30 26.7L24 30L25.5 24L21 18H27.3L30 12L32.7 18H39L34.5 24L36 30ZM54 13.2C54 16.8 51.3 20.1 48 20.7V9H54V13.2Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-lock\" viewBox=\"0 0 401.998 401.998\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-like\" viewBox=\"0 0 36 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M34.184 21.3804C34.9351 20.2459 35.3101 18.9972 35.3101 17.6332C35.3101 16.0544 34.7284 14.6832 33.5639 13.5173C32.3989 12.3526 31.0194 11.7703 29.4257 11.7703H25.3796C26.115 10.2532 26.4834 8.78172 26.4834 7.35661C26.4834 5.56338 26.2145 4.13819 25.6785 3.08065C25.142 2.0228 24.3603 1.24523 23.3333 0.746894C22.3062 0.248804 21.1494 0 19.8621 0C19.0801 0 18.3907 0.283507 17.793 0.850763C17.1341 1.49435 16.659 2.32217 16.3679 3.33373C16.0767 4.34496 15.8428 5.31449 15.6667 6.24175C15.4906 7.16892 15.2183 7.82411 14.8507 8.20722C14.0995 9.01949 13.2797 10.0006 12.3907 11.1499C10.8428 13.1574 9.79288 14.3453 9.2414 14.7133H2.94257C2.13029 14.7133 1.4367 15.0011 0.861955 15.5753C0.287453 16.1502 0 16.8437 0 17.656V32.3687C0 33.1811 0.287131 33.8743 0.861955 34.4491C1.43702 35.024 2.13029 35.3116 2.94257 35.3116H9.56291C9.90013 35.3116 10.9574 35.618 12.7353 36.2311C14.6205 36.8902 16.2795 37.392 17.7123 37.737C19.1389 38.0812 20.6013 38.2549 22.0689 38.2545H25.0343C27.1951 38.2545 28.9345 37.6372 30.2527 36.4033C31.5704 35.1695 32.222 33.4875 32.2069 31.3572C33.1264 30.1771 33.5861 28.8131 33.5861 27.2653C33.5861 26.9284 33.5634 26.5989 33.5172 26.2767C34.0994 25.2503 34.3912 24.1467 34.3912 22.9666C34.3909 22.4148 34.3221 21.8858 34.184 21.3804ZM5.4484 31.9322C5.15724 32.2232 4.81246 32.3693 4.41397 32.3693C4.0154 32.3693 3.67054 32.2233 3.3793 31.9322C3.08822 31.6413 2.94257 31.2963 2.94257 30.8975C2.94257 30.4991 3.0879 30.1544 3.3793 29.8631C3.67086 29.5719 4.0154 29.4263 4.41397 29.4263C4.81246 29.4263 5.15724 29.5719 5.4484 29.8631C5.73963 30.1543 5.88529 30.499 5.88529 30.8975C5.88529 31.2963 5.73963 31.6413 5.4484 31.9322ZM31.8744 19.5193C31.5448 20.2242 31.1347 20.5843 30.6444 20.5995C30.8742 20.8601 31.0659 21.2245 31.2192 21.6915C31.3724 22.1591 31.4485 22.5842 31.4485 22.9675C31.4485 24.0245 31.0429 24.9366 30.2305 25.7027C30.5067 26.1929 30.6445 26.7219 30.6445 27.2887C30.6445 27.8558 30.5106 28.419 30.2422 28.9783C29.9743 29.5371 29.61 29.9395 29.1504 30.1846C29.227 30.6443 29.265 31.0736 29.265 31.472C29.265 34.0313 27.7936 35.3109 24.8507 35.3109H22.0699C20.0618 35.3109 17.4415 34.7519 14.2074 33.6328C14.1307 33.6022 13.9088 33.5215 13.5407 33.3914C13.1727 33.2614 12.9007 33.1655 12.7244 33.1044C12.5481 33.0426 12.2801 32.9546 11.9197 32.8399C11.5594 32.7247 11.2685 32.6403 11.0462 32.5869C10.8241 32.5334 10.571 32.4836 10.2877 32.4375C10.0043 32.3916 9.76284 32.3687 9.56364 32.3687H8.82802V17.6566H9.56364C9.80882 17.6566 10.0808 17.5874 10.3797 17.4498C10.6785 17.3118 10.9852 17.105 11.2993 16.829C11.6012 16.5645 11.8963 16.2923 12.1844 16.0127C12.4603 15.7446 12.7668 15.4075 13.1041 15.0015C13.4412 14.5952 13.7055 14.2696 13.8973 14.0244C14.1406 13.7117 14.3819 13.3975 14.6213 13.0818C14.9124 12.6987 15.0888 12.4688 15.15 12.392C15.9928 11.35 16.5829 10.6527 16.92 10.3001C17.5484 9.64126 18.0043 8.80217 18.2878 7.78296C18.5716 6.76359 18.8053 5.80187 18.9885 4.89781C19.1723 3.99366 19.4638 3.3421 19.8628 2.94361C21.3337 2.94361 22.3149 3.30361 22.8051 4.02401C23.2953 4.74426 23.5406 5.8555 23.5406 7.35742C23.5406 8.26157 23.1725 9.49141 22.4367 11.0469C21.7012 12.6025 21.3337 13.8248 21.3337 14.7136H29.4255C30.1926 14.7136 30.8743 15.0085 31.4717 15.5989C32.0697 16.1888 32.3689 16.8745 32.3689 17.6564C32.3687 18.1927 32.2039 18.8135 31.8744 19.5193Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-fire\" viewBox=\"0 0 44 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M38.4789 22.7725C38.3171 22.5697 38.1209 22.6096 38.0181 22.6509C37.932 22.6858 37.7346 22.7974 37.7619 23.077C37.7947 23.4128 37.8131 23.7551 37.8167 24.0946C37.8313 25.5029 37.2663 26.8827 36.2667 27.8801C35.2735 28.871 33.9671 29.4049 32.576 29.3894C30.676 29.3652 29.1 28.3741 28.0185 26.5234C27.1242 24.993 27.5173 23.0192 27.9334 20.9294C28.1769 19.7062 28.4288 18.4413 28.4288 17.2375C28.4288 7.86374 22.1271 2.45577 18.3708 0.0664355C18.2931 0.0170996 18.2192 -0.000244141 18.1537 -0.000244141C18.0471 -0.000244141 17.9628 0.0456934 17.9212 0.0738184C17.8405 0.128428 17.7115 0.252881 17.753 0.473193C19.1888 8.09765 14.9063 12.6833 10.3723 17.5382C5.69885 22.5424 0.401855 28.2144 0.401855 38.4439C0.401855 50.33 10.0718 60 21.9579 60C31.7445 60 40.3731 53.1769 42.9409 43.4074C44.6919 36.7461 42.857 28.2608 38.4789 22.7725ZM22.4957 55.3989C19.5194 55.5346 16.6888 54.4671 14.5268 52.3999C12.388 50.3548 11.1613 47.5007 11.1613 44.5693C11.1613 39.0684 13.2646 35.0301 18.9217 29.6691C19.0143 29.5813 19.1091 29.5535 19.1917 29.5535C19.2666 29.5535 19.3315 29.5764 19.3762 29.5978C19.4703 29.6432 19.6249 29.7554 19.6041 29.9982C19.4018 32.3519 19.4053 34.3056 19.6144 35.8051C20.1488 39.6354 22.9527 42.2089 26.592 42.2089C28.3763 42.2089 30.0758 41.5375 31.3777 40.3181C31.4279 40.2698 31.4892 40.2346 31.5563 40.2154C31.6233 40.1963 31.694 40.1938 31.7622 40.2083C31.8478 40.2268 31.9626 40.2793 32.0227 40.4243C32.5624 41.7275 32.8383 43.1109 32.8425 44.5358C32.8597 50.2692 28.2182 55.1425 22.4957 55.3989Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-collection\" viewBox=\"0 0 61 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M0.315389 3.17604V56.4106C0.315389 57.9575 1.57928 59.2186 3.08977 59.2186H11.5531C11.9202 59.2187 12.2838 59.1458 12.6226 59.0043C12.9614 58.8627 13.2688 58.6554 13.5268 58.3942C13.7849 58.133 13.9885 57.8231 14.126 57.4827C14.2634 57.1422 14.3319 56.7778 14.3274 56.4106V3.17604C14.3274 1.62911 13.0636 0.368022 11.5531 0.368022H3.08977C2.72259 0.367995 2.35905 0.440855 2.02024 0.582379C1.68142 0.723904 1.37407 0.931276 1.116 1.19247C0.857932 1.45367 0.654278 1.7635 0.516846 2.10399C0.379414 2.44449 0.310939 2.80888 0.315389 3.17604ZM17.1298 3.17604V56.4106C17.1298 57.9575 18.3937 59.2186 19.9042 59.2186H28.3675C28.7347 59.2187 29.0982 59.1458 29.437 59.0043C29.7759 58.8627 30.0832 58.6554 30.3413 58.3942C30.5994 58.133 30.803 57.8231 30.9404 57.4827C31.0779 57.1422 31.1463 56.7778 31.1419 56.4106V3.17604C31.1419 1.62911 29.878 0.368022 28.3675 0.368022H19.9042C19.537 0.367995 19.1735 0.440855 18.8347 0.582379C18.4959 0.723904 18.1885 0.931276 17.9305 1.19247C17.6724 1.45367 17.4687 1.7635 17.3313 2.10399C17.1939 2.44449 17.1254 2.80888 17.1298 3.17604ZM32.899 5.89718L46.6756 57.3158C47.0792 58.8151 48.6233 59.7034 50.0862 59.3111L58.2552 57.1224C58.6104 57.0278 58.9433 56.8634 59.2345 56.639C59.5257 56.4146 59.7693 56.1345 59.9513 55.8151C60.1333 55.4957 60.25 55.1433 60.2947 54.7784C60.3393 54.4135 60.311 54.0433 60.2113 53.6895L46.4346 2.27086C46.2444 1.55562 45.7791 0.944571 45.1403 0.570832C44.5015 0.197093 43.7408 0.0909553 43.0241 0.275542L34.8551 2.46422C34.4999 2.55889 34.167 2.72321 33.8758 2.94764C33.5846 3.17206 33.341 3.45212 33.159 3.77154C32.977 4.09095 32.8603 4.44336 32.8156 4.80826C32.771 5.17317 32.7993 5.54331 32.899 5.89718Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-cartoon\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"19.6079\" cy=\"19.4595\" r=\"17.7505\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M15.0773 15.8002H8.49786C7.88323 15.8002 7.42932 15.251 7.65171 14.678C8.13781 13.4255 9.28288 11.5726 11.8034 11.5726C14.5141 11.5726 15.5494 13.4923 15.9364 14.7445C16.1087 15.3017 15.6605 15.8002 15.0773 15.8002Z\" fill=\"currentColor\"/>\n        <path d=\"M30.8068 15.8002H24.2274C23.6127 15.8002 23.1588 15.251 23.3812 14.678C23.8673 13.4255 25.0124 11.5726 27.5328 11.5726C30.2436 11.5726 31.2789 13.4923 31.6659 14.7445C31.8382 15.3017 31.39 15.8002 30.8068 15.8002Z\" fill=\"currentColor\"/>\n        <path d=\"M18.0556 26.8907C18.856 27.8763 20.3603 27.8763 21.1607 26.8907L24.5473 22.7202C25.6087 21.4131 24.6785 19.4595 22.9947 19.4595H16.2216C14.5377 19.4595 13.6075 21.4131 14.669 22.7202L18.0556 26.8907Z\" fill=\"currentColor\"/>\n        <path d=\"M5.77871 9.15714C8.77444 7.75941 10.9443 4.5428 11.8525 3.02854C12.0247 2.74155 12.3223 2.55334 12.6561 2.5298L24.5609 1.69058C24.7304 1.67863 24.9002 1.70974 25.0535 1.78303C27.5412 2.97239 31.7878 5.43831 30.5434 6.62878C28.9379 8.1647 18.8949 10.7194 20.3608 8.4158C21.8267 6.1122 21.5477 5.41414 18.197 7.2989C14.8464 9.18367 1.58993 11.1115 5.77871 9.15714Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-plus\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"19.2505\" cy=\"19.2505\" r=\"17.7505\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"10.1309\" y=\"17.75\" width=\"18.2383\" height=\"3.00049\" rx=\"1.50024\" fill=\"currentColor\"/>\n        <rect x=\"17.75\" y=\"28.3696\" width=\"18.2383\" height=\"3.00049\" rx=\"1.50024\" transform=\"rotate(-90 17.75 28.3696)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-youtube\" viewBox=\"0 0 39 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M38.116 6.23235C38.116 6.23235 37.7406 3.40012 36.5868 2.15365C35.1225 0.519763 33.4814 0.510138 32.7294 0.417495C27.3417 -1.43427e-07 19.2589 0 19.2589 0H19.2409C19.2409 0 11.1593 -1.43427e-07 5.77274 0.417495C5.01956 0.508935 3.38087 0.51856 1.91542 2.15365C0.761597 3.40012 0.38501 6.23235 0.38501 6.23235C0.38501 6.23235 0 9.55546 0 12.8786V15.9935C0 19.3191 0.38501 22.641 0.38501 22.641C0.38501 22.641 0.760394 25.472 1.91422 26.7161C3.37966 28.35 5.30231 28.3006 6.15895 28.4715C9.23903 28.7867 19.2505 28.8842 19.2505 28.8842C19.2505 28.8842 27.3405 28.8697 32.7294 28.457C33.4814 28.3608 35.1225 28.3512 36.5868 26.7161C37.7394 25.472 38.116 22.641 38.116 22.641C38.116 22.641 38.501 19.3179 38.501 15.9935V12.8786C38.501 9.55546 38.116 6.23235 38.116 6.23235ZM14.4427 21.6628V7.22014L26.4778 14.4415L14.4427 21.6628Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-adult\" viewBox=\"0 0 103 102\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.4219 67.759V40.3141H25.9893V33.281H41.2982V67.759H32.4219ZM74.6578 42.183C74.6578 45.1831 73.0122 47.8389 70.2696 49.3147C74.109 50.8882 76.5028 54.1838 76.5028 58.02C76.5028 64.2169 70.9176 68.1518 62.1911 68.1518C53.4644 68.1518 47.8795 64.2661 47.8795 58.1678C47.8795 54.2329 50.4725 50.8882 54.5116 49.3147C51.5695 47.6914 49.6746 44.9375 49.6746 41.9374C49.6746 36.4284 54.5618 32.9367 62.1413 32.9367C69.8205 32.9367 74.6578 36.527 74.6578 42.183ZM56.2569 57.2825C56.2569 60.1846 58.3515 61.8076 62.1911 61.8076C66.0308 61.8076 68.175 60.2341 68.175 57.2825C68.175 54.4303 66.0308 52.8067 62.1911 52.8067C58.3512 52.8067 56.2569 54.43 56.2569 57.2825ZM57.1548 42.6748C57.1548 45.1345 58.9499 46.511 62.1911 46.511C65.4324 46.511 67.2275 45.1342 67.2275 42.6748C67.2275 40.118 65.4324 38.6914 62.1911 38.6914C58.9496 38.6914 57.1548 40.118 57.1548 42.6748Z\" fill=\"currentColor\"/>\n        <path d=\"M91.2731 37.1731C92.7488 41.4689 93.4974 45.962 93.4974 50.5446C93.4974 73.5225 74.5436 92.2166 51.2463 92.2166C27.9489 92.2166 8.99476 73.5225 8.99476 50.5446C8.99476 27.566 27.9486 8.87247 51.2459 8.87247C55.8928 8.87247 60.4483 9.6102 64.8031 11.0663V1.79269C60.4043 0.603404 55.8613 0 51.2463 0C22.9891 0 0 22.6742 0 50.5446C0 78.4149 22.9891 101.089 51.2463 101.089C79.5034 101.089 102.492 78.4149 102.492 50.5446C102.492 45.993 101.881 41.5119 100.675 37.1731H91.2731Z\" fill=\"currentColor\"/>\n        <path d=\"M88.7161 13.5592V3.86752H81.6502V13.5592H71.8828V20.5277H81.6502V30.219H88.7161V20.5277H98.5417V13.5592H88.7161Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-violence\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.3081 3.72149C18.6649 3.18629 18.515 2.46269 17.9749 2.11327L15.5658 0.554427C15.0361 0.211699 14.3294 0.35811 13.9794 0.883006L10.9963 5.35762L15.662 7.69043L18.3081 3.72149ZM22.4072 11.063L24.5912 7.78701C24.948 7.25181 24.7981 6.52821 24.2581 6.1788L21.8489 4.61995C21.3193 4.27722 20.6125 4.42363 20.2625 4.94853L17.7415 8.73015L22.4072 11.063ZM22.9308 16.8673L25.0432 17.8062C25.2919 17.9167 25.5716 17.9357 25.833 17.8599C26.0943 17.7841 26.3205 17.6183 26.4714 17.3919L30.3783 11.5316C30.7351 10.9964 30.5852 10.2728 30.0452 9.92335L28.1321 8.68539C27.6024 8.34266 26.8956 8.48908 26.5457 9.01397L22.4394 15.1734C22.0429 15.7683 22.2775 16.577 22.9308 16.8673ZM35.8323 13.668L33.9191 12.4301C33.3895 12.0874 32.6827 12.2338 32.3328 12.7587L28.8296 18.0135C28.433 18.6084 28.6676 19.417 29.3209 19.7074L31.4333 20.6462C31.682 20.7567 31.9617 20.7758 32.2231 20.6999C32.4844 20.6241 32.7106 20.4584 32.8615 20.2319L36.1654 15.2761C36.5222 14.7411 36.3723 14.0175 35.8323 13.668Z\" fill=\"currentColor\"/>\n        <path d=\"M31.9014 23.0527H31.9011C31.4171 23.0532 30.9383 22.9515 30.4963 22.7542L19.7173 17.9637H18.9884L23.8338 27.6546C24.127 28.2409 23.8739 28.9574 23.2676 29.2258C22.6996 29.4772 22.0337 29.2126 21.7559 28.6571L16.4092 17.9637H11.4746C10.8535 17.9637 10.319 17.4864 10.2898 16.866C10.2586 16.2036 10.7864 15.6568 11.442 15.6568H18.7274C19.1131 15.6568 19.4733 15.464 19.6872 15.1431L20.3929 14.0845C20.7777 13.5073 20.5695 12.7233 19.9489 12.413L10.6175 7.74734C10.3661 7.62161 10.0774 7.59205 9.80565 7.66421C9.53393 7.73637 9.29792 7.90528 9.14198 8.1392L3.8345 16.1005C3.70277 16.2981 3.63524 16.5315 3.64112 16.7689C3.64699 17.0063 3.72599 17.2361 3.86734 17.4269L12.3688 28.9038C12.4702 29.0407 12.54 29.1983 12.5732 29.3654C12.6065 29.5325 12.6023 29.7048 12.561 29.8701L10.4517 38.307C10.2697 39.035 10.8203 39.7402 11.5707 39.7402H29.0154C29.6524 39.7402 30.1688 39.2238 30.1688 38.5868V32.4304C30.1688 32.2408 30.2155 32.0542 30.3048 31.8869C30.3942 31.7197 30.5233 31.5771 30.6809 31.4717C30.6809 31.4717 30.9702 31.2782 31.3983 30.9927C33.296 29.7277 34.4289 27.6109 34.4289 25.3302V21.9541C34.1056 22.301 33.7144 22.5776 33.2795 22.7666C32.8447 22.9556 32.3755 23.053 31.9014 23.0527Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-fear\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.7163 18.1919C37.7163 7.66595 30.256 -0.0365443 21.0753 0.000130412C11.8948 -0.0365443 4.42674 7.66595 4.42674 18.1919L4.45986 39.2561L10.0132 36.6109L15.5662 40.0574L21.1041 36.611L26.6423 40.0576L32.1802 36.6114L37.7189 39.2571L37.7163 18.1919ZM13.8381 23.0375C11.3826 22.4627 9.85789 20.0062 10.4327 17.5507L19.3249 19.6321C18.7501 22.0876 16.2936 23.6122 13.8381 23.0375ZM28.3076 23.0375C25.8521 23.6122 23.3956 22.0876 22.8208 19.6321L31.713 17.5506C32.2877 20.0062 30.7631 22.4627 28.3076 23.0375Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-profanity\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.3103 19.3136H17.3632L18.3397 15.4073H15.2868L14.3103 19.3136Z\" fill=\"currentColor\"/>\n        <path d=\"M35.7031 2.12608H4.29688C1.92375 2.12608 0 4.04983 0 6.42295V28.298C0 30.6711 1.92375 32.5948 4.29688 32.5948H24.2445L30.9403 38.5466C31.696 39.2184 32.8906 38.6819 32.8906 37.6707V32.5948H35.7031C38.0763 32.5948 40 30.6711 40 28.298V6.42295C40 4.04983 38.0763 2.12608 35.7031 2.12608ZM23.4281 14.2355C23.4281 14.8826 22.9035 15.4073 22.2563 15.4073H20.7556L19.779 19.3136H20.6938C21.341 19.3136 21.8656 19.8383 21.8656 20.4855C21.8656 21.1326 21.341 21.6573 20.6938 21.6573H19.1931L18.2431 25.4572C18.0862 26.0851 17.4499 26.4668 16.822 26.3098C16.1942 26.1529 15.8124 25.5166 15.9694 24.8887L16.7773 21.6573H13.7244L12.7744 25.4572C12.6174 26.0851 11.9812 26.4668 11.3533 26.3098H11.3532C10.7253 26.1529 10.3436 25.5166 10.5006 24.8887L11.3085 21.6573H10.3938C9.74657 21.6573 9.22188 21.1326 9.22188 20.4855C9.22188 19.8383 9.74657 19.3136 10.3938 19.3136H11.8945L12.871 15.4073H11.9563C11.3091 15.4073 10.7844 14.8826 10.7844 14.2355C10.7844 13.5883 11.3091 13.0636 11.9563 13.0636H13.457L14.407 9.26374C14.5639 8.63585 15.2002 8.25413 15.8281 8.41108H15.8281C16.456 8.56803 16.8377 9.20428 16.6808 9.83217L15.8728 13.0636H18.9256L19.8756 9.26374C20.0325 8.63585 20.6688 8.25413 21.2967 8.41108C21.9245 8.56803 22.3063 9.20428 22.1493 9.83217L21.3416 13.0636H22.2563C22.9035 13.0636 23.4281 13.5883 23.4281 14.2355ZM26.8719 9.54795C26.8719 8.90077 27.3966 8.37608 28.0438 8.37608C28.691 8.37608 29.2156 8.90077 29.2156 9.54795V20.4855C29.2156 21.1326 28.691 21.6573 28.0438 21.6573C27.3966 21.6573 26.8719 21.1326 26.8719 20.4855V9.54795ZM28.0453 26.3448C27.3981 26.3448 26.8731 25.8202 26.8731 25.173C26.8731 24.5258 27.3973 24.0011 28.0446 24.0011H28.0453C28.6925 24.0011 29.2172 24.5258 29.2172 25.173C29.2172 25.8202 28.6925 26.3448 28.0453 26.3448Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-sadness\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M20 0.468704C9.22004 0.468704 0.468719 9.22002 0.468719 20C0.468719 30.78 9.22004 39.5313 20 39.5313C30.78 39.5313 39.5313 30.78 39.5313 20C39.5313 9.22002 30.78 0.468704 20 0.468704ZM16.832 28.8854C18.9453 27.431 21.0586 27.4453 23.1719 28.888C23.4571 29.0828 23.8081 29.1563 24.1475 29.0923C24.4869 29.0283 24.787 28.8321 24.9818 28.5469C25.1766 28.2616 25.25 27.9107 25.1861 27.5713C25.1221 27.2319 24.9259 26.9318 24.6406 26.737C21.5456 24.625 18.4505 24.6107 15.3555 26.7396C15.0857 26.9413 14.9044 27.2396 14.8497 27.5719C14.795 27.9043 14.8711 28.2449 15.0621 28.5224C15.253 28.7999 15.544 28.9927 15.8739 29.0604C16.2039 29.1281 16.5473 29.0654 16.832 28.8854ZM10.6901 13.0065C10.2441 12.9388 9.8043 12.8351 9.37499 12.6966C9.05983 12.5797 8.80203 12.3455 8.65544 12.043C8.50885 11.7405 8.4848 11.393 8.58833 11.0732C8.69185 10.7534 8.91494 10.4859 9.21099 10.3267C9.50705 10.1675 9.85317 10.1288 10.1771 10.2187C11.7878 10.7396 13.5404 10.5377 14.8828 10.1146C15.6914 9.85935 16.3516 9.53904 16.6849 9.21742C16.9337 8.97793 17.2675 8.84709 17.6128 8.85369C17.958 8.86028 18.2866 9.00377 18.5261 9.25258C18.7655 9.50139 18.8964 9.83515 18.8898 10.1804C18.8832 10.5257 18.7397 10.8542 18.4909 11.0937C17.8477 11.7122 16.4505 12.4232 14.7487 12.8164C15.295 13.2124 15.7048 13.7683 15.9214 14.4074C16.138 15.0464 16.1506 15.737 15.9575 16.3835C15.7645 17.0301 15.3753 17.6006 14.8438 18.0163C14.3123 18.432 13.6647 18.6722 12.9907 18.7038C12.3167 18.7354 11.6495 18.5567 11.0815 18.1925C10.5135 17.8284 10.0726 17.2967 9.81999 16.671C9.56734 16.0453 9.51537 15.3566 9.67124 14.7001C9.82712 14.0436 10.1832 13.4518 10.6901 13.0065ZM25.3503 12.7461C23.7787 12.3437 22.5 11.6771 21.8932 11.0937C21.6444 10.8542 21.5009 10.5257 21.4944 10.1804C21.4878 9.83515 21.6186 9.50139 21.8581 9.25258C22.0976 9.00377 22.4261 8.86028 22.7714 8.85369C23.1167 8.84709 23.4504 8.97793 23.6992 9.21742C24.0339 9.53904 24.694 9.85935 25.5013 10.1146C26.8451 10.5377 28.5964 10.7396 30.2084 10.2187C30.537 10.1124 30.8943 10.1409 31.2019 10.298C31.5094 10.4552 31.742 10.728 31.8484 11.0566C31.9547 11.3852 31.9262 11.7426 31.7691 12.0501C31.6119 12.3577 31.339 12.5902 31.0105 12.6966C30.4731 12.8689 29.9201 12.988 29.3594 13.0521C29.8585 13.5095 30.2026 14.1112 30.3437 14.7734C30.4849 15.4356 30.416 16.1253 30.1467 16.7465C29.8774 17.3677 29.4212 17.8895 28.8415 18.2392C28.2617 18.5889 27.5874 18.7492 26.9123 18.6976C26.2372 18.6461 25.595 18.3854 25.075 17.9517C24.5551 17.5181 24.1833 16.9331 24.0114 16.2782C23.8396 15.6233 23.8762 14.9312 24.1161 14.2981C24.3561 13.665 24.7875 13.1225 25.3503 12.7461Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-sex\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M13.4948 27.2901C14.3318 27.2901 15.1542 27.2085 15.956 27.0537C14.1817 25.5932 12.7652 23.7426 11.8158 21.6448C11.5175 21.577 11.2234 21.4914 10.9352 21.3885C6.97126 19.9716 4.89344 15.5772 6.30461 11.5929C6.83505 10.1027 7.81035 8.81316 9.09736 7.9005C10.3844 6.98784 11.9204 6.49648 13.4957 6.4935C14.3643 6.4935 15.2252 6.64397 16.0544 6.94059C20.0192 8.35925 22.0971 12.7528 20.685 16.7362C20.5787 17.035 20.4544 17.327 20.3128 17.6106L20.3213 17.633C20.7026 18.5139 21.3006 19.2829 22.0592 19.8677C22.8178 20.4525 23.7119 20.8338 24.6575 20.9758C25.1128 20.2235 25.497 19.4179 25.7991 18.5676C28.2141 11.7503 24.6592 4.23139 17.8755 1.8042C16.4698 1.30002 14.9883 1.04206 13.4957 1.04156C7.98535 1.04156 3.04069 4.54779 1.19136 9.76501C-0.954916 15.8222 1.61326 22.4349 6.97297 25.5353L5.37182 30.0535L4.82755 28.8997C4.5603 28.3342 4.08039 27.8985 3.4934 27.6884C2.90641 27.4784 2.26043 27.5113 1.69755 27.7798C1.13468 28.0483 0.701026 28.5305 0.491989 29.1202C0.282953 29.7099 0.315658 30.359 0.582909 30.9245L3.63717 37.385C3.76933 37.6651 3.95516 37.9162 4.18402 38.1241C4.41289 38.332 4.6803 38.4925 4.97096 38.5965C5.26162 38.7005 5.56984 38.7459 5.87797 38.7301C6.18611 38.7143 6.48812 38.6376 6.76673 38.5044L12.8761 35.5888C13.4292 35.3146 13.8527 34.8327 14.0552 34.2474C14.2577 33.6621 14.2229 33.0202 13.9584 32.4604C13.6939 31.9006 13.2209 31.4678 12.6415 31.2554C12.0621 31.043 11.4228 31.068 10.8616 31.3251L9.71401 31.8728L11.399 27.1173C12.0905 27.2317 12.7922 27.2901 13.4948 27.2901Z\" fill=\"currentColor\"/>\n        <path d=\"M39.4359 28.6942C39.1883 28.1202 38.724 27.6684 38.145 27.4382C37.566 27.208 36.9198 27.2181 36.3482 27.4664L33.7621 28.5927L32.7643 26.2807C34.9728 24.8056 36.678 22.6855 37.6499 20.2063C38.2859 18.6053 38.5992 16.8934 38.5718 15.1699C38.5443 13.4463 38.1765 11.7454 37.4898 10.1657C35.4189 5.35943 30.7121 2.25558 25.4996 2.25558C24.5 2.25558 23.7367 2.33211 22.7722 2.55823C24.6669 3.76968 26.0345 5.44283 26.9852 7.86916C29.4858 8.31024 31.4746 9.93954 32.5075 12.3332C32.908 13.2567 33.1225 14.2507 33.1385 15.2579C33.1545 16.265 32.9718 17.2654 32.6008 18.2013C32.2345 19.1392 31.6866 19.9948 30.9889 20.7184C30.2911 21.442 29.4573 22.0193 28.5359 22.4168C27.1635 23.0163 25.6455 23.1952 24.1723 22.931C22.93 22.7097 21.7618 22.1824 20.7721 21.3963C19.7824 20.6102 19.0021 19.5899 18.5011 18.4265C18.0999 17.5031 17.8852 16.5089 17.8691 15.5015C17.8531 14.494 18.0362 13.4934 18.4078 12.5576C18.5567 12.181 18.739 11.8259 18.9392 11.4829C18.0394 9.942 16.6262 8.77042 14.9496 8.17525C14.8495 8.14 14.7468 8.12366 14.6467 8.09357C14.133 8.86473 13.7021 9.68843 13.3613 10.5509L13.3091 10.6858C12.0791 13.8873 12.155 17.4468 13.5205 20.5924C14.5325 22.9425 16.2069 24.9437 18.3374 26.3491C20.4679 27.7545 22.9612 28.5028 25.5099 28.5016C26.5001 28.4982 27.4868 28.3805 28.4503 28.1508L29.4498 30.4662L26.8628 31.5934C26.5725 31.7115 26.3085 31.8868 26.0865 32.1089C25.8646 32.331 25.6891 32.5955 25.5704 32.8867C25.4517 33.178 25.3921 33.4902 25.3953 33.8049C25.3985 34.1197 25.4643 34.4306 25.5888 34.7194C25.7134 35.0082 25.8941 35.269 26.1205 35.4866C26.3469 35.7042 26.6143 35.874 26.907 35.9862C27.1997 36.0984 27.5118 36.1506 27.8249 36.1398C28.138 36.129 28.4458 36.0554 28.7301 35.9233L31.3154 34.7978L32.2713 37.0118C32.3937 37.2963 32.5706 37.5539 32.7921 37.7696C33.0136 37.9854 33.2753 38.1551 33.5622 38.2691C33.849 38.3832 34.1555 38.4393 34.4639 38.4342C34.7724 38.4291 35.0768 38.363 35.3598 38.2396C35.9315 37.991 36.3815 37.5244 36.6108 36.9425C36.8402 36.3606 36.83 35.711 36.5827 35.1366L35.6268 32.9218L38.2147 31.7963C38.4979 31.6735 38.7541 31.4958 38.9689 31.2733C39.1836 31.0508 39.3525 30.788 39.4659 30.4998C39.5793 30.2116 39.6351 29.9038 39.6299 29.594C39.6248 29.2841 39.5588 28.9784 39.4359 28.6942Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-importance\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M20 39.6419C9.19695 39.6419 0.358093 30.803 0.358093 20C0.358093 9.19695 9.19695 0.358093 20 0.358093C30.803 0.358093 39.6419 9.19695 39.6419 20C39.6419 30.803 30.803 39.6419 20 39.6419ZM20 4.28647C11.3576 4.28647 4.28647 11.3576 4.28647 20C4.28647 28.6424 11.3576 35.7135 20 35.7135C28.6424 35.7135 35.7135 28.6424 35.7135 20C35.7135 11.3576 28.6424 4.28647 20 4.28647Z\" fill=\"currentColor\"/>\n        <path d=\"M20 21.9642C18.8215 21.9642 18.0358 21.1785 18.0358 20V12.1432C18.0358 10.9647 18.8215 10.179 20 10.179C21.1785 10.179 21.9642 10.9647 21.9642 12.1432V20C21.9642 21.1785 21.1785 21.9642 20 21.9642ZM20 29.821C18.8215 29.821 18.0358 29.0353 18.0358 27.8568C18.0358 26.6782 18.8215 25.8926 20 25.8926C21.1785 25.8926 21.9642 26.6782 21.9642 27.8568C21.9642 29.0353 21.1785 29.821 20 29.821Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-tension\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.0715 16.3786C31.8617 15.9801 31.5471 15.6465 31.1615 15.4138C30.776 15.181 30.3343 15.058 29.884 15.0579H25.2338L30.8589 3.80775C31.047 3.43095 31.1358 3.01233 31.1168 2.59159C31.0978 2.17085 30.9717 1.76194 30.7503 1.40363C30.529 1.04526 30.2196 0.749446 29.8518 0.544293C29.4839 0.339139 29.0697 0.231461 28.6484 0.231491L16.2931 0.231491C15.2289 0.231491 14.2853 0.91204 13.9487 1.92132L7.77102 20.4544C7.64731 20.8259 7.61365 21.2214 7.67281 21.6085C7.73196 21.9955 7.88224 22.3629 8.11126 22.6805C8.34015 22.9981 8.64121 23.2567 8.98965 23.4351C9.33808 23.6135 9.72392 23.7066 10.1154 23.7067H15.884L13.8509 36.9218C13.676 38.0608 14.3106 39.1702 15.3821 39.5949C15.9024 39.8009 16.4773 39.8243 17.0126 39.6613C17.548 39.4984 18.0123 39.1588 18.3298 38.6979L31.9207 18.9293C32.1758 18.5582 32.3246 18.1244 32.3512 17.6749C32.3778 17.2254 32.2811 16.7771 32.0715 16.3786Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-pace\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M34.1659 7.81554C30.3975 4.04712 25.3036 1.93512 20.0025 1.93512C8.94526 1.93512 0 10.88 0 21.8955C0 27.1962 2.112 32.2896 5.83916 36.0581C6.58442 36.8033 7.74442 36.8033 8.44842 36.0581L10.0219 34.4846L11.5958 32.9111C12.341 32.1658 12.341 31.0058 11.5958 30.3018C10.8505 29.5978 9.69052 29.5566 8.98652 30.3018L7.41305 31.8757C5.5827 29.5424 4.43573 26.7469 4.09979 23.8004H6.37768C6.62266 23.8013 6.86539 23.7537 7.0919 23.6603C7.3184 23.567 7.52419 23.4298 7.69742 23.2565C7.87064 23.0833 8.00788 22.8775 8.10122 22.651C8.19456 22.4245 8.24215 22.1818 8.24126 21.9368C8.24126 21.44 8.0341 20.9431 7.70273 20.6117C7.37137 20.2804 6.91621 20.0732 6.37768 20.0732H4.09979C4.43581 17.1269 5.58277 14.3315 7.41305 11.9983L8.98652 13.5717C9.73179 14.317 10.8918 14.317 11.5958 13.5717C12.2998 12.8265 12.341 11.6669 11.5958 10.9629L10.0632 9.38901C12.3839 7.52999 15.1841 6.36699 18.1389 6.03491V8.2707C18.138 8.51571 18.1855 8.75849 18.2789 8.98504C18.3722 9.21159 18.5094 9.41743 18.6826 9.5907C18.8559 9.76398 19.0617 9.90125 19.2882 9.99461C19.5147 10.088 19.7575 10.1356 20.0025 10.1347C20.4994 10.1347 20.9962 9.92754 21.328 9.59617C21.6589 9.2648 21.8661 8.80922 21.8661 8.27112V6.03491C24.821 6.36699 27.6212 7.52999 29.9419 9.38901L28.368 10.9629C27.6227 11.7082 27.6227 12.8677 28.368 13.5717C29.1133 14.2757 30.2733 14.317 30.9773 13.5717L32.5507 11.9983C37.1478 17.837 37.1478 26.0366 32.5507 31.8341L30.9356 30.2193C30.1903 29.4741 29.0307 29.4741 28.3267 30.2193C27.6227 30.9646 27.5815 32.1242 28.3267 32.8282L29.9419 34.4016L31.5154 35.9755C32.2606 36.7208 33.4206 36.7208 34.1246 35.9755C41.9516 28.2728 41.9516 15.6008 34.1659 7.81554ZM31.4741 20.1562L23.5642 19.2867C23.317 18.9569 23.0241 18.664 22.6943 18.4168C20.7482 16.9675 17.9735 17.3402 16.5238 19.2867C15.0741 21.2332 15.4472 24.0075 17.3937 25.4568C19.3402 26.9061 22.1145 26.5334 23.5642 24.5873L31.4741 23.7174C31.8772 23.6758 32.2536 23.4966 32.5402 23.2101C32.8267 22.9235 33.0059 22.547 33.0476 22.144C33.1305 21.1503 32.4265 20.2804 31.4741 20.1562Z\" fill=\"currentColor\"/>\n    </symbol>\n    \n    <symbol id=\"sprite-meta-action\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M23.75 0C15.2255 4.91161 16.2499 18.75 16.2499 18.75C16.2499 18.75 12.5 17.5 12.5 11.875C8.02599 14.4693 4.99997 19.4557 4.99997 25C4.99997 33.2843 11.7157 40 20 40C28.2843 40 35 33.2843 35 25C34.9999 12.8125 23.75 10.3125 23.75 0ZM21.3176 34.8315C18.3034 35.583 15.2505 33.7487 14.4988 30.7344C13.7473 27.7201 15.5816 24.6671 18.596 23.9156C25.8732 22.1012 26.7852 18.0089 26.7852 18.0089C26.7852 18.0089 30.4141 32.5634 21.3176 34.8315Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-romance\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.2535 18.1293C31.9958 18.2362 31.7424 18.365 31.4981 18.5027L31.2005 18.6716L31.0312 18.3739C29.8135 16.2404 27.5247 14.9162 25.067 14.9162C23.8758 14.9162 22.6981 15.232 21.6581 15.8269C18.3781 17.7069 17.2362 21.9112 19.1116 25.1958L22.3251 30.8093L19.2628 34.7065L3.22315 22.1027C-0.438753 19.2227 -1.07454 13.92 1.80083 10.2543C4.68083 6.58734 9.992 5.95197 13.6493 8.83198L16.4185 11.005L18.5916 8.24082C21.4716 4.57429 26.7735 3.9385 30.44 6.8185C33.9293 9.56082 34.6758 14.4985 32.2535 18.1293Z\" fill=\"currentColor\"/>\n        <path d=\"M37.4375 28.8745L35.5988 29.9272L26.7663 34.9857L20.656 24.3128C19.2619 21.8745 20.1065 18.7663 22.5436 17.3693C24.9828 15.9726 28.0931 16.8181 29.4872 19.2564L30.5423 21.0964L32.3815 20.0434C34.8202 18.6467 37.9285 19.4918 39.3247 21.9309C40.7238 24.3705 39.8788 27.4787 37.4375 28.8741\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-humor\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M20.0004 0.369202C15.4587 0.369096 11.0574 1.94376 7.54659 4.8249C4.03583 7.70609 1.63266 11.7154 0.746527 16.1698C-0.139606 20.6242 0.546121 25.248 2.68688 29.2535C4.32404 32.3166 6.74455 34.8905 9.70141 36.7126C12.6583 38.5346 16.0456 39.5396 19.5177 39.6249C22.9898 39.7103 26.4224 38.8729 29.4652 37.1982C32.508 35.5236 35.052 33.0717 36.8377 30.0927C38.6233 27.1137 39.5866 23.7143 39.6293 20.2414C39.672 16.7685 38.7926 13.3464 37.0807 10.3244C35.3688 7.3024 32.8859 4.78866 29.8852 3.03973C26.8845 1.29079 23.4735 0.369269 20.0004 0.369202ZM9.04618 16.1446C9.47031 15.5957 10.0114 15.1481 10.6301 14.8345C11.2488 14.5208 11.9296 14.3489 12.623 14.3312C13.3987 14.3012 14.1714 14.4421 14.8866 14.7439C15.6017 15.0458 16.2417 15.5013 16.7613 16.078C16.8644 16.1935 16.9438 16.3281 16.9949 16.4742C17.046 16.6204 17.0678 16.7752 17.0591 16.9297C17.0504 17.0843 17.0113 17.2356 16.9441 17.3751C16.8768 17.5145 16.7828 17.6394 16.6673 17.7425C16.5518 17.8456 16.4172 17.925 16.2711 17.9761C16.1249 18.0272 15.9701 18.049 15.8156 18.0402C15.661 18.0315 15.5097 17.9924 15.3702 17.9252C15.2308 17.858 15.1059 17.764 15.0028 17.6485C14.7153 17.3318 14.3614 17.0825 13.9664 16.9183C13.5715 16.7541 13.1451 16.679 12.7178 16.6986C12.3746 16.6991 12.036 16.7771 11.7271 16.9266C11.4182 17.076 11.147 17.2932 10.9336 17.562C10.7567 17.7974 10.4982 17.9583 10.2089 18.0131C9.91957 18.068 9.62018 18.0128 9.36943 17.8584C9.18249 17.7432 9.03148 17.5781 8.93347 17.3816C8.83545 17.1852 8.79434 16.9652 8.81477 16.7466C8.83507 16.5281 8.91609 16.3195 9.04868 16.1446H9.04618ZM30.8838 23.5219C30.5109 26.1428 29.2047 28.541 27.2053 30.2761C25.2059 32.0111 22.6476 32.9664 20.0004 32.9664C17.3531 32.9664 14.7948 32.0111 12.7954 30.2761C10.796 28.541 9.48982 26.1428 9.11689 23.5219C9.08804 23.3188 9.10684 23.1118 9.17179 22.9172C9.23698 22.7299 9.34296 22.5595 9.48205 22.4181C9.62583 22.2743 9.79665 22.1603 9.98467 22.0828C10.1727 22.0053 10.3742 21.9657 10.5776 21.9664H29.4231C29.6291 21.9648 29.8333 22.0047 30.0235 22.0837C30.2138 22.1627 30.3861 22.2793 30.5303 22.4264C30.6717 22.5702 30.7779 22.7447 30.8406 22.9363C30.901 23.1266 30.9158 23.3283 30.8838 23.5253V23.5219ZM30.9936 17.735C30.878 17.8379 30.7432 17.917 30.597 17.9677C30.4507 18.0185 30.2959 18.0399 30.1414 18.0307C29.9869 18.0216 29.8357 17.9821 29.6965 17.9145C29.5573 17.8469 29.4327 17.7526 29.33 17.6368C29.0422 17.3204 28.6883 17.0713 28.2934 16.9071C27.8985 16.7429 27.4722 16.6677 27.045 16.6869C26.7006 16.6886 26.361 16.7683 26.0518 16.9198C25.7425 17.0713 25.4715 17.2909 25.2591 17.562C25.0822 17.7974 24.8238 17.9583 24.5344 18.0131C24.2451 18.068 23.9457 18.0128 23.6949 17.8584C23.5552 17.7722 23.435 17.6578 23.3421 17.5224C23.2492 17.3871 23.1856 17.2338 23.1554 17.0724C23.1251 16.9111 23.129 16.7452 23.1667 16.5854C23.2044 16.4256 23.2751 16.2754 23.3742 16.1446C23.7979 15.5962 24.3383 15.149 24.9562 14.8354C25.5741 14.5217 26.254 14.3495 26.9468 14.3312C27.7223 14.3024 28.4947 14.4438 29.2096 14.7456C29.9246 15.0474 30.5648 15.5022 31.085 16.078C31.2931 16.3111 31.4 16.6173 31.3824 16.9293C31.3648 17.2412 31.2241 17.5334 30.9911 17.7417L30.9936 17.735Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-player-prev\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.78541 8.07648C4.36836 9.01505 4.36836 11.0953 5.78541 12.0339L13.9759 17.4588C15.5536 18.5038 17.6598 17.3725 17.6598 15.4801L17.6598 4.63027C17.6598 2.7379 15.5536 1.60659 13.9759 2.65157L5.78541 8.07648Z\" fill=\"currentColor\"/>\n        <rect width=\"3.87428\" height=\"15.6044\" rx=\"1.93714\" transform=\"matrix(-1 0 0 1 6.67232 2.25293)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-next\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.3225 8.07648C15.7396 9.01505 15.7396 11.0953 14.3225 12.0339L6.13206 17.4588C4.55437 18.5038 2.44812 17.3725 2.44812 15.4801L2.44812 4.63027C2.44812 2.7379 4.55437 1.60659 6.13206 2.65157L14.3225 8.07648Z\" fill=\"currentColor\"/>\n        <rect x=\"13.4356\" y=\"2.25293\" width=\"3.87428\" height=\"15.6044\" rx=\"1.93714\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-play\" viewBox=\"0 0 30 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M27.0947 10.3888C29.7614 11.9285 29.7614 15.7775 27.0947 17.3171L10.0392 27.164C7.37258 28.7036 4.03925 26.7791 4.03925 23.6999L4.03925 4.00597C4.03925 0.926766 7.37258 -0.997735 10.0392 0.541866L27.0947 10.3888Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-pause\" viewBox=\"0 0 30 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"2.57178\" width=\"9.16595\" height=\"27.7061\" rx=\"3\" fill=\"currentColor\"/>\n        <rect x=\"17.3571\" width=\"9.16595\" height=\"27.7061\" rx=\"3\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-playlist\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"18.8307\" y=\"1.55127\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 1.55127)\" fill=\"currentColor\"/>\n        <rect x=\"18.8307\" y=\"8.34766\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 8.34766)\" fill=\"currentColor\"/>\n        <rect x=\"18.8307\" y=\"15.1436\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 15.1436)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-volume\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.86032\" y=\"5.05762\" width=\"4.80624\" height=\"9.99512\" rx=\"2\" fill=\"currentColor\"/>\n        <path d=\"M7.97406 6.92909C7.97406 6.18824 8.37101 5.48162 9.06762 4.98242L13.2115 2.01285C14.6465 0.98453 16.9527 1.78454 16.9527 3.31063V16.8002C16.9527 18.3263 14.6465 19.1263 13.2115 18.098L9.06762 15.1284C8.37101 14.6292 7.97406 13.9226 7.97406 13.1818V6.92909Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-settings\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M16.9635 3.43679L11.7643 0.429913C10.7687 -0.143304 9.20999 -0.143304 8.2144 0.429913L2.96494 3.45691C0.883251 4.86481 0.762573 5.07599 0.762573 7.31858V12.7792C0.762573 15.0218 0.883251 15.2431 3.00516 16.6711L8.20435 19.678C8.70717 19.9696 9.35078 20.1104 9.98434 20.1104C10.6179 20.1104 11.2615 19.9696 11.7543 19.678L17.0037 16.651C19.0854 15.2431 19.2061 15.0319 19.2061 12.7893V7.31858C19.2061 5.07599 19.0854 4.86481 16.9635 3.43679ZM9.98434 14.7924C7.37452 14.7924 5.24583 12.6638 5.24583 10.0539C5.24583 7.44412 7.37452 5.31543 9.98434 5.31543C12.5942 5.31543 14.7228 7.44412 14.7228 10.0539C14.7228 12.6638 12.5942 14.7924 9.98434 14.7924Z\" fill=\"currentColor\"/>\n\n    </symbol>\n    <symbol id=\"sprite-player-subtitles\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.7631 15.1804C18.1916 15.5189 18.2729 16.143 17.8981 16.5401C16.1749 18.3662 13.7323 19.5058 11.0234 19.5058C5.80377 19.5058 1.57245 15.2745 1.57245 10.0549C1.57245 4.83532 5.80377 0.604004 11.0234 0.604004C13.7323 0.604004 16.1749 1.74367 17.8981 3.56969C18.2729 3.96688 18.1916 4.59092 17.7631 4.92947L15.972 6.34451C15.557 6.67245 14.9633 6.61199 14.5513 6.28014C13.5728 5.49191 12.3287 5.02009 10.9744 5.02009C7.82296 5.02009 5.93954 6.90351 5.93954 10.0549C5.93954 13.2063 7.82296 15.0897 10.9744 15.0897C12.3287 15.0897 13.5728 14.6179 14.5513 13.8297C14.9633 13.4979 15.557 13.4374 15.972 13.7653L17.7631 15.1804Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-voice\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.4085 4.52687C14.4085 2.02675 12.3818 0 9.88165 0C7.38153 0 5.35478 2.02675 5.35478 4.52687V10.3471C5.35478 12.8473 7.38153 14.874 9.88165 14.874C12.3818 14.874 14.4085 12.8473 14.4085 10.3471V4.52687Z\" fill=\"currentColor\"/>\n        <path d=\"M4.31538 11.9269C4.11641 11.4295 3.55187 11.1876 3.05445 11.3865C2.55703 11.5855 2.31508 12.15 2.51405 12.6475L4.31538 11.9269ZM17.2493 12.6475C17.4483 12.15 17.2063 11.5855 16.7089 11.3865C16.2115 11.1876 15.647 11.4295 15.448 11.9269L17.2493 12.6475ZM2.51405 12.6475C3.96832 16.2831 6.93607 17.7841 9.88167 17.7841V15.844C7.65371 15.844 5.44789 14.7582 4.31538 11.9269L2.51405 12.6475ZM9.88167 17.7841C12.8273 17.7841 15.795 16.2831 17.2493 12.6475L15.448 11.9269C14.3155 14.7582 12.1096 15.844 9.88167 15.844V17.7841Z\" fill=\"currentColor\"/>\n        <path d=\"M11.1751 17.4609C11.1751 16.7466 10.596 16.1675 9.88166 16.1675C9.16734 16.1675 8.58827 16.7466 8.58827 17.4609V18.7543C8.58827 19.4686 9.16734 20.0477 9.88166 20.0477C10.596 20.0477 11.1751 19.4686 11.1751 18.7543V17.4609Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-pip\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.62734 17.8131H4.5013C2.84444 17.8131 1.5013 16.47 1.5013 14.8131V4.76074C1.5013 3.10389 2.84444 1.76074 4.5013 1.76074H15.618C17.2749 1.76074 18.618 3.10389 18.618 4.76074V7.95645\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <rect x=\"9.61014\" y=\"12.0571\" width=\"10.411\" height=\"7.20752\" rx=\"2\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-fullscreen\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.0802 11.6267L18.0802 15.2422C18.0802 16.899 16.737 18.2422 15.0802 18.2422L5.02777 18.2422C3.37092 18.2422 2.02777 16.899 2.02777 15.2422L2.02777 4.76074C2.02777 3.10389 3.37092 1.76074 5.02777 1.76074L8.1847 1.76074\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <path d=\"M12.5018 1.76074H15.0391C16.696 1.76074 18.0391 3.10389 18.0391 4.76074V7.2283\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <rect x=\"7.37248\" y=\"11.3169\" width=\"9.53292\" height=\"2.61035\" rx=\"1.30518\" transform=\"rotate(-47.7566 7.37248 11.3169)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-flow\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.1649 2.945C15.2657 1.04591 12.7407 0 10.0549 0C7.36917 0 4.84416 1.04591 2.945 2.945C1.04591 4.84416 0 7.36917 0 10.0549C0 12.7407 1.04591 15.2657 2.945 17.1649C4.84416 19.064 7.36917 20.1099 10.0549 20.1099C12.7407 20.1099 15.2657 19.064 17.1649 17.1649C19.064 15.2657 20.1099 12.7407 20.1099 10.0549C20.1099 7.36917 19.064 4.84416 17.1649 2.945ZM4.71325 10.9976C4.71325 11.5182 4.29122 11.9402 3.7706 11.9402C3.24998 11.9402 2.82795 11.5182 2.82795 10.9976V9.11228C2.82795 8.59166 3.24998 8.16963 3.7706 8.16963C4.29122 8.16963 4.71325 8.59166 4.71325 9.11228V10.9976ZM7.85542 12.5687C7.85542 13.0893 7.43338 13.5113 6.91277 13.5113C6.39215 13.5113 5.97012 13.0893 5.97012 12.5687V7.5412C5.97012 7.02058 6.39215 6.59855 6.91277 6.59855C7.43338 6.59855 7.85542 7.02058 7.85542 7.5412V12.5687ZM10.9976 14.454C10.9976 14.9746 10.5755 15.3966 10.0549 15.3966C9.53431 15.3966 9.11228 14.9746 9.11228 14.454V5.6559C9.11228 5.13528 9.53431 4.71325 10.0549 4.71325C10.5755 4.71325 10.9976 5.13528 10.9976 5.6559V14.454ZM14.1397 12.5687C14.1397 13.0893 13.7177 13.5113 13.1971 13.5113C12.6765 13.5113 12.2544 13.0893 12.2544 12.5687V7.5412C12.2544 7.02058 12.6765 6.59855 13.1971 6.59855C13.7177 6.59855 14.1397 7.02058 14.1397 7.5412V12.5687ZM16.3393 11.9402C15.8186 11.9402 15.3966 11.5182 15.3966 10.9976V9.11228C15.3966 8.59166 15.8186 8.16963 16.3393 8.16963C16.8599 8.16963 17.2819 8.59166 17.2819 9.11228V10.9976C17.2819 11.5182 16.8599 11.9402 16.3393 11.9402Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-ai\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M10.054 0.00195312L10.5172 1.75955C11.5271 5.59073 14.5192 8.58285 18.3504 9.59267L20.108 10.0559L18.3504 10.5192C14.5192 11.529 11.5271 14.5211 10.5172 18.3523L10.054 20.1099L9.59071 18.3523C8.5809 14.5211 5.58878 11.529 1.7576 10.5192L0 10.0559L1.7576 9.59267C5.58878 8.58285 8.5809 5.59073 9.59071 1.75955L10.054 0.00195312Z\" fill=\"currentColor\"/>\n        <path d=\"M16.3286 0.707031C16.7236 2.2056 17.894 3.37598 19.3925 3.77097C17.894 4.16596 16.7236 5.33633 16.3286 6.8349C15.9336 5.33633 14.7633 4.16596 13.2647 3.77097C14.7633 3.37598 15.9336 2.2056 16.3286 0.707031Z\" fill=\"currentColor\"/>\n        <path d=\"M4.06625 13.9224C4.33844 14.9551 5.14498 15.7616 6.17769 16.0338C5.14498 16.306 4.33844 17.1125 4.06625 18.1452C3.79405 17.1125 2.98751 16.306 1.9548 16.0338C2.98751 15.7616 3.79405 14.9551 4.06625 13.9224Z\" fill=\"currentColor\"/>\n        <circle cx=\"15.9932\" cy=\"15.7028\" r=\"0.679867\" fill=\"currentColor\"/>\n        <circle cx=\"4.74611\" cy=\"4.95233\" r=\"0.679867\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-ai-agent\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M13.9498 0L15.7629 3.4198C17.731 7.13203 20.7675 10.1685 24.4797 12.1367L27.8995 13.9498L24.4797 15.7629C20.7675 17.731 17.731 20.7675 15.7629 24.4797L13.9498 27.8995L12.1367 24.4797C10.1685 20.7675 7.13203 17.731 3.4198 15.7629L0 13.9498L3.4198 12.1367C7.13203 10.1685 10.1685 7.13203 12.1367 3.4198L13.9498 0Z\" fill=\"currentColor\"/>\n    </symbol>\n</svg>\n";
+  var html$s = "\n<svg style=\"display: none;\" id=\"sprites\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 39 39\">\n    <symbol id=\"sprite-home\" viewBox=\"0 0 39 38\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.457 2.53174C18.6771 1.65561 20.321 1.65561 21.541 2.53174L35.8486 12.8062C36.7642 13.4636 37.3066 14.5227 37.3066 15.6499V32.8345C37.3066 34.7675 35.7396 36.3345 33.8066 36.3345H5.19141C3.25841 36.3345 1.69141 34.7675 1.69141 32.8345V15.6499C1.69141 14.5227 2.23389 13.4637 3.14941 12.8062L17.457 2.53174Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-feed\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M9 0L11.4308 6.56918L18 9L11.4308 11.4308L9 18L6.56918 11.4308L0 9L6.56918 6.56918L9 0Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-movie\" viewBox=\"0 0 40 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.8574 15.9922V30.3311C37.8574 32.2641 36.2904 33.8311 34.3574 33.8311H5.35742C3.42443 33.8311 1.85742 32.2641 1.85742 30.3311V15.9922H37.8574Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M5.35742 1.73096H34.3574C36.2904 1.73096 37.8574 3.29796 37.8574 5.23096V10.4312H1.85742V5.23096C1.85742 3.29796 3.42443 1.73096 5.35742 1.73096Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"11.6924\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 11.6924 1.41992)\" fill=\"currentColor\"/>\n        <rect x=\"20.8115\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 20.8115 1.41992)\" fill=\"currentColor\"/>\n        <rect x=\"29.9307\" y=\"1.41992\" width=\"3.00879\" height=\"9.02734\" transform=\"rotate(30 29.9307 1.41992)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-tv\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"8.58545\" width=\"35.501\" height=\"22.8032\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"13.8877\" y=\"1.70264\" width=\"2.9873\" height=\"9.61475\" rx=\"1.49365\" transform=\"rotate(-30 13.8877 1.70264)\" fill=\"currentColor\"/>\n        <rect x=\"22.3926\" y=\"0.208984\" width=\"2.9873\" height=\"9.61475\" rx=\"1.49365\" transform=\"rotate(30 22.3926 0.208984)\" fill=\"currentColor\"/>\n        <rect x=\"9.02832\" y=\"35.6714\" width=\"20.8105\" height=\"3.03857\" rx=\"1.51929\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-catalog\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"13.2769\" width=\"35.501\" height=\"23.9331\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"4.72461\" y=\"6.08398\" width=\"29.7656\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"7.55957\" y=\"0.391113\" width=\"24.0957\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-filter\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"6.9043\" y=\"8.02637\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <rect x=\"6.9043\" y=\"17.9648\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <rect x=\"6.9043\" y=\"27.9033\" width=\"25.4062\" height=\"2.98926\" rx=\"1.49463\" fill=\"currentColor\"/>\n        <circle cx=\"26.0732\" cy=\"9.521\" r=\"3.42188\" fill=\"currentColor\"/>\n        <circle cx=\"21.6035\" cy=\"29.3979\" r=\"3.42188\" fill=\"currentColor\"/>\n        <circle cx=\"13.6904\" cy=\"19.4595\" r=\"3.42188\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-hd\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"9.11133\" y=\"12.77\" width=\"2.96094\" height=\"14.2765\" rx=\"1\" fill=\"currentColor\"/>\n        <rect x=\"15.7627\" y=\"12.77\" width=\"3.01162\" height=\"14.2765\" rx=\"1\" fill=\"currentColor\"/>\n        <rect x=\"10.6455\" y=\"18.0308\" width=\"6.98432\" height=\"3.07105\" fill=\"currentColor\"/>\n        <path d=\"M25.5996 14.27C27.5326 14.27 29.0996 15.837 29.0996 17.77V22.0464C29.0996 23.9794 27.5326 25.5464 25.5996 25.5464H22.4365V14.27H25.5996Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-anime\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M4.10938 7.84473L0.540039 11.2682C0.540039 11.2682 11.5933 14.2557 18.8397 14.3477C26.6781 14.4473 38.6752 11.2682 38.6752 11.2682L34.53 7.84473C32.1503 8.76586 25.1138 10.8878 18.8397 10.8021C12.9311 10.7213 6.76589 8.9335 4.10938 7.84473Z\" fill=\"currentColor\"/>\n        <path d=\"M10.521 23.8809C12.591 19.2814 13.2995 15.2089 13.395 13.7476L17.2589 14.132C16.9954 15.6892 15.9509 20.2695 13.8811 26.134C11.8113 31.9984 8.41913 36.9621 6.98177 38.7109L4.19629 34.8766C5.442 33.1278 8.45093 28.4803 10.521 23.8809Z\" fill=\"currentColor\"/>\n        <path d=\"M29.2622 23.8809C27.1922 19.2814 26.4837 15.2089 26.3882 13.7476L22.5243 14.132C22.7878 15.6892 23.8323 20.2695 25.9021 26.134C27.9719 31.9984 31.3641 36.9621 32.8014 38.7109L35.5869 34.8766C34.3412 33.1278 31.3323 28.4803 29.2622 23.8809Z\" fill=\"currentColor\"/>\n        <path d=\"M19.3691 5.729C15.4022 5.729 11.823 3.76481 10.5293 2.78271L13.179 0.495059C14.1612 1.35753 16.9543 2.78271 19.3691 2.78271C21.784 2.78271 24.4579 1.2138 25.2004 0.495059L28.6869 2.78271C27.7287 3.4774 23.3361 5.729 19.3691 5.729Z\" fill=\"currentColor\"/>\n        <path d=\"M19.4619 27.8662C15.4949 27.8662 11.9158 25.902 10.6221 24.9199L13.2718 22.6323C14.254 23.4947 17.047 24.9199 19.4619 24.9199C21.8768 24.9199 24.5507 23.351 25.2932 22.6323L28.7797 24.9199C27.8214 25.6146 23.4289 27.8662 19.4619 27.8662Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-favorite\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.35742 9.66309H19.2881C21.7734 9.66309 23.7881 11.6778 23.7881 14.1631V36.3369L13.4658 31.4375L12.8232 31.1328L12.1797 31.4375L1.85742 36.3369V14.1631C1.85742 11.6778 3.87214 9.66309 6.35742 9.66309Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M33.167 0.216797C36.3373 0.377414 38.8584 2.99877 38.8584 6.20898V30.7559L26.3936 24.8389L25.2881 25.3633V22.042L26.3936 21.5176L27.6797 22.1289L35.8584 26.0107V6.20898C35.8584 4.55213 34.5153 3.20899 32.8584 3.20898H19.9277C18.2709 3.20898 16.9277 4.55213 16.9277 6.20898V8.16309H13.9277V6.20898C13.9277 2.89528 16.614 0.208984 19.9277 0.208984H32.8584L33.167 0.216797Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-folder\" viewBox=\"0 0 40 33\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.70496 0.230957H18.4739C19.6491 0.230957 20.7664 0.371722 21.7895 0.919702L21.8825 0.973746C22.6441 1.40484 23.3002 2.03828 23.8054 2.9696H33.4076C35.0315 2.9696 36.507 3.6332 37.5753 4.70026V4.70654C38.1235 5.2522 38.5586 5.90064 38.8558 6.61471C39.153 7.32878 39.3064 8.09447 39.3072 8.86792V26.9349C39.307 27.7094 39.1539 28.4762 38.8567 29.1914C38.5595 29.9065 38.124 30.556 37.5753 31.1026C37.0288 31.6513 36.3793 32.0867 35.6641 32.3839C34.9489 32.6811 34.1821 32.8343 33.4076 32.8345H6.70496C5.9307 32.8341 5.16412 32.6809 4.44917 32.3837C3.73421 32.0865 3.08494 31.6511 2.53856 31.1026L2.45058 31.0083C1.39699 29.9143 0.807841 28.455 0.806641 26.9362V6.12928C0.806641 4.51047 1.47025 3.03621 2.5373 1.9679V1.96162C3.08389 1.41305 3.73341 0.97779 4.4486 0.680803C5.16378 0.383816 5.93056 0.230944 6.70496 0.230957ZM24.7606 5.8666L25.5323 8.78245H36.4077C36.3861 8.0166 36.0706 7.28842 35.5267 6.74889C35.2489 6.46961 34.9187 6.2479 34.5551 6.0965C34.1915 5.94509 33.8015 5.86697 33.4076 5.8666H24.7606ZM36.409 11.6795H24.5005C23.8997 11.6795 23.3379 11.3011 23.1305 10.7004L21.5469 5.00692C21.2704 4.20758 20.9059 3.74758 20.4811 3.49872L20.4195 3.4673C19.9168 3.19834 19.2343 3.12796 18.4739 3.12796H6.70496C5.88173 3.12796 5.1314 3.4673 4.58594 4.01151C4.30615 4.2889 4.08412 4.61899 3.93267 4.9827C3.78123 5.34642 3.70339 5.73655 3.70364 6.13053V26.9349C3.70364 27.7292 4.01659 28.4557 4.52184 28.9936L4.5872 29.0539C5.1314 29.5981 5.88173 29.9375 6.70496 29.9375H33.4076C34.2309 29.9375 34.9812 29.5981 35.5254 29.0539C36.0696 28.5097 36.409 27.7594 36.409 26.9349V19.0784V11.6795Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-history\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.16992 16.8159H6.80176C7.7299 16.8159 8.48242 17.5684 8.48242 18.4966C8.48249 21.0815 10.5782 23.1772 13.1631 23.1772H26.0527C28.6376 23.1772 30.7333 21.0815 30.7334 18.4966C30.7334 17.5684 31.4859 16.8159 32.4141 16.8159H34.0459C35.8753 16.816 37.3583 18.299 37.3584 20.1284V32.7095C37.3584 35.1948 35.3437 37.2104 32.8584 37.2104H6.35742C3.8723 37.2104 1.85769 35.1955 1.85742 32.7104V20.1284C1.85749 18.299 3.34051 16.816 5.16992 16.8159Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"11.4727\" y=\"14.4282\" width=\"16.2695\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n        <rect x=\"6.72852\" y=\"6.87207\" width=\"25.7598\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n        <rect x=\"8.66016\" y=\"0.208984\" width=\"21.8965\" height=\"3.15723\" rx=\"1.57861\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-subscribes\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"13.0947\" width=\"35.501\" height=\"23.9331\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"4.72461\" y=\"5.90186\" width=\"29.7656\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"7.55957\" y=\"0.208984\" width=\"24.0957\" height=\"3.01074\" rx=\"1.50537\" fill=\"currentColor\"/>\n        <rect x=\"23.3701\" y=\"18.9653\" width=\"3.06348\" height=\"12.3091\" rx=\"1.53174\" transform=\"rotate(30 23.3701 18.9653)\" fill=\"currentColor\"/>\n        <rect x=\"13.1934\" y=\"25.2788\" width=\"3.06348\" height=\"8.31331\" rx=\"1.53174\" transform=\"rotate(-45 13.1934 25.2788)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-calendar\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"5.68799\" width=\"35.501\" height=\"31.522\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.35059\" y=\"0.208984\" width=\"3.0166\" height=\"9.56055\" rx=\"1.5083\" fill=\"currentColor\"/>\n        <rect x=\"28.8486\" y=\"0.208984\" width=\"3.0166\" height=\"9.56055\" rx=\"1.5083\" fill=\"currentColor\"/>\n        <rect x=\"7.35059\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"7.35059\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"16.7744\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"16.7744\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"26.1992\" y=\"13.3555\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n        <rect x=\"26.1992\" y=\"23.7998\" width=\"5.6665\" height=\"5.6665\" rx=\"2\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-minipc\" viewBox=\"0 0 39 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.82422\" y=\"2.43555\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.16992\" y=\"9.91699\" width=\"24.8086\" height=\"6.42773\" rx=\"3\" fill=\"currentColor\"/>\n        <rect x=\"7.16992\" y=\"27.7261\" width=\"10.4561\" height=\"3.12256\" rx=\"1.56128\" fill=\"currentColor\"/>\n        <rect x=\"28.833\" y=\"27.7261\" width=\"3.14551\" height=\"3.12256\" rx=\"1.56128\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-settings\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M2.35883 18.1883L1.63573 17.4976L2.35883 18.1883L3.00241 17.5146C3.8439 16.6337 4.15314 15.4711 4.15314 14.4013C4.15314 13.3314 3.8439 12.1688 3.00241 11.2879L2.27931 11.9786L3.00241 11.2879L2.35885 10.6142C1.74912 9.9759 1.62995 9.01336 2.0656 8.24564L2.66116 7.19613C3.10765 6.40931 4.02672 6.02019 4.90245 6.24719L5.69281 6.45206C6.87839 6.75939 8.05557 6.45293 8.98901 5.90194C9.8943 5.36758 10.7201 4.51559 11.04 3.36732L11.2919 2.46324C11.5328 1.59833 12.3206 1 13.2185 1H14.3282C15.225 1 16.0121 1.59689 16.2541 2.46037L16.5077 3.36561C16.8298 4.51517 17.6582 5.36897 18.5629 5.90557C19.498 6.4602 20.6725 6.75924 21.8534 6.45313L22.6478 6.2472C23.5236 6.02019 24.4426 6.40932 24.8891 7.19615L25.4834 8.24336C25.9194 9.0118 25.7996 9.97532 25.1885 10.6135L24.5426 11.2882C23.7 12.1684 23.39 13.3312 23.39 14.4013C23.39 15.4711 23.6992 16.6337 24.5407 17.5146L25.1842 18.1883C25.794 18.8266 25.9131 19.7891 25.4775 20.5569L24.8819 21.6064C24.4355 22.3932 23.5164 22.7823 22.6406 22.5553L21.8503 22.3505C20.6647 22.0431 19.4876 22.3496 18.5541 22.9006C17.6488 23.4349 16.8231 24.2869 16.5031 25.4352L16.2513 26.3393C16.0103 27.2042 15.2225 27.8025 14.3246 27.8025H13.2184C12.3206 27.8025 11.5328 27.2042 11.2918 26.3393L11.0413 25.4402C10.7206 24.2889 9.89187 23.4336 8.98627 22.8963C8.05183 22.342 6.87822 22.0432 5.69813 22.3491L4.90241 22.5553C4.02667 22.7823 3.10759 22.3932 2.66111 21.6064L2.06558 20.5569C1.62993 19.7892 1.74911 18.8266 2.35883 18.1883Z\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n        <circle cx=\"13.7751\" cy=\"14.4013\" r=\"4.1675\" stroke=\"currentColor\" stroke-width=\"2.4\"/>\n    </symbol>\n\n    <symbol id=\"sprite-info\" viewBox=\"0 0 512 512\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill=\"currentColor\" d=\"m392 512h-272c-66.168 0-120-53.832-120-120v-272c0-66.168 53.832-120 120-120h272c66.168 0 120 53.832 120 120v272c0 66.168-53.832 120-120 120zm-272-472c-44.112 0-80 35.888-80 80v272c0 44.112 35.888 80 80 80h272c44.112 0 80-35.888 80-80v-272c0-44.112-35.888-80-80-80zm206 342c0 11.046-8.954 20-20 20h-100c-26.536-1.056-26.516-38.953 0-40h30v-113c0-11.028-8.972-20-20-20h-10c-26.536-1.056-26.516-38.953 0-40h10c33.084 0 60 26.916 60 60v113h30c11.046 0 20 8.954 20 20zm-70-222c13.807 0 25-11.193 25-25-1.317-33.162-48.688-33.153-50 0 0 13.807 11.193 25 25 25z\"/>\n    </symbol>\n\n    <symbol id=\"sprite-console\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"7.625\" y=\"8.99316\" width=\"23.9668\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"14.7573\" width=\"19.2646\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"21.1284\" width=\"23.9668\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n        <rect x=\"7.625\" y=\"26.8921\" width=\"20.0986\" height=\"3.03369\" rx=\"1.51685\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-edit\" viewBox=\"0 0 30 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.2989 5.27973L2.60834 20.9715C2.52933 21.0507 2.47302 21.1496 2.44528 21.258L0.706081 28.2386C0.680502 28.3422 0.682069 28.4507 0.710632 28.5535C0.739195 28.6563 0.793788 28.75 0.869138 28.8255C0.984875 28.9409 1.14158 29.0057 1.30498 29.0059C1.35539 29.0058 1.4056 28.9996 1.45449 28.9873L8.43509 27.2479C8.54364 27.2206 8.64271 27.1643 8.72172 27.0851L24.4137 11.3944L18.2989 5.27973ZM28.3009 3.14018L26.5543 1.39363C25.3869 0.226285 23.3524 0.227443 22.1863 1.39363L20.0469 3.53318L26.1614 9.64766L28.3009 7.50816C28.884 6.9253 29.2052 6.14945 29.2052 5.32432C29.2052 4.49919 28.884 3.72333 28.3009 3.14018Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-person\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.85742\" y=\"1.70898\" width=\"35.501\" height=\"35.501\" rx=\"4.5\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M8.55957 30.6004C9.15198 25.0219 13.8722 20.6763 19.6077 20.6763C25.3434 20.6763 30.0636 25.0222 30.6557 30.6006\" stroke=\"currentColor\" stroke-width=\"3\" stroke-miterlimit=\"10\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n        <circle cx=\"19.6084\" cy=\"14.7578\" r=\"5.44238\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-fullscreen\" viewBox=\"0 0 25 23\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M1.51904 7.75323V5C1.51904 2.79086 3.3099 1 5.51904 1H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M1.51904 14.7305V17.4837C1.51904 19.6928 3.3099 21.4837 5.51904 21.4837H8.46433\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M23.2815 7.75323V5C23.2815 2.79086 21.4906 1 19.2815 1H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n        <path d=\"M23.2815 14.7305V17.4837C23.2815 19.6928 21.4906 21.4837 19.2815 21.4837H16.3362\" stroke=\"currentColor\" stroke-width=\"2.7\" stroke-linecap=\"round\"/>\n    </symbol>\n\n    <symbol id=\"sprite-menu\" viewBox=\"0 0 39 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"0.357422\" y=\"0.763672\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n        <rect x=\"0.357422\" y=\"23.2793\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n        <rect x=\"0.357422\" y=\"12.0215\" width=\"38.501\" height=\"5\" rx=\"2.5\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-search\" viewBox=\"0 0 23 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"9.9964\" cy=\"9.63489\" r=\"8.43556\" stroke=\"currentColor\" stroke-width=\"2.4\"></circle>\n        <path d=\"M20.7768 20.4334L18.2135 17.8701\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-broadcast\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M1.04272 7.22978V6.76392C1.04272 4.00249 3.2813 1.76392 6.04272 1.76392H17.7877C20.5491 1.76392 22.7877 4.00249 22.7877 6.76392V17.2999C22.7877 20.0613 20.5491 22.2999 17.7877 22.2999H15.8387\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"></path>\n        <circle cx=\"6.69829\" cy=\"16.6443\" r=\"5.65556\" fill=\"currentColor\"></circle>\n    </symbol>\n\n    <symbol id=\"sprite-bell\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"></path>\n        <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-play\" viewBox=\"0 0 28 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"14\" cy=\"14.5\" r=\"13\" stroke=\"currentColor\" stroke-width=\"2.7\"></circle>\n        <path d=\"M18.0739 13.634C18.7406 14.0189 18.7406 14.9811 18.0739 15.366L11.751 19.0166C11.0843 19.4015 10.251 18.9204 10.251 18.1506L10.251 10.8494C10.251 10.0796 11.0843 9.5985 11.751 9.9834L18.0739 13.634Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-dots\" viewBox=\"0 0 38 10\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"4.88968\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n        <circle cx=\"18.9746\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n        <circle cx=\"33.0596\" cy=\"4.98563\" r=\"4.75394\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-reaction\" viewBox=\"0 0 38 34\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.208 10.9742C37.1364 10.8013 37.0314 10.6441 36.899 10.5117C36.7666 10.3794 36.6095 10.2744 36.4365 10.2028L12.0658 0.108375C11.7166 -0.0361828 11.3242 -0.0361227 10.9749 0.108542C10.6257 0.253206 10.3482 0.530634 10.2034 0.879836L0.108666 25.2507C0.0369593 25.4236 3.37953e-05 25.609 2.3187e-08 25.7962C-3.37489e-05 25.9834 0.0368249 26.1688 0.108469 26.3418C0.180114 26.5147 0.28514 26.6719 0.417545 26.8042C0.54995 26.9366 0.707139 27.0416 0.880127 27.1131L17.2452 33.8917C17.5945 34.0361 17.9869 34.0361 18.3362 33.8917L29.6574 29.2017C29.8304 29.1301 29.9875 29.0251 30.1199 28.8928C30.2523 28.7604 30.3573 28.6032 30.4289 28.4303L37.2078 12.065C37.2795 11.8921 37.3164 11.7068 37.3164 11.5196C37.3165 11.3325 37.2796 11.1471 37.208 10.9742ZM20.425 29.9407L21.8784 26.4316L25.3873 27.885L20.425 29.9407ZM28.3407 26.0222L21.6524 23.252C21.3031 23.1075 20.9107 23.1076 20.5615 23.2523C20.2123 23.3969 19.9348 23.6743 19.79 24.0235L17.0194 30.7123L3.28783 25.0247L12.2918 3.28773L34.0286 12.2912L28.3407 26.0222Z\" fill=\"currentColor\"/>\n        <path d=\"M25.3493 16.976L24.258 14.3423L16.959 17.3666L15.7196 14.375L13.0859 15.4659L15.4161 21.0916L25.3493 16.976Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-book\" viewBox=\"0 0 25 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M6.07617 1.77832H19.0068C21.4921 1.77832 23.5068 3.79304 23.5068 6.27832V35.9238L13.3086 29.8564L12.542 29.4004L11.7744 29.8564L1.57617 35.9238V6.27832C1.57617 3.79304 3.59089 1.77832 6.07617 1.77832Z\" stroke=\"currentColor\" stroke-width=\"3\"/>\n    </symbol>\n\n    <symbol id=\"sprite-torrent\" viewBox=\"0 0 47 47\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M23.4082 0.577148C10.7252 0.577148 0.408203 10.8941 0.408203 23.5771C0.408203 36.2601 10.7252 46.5771 23.4082 46.5771C36.0912 46.5771 46.4082 36.2601 46.4082 23.5771C46.4082 10.8941 36.0912 0.577148 23.4082 0.577148ZM38.9082 29.5401C35.8082 29.5401 34.0082 27.1401 34.0082 27.1401C34.0082 27.1401 32.5082 33.5771 25.4082 33.5771C24.0082 33.5771 21.8082 32.7401 21.8082 32.7401L25.9782 42.3831C25.1352 42.4971 24.2822 42.5771 23.4082 42.5771C21.2512 42.5771 19.1862 42.2001 17.2532 41.5381L7.6452 15.4281C7.6452 15.4281 6.9452 14.2281 8.0452 13.9281C9.1452 13.6281 13.4452 12.7281 13.4452 12.7281C13.4452 12.7281 14.9202 12.2341 15.2452 13.2281C15.7452 14.5281 19.3082 24.3401 19.3082 24.3401C19.3082 24.3401 21.0082 27.5771 25.8082 27.5771C30.5082 27.5771 31.7082 24.1401 31.5082 23.6401C30.3082 20.6401 26.5152 11.7781 26.5152 11.7781C26.5152 11.7781 25.9152 10.6781 27.3152 10.3781C28.7152 10.0781 31.1152 9.67815 31.1152 9.67815C31.1152 9.67815 32.2202 9.51515 32.7152 10.4781C33.4532 11.9151 37.9082 21.7401 37.9082 21.7401C37.9082 21.7401 39.0082 24.6401 41.2082 24.6401C41.6722 24.6401 42.0422 24.5941 42.3602 24.5361C42.2782 26.1711 42.0122 27.7571 41.5432 29.2581C40.9492 29.4441 40.1642 29.5401 38.9082 29.5401Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-trailer\" viewBox=\"0 0 80 70\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M71.2555 2.08955C74.6975 3.2397 77.4083 6.62804 78.3283 10.9306C80 18.7291 80 35 80 35C80 35 80 51.2709 78.3283 59.0694C77.4083 63.372 74.6975 66.7603 71.2555 67.9104C65.0167 70 40 70 40 70C40 70 14.9833 70 8.74453 67.9104C5.3025 66.7603 2.59172 63.372 1.67172 59.0694C0 51.2709 0 35 0 35C0 35 0 18.7291 1.67172 10.9306C2.59172 6.62804 5.3025 3.2395 8.74453 2.08955C14.9833 0 40 0 40 0C40 0 65.0167 0 71.2555 2.08955ZM55.5909 35.0004L29.9773 49.5714V20.4286L55.5909 35.0004Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-backward\" viewBox=\"0 0 25 41\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"0.101807\" y=\"20.6182\" width=\"28.7098\" height=\"5.9619\" rx=\"2.98095\" transform=\"rotate(-45 0.101807 20.6182)\" fill=\"currentColor\"></rect>\n        <rect width=\"28.7098\" height=\"5.9619\" rx=\"2.98095\" transform=\"matrix(0.707107 0.707107 0.707107 -0.707107 0.101807 20.7075)\" fill=\"currentColor\"></rect>\n    </symbol>\n\n    <symbol id=\"sprite-star\" viewBox=\"0 0 17 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M8.39409 0.192139L10.99 5.30994L16.7882 6.20387L12.5475 10.4277L13.5819 15.9311L8.39409 13.2425L3.20626 15.9311L4.24065 10.4277L0 6.20387L5.79819 5.30994L8.39409 0.192139Z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-viewed\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-top\" viewBox=\"0 0 60 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M57 3H48V0H12V3H3C1.2 3 0 4.2 0 6V13.2C0 20.1 5.1 25.8 12 26.7V27C12 35.7 18 42.9 26.1 44.7L24 51H17.1C15.9 51 14.7 51.9 14.4 53.1L12 60H48L45.6 53.1C45.3 51.9 44.1 51 42.9 51H36L33.9 44.7C42 42.9 48 35.7 48 27V26.7C54.9 25.8 60 20.1 60 13.2V6C60 4.2 58.8 3 57 3ZM12 20.7C8.7 19.8 6 16.8 6 13.2V9H12V20.7ZM36 30L30 26.7L24 30L25.5 24L21 18H27.3L30 12L32.7 18H39L34.5 24L36 30ZM54 13.2C54 16.8 51.3 20.1 48 20.7V9H54V13.2Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-lock\" viewBox=\"0 0 401.998 401.998\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M357.45 190.721c-5.331-5.33-11.8-7.993-19.417-7.993h-9.131v-54.821c0-35.022-12.559-65.093-37.685-90.218C266.093 12.563 236.025 0 200.998 0c-35.026 0-65.1 12.563-90.222 37.688-25.126 25.126-37.685 55.196-37.685 90.219v54.821h-9.135c-7.611 0-14.084 2.663-19.414 7.993-5.33 5.326-7.994 11.799-7.994 19.417V374.59c0 7.611 2.665 14.086 7.994 19.417 5.33 5.325 11.803 7.991 19.414 7.991H338.04c7.617 0 14.085-2.663 19.417-7.991 5.325-5.331 7.994-11.806 7.994-19.417V210.135c.004-7.612-2.669-14.084-8.001-19.414zm-83.363-7.993H127.909v-54.821c0-20.175 7.139-37.402 21.414-51.675 14.277-14.275 31.501-21.411 51.678-21.411 20.179 0 37.399 7.135 51.677 21.411 14.271 14.272 21.409 31.5 21.409 51.675v54.821z\" fill=\"currentColor\"></path>\n    </symbol>\n\n    <symbol id=\"sprite-like\" viewBox=\"0 0 36 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M34.184 21.3804C34.9351 20.2459 35.3101 18.9972 35.3101 17.6332C35.3101 16.0544 34.7284 14.6832 33.5639 13.5173C32.3989 12.3526 31.0194 11.7703 29.4257 11.7703H25.3796C26.115 10.2532 26.4834 8.78172 26.4834 7.35661C26.4834 5.56338 26.2145 4.13819 25.6785 3.08065C25.142 2.0228 24.3603 1.24523 23.3333 0.746894C22.3062 0.248804 21.1494 0 19.8621 0C19.0801 0 18.3907 0.283507 17.793 0.850763C17.1341 1.49435 16.659 2.32217 16.3679 3.33373C16.0767 4.34496 15.8428 5.31449 15.6667 6.24175C15.4906 7.16892 15.2183 7.82411 14.8507 8.20722C14.0995 9.01949 13.2797 10.0006 12.3907 11.1499C10.8428 13.1574 9.79288 14.3453 9.2414 14.7133H2.94257C2.13029 14.7133 1.4367 15.0011 0.861955 15.5753C0.287453 16.1502 0 16.8437 0 17.656V32.3687C0 33.1811 0.287131 33.8743 0.861955 34.4491C1.43702 35.024 2.13029 35.3116 2.94257 35.3116H9.56291C9.90013 35.3116 10.9574 35.618 12.7353 36.2311C14.6205 36.8902 16.2795 37.392 17.7123 37.737C19.1389 38.0812 20.6013 38.2549 22.0689 38.2545H25.0343C27.1951 38.2545 28.9345 37.6372 30.2527 36.4033C31.5704 35.1695 32.222 33.4875 32.2069 31.3572C33.1264 30.1771 33.5861 28.8131 33.5861 27.2653C33.5861 26.9284 33.5634 26.5989 33.5172 26.2767C34.0994 25.2503 34.3912 24.1467 34.3912 22.9666C34.3909 22.4148 34.3221 21.8858 34.184 21.3804ZM5.4484 31.9322C5.15724 32.2232 4.81246 32.3693 4.41397 32.3693C4.0154 32.3693 3.67054 32.2233 3.3793 31.9322C3.08822 31.6413 2.94257 31.2963 2.94257 30.8975C2.94257 30.4991 3.0879 30.1544 3.3793 29.8631C3.67086 29.5719 4.0154 29.4263 4.41397 29.4263C4.81246 29.4263 5.15724 29.5719 5.4484 29.8631C5.73963 30.1543 5.88529 30.499 5.88529 30.8975C5.88529 31.2963 5.73963 31.6413 5.4484 31.9322ZM31.8744 19.5193C31.5448 20.2242 31.1347 20.5843 30.6444 20.5995C30.8742 20.8601 31.0659 21.2245 31.2192 21.6915C31.3724 22.1591 31.4485 22.5842 31.4485 22.9675C31.4485 24.0245 31.0429 24.9366 30.2305 25.7027C30.5067 26.1929 30.6445 26.7219 30.6445 27.2887C30.6445 27.8558 30.5106 28.419 30.2422 28.9783C29.9743 29.5371 29.61 29.9395 29.1504 30.1846C29.227 30.6443 29.265 31.0736 29.265 31.472C29.265 34.0313 27.7936 35.3109 24.8507 35.3109H22.0699C20.0618 35.3109 17.4415 34.7519 14.2074 33.6328C14.1307 33.6022 13.9088 33.5215 13.5407 33.3914C13.1727 33.2614 12.9007 33.1655 12.7244 33.1044C12.5481 33.0426 12.2801 32.9546 11.9197 32.8399C11.5594 32.7247 11.2685 32.6403 11.0462 32.5869C10.8241 32.5334 10.571 32.4836 10.2877 32.4375C10.0043 32.3916 9.76284 32.3687 9.56364 32.3687H8.82802V17.6566H9.56364C9.80882 17.6566 10.0808 17.5874 10.3797 17.4498C10.6785 17.3118 10.9852 17.105 11.2993 16.829C11.6012 16.5645 11.8963 16.2923 12.1844 16.0127C12.4603 15.7446 12.7668 15.4075 13.1041 15.0015C13.4412 14.5952 13.7055 14.2696 13.8973 14.0244C14.1406 13.7117 14.3819 13.3975 14.6213 13.0818C14.9124 12.6987 15.0888 12.4688 15.15 12.392C15.9928 11.35 16.5829 10.6527 16.92 10.3001C17.5484 9.64126 18.0043 8.80217 18.2878 7.78296C18.5716 6.76359 18.8053 5.80187 18.9885 4.89781C19.1723 3.99366 19.4638 3.3421 19.8628 2.94361C21.3337 2.94361 22.3149 3.30361 22.8051 4.02401C23.2953 4.74426 23.5406 5.8555 23.5406 7.35742C23.5406 8.26157 23.1725 9.49141 22.4367 11.0469C21.7012 12.6025 21.3337 13.8248 21.3337 14.7136H29.4255C30.1926 14.7136 30.8743 15.0085 31.4717 15.5989C32.0697 16.1888 32.3689 16.8745 32.3689 17.6564C32.3687 18.1927 32.2039 18.8135 31.8744 19.5193Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-fire\" viewBox=\"0 0 44 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M38.4789 22.7725C38.3171 22.5697 38.1209 22.6096 38.0181 22.6509C37.932 22.6858 37.7346 22.7974 37.7619 23.077C37.7947 23.4128 37.8131 23.7551 37.8167 24.0946C37.8313 25.5029 37.2663 26.8827 36.2667 27.8801C35.2735 28.871 33.9671 29.4049 32.576 29.3894C30.676 29.3652 29.1 28.3741 28.0185 26.5234C27.1242 24.993 27.5173 23.0192 27.9334 20.9294C28.1769 19.7062 28.4288 18.4413 28.4288 17.2375C28.4288 7.86374 22.1271 2.45577 18.3708 0.0664355C18.2931 0.0170996 18.2192 -0.000244141 18.1537 -0.000244141C18.0471 -0.000244141 17.9628 0.0456934 17.9212 0.0738184C17.8405 0.128428 17.7115 0.252881 17.753 0.473193C19.1888 8.09765 14.9063 12.6833 10.3723 17.5382C5.69885 22.5424 0.401855 28.2144 0.401855 38.4439C0.401855 50.33 10.0718 60 21.9579 60C31.7445 60 40.3731 53.1769 42.9409 43.4074C44.6919 36.7461 42.857 28.2608 38.4789 22.7725ZM22.4957 55.3989C19.5194 55.5346 16.6888 54.4671 14.5268 52.3999C12.388 50.3548 11.1613 47.5007 11.1613 44.5693C11.1613 39.0684 13.2646 35.0301 18.9217 29.6691C19.0143 29.5813 19.1091 29.5535 19.1917 29.5535C19.2666 29.5535 19.3315 29.5764 19.3762 29.5978C19.4703 29.6432 19.6249 29.7554 19.6041 29.9982C19.4018 32.3519 19.4053 34.3056 19.6144 35.8051C20.1488 39.6354 22.9527 42.2089 26.592 42.2089C28.3763 42.2089 30.0758 41.5375 31.3777 40.3181C31.4279 40.2698 31.4892 40.2346 31.5563 40.2154C31.6233 40.1963 31.694 40.1938 31.7622 40.2083C31.8478 40.2268 31.9626 40.2793 32.0227 40.4243C32.5624 41.7275 32.8383 43.1109 32.8425 44.5358C32.8597 50.2692 28.2182 55.1425 22.4957 55.3989Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-collection\" viewBox=\"0 0 61 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M0.315389 3.17604V56.4106C0.315389 57.9575 1.57928 59.2186 3.08977 59.2186H11.5531C11.9202 59.2187 12.2838 59.1458 12.6226 59.0043C12.9614 58.8627 13.2688 58.6554 13.5268 58.3942C13.7849 58.133 13.9885 57.8231 14.126 57.4827C14.2634 57.1422 14.3319 56.7778 14.3274 56.4106V3.17604C14.3274 1.62911 13.0636 0.368022 11.5531 0.368022H3.08977C2.72259 0.367995 2.35905 0.440855 2.02024 0.582379C1.68142 0.723904 1.37407 0.931276 1.116 1.19247C0.857932 1.45367 0.654278 1.7635 0.516846 2.10399C0.379414 2.44449 0.310939 2.80888 0.315389 3.17604ZM17.1298 3.17604V56.4106C17.1298 57.9575 18.3937 59.2186 19.9042 59.2186H28.3675C28.7347 59.2187 29.0982 59.1458 29.437 59.0043C29.7759 58.8627 30.0832 58.6554 30.3413 58.3942C30.5994 58.133 30.803 57.8231 30.9404 57.4827C31.0779 57.1422 31.1463 56.7778 31.1419 56.4106V3.17604C31.1419 1.62911 29.878 0.368022 28.3675 0.368022H19.9042C19.537 0.367995 19.1735 0.440855 18.8347 0.582379C18.4959 0.723904 18.1885 0.931276 17.9305 1.19247C17.6724 1.45367 17.4687 1.7635 17.3313 2.10399C17.1939 2.44449 17.1254 2.80888 17.1298 3.17604ZM32.899 5.89718L46.6756 57.3158C47.0792 58.8151 48.6233 59.7034 50.0862 59.3111L58.2552 57.1224C58.6104 57.0278 58.9433 56.8634 59.2345 56.639C59.5257 56.4146 59.7693 56.1345 59.9513 55.8151C60.1333 55.4957 60.25 55.1433 60.2947 54.7784C60.3393 54.4135 60.311 54.0433 60.2113 53.6895L46.4346 2.27086C46.2444 1.55562 45.7791 0.944571 45.1403 0.570832C44.5015 0.197093 43.7408 0.0909553 43.0241 0.275542L34.8551 2.46422C34.4999 2.55889 34.167 2.72321 33.8758 2.94764C33.5846 3.17206 33.341 3.45212 33.159 3.77154C32.977 4.09095 32.8603 4.44336 32.8156 4.80826C32.771 5.17317 32.7993 5.54331 32.899 5.89718Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-cartoon\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"19.6079\" cy=\"19.4595\" r=\"17.7505\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M15.0773 15.8002H8.49786C7.88323 15.8002 7.42932 15.251 7.65171 14.678C8.13781 13.4255 9.28288 11.5726 11.8034 11.5726C14.5141 11.5726 15.5494 13.4923 15.9364 14.7445C16.1087 15.3017 15.6605 15.8002 15.0773 15.8002Z\" fill=\"currentColor\"/>\n        <path d=\"M30.8068 15.8002H24.2274C23.6127 15.8002 23.1588 15.251 23.3812 14.678C23.8673 13.4255 25.0124 11.5726 27.5328 11.5726C30.2436 11.5726 31.2789 13.4923 31.6659 14.7445C31.8382 15.3017 31.39 15.8002 30.8068 15.8002Z\" fill=\"currentColor\"/>\n        <path d=\"M18.0556 26.8907C18.856 27.8763 20.3603 27.8763 21.1607 26.8907L24.5473 22.7202C25.6087 21.4131 24.6785 19.4595 22.9947 19.4595H16.2216C14.5377 19.4595 13.6075 21.4131 14.669 22.7202L18.0556 26.8907Z\" fill=\"currentColor\"/>\n        <path d=\"M5.77871 9.15714C8.77444 7.75941 10.9443 4.5428 11.8525 3.02854C12.0247 2.74155 12.3223 2.55334 12.6561 2.5298L24.5609 1.69058C24.7304 1.67863 24.9002 1.70974 25.0535 1.78303C27.5412 2.97239 31.7878 5.43831 30.5434 6.62878C28.9379 8.1647 18.8949 10.7194 20.3608 8.4158C21.8267 6.1122 21.5477 5.41414 18.197 7.2989C14.8464 9.18367 1.58993 11.1115 5.77871 9.15714Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-plus\" viewBox=\"0 0 39 39\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <circle cx=\"19.2505\" cy=\"19.2505\" r=\"17.7505\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <rect x=\"10.1309\" y=\"17.75\" width=\"18.2383\" height=\"3.00049\" rx=\"1.50024\" fill=\"currentColor\"/>\n        <rect x=\"17.75\" y=\"28.3696\" width=\"18.2383\" height=\"3.00049\" rx=\"1.50024\" transform=\"rotate(-90 17.75 28.3696)\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-youtube\" viewBox=\"0 0 39 29\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M38.116 6.23235C38.116 6.23235 37.7406 3.40012 36.5868 2.15365C35.1225 0.519763 33.4814 0.510138 32.7294 0.417495C27.3417 -1.43427e-07 19.2589 0 19.2589 0H19.2409C19.2409 0 11.1593 -1.43427e-07 5.77274 0.417495C5.01956 0.508935 3.38087 0.51856 1.91542 2.15365C0.761597 3.40012 0.38501 6.23235 0.38501 6.23235C0.38501 6.23235 0 9.55546 0 12.8786V15.9935C0 19.3191 0.38501 22.641 0.38501 22.641C0.38501 22.641 0.760394 25.472 1.91422 26.7161C3.37966 28.35 5.30231 28.3006 6.15895 28.4715C9.23903 28.7867 19.2505 28.8842 19.2505 28.8842C19.2505 28.8842 27.3405 28.8697 32.7294 28.457C33.4814 28.3608 35.1225 28.3512 36.5868 26.7161C37.7394 25.472 38.116 22.641 38.116 22.641C38.116 22.641 38.501 19.3179 38.501 15.9935V12.8786C38.501 9.55546 38.116 6.23235 38.116 6.23235ZM14.4427 21.6628V7.22014L26.4778 14.4415L14.4427 21.6628Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-adult\" viewBox=\"0 0 103 102\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.4219 67.759V40.3141H25.9893V33.281H41.2982V67.759H32.4219ZM74.6578 42.183C74.6578 45.1831 73.0122 47.8389 70.2696 49.3147C74.109 50.8882 76.5028 54.1838 76.5028 58.02C76.5028 64.2169 70.9176 68.1518 62.1911 68.1518C53.4644 68.1518 47.8795 64.2661 47.8795 58.1678C47.8795 54.2329 50.4725 50.8882 54.5116 49.3147C51.5695 47.6914 49.6746 44.9375 49.6746 41.9374C49.6746 36.4284 54.5618 32.9367 62.1413 32.9367C69.8205 32.9367 74.6578 36.527 74.6578 42.183ZM56.2569 57.2825C56.2569 60.1846 58.3515 61.8076 62.1911 61.8076C66.0308 61.8076 68.175 60.2341 68.175 57.2825C68.175 54.4303 66.0308 52.8067 62.1911 52.8067C58.3512 52.8067 56.2569 54.43 56.2569 57.2825ZM57.1548 42.6748C57.1548 45.1345 58.9499 46.511 62.1911 46.511C65.4324 46.511 67.2275 45.1342 67.2275 42.6748C67.2275 40.118 65.4324 38.6914 62.1911 38.6914C58.9496 38.6914 57.1548 40.118 57.1548 42.6748Z\" fill=\"currentColor\"/>\n        <path d=\"M91.2731 37.1731C92.7488 41.4689 93.4974 45.962 93.4974 50.5446C93.4974 73.5225 74.5436 92.2166 51.2463 92.2166C27.9489 92.2166 8.99476 73.5225 8.99476 50.5446C8.99476 27.566 27.9486 8.87247 51.2459 8.87247C55.8928 8.87247 60.4483 9.6102 64.8031 11.0663V1.79269C60.4043 0.603404 55.8613 0 51.2463 0C22.9891 0 0 22.6742 0 50.5446C0 78.4149 22.9891 101.089 51.2463 101.089C79.5034 101.089 102.492 78.4149 102.492 50.5446C102.492 45.993 101.881 41.5119 100.675 37.1731H91.2731Z\" fill=\"currentColor\"/>\n        <path d=\"M88.7161 13.5592V3.86752H81.6502V13.5592H71.8828V20.5277H81.6502V30.219H88.7161V20.5277H98.5417V13.5592H88.7161Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-violence\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.3081 3.72149C18.6649 3.18629 18.515 2.46269 17.9749 2.11327L15.5658 0.554427C15.0361 0.211699 14.3294 0.35811 13.9794 0.883006L10.9963 5.35762L15.662 7.69043L18.3081 3.72149ZM22.4072 11.063L24.5912 7.78701C24.948 7.25181 24.7981 6.52821 24.2581 6.1788L21.8489 4.61995C21.3193 4.27722 20.6125 4.42363 20.2625 4.94853L17.7415 8.73015L22.4072 11.063ZM22.9308 16.8673L25.0432 17.8062C25.2919 17.9167 25.5716 17.9357 25.833 17.8599C26.0943 17.7841 26.3205 17.6183 26.4714 17.3919L30.3783 11.5316C30.7351 10.9964 30.5852 10.2728 30.0452 9.92335L28.1321 8.68539C27.6024 8.34266 26.8956 8.48908 26.5457 9.01397L22.4394 15.1734C22.0429 15.7683 22.2775 16.577 22.9308 16.8673ZM35.8323 13.668L33.9191 12.4301C33.3895 12.0874 32.6827 12.2338 32.3328 12.7587L28.8296 18.0135C28.433 18.6084 28.6676 19.417 29.3209 19.7074L31.4333 20.6462C31.682 20.7567 31.9617 20.7758 32.2231 20.6999C32.4844 20.6241 32.7106 20.4584 32.8615 20.2319L36.1654 15.2761C36.5222 14.7411 36.3723 14.0175 35.8323 13.668Z\" fill=\"currentColor\"/>\n        <path d=\"M31.9014 23.0527H31.9011C31.4171 23.0532 30.9383 22.9515 30.4963 22.7542L19.7173 17.9637H18.9884L23.8338 27.6546C24.127 28.2409 23.8739 28.9574 23.2676 29.2258C22.6996 29.4772 22.0337 29.2126 21.7559 28.6571L16.4092 17.9637H11.4746C10.8535 17.9637 10.319 17.4864 10.2898 16.866C10.2586 16.2036 10.7864 15.6568 11.442 15.6568H18.7274C19.1131 15.6568 19.4733 15.464 19.6872 15.1431L20.3929 14.0845C20.7777 13.5073 20.5695 12.7233 19.9489 12.413L10.6175 7.74734C10.3661 7.62161 10.0774 7.59205 9.80565 7.66421C9.53393 7.73637 9.29792 7.90528 9.14198 8.1392L3.8345 16.1005C3.70277 16.2981 3.63524 16.5315 3.64112 16.7689C3.64699 17.0063 3.72599 17.2361 3.86734 17.4269L12.3688 28.9038C12.4702 29.0407 12.54 29.1983 12.5732 29.3654C12.6065 29.5325 12.6023 29.7048 12.561 29.8701L10.4517 38.307C10.2697 39.035 10.8203 39.7402 11.5707 39.7402H29.0154C29.6524 39.7402 30.1688 39.2238 30.1688 38.5868V32.4304C30.1688 32.2408 30.2155 32.0542 30.3048 31.8869C30.3942 31.7197 30.5233 31.5771 30.6809 31.4717C30.6809 31.4717 30.9702 31.2782 31.3983 30.9927C33.296 29.7277 34.4289 27.6109 34.4289 25.3302V21.9541C34.1056 22.301 33.7144 22.5776 33.2795 22.7666C32.8447 22.9556 32.3755 23.053 31.9014 23.0527Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-fear\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M37.7163 18.1919C37.7163 7.66595 30.256 -0.0365443 21.0753 0.000130412C11.8948 -0.0365443 4.42674 7.66595 4.42674 18.1919L4.45986 39.2561L10.0132 36.6109L15.5662 40.0574L21.1041 36.611L26.6423 40.0576L32.1802 36.6114L37.7189 39.2571L37.7163 18.1919ZM13.8381 23.0375C11.3826 22.4627 9.85789 20.0062 10.4327 17.5507L19.3249 19.6321C18.7501 22.0876 16.2936 23.6122 13.8381 23.0375ZM28.3076 23.0375C25.8521 23.6122 23.3956 22.0876 22.8208 19.6321L31.713 17.5506C32.2877 20.0062 30.7631 22.4627 28.3076 23.0375Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-profanity\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.3103 19.3136H17.3632L18.3397 15.4073H15.2868L14.3103 19.3136Z\" fill=\"currentColor\"/>\n        <path d=\"M35.7031 2.12608H4.29688C1.92375 2.12608 0 4.04983 0 6.42295V28.298C0 30.6711 1.92375 32.5948 4.29688 32.5948H24.2445L30.9403 38.5466C31.696 39.2184 32.8906 38.6819 32.8906 37.6707V32.5948H35.7031C38.0763 32.5948 40 30.6711 40 28.298V6.42295C40 4.04983 38.0763 2.12608 35.7031 2.12608ZM23.4281 14.2355C23.4281 14.8826 22.9035 15.4073 22.2563 15.4073H20.7556L19.779 19.3136H20.6938C21.341 19.3136 21.8656 19.8383 21.8656 20.4855C21.8656 21.1326 21.341 21.6573 20.6938 21.6573H19.1931L18.2431 25.4572C18.0862 26.0851 17.4499 26.4668 16.822 26.3098C16.1942 26.1529 15.8124 25.5166 15.9694 24.8887L16.7773 21.6573H13.7244L12.7744 25.4572C12.6174 26.0851 11.9812 26.4668 11.3533 26.3098H11.3532C10.7253 26.1529 10.3436 25.5166 10.5006 24.8887L11.3085 21.6573H10.3938C9.74657 21.6573 9.22188 21.1326 9.22188 20.4855C9.22188 19.8383 9.74657 19.3136 10.3938 19.3136H11.8945L12.871 15.4073H11.9563C11.3091 15.4073 10.7844 14.8826 10.7844 14.2355C10.7844 13.5883 11.3091 13.0636 11.9563 13.0636H13.457L14.407 9.26374C14.5639 8.63585 15.2002 8.25413 15.8281 8.41108H15.8281C16.456 8.56803 16.8377 9.20428 16.6808 9.83217L15.8728 13.0636H18.9256L19.8756 9.26374C20.0325 8.63585 20.6688 8.25413 21.2967 8.41108C21.9245 8.56803 22.3063 9.20428 22.1493 9.83217L21.3416 13.0636H22.2563C22.9035 13.0636 23.4281 13.5883 23.4281 14.2355ZM26.8719 9.54795C26.8719 8.90077 27.3966 8.37608 28.0438 8.37608C28.691 8.37608 29.2156 8.90077 29.2156 9.54795V20.4855C29.2156 21.1326 28.691 21.6573 28.0438 21.6573C27.3966 21.6573 26.8719 21.1326 26.8719 20.4855V9.54795ZM28.0453 26.3448C27.3981 26.3448 26.8731 25.8202 26.8731 25.173C26.8731 24.5258 27.3973 24.0011 28.0446 24.0011H28.0453C28.6925 24.0011 29.2172 24.5258 29.2172 25.173C29.2172 25.8202 28.6925 26.3448 28.0453 26.3448Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-sadness\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M20 0.468704C9.22004 0.468704 0.468719 9.22002 0.468719 20C0.468719 30.78 9.22004 39.5313 20 39.5313C30.78 39.5313 39.5313 30.78 39.5313 20C39.5313 9.22002 30.78 0.468704 20 0.468704ZM16.832 28.8854C18.9453 27.431 21.0586 27.4453 23.1719 28.888C23.4571 29.0828 23.8081 29.1563 24.1475 29.0923C24.4869 29.0283 24.787 28.8321 24.9818 28.5469C25.1766 28.2616 25.25 27.9107 25.1861 27.5713C25.1221 27.2319 24.9259 26.9318 24.6406 26.737C21.5456 24.625 18.4505 24.6107 15.3555 26.7396C15.0857 26.9413 14.9044 27.2396 14.8497 27.5719C14.795 27.9043 14.8711 28.2449 15.0621 28.5224C15.253 28.7999 15.544 28.9927 15.8739 29.0604C16.2039 29.1281 16.5473 29.0654 16.832 28.8854ZM10.6901 13.0065C10.2441 12.9388 9.8043 12.8351 9.37499 12.6966C9.05983 12.5797 8.80203 12.3455 8.65544 12.043C8.50885 11.7405 8.4848 11.393 8.58833 11.0732C8.69185 10.7534 8.91494 10.4859 9.21099 10.3267C9.50705 10.1675 9.85317 10.1288 10.1771 10.2187C11.7878 10.7396 13.5404 10.5377 14.8828 10.1146C15.6914 9.85935 16.3516 9.53904 16.6849 9.21742C16.9337 8.97793 17.2675 8.84709 17.6128 8.85369C17.958 8.86028 18.2866 9.00377 18.5261 9.25258C18.7655 9.50139 18.8964 9.83515 18.8898 10.1804C18.8832 10.5257 18.7397 10.8542 18.4909 11.0937C17.8477 11.7122 16.4505 12.4232 14.7487 12.8164C15.295 13.2124 15.7048 13.7683 15.9214 14.4074C16.138 15.0464 16.1506 15.737 15.9575 16.3835C15.7645 17.0301 15.3753 17.6006 14.8438 18.0163C14.3123 18.432 13.6647 18.6722 12.9907 18.7038C12.3167 18.7354 11.6495 18.5567 11.0815 18.1925C10.5135 17.8284 10.0726 17.2967 9.81999 16.671C9.56734 16.0453 9.51537 15.3566 9.67124 14.7001C9.82712 14.0436 10.1832 13.4518 10.6901 13.0065ZM25.3503 12.7461C23.7787 12.3437 22.5 11.6771 21.8932 11.0937C21.6444 10.8542 21.5009 10.5257 21.4944 10.1804C21.4878 9.83515 21.6186 9.50139 21.8581 9.25258C22.0976 9.00377 22.4261 8.86028 22.7714 8.85369C23.1167 8.84709 23.4504 8.97793 23.6992 9.21742C24.0339 9.53904 24.694 9.85935 25.5013 10.1146C26.8451 10.5377 28.5964 10.7396 30.2084 10.2187C30.537 10.1124 30.8943 10.1409 31.2019 10.298C31.5094 10.4552 31.742 10.728 31.8484 11.0566C31.9547 11.3852 31.9262 11.7426 31.7691 12.0501C31.6119 12.3577 31.339 12.5902 31.0105 12.6966C30.4731 12.8689 29.9201 12.988 29.3594 13.0521C29.8585 13.5095 30.2026 14.1112 30.3437 14.7734C30.4849 15.4356 30.416 16.1253 30.1467 16.7465C29.8774 17.3677 29.4212 17.8895 28.8415 18.2392C28.2617 18.5889 27.5874 18.7492 26.9123 18.6976C26.2372 18.6461 25.595 18.3854 25.075 17.9517C24.5551 17.5181 24.1833 16.9331 24.0114 16.2782C23.8396 15.6233 23.8762 14.9312 24.1161 14.2981C24.3561 13.665 24.7875 13.1225 25.3503 12.7461Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-sex\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M13.4948 27.2901C14.3318 27.2901 15.1542 27.2085 15.956 27.0537C14.1817 25.5932 12.7652 23.7426 11.8158 21.6448C11.5175 21.577 11.2234 21.4914 10.9352 21.3885C6.97126 19.9716 4.89344 15.5772 6.30461 11.5929C6.83505 10.1027 7.81035 8.81316 9.09736 7.9005C10.3844 6.98784 11.9204 6.49648 13.4957 6.4935C14.3643 6.4935 15.2252 6.64397 16.0544 6.94059C20.0192 8.35925 22.0971 12.7528 20.685 16.7362C20.5787 17.035 20.4544 17.327 20.3128 17.6106L20.3213 17.633C20.7026 18.5139 21.3006 19.2829 22.0592 19.8677C22.8178 20.4525 23.7119 20.8338 24.6575 20.9758C25.1128 20.2235 25.497 19.4179 25.7991 18.5676C28.2141 11.7503 24.6592 4.23139 17.8755 1.8042C16.4698 1.30002 14.9883 1.04206 13.4957 1.04156C7.98535 1.04156 3.04069 4.54779 1.19136 9.76501C-0.954916 15.8222 1.61326 22.4349 6.97297 25.5353L5.37182 30.0535L4.82755 28.8997C4.5603 28.3342 4.08039 27.8985 3.4934 27.6884C2.90641 27.4784 2.26043 27.5113 1.69755 27.7798C1.13468 28.0483 0.701026 28.5305 0.491989 29.1202C0.282953 29.7099 0.315658 30.359 0.582909 30.9245L3.63717 37.385C3.76933 37.6651 3.95516 37.9162 4.18402 38.1241C4.41289 38.332 4.6803 38.4925 4.97096 38.5965C5.26162 38.7005 5.56984 38.7459 5.87797 38.7301C6.18611 38.7143 6.48812 38.6376 6.76673 38.5044L12.8761 35.5888C13.4292 35.3146 13.8527 34.8327 14.0552 34.2474C14.2577 33.6621 14.2229 33.0202 13.9584 32.4604C13.6939 31.9006 13.2209 31.4678 12.6415 31.2554C12.0621 31.043 11.4228 31.068 10.8616 31.3251L9.71401 31.8728L11.399 27.1173C12.0905 27.2317 12.7922 27.2901 13.4948 27.2901Z\" fill=\"currentColor\"/>\n        <path d=\"M39.4359 28.6942C39.1883 28.1202 38.724 27.6684 38.145 27.4382C37.566 27.208 36.9198 27.2181 36.3482 27.4664L33.7621 28.5927L32.7643 26.2807C34.9728 24.8056 36.678 22.6855 37.6499 20.2063C38.2859 18.6053 38.5992 16.8934 38.5718 15.1699C38.5443 13.4463 38.1765 11.7454 37.4898 10.1657C35.4189 5.35943 30.7121 2.25558 25.4996 2.25558C24.5 2.25558 23.7367 2.33211 22.7722 2.55823C24.6669 3.76968 26.0345 5.44283 26.9852 7.86916C29.4858 8.31024 31.4746 9.93954 32.5075 12.3332C32.908 13.2567 33.1225 14.2507 33.1385 15.2579C33.1545 16.265 32.9718 17.2654 32.6008 18.2013C32.2345 19.1392 31.6866 19.9948 30.9889 20.7184C30.2911 21.442 29.4573 22.0193 28.5359 22.4168C27.1635 23.0163 25.6455 23.1952 24.1723 22.931C22.93 22.7097 21.7618 22.1824 20.7721 21.3963C19.7824 20.6102 19.0021 19.5899 18.5011 18.4265C18.0999 17.5031 17.8852 16.5089 17.8691 15.5015C17.8531 14.494 18.0362 13.4934 18.4078 12.5576C18.5567 12.181 18.739 11.8259 18.9392 11.4829C18.0394 9.942 16.6262 8.77042 14.9496 8.17525C14.8495 8.14 14.7468 8.12366 14.6467 8.09357C14.133 8.86473 13.7021 9.68843 13.3613 10.5509L13.3091 10.6858C12.0791 13.8873 12.155 17.4468 13.5205 20.5924C14.5325 22.9425 16.2069 24.9437 18.3374 26.3491C20.4679 27.7545 22.9612 28.5028 25.5099 28.5016C26.5001 28.4982 27.4868 28.3805 28.4503 28.1508L29.4498 30.4662L26.8628 31.5934C26.5725 31.7115 26.3085 31.8868 26.0865 32.1089C25.8646 32.331 25.6891 32.5955 25.5704 32.8867C25.4517 33.178 25.3921 33.4902 25.3953 33.8049C25.3985 34.1197 25.4643 34.4306 25.5888 34.7194C25.7134 35.0082 25.8941 35.269 26.1205 35.4866C26.3469 35.7042 26.6143 35.874 26.907 35.9862C27.1997 36.0984 27.5118 36.1506 27.8249 36.1398C28.138 36.129 28.4458 36.0554 28.7301 35.9233L31.3154 34.7978L32.2713 37.0118C32.3937 37.2963 32.5706 37.5539 32.7921 37.7696C33.0136 37.9854 33.2753 38.1551 33.5622 38.2691C33.849 38.3832 34.1555 38.4393 34.4639 38.4342C34.7724 38.4291 35.0768 38.363 35.3598 38.2396C35.9315 37.991 36.3815 37.5244 36.6108 36.9425C36.8402 36.3606 36.83 35.711 36.5827 35.1366L35.6268 32.9218L38.2147 31.7963C38.4979 31.6735 38.7541 31.4958 38.9689 31.2733C39.1836 31.0508 39.3525 30.788 39.4659 30.4998C39.5793 30.2116 39.6351 29.9038 39.6299 29.594C39.6248 29.2841 39.5588 28.9784 39.4359 28.6942Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-importance\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M20 39.6419C9.19695 39.6419 0.358093 30.803 0.358093 20C0.358093 9.19695 9.19695 0.358093 20 0.358093C30.803 0.358093 39.6419 9.19695 39.6419 20C39.6419 30.803 30.803 39.6419 20 39.6419ZM20 4.28647C11.3576 4.28647 4.28647 11.3576 4.28647 20C4.28647 28.6424 11.3576 35.7135 20 35.7135C28.6424 35.7135 35.7135 28.6424 35.7135 20C35.7135 11.3576 28.6424 4.28647 20 4.28647Z\" fill=\"currentColor\"/>\n        <path d=\"M20 21.9642C18.8215 21.9642 18.0358 21.1785 18.0358 20V12.1432C18.0358 10.9647 18.8215 10.179 20 10.179C21.1785 10.179 21.9642 10.9647 21.9642 12.1432V20C21.9642 21.1785 21.1785 21.9642 20 21.9642ZM20 29.821C18.8215 29.821 18.0358 29.0353 18.0358 27.8568C18.0358 26.6782 18.8215 25.8926 20 25.8926C21.1785 25.8926 21.9642 26.6782 21.9642 27.8568C21.9642 29.0353 21.1785 29.821 20 29.821Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-tension\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.0715 16.3786C31.8617 15.9801 31.5471 15.6465 31.1615 15.4138C30.776 15.181 30.3343 15.058 29.884 15.0579H25.2338L30.8589 3.80775C31.047 3.43095 31.1358 3.01233 31.1168 2.59159C31.0978 2.17085 30.9717 1.76194 30.7503 1.40363C30.529 1.04526 30.2196 0.749446 29.8518 0.544293C29.4839 0.339139 29.0697 0.231461 28.6484 0.231491L16.2931 0.231491C15.2289 0.231491 14.2853 0.91204 13.9487 1.92132L7.77102 20.4544C7.64731 20.8259 7.61365 21.2214 7.67281 21.6085C7.73196 21.9955 7.88224 22.3629 8.11126 22.6805C8.34015 22.9981 8.64121 23.2567 8.98965 23.4351C9.33808 23.6135 9.72392 23.7066 10.1154 23.7067H15.884L13.8509 36.9218C13.676 38.0608 14.3106 39.1702 15.3821 39.5949C15.9024 39.8009 16.4773 39.8243 17.0126 39.6613C17.548 39.4984 18.0123 39.1588 18.3298 38.6979L31.9207 18.9293C32.1758 18.5582 32.3246 18.1244 32.3512 17.6749C32.3778 17.2254 32.2811 16.7771 32.0715 16.3786Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-pace\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M34.1659 7.81554C30.3975 4.04712 25.3036 1.93512 20.0025 1.93512C8.94526 1.93512 0 10.88 0 21.8955C0 27.1962 2.112 32.2896 5.83916 36.0581C6.58442 36.8033 7.74442 36.8033 8.44842 36.0581L10.0219 34.4846L11.5958 32.9111C12.341 32.1658 12.341 31.0058 11.5958 30.3018C10.8505 29.5978 9.69052 29.5566 8.98652 30.3018L7.41305 31.8757C5.5827 29.5424 4.43573 26.7469 4.09979 23.8004H6.37768C6.62266 23.8013 6.86539 23.7537 7.0919 23.6603C7.3184 23.567 7.52419 23.4298 7.69742 23.2565C7.87064 23.0833 8.00788 22.8775 8.10122 22.651C8.19456 22.4245 8.24215 22.1818 8.24126 21.9368C8.24126 21.44 8.0341 20.9431 7.70273 20.6117C7.37137 20.2804 6.91621 20.0732 6.37768 20.0732H4.09979C4.43581 17.1269 5.58277 14.3315 7.41305 11.9983L8.98652 13.5717C9.73179 14.317 10.8918 14.317 11.5958 13.5717C12.2998 12.8265 12.341 11.6669 11.5958 10.9629L10.0632 9.38901C12.3839 7.52999 15.1841 6.36699 18.1389 6.03491V8.2707C18.138 8.51571 18.1855 8.75849 18.2789 8.98504C18.3722 9.21159 18.5094 9.41743 18.6826 9.5907C18.8559 9.76398 19.0617 9.90125 19.2882 9.99461C19.5147 10.088 19.7575 10.1356 20.0025 10.1347C20.4994 10.1347 20.9962 9.92754 21.328 9.59617C21.6589 9.2648 21.8661 8.80922 21.8661 8.27112V6.03491C24.821 6.36699 27.6212 7.52999 29.9419 9.38901L28.368 10.9629C27.6227 11.7082 27.6227 12.8677 28.368 13.5717C29.1133 14.2757 30.2733 14.317 30.9773 13.5717L32.5507 11.9983C37.1478 17.837 37.1478 26.0366 32.5507 31.8341L30.9356 30.2193C30.1903 29.4741 29.0307 29.4741 28.3267 30.2193C27.6227 30.9646 27.5815 32.1242 28.3267 32.8282L29.9419 34.4016L31.5154 35.9755C32.2606 36.7208 33.4206 36.7208 34.1246 35.9755C41.9516 28.2728 41.9516 15.6008 34.1659 7.81554ZM31.4741 20.1562L23.5642 19.2867C23.317 18.9569 23.0241 18.664 22.6943 18.4168C20.7482 16.9675 17.9735 17.3402 16.5238 19.2867C15.0741 21.2332 15.4472 24.0075 17.3937 25.4568C19.3402 26.9061 22.1145 26.5334 23.5642 24.5873L31.4741 23.7174C31.8772 23.6758 32.2536 23.4966 32.5402 23.2101C32.8267 22.9235 33.0059 22.547 33.0476 22.144C33.1305 21.1503 32.4265 20.2804 31.4741 20.1562Z\" fill=\"currentColor\"/>\n    </symbol>\n    \n    <symbol id=\"sprite-meta-action\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M23.75 0C15.2255 4.91161 16.2499 18.75 16.2499 18.75C16.2499 18.75 12.5 17.5 12.5 11.875C8.02599 14.4693 4.99997 19.4557 4.99997 25C4.99997 33.2843 11.7157 40 20 40C28.2843 40 35 33.2843 35 25C34.9999 12.8125 23.75 10.3125 23.75 0ZM21.3176 34.8315C18.3034 35.583 15.2505 33.7487 14.4988 30.7344C13.7473 27.7201 15.5816 24.6671 18.596 23.9156C25.8732 22.1012 26.7852 18.0089 26.7852 18.0089C26.7852 18.0089 30.4141 32.5634 21.3176 34.8315Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-romance\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M32.2535 18.1293C31.9958 18.2362 31.7424 18.365 31.4981 18.5027L31.2005 18.6716L31.0312 18.3739C29.8135 16.2404 27.5247 14.9162 25.067 14.9162C23.8758 14.9162 22.6981 15.232 21.6581 15.8269C18.3781 17.7069 17.2362 21.9112 19.1116 25.1958L22.3251 30.8093L19.2628 34.7065L3.22315 22.1027C-0.438753 19.2227 -1.07454 13.92 1.80083 10.2543C4.68083 6.58734 9.992 5.95197 13.6493 8.83198L16.4185 11.005L18.5916 8.24082C21.4716 4.57429 26.7735 3.9385 30.44 6.8185C33.9293 9.56082 34.6758 14.4985 32.2535 18.1293Z\" fill=\"currentColor\"/>\n        <path d=\"M37.4375 28.8745L35.5988 29.9272L26.7663 34.9857L20.656 24.3128C19.2619 21.8745 20.1065 18.7663 22.5436 17.3693C24.9828 15.9726 28.0931 16.8181 29.4872 19.2564L30.5423 21.0964L32.3815 20.0434C34.8202 18.6467 37.9285 19.4918 39.3247 21.9309C40.7238 24.3705 39.8788 27.4787 37.4375 28.8741\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-meta-humor\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M20.0004 0.369202C15.4587 0.369096 11.0574 1.94376 7.54659 4.8249C4.03583 7.70609 1.63266 11.7154 0.746527 16.1698C-0.139606 20.6242 0.546121 25.248 2.68688 29.2535C4.32404 32.3166 6.74455 34.8905 9.70141 36.7126C12.6583 38.5346 16.0456 39.5396 19.5177 39.6249C22.9898 39.7103 26.4224 38.8729 29.4652 37.1982C32.508 35.5236 35.052 33.0717 36.8377 30.0927C38.6233 27.1137 39.5866 23.7143 39.6293 20.2414C39.672 16.7685 38.7926 13.3464 37.0807 10.3244C35.3688 7.3024 32.8859 4.78866 29.8852 3.03973C26.8845 1.29079 23.4735 0.369269 20.0004 0.369202ZM9.04618 16.1446C9.47031 15.5957 10.0114 15.1481 10.6301 14.8345C11.2488 14.5208 11.9296 14.3489 12.623 14.3312C13.3987 14.3012 14.1714 14.4421 14.8866 14.7439C15.6017 15.0458 16.2417 15.5013 16.7613 16.078C16.8644 16.1935 16.9438 16.3281 16.9949 16.4742C17.046 16.6204 17.0678 16.7752 17.0591 16.9297C17.0504 17.0843 17.0113 17.2356 16.9441 17.3751C16.8768 17.5145 16.7828 17.6394 16.6673 17.7425C16.5518 17.8456 16.4172 17.925 16.2711 17.9761C16.1249 18.0272 15.9701 18.049 15.8156 18.0402C15.661 18.0315 15.5097 17.9924 15.3702 17.9252C15.2308 17.858 15.1059 17.764 15.0028 17.6485C14.7153 17.3318 14.3614 17.0825 13.9664 16.9183C13.5715 16.7541 13.1451 16.679 12.7178 16.6986C12.3746 16.6991 12.036 16.7771 11.7271 16.9266C11.4182 17.076 11.147 17.2932 10.9336 17.562C10.7567 17.7974 10.4982 17.9583 10.2089 18.0131C9.91957 18.068 9.62018 18.0128 9.36943 17.8584C9.18249 17.7432 9.03148 17.5781 8.93347 17.3816C8.83545 17.1852 8.79434 16.9652 8.81477 16.7466C8.83507 16.5281 8.91609 16.3195 9.04868 16.1446H9.04618ZM30.8838 23.5219C30.5109 26.1428 29.2047 28.541 27.2053 30.2761C25.2059 32.0111 22.6476 32.9664 20.0004 32.9664C17.3531 32.9664 14.7948 32.0111 12.7954 30.2761C10.796 28.541 9.48982 26.1428 9.11689 23.5219C9.08804 23.3188 9.10684 23.1118 9.17179 22.9172C9.23698 22.7299 9.34296 22.5595 9.48205 22.4181C9.62583 22.2743 9.79665 22.1603 9.98467 22.0828C10.1727 22.0053 10.3742 21.9657 10.5776 21.9664H29.4231C29.6291 21.9648 29.8333 22.0047 30.0235 22.0837C30.2138 22.1627 30.3861 22.2793 30.5303 22.4264C30.6717 22.5702 30.7779 22.7447 30.8406 22.9363C30.901 23.1266 30.9158 23.3283 30.8838 23.5253V23.5219ZM30.9936 17.735C30.878 17.8379 30.7432 17.917 30.597 17.9677C30.4507 18.0185 30.2959 18.0399 30.1414 18.0307C29.9869 18.0216 29.8357 17.9821 29.6965 17.9145C29.5573 17.8469 29.4327 17.7526 29.33 17.6368C29.0422 17.3204 28.6883 17.0713 28.2934 16.9071C27.8985 16.7429 27.4722 16.6677 27.045 16.6869C26.7006 16.6886 26.361 16.7683 26.0518 16.9198C25.7425 17.0713 25.4715 17.2909 25.2591 17.562C25.0822 17.7974 24.8238 17.9583 24.5344 18.0131C24.2451 18.068 23.9457 18.0128 23.6949 17.8584C23.5552 17.7722 23.435 17.6578 23.3421 17.5224C23.2492 17.3871 23.1856 17.2338 23.1554 17.0724C23.1251 16.9111 23.129 16.7452 23.1667 16.5854C23.2044 16.4256 23.2751 16.2754 23.3742 16.1446C23.7979 15.5962 24.3383 15.149 24.9562 14.8354C25.5741 14.5217 26.254 14.3495 26.9468 14.3312C27.7223 14.3024 28.4947 14.4438 29.2096 14.7456C29.9246 15.0474 30.5648 15.5022 31.085 16.078C31.2931 16.3111 31.4 16.6173 31.3824 16.9293C31.3648 17.2412 31.2241 17.5334 30.9911 17.7417L30.9936 17.735Z\" fill=\"currentColor\"/>\n    </symbol>\n\n    <symbol id=\"sprite-player-prev\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.78541 8.07648C4.36836 9.01505 4.36836 11.0953 5.78541 12.0339L13.9759 17.4588C15.5536 18.5038 17.6598 17.3725 17.6598 15.4801L17.6598 4.63027C17.6598 2.7379 15.5536 1.60659 13.9759 2.65157L5.78541 8.07648Z\" fill=\"currentColor\"/>\n        <rect width=\"3.87428\" height=\"15.6044\" rx=\"1.93714\" transform=\"matrix(-1 0 0 1 6.67232 2.25293)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-next\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.3225 8.07648C15.7396 9.01505 15.7396 11.0953 14.3225 12.0339L6.13206 17.4588C4.55437 18.5038 2.44812 17.3725 2.44812 15.4801L2.44812 4.63027C2.44812 2.7379 4.55437 1.60659 6.13206 2.65157L14.3225 8.07648Z\" fill=\"currentColor\"/>\n        <rect x=\"13.4356\" y=\"2.25293\" width=\"3.87428\" height=\"15.6044\" rx=\"1.93714\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-play\" viewBox=\"0 0 30 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M27.0947 10.3888C29.7614 11.9285 29.7614 15.7775 27.0947 17.3171L10.0392 27.164C7.37258 28.7036 4.03925 26.7791 4.03925 23.6999L4.03925 4.00597C4.03925 0.926766 7.37258 -0.997735 10.0392 0.541866L27.0947 10.3888Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-pause\" viewBox=\"0 0 30 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"2.57178\" width=\"9.16595\" height=\"27.7061\" rx=\"3\" fill=\"currentColor\"/>\n        <rect x=\"17.3571\" width=\"9.16595\" height=\"27.7061\" rx=\"3\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-playlist\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"18.8307\" y=\"1.55127\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 1.55127)\" fill=\"currentColor\"/>\n        <rect x=\"18.8307\" y=\"8.34766\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 8.34766)\" fill=\"currentColor\"/>\n        <rect x=\"18.8307\" y=\"15.1436\" width=\"3.4165\" height=\"17.5534\" rx=\"1.70825\" transform=\"rotate(90 18.8307 15.1436)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-volume\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"1.86032\" y=\"5.05762\" width=\"4.80624\" height=\"9.99512\" rx=\"2\" fill=\"currentColor\"/>\n        <path d=\"M7.97406 6.92909C7.97406 6.18824 8.37101 5.48162 9.06762 4.98242L13.2115 2.01285C14.6465 0.98453 16.9527 1.78454 16.9527 3.31063V16.8002C16.9527 18.3263 14.6465 19.1263 13.2115 18.098L9.06762 15.1284C8.37101 14.6292 7.97406 13.9226 7.97406 13.1818V6.92909Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-settings\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M16.9635 3.43679L11.7643 0.429913C10.7687 -0.143304 9.20999 -0.143304 8.2144 0.429913L2.96494 3.45691C0.883251 4.86481 0.762573 5.07599 0.762573 7.31858V12.7792C0.762573 15.0218 0.883251 15.2431 3.00516 16.6711L8.20435 19.678C8.70717 19.9696 9.35078 20.1104 9.98434 20.1104C10.6179 20.1104 11.2615 19.9696 11.7543 19.678L17.0037 16.651C19.0854 15.2431 19.2061 15.0319 19.2061 12.7893V7.31858C19.2061 5.07599 19.0854 4.86481 16.9635 3.43679ZM9.98434 14.7924C7.37452 14.7924 5.24583 12.6638 5.24583 10.0539C5.24583 7.44412 7.37452 5.31543 9.98434 5.31543C12.5942 5.31543 14.7228 7.44412 14.7228 10.0539C14.7228 12.6638 12.5942 14.7924 9.98434 14.7924Z\" fill=\"currentColor\"/>\n\n    </symbol>\n    <symbol id=\"sprite-player-subtitles\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.7631 15.1804C18.1916 15.5189 18.2729 16.143 17.8981 16.5401C16.1749 18.3662 13.7323 19.5058 11.0234 19.5058C5.80377 19.5058 1.57245 15.2745 1.57245 10.0549C1.57245 4.83532 5.80377 0.604004 11.0234 0.604004C13.7323 0.604004 16.1749 1.74367 17.8981 3.56969C18.2729 3.96688 18.1916 4.59092 17.7631 4.92947L15.972 6.34451C15.557 6.67245 14.9633 6.61199 14.5513 6.28014C13.5728 5.49191 12.3287 5.02009 10.9744 5.02009C7.82296 5.02009 5.93954 6.90351 5.93954 10.0549C5.93954 13.2063 7.82296 15.0897 10.9744 15.0897C12.3287 15.0897 13.5728 14.6179 14.5513 13.8297C14.9633 13.4979 15.557 13.4374 15.972 13.7653L17.7631 15.1804Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-voice\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M14.4085 4.52687C14.4085 2.02675 12.3818 0 9.88165 0C7.38153 0 5.35478 2.02675 5.35478 4.52687V10.3471C5.35478 12.8473 7.38153 14.874 9.88165 14.874C12.3818 14.874 14.4085 12.8473 14.4085 10.3471V4.52687Z\" fill=\"currentColor\"/>\n        <path d=\"M4.31538 11.9269C4.11641 11.4295 3.55187 11.1876 3.05445 11.3865C2.55703 11.5855 2.31508 12.15 2.51405 12.6475L4.31538 11.9269ZM17.2493 12.6475C17.4483 12.15 17.2063 11.5855 16.7089 11.3865C16.2115 11.1876 15.647 11.4295 15.448 11.9269L17.2493 12.6475ZM2.51405 12.6475C3.96832 16.2831 6.93607 17.7841 9.88167 17.7841V15.844C7.65371 15.844 5.44789 14.7582 4.31538 11.9269L2.51405 12.6475ZM9.88167 17.7841C12.8273 17.7841 15.795 16.2831 17.2493 12.6475L15.448 11.9269C14.3155 14.7582 12.1096 15.844 9.88167 15.844V17.7841Z\" fill=\"currentColor\"/>\n        <path d=\"M11.1751 17.4609C11.1751 16.7466 10.596 16.1675 9.88166 16.1675C9.16734 16.1675 8.58827 16.7466 8.58827 17.4609V18.7543C8.58827 19.4686 9.16734 20.0477 9.88166 20.0477C10.596 20.0477 11.1751 19.4686 11.1751 18.7543V17.4609Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-pip\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M5.62734 17.8131H4.5013C2.84444 17.8131 1.5013 16.47 1.5013 14.8131V4.76074C1.5013 3.10389 2.84444 1.76074 4.5013 1.76074H15.618C17.2749 1.76074 18.618 3.10389 18.618 4.76074V7.95645\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <rect x=\"9.61014\" y=\"12.0571\" width=\"10.411\" height=\"7.20752\" rx=\"2\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-fullscreen\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M18.0802 11.6267L18.0802 15.2422C18.0802 16.899 16.737 18.2422 15.0802 18.2422L5.02777 18.2422C3.37092 18.2422 2.02777 16.899 2.02777 15.2422L2.02777 4.76074C2.02777 3.10389 3.37092 1.76074 5.02777 1.76074L8.1847 1.76074\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <path d=\"M12.5018 1.76074H15.0391C16.696 1.76074 18.0391 3.10389 18.0391 4.76074V7.2283\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n        <rect x=\"7.37248\" y=\"11.3169\" width=\"9.53292\" height=\"2.61035\" rx=\"1.30518\" transform=\"rotate(-47.7566 7.37248 11.3169)\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-flow\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M17.1649 2.945C15.2657 1.04591 12.7407 0 10.0549 0C7.36917 0 4.84416 1.04591 2.945 2.945C1.04591 4.84416 0 7.36917 0 10.0549C0 12.7407 1.04591 15.2657 2.945 17.1649C4.84416 19.064 7.36917 20.1099 10.0549 20.1099C12.7407 20.1099 15.2657 19.064 17.1649 17.1649C19.064 15.2657 20.1099 12.7407 20.1099 10.0549C20.1099 7.36917 19.064 4.84416 17.1649 2.945ZM4.71325 10.9976C4.71325 11.5182 4.29122 11.9402 3.7706 11.9402C3.24998 11.9402 2.82795 11.5182 2.82795 10.9976V9.11228C2.82795 8.59166 3.24998 8.16963 3.7706 8.16963C4.29122 8.16963 4.71325 8.59166 4.71325 9.11228V10.9976ZM7.85542 12.5687C7.85542 13.0893 7.43338 13.5113 6.91277 13.5113C6.39215 13.5113 5.97012 13.0893 5.97012 12.5687V7.5412C5.97012 7.02058 6.39215 6.59855 6.91277 6.59855C7.43338 6.59855 7.85542 7.02058 7.85542 7.5412V12.5687ZM10.9976 14.454C10.9976 14.9746 10.5755 15.3966 10.0549 15.3966C9.53431 15.3966 9.11228 14.9746 9.11228 14.454V5.6559C9.11228 5.13528 9.53431 4.71325 10.0549 4.71325C10.5755 4.71325 10.9976 5.13528 10.9976 5.6559V14.454ZM14.1397 12.5687C14.1397 13.0893 13.7177 13.5113 13.1971 13.5113C12.6765 13.5113 12.2544 13.0893 12.2544 12.5687V7.5412C12.2544 7.02058 12.6765 6.59855 13.1971 6.59855C13.7177 6.59855 14.1397 7.02058 14.1397 7.5412V12.5687ZM16.3393 11.9402C15.8186 11.9402 15.3966 11.5182 15.3966 10.9976V9.11228C15.3966 8.59166 15.8186 8.16963 16.3393 8.16963C16.8599 8.16963 17.2819 8.59166 17.2819 9.11228V10.9976C17.2819 11.5182 16.8599 11.9402 16.3393 11.9402Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-player-ai\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M10.054 0.00195312L10.5172 1.75955C11.5271 5.59073 14.5192 8.58285 18.3504 9.59267L20.108 10.0559L18.3504 10.5192C14.5192 11.529 11.5271 14.5211 10.5172 18.3523L10.054 20.1099L9.59071 18.3523C8.5809 14.5211 5.58878 11.529 1.7576 10.5192L0 10.0559L1.7576 9.59267C5.58878 8.58285 8.5809 5.59073 9.59071 1.75955L10.054 0.00195312Z\" fill=\"currentColor\"/>\n        <path d=\"M16.3286 0.707031C16.7236 2.2056 17.894 3.37598 19.3925 3.77097C17.894 4.16596 16.7236 5.33633 16.3286 6.8349C15.9336 5.33633 14.7633 4.16596 13.2647 3.77097C14.7633 3.37598 15.9336 2.2056 16.3286 0.707031Z\" fill=\"currentColor\"/>\n        <path d=\"M4.06625 13.9224C4.33844 14.9551 5.14498 15.7616 6.17769 16.0338C5.14498 16.306 4.33844 17.1125 4.06625 18.1452C3.79405 17.1125 2.98751 16.306 1.9548 16.0338C2.98751 15.7616 3.79405 14.9551 4.06625 13.9224Z\" fill=\"currentColor\"/>\n        <circle cx=\"15.9932\" cy=\"15.7028\" r=\"0.679867\" fill=\"currentColor\"/>\n        <circle cx=\"4.74611\" cy=\"4.95233\" r=\"0.679867\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-ai-agent\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M13.9498 0L15.7629 3.4198C17.731 7.13203 20.7675 10.1685 24.4797 12.1367L27.8995 13.9498L24.4797 15.7629C20.7675 17.731 17.731 20.7675 15.7629 24.4797L13.9498 27.8995L12.1367 24.4797C10.1685 20.7675 7.13203 17.731 3.4198 15.7629L0 13.9498L3.4198 12.1367C7.13203 10.1685 10.1685 7.13203 12.1367 3.4198L13.9498 0Z\" fill=\"currentColor\"/>\n    </symbol>\n    <symbol id=\"sprite-copy\" viewBox=\"0 0 28 28\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n        <rect x=\"9.5\" y=\"9.5\" width=\"16\" height=\"16\" rx=\"3\" stroke=\"currentColor\" stroke-width=\"3\"/>\n        <path d=\"M18.5 4.5C18.5 3.39543 17.6046 2.5 16.5 2.5H5.5C3.84315 2.5 2.5 3.84315 2.5 5.5V16.5C2.5 17.6046 3.39543 18.5 4.5 18.5\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    </symbol>\n</svg>\n";
 
   var html$r = "<div class=\"warning-box warning-box--{type}\">\n    <div class=\"warning-box__icon\">{icon}</div>\n    <div class=\"warning-box__content\">\n        <div class=\"warning-box__title\">{title}</div>\n        <div class=\"warning-box__descr\">{text}</div>\n    </div>\n    <div class=\"warning-box__right hide\"></div>\n</div>";
 
@@ -3281,7 +4055,7 @@
    * @returns {void}
    */
 
-  function show$g(text) {
+  function show$h(text) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     clearTimeout(time$4);
     html$p.attr('class', 'noty');
@@ -3298,7 +4072,7 @@
   }
 
   var Noty = {
-    show: show$g,
+    show: show$h,
     render: render$n
   };
 
@@ -3505,7 +4279,7 @@
     pause: typeof VK_PAUSE !== 'undefined' ? VK_PAUSE : typeof KEYCODE_MEDIA_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PAUSE : -1,
     play_pause: typeof VK_PLAY_PAUSE !== 'undefined' ? VK_PLAY_PAUSE : typeof KEYCODE_MEDIA_PLAY_PAUSE !== 'undefined' ? KEYCODE_MEDIA_PLAY_PAUSE : -1
   };
-  var enabled$2 = false;
+  var enabled$3 = false;
   var listener$m = Subscribe$2();
   var time$3 = 0;
   var lastdown = 0;
@@ -3513,9 +4287,9 @@
   var longpress;
 
   function toggle$d(new_status) {
-    enabled$2 = new_status;
+    enabled$3 = new_status;
     listener$m.send('toggle', {
-      status: enabled$2
+      status: enabled$3
     });
   }
 
@@ -3548,7 +4322,7 @@
     // иначе клавиша уходит в систему (Android WebView ищет фокус сам) и приложение «зависает», пока её не отпустить
 
     if (time$3 > Date.now() - 100) {
-      if (enabled$2 && !isEnter(keycode) && !(keycode == 122 || keycode == 123)) e.preventDefault();
+      if (enabled$3 && !isEnter(keycode) && !(keycode == 122 || keycode == 123)) e.preventDefault();
       return;
     }
 
@@ -3561,19 +4335,19 @@
   function keydownHandle(e, keycode) {
     listener$m.send('keydown', {
       code: keycode,
-      enabled: enabled$2,
+      enabled: enabled$3,
       event: e
     });
     if (e.defaultPrevented) return;
     if (isEnter(keycode)) return;
-    if (!enabled$2) return; //отключить все
+    if (!enabled$3) return; //отключить все
     //4 - Samsung orsay
 
     if (keycode == 37 || keycode == 4) {
       Sound$1.play('hover');
       listener$m.send('left', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('left');
@@ -3584,7 +4358,7 @@
       Sound$1.play('hover');
       listener$m.send('up', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('up');
@@ -3595,7 +4369,7 @@
       Sound$1.play('hover');
       listener$m.send('right', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('right');
@@ -3607,7 +4381,7 @@
       Sound$1.play('hover');
       listener$m.send('down', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('down');
@@ -3618,7 +4392,7 @@
       Sound$1.play('hover');
       listener$m.send('toup', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('toup');
@@ -3629,7 +4403,7 @@
       Sound$1.play('hover');
       listener$m.send('todown', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       Controller.move('todown');
@@ -3691,7 +4465,7 @@
       e.preventDefault();
       listener$m.send('back', {
         code: keycode,
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
       if (window.appready) Controller.back();
@@ -3724,7 +4498,7 @@
             longpress = true;
             listener$m.send('longdown', {
               code: lastdown,
-              enabled: enabled$2,
+              enabled: enabled$3,
               event: e
             });
             Controller["long"]();
@@ -3738,7 +4512,7 @@
       timer$a = null;
       listener$m.send('keyup', {
         code: keyCode(e),
-        enabled: enabled$2,
+        enabled: enabled$3,
         event: e
       });
 
@@ -3747,7 +4521,7 @@
           Sound$1.play('enter');
           listener$m.send('enter', {
             code: keyCode(e),
-            enabled: enabled$2,
+            enabled: enabled$3,
             event: e
           });
           Controller.enter();
@@ -4049,7 +4823,7 @@
     return new Date(str);
   }
 
-  function parseTime(str) {
+  function parseTime$1(str) {
     var months = getMoths();
     var months_end = getMoths(true);
     var days = [Lang.translate('day_7'), Lang.translate('day_1'), Lang.translate('day_2'), Lang.translate('day_3'), Lang.translate('day_4'), Lang.translate('day_5'), Lang.translate('day_6')];
@@ -4901,7 +5675,7 @@
     time: time$2,
     bytesToSize: bytesToSize,
     calcBitrate: calcBitrate,
-    parseTime: parseTime,
+    parseTime: parseTime$1,
     parseToDate: parseToDate,
     checkHttp: checkHttp,
     shortText: shortText,
@@ -5866,7 +6640,7 @@
     return colors;
   }
 
-  function rgba(c) {
+  function rgba$1(c) {
     var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
     return 'rgba(' + c.join(',') + ',' + o + ')';
   }
@@ -5877,7 +6651,7 @@
     var l = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 80;
     var hls = rgbToHsl(c[0], c[1], c[2]);
     var rgb = hslToRgb$1(hls[0], Math.min(s, hls[1]), l);
-    return rgba(rgb, o);
+    return rgba$1(rgb, o);
   }
   /**
    * Converts an RGB color value to HSL.
@@ -6090,7 +6864,7 @@
     get: get$f,
     extract: extract$3,
     palette: palette,
-    rgba: rgba,
+    rgba: rgba$1,
     blur: blur$1,
     tone: tone,
     rgbToHsl: rgbToHsl,
@@ -7349,7 +8123,7 @@
 
       if (!element.noenter) {
         var goclose = function goclose() {
-          if (!active$8.nohide) hide$4();else {
+          if (!active$8.nohide) hide$5();else {
             scroll$4.render().find('.selected').removeClass('selected');
             item.addClass('selected');
           }
@@ -7398,7 +8172,7 @@
    */
 
 
-  function show$f(object) {
+  function show$g(object) {
     // Селект поверх открытого селекта: запоминаем родителя, close() вернёт его обратно
     if (opened$3()) {
       stack$1.push({
@@ -7470,7 +8244,7 @@
    */
 
 
-  function hide$4() {
+  function hide$5() {
     // Выбор пункта закрывает всю ветку вложенных селектов
     stack$1.forEach(function (frame) {
       if (frame.win) Controller.windowClose(frame.win, true);
@@ -7576,9 +8350,9 @@
   var Select = {
     listener: listener$k,
     init: init$1m,
-    show: show$f,
+    show: show$g,
     opened: opened$3,
-    hide: hide$4,
+    hide: hide$5,
     close: close$a,
     closeAll: closeAll$1,
     render: render$m
@@ -8248,7 +9022,7 @@
 
   var video_tube = [];
 
-  function register$1(params) {
+  function register$2(params) {
     if (typeof params.verify === 'function' && typeof params.create === 'function') {
       if (video_tube.indexOf(params) == -1) video_tube.push(params);
       return true;
@@ -8269,12 +9043,12 @@
   }
 
   var Tube = {
-    register: register$1,
+    register: register$2,
     verify: verify,
     remove: remove$6
   };
 
-  function parse$c(data) {
+  function parse$d(data) {
     var result = {
       hash_string: '',
       season: null,
@@ -8339,17 +9113,17 @@
   }
 
   var EpisodeParser = {
-    parse: parse$c
+    parse: parse$d
   };
 
-  var network$b = new Request();
+  var network$c = new Request();
   var gst_work = false;
   /**
    * Возвращает url сервера
    * @returns {string}
    */
 
-  function url$5() {
+  function url$6() {
     var u = ip();
     return u ? Utils$1.checkEmptyUrl(u) : u;
   }
@@ -8377,7 +9151,7 @@
       action: 'list'
     });
     clear$e();
-    network$b.silent(url$5() + '/torrents', function (result) {
+    network$c.silent(url$6() + '/torrents', function (result) {
       if (result.length) success(result);else fail();
     }, fail, data);
   }
@@ -8393,7 +9167,7 @@
       action: 'get',
       hash: hash
     });
-    network$b.silent(url$5() + '/cache', success, fail, data);
+    network$c.silent(url$6() + '/cache', success, fail, data);
   }
 
   function viewed$2(hash, success, fail) {
@@ -8402,8 +9176,8 @@
       hash: hash
     });
     clear$e();
-    network$b.timeout(5000);
-    network$b.silent(url$5() + '/viewed', success, fail, data);
+    network$c.timeout(5000);
+    network$c.silent(url$6() + '/viewed', success, fail, data);
   }
 
   function viewedSet(hash, file_index, timecode, success, fail) {
@@ -8413,7 +9187,7 @@
       file_index: file_index,
       timecode: timecode
     });
-    network$b.silent(url$5() + '/viewed', success, fail, data);
+    network$c.silent(url$6() + '/viewed', success, fail, data);
   }
   /**
    * Добавляет торрент на сервер
@@ -8443,7 +9217,7 @@
     };
     var data = JSON.stringify(json);
     clear$e();
-    network$b.silent(url$5() + '/torrents', success, fail, data);
+    network$c.silent(url$6() + '/torrents', success, fail, data);
   }
   /**
    * Добавляет торрент на сервер с проверкой хэша
@@ -8473,8 +9247,8 @@
     };
     var data = JSON.stringify(json);
     clear$e();
-    network$b.silent(url$5() + '/torrents', success, function (a, c) {
-      fail(network$b.errorDecode(a, c));
+    network$c.silent(url$6() + '/torrents', success, function (a, c) {
+      fail(network$c.errorDecode(a, c));
     }, data);
   }
   /**
@@ -8491,8 +9265,8 @@
       hash: hash
     });
     clear$e();
-    network$b.timeout(2000);
-    network$b.silent(url$5() + '/torrents', function (json) {
+    network$c.timeout(2000);
+    network$c.silent(url$6() + '/torrents', function (json) {
       if (json.file_stats) {
         success(json);
       }
@@ -8507,8 +9281,8 @@
 
   function connected(success, fail) {
     clear$e();
-    network$b.timeout(5000);
-    network$b.silent(url$5() + '/settings', function (json) {
+    network$c.timeout(5000);
+    network$c.silent(url$6() + '/settings', function (json) {
       if (typeof json.CacheSize == 'undefined') {
         fail(Lang.translate('torrent_error_nomatrix'));
       } else {
@@ -8517,7 +9291,7 @@
 
       gstCheck();
     }, function (a, c) {
-      fail(network$b.errorDecode(a, c));
+      fail(network$c.errorDecode(a, c));
     }, JSON.stringify({
       action: 'get'
     }));
@@ -8529,7 +9303,7 @@
 
 
   function gstCheck() {
-    network$b.silent(url$5() + '/gst/echo', function (json) {
+    network$c.silent(url$6() + '/gst/echo', function (json) {
       gst_work = true;
     }, function (a, c) {
       gst_work = false;
@@ -8554,8 +9328,8 @@
 
 
   function stream(path, hash, id) {
-    if (gstWork()) return url$5() + '/gst/' + encodeURIComponent(hash) + '/master.m3u8?index=' + id + '&audio=0';
-    return url$5() + '/stream/' + encodeURIComponent(path.split('\\').pop().split('/').pop()) + '?link=' + hash + '&index=' + id + '&' + (Storage.field('torrserver_preload') ? 'preload' : 'play');
+    if (gstWork()) return url$6() + '/gst/' + encodeURIComponent(hash) + '/master.m3u8?index=' + id + '&audio=0';
+    return url$6() + '/stream/' + encodeURIComponent(path.split('\\').pop().split('/').pop()) + '?link=' + hash + '&index=' + id + '&' + (Storage.field('torrserver_preload') ? 'preload' : 'play');
   }
   /**
    * Возвращает ссылку на потоковое воспроизведение файла торрента с заменой параметра preload на play
@@ -8576,7 +9350,7 @@
 
 
   function drop(hash, success, fail) {
-    if (gstWork()) return network$b.silent(url$5() + '/gst/remove?hash=' + encodeURIComponent(hash), success, fail, data, {
+    if (gstWork()) return network$c.silent(url$6() + '/gst/remove?hash=' + encodeURIComponent(hash), success, fail, data, {
       dataType: 'text'
     });
     var data = JSON.stringify({
@@ -8584,7 +9358,7 @@
       hash: hash
     });
     clear$e();
-    network$b.silent(url$5() + '/torrents', success, fail, data, {
+    network$c.silent(url$6() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
   }
@@ -8602,7 +9376,7 @@
       hash: hash
     });
     clear$e();
-    network$b.silent(url$5() + '/torrents', success, fail, data, {
+    network$c.silent(url$6() + '/torrents', success, fail, data, {
       dataType: 'text'
     });
   }
@@ -8613,7 +9387,7 @@
    */
 
 
-  function parse$b(data) {
+  function parse$c(data) {
     var result = EpisodeParser.parse(data);
     result.hash = Utils$1.hash(result.hash_string);
     return result;
@@ -8688,7 +9462,7 @@
 
 
   function clear$e() {
-    network$b.clear();
+    network$c.clear();
   }
   /**
    * Показывает модальное окно с информацией об ошибке соединения с сервером
@@ -8752,7 +9526,7 @@
     ip: ip,
     my: my,
     add: add$e,
-    url: url$5,
+    url: url$6,
     hash: hash$1,
     files: files$1,
     clear: clear$e,
@@ -8760,7 +9534,7 @@
     stream: stream,
     remove: remove$5,
     connected: connected,
-    parse: parse$b,
+    parse: parse$c,
     error: error$3,
     cache: cache$1,
     gstWork: gstWork,
@@ -9950,12 +10724,12 @@
    */
 
 
-  function show$e() {
+  function show$f() {
     main$3();
   }
 
   var Filter$1 = {
-    show: show$e
+    show: show$f
   };
 
   var menu$4;
@@ -10019,7 +10793,7 @@
     }
   }
 
-  function hide$3() {
+  function hide$4() {
     var items = Storage.get('menu_hide', '[]');
     $('.menu__item', menu$4).removeClass('hidden');
 
@@ -10048,7 +10822,7 @@
 
   function update$g() {
     order();
-    hide$3();
+    hide$4();
   }
 
   function observe$3() {
@@ -10493,7 +11267,7 @@
    */
 
 
-  function details(params) {
+  function details$1(params) {
     var str = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
     var line = Template.get('timeline_details', format(params));
     if (str) line.prepend(str);
@@ -10562,7 +11336,7 @@
     render: render$k,
     update: update$f,
     view: view$1,
-    details: details,
+    details: details$1,
     format: format,
     watched: watched,
     watchedEpisode: watchedEpisode,
@@ -11157,7 +11931,64 @@
     setProgress: setProgress
   };
 
+  var bell;
+  var items$1 = [];
+
+  function Item$1(params) {
+    var _this = this;
+
+    Arrays.extend(params, {
+      icon: "<svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"></path>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"></path>\n            </svg>",
+      type: 'info',
+      text: '',
+      from: '',
+      time: 5000
+    });
+    var element = $("<div class=\"bell__item bell__item--".concat(params.type, "\">\n        <div class=\"bell__item-icon\">").concat(params.icon, "</div>\n        <div class=\"bell__item-text\"><div>").concat(params.text, "</div></div>    \n    </div>"));
+    if (params.from) element.find('.bell__item-text').prepend("<b>".concat(params.from, "</b><br>"));
+    setTimeout(function () {
+      element.removeClass('show');
+      setTimeout(function () {
+        var slide = $("<div class=\"bell__item-slide\"></div>");
+        slide.css('height', element.outerHeight() + 'px');
+        element.after(slide);
+        element.remove();
+        Arrays.remove(items$1, _this);
+        slide.animate({
+          height: 0
+        }, 300, function () {
+          slide.remove();
+        });
+
+        if (items$1.length == 0) {
+          bell.removeClass('show');
+        }
+      }, 300);
+    }, params.time);
+    bell.find('.bell__wrap').append(element);
+    setTimeout(function () {
+      element.addClass('show');
+    }, 100);
+    items$1.push(this);
+    Sound$1.play('bell');
+  }
+
   function init$1g() {
+    bell = $("<div class=\"bell\">\n        <div class=\"bell__wrap\"></div>\n    </div>");
+    $('body').append(bell);
+  }
+
+  function push$8(params) {
+    new Item$1(params);
+    bell.addClass('show');
+  }
+
+  var Bell = {
+    init: init$1g,
+    push: push$8
+  };
+
+  function init$1f() {
     Settings.listener.follow('open', function (e) {
       if (e.name == 'account') e.body.find('.settings--account-device-add').on('hover:enter', function () {
         login(function () {
@@ -11206,6 +12037,52 @@
     }
   }
   /**
+   * Чем открыть ссылку в браузере на этом устройстве
+   * @returns {function|null} - null, если открыть нельзя (телевизор, приставка, Electron)
+   */
+
+
+  function opener() {
+    if (Platform.tv() || Platform.is(['philips', 'electron'])) return null;
+
+    if (Platform.is('android')) {
+      return typeof AndroidJS !== 'undefined' && typeof AndroidJS.openBrowser == 'function' ? Android.openBrowser : null;
+    }
+
+    if (Platform.is('nw')) {
+      return typeof nw !== 'undefined' && nw.Shell && nw.Shell.openExternal ? function (link) {
+        return nw.Shell.openExternal(link);
+      } : null;
+    }
+
+    return typeof window.open == 'function' ? function (link) {
+      return window.open(link, '_blank');
+    } : null;
+  }
+  /**
+   * Адрес сайта в тексте окна — по клику копировать ссылку (на ТВ буфер обмена не нужен).
+   * Не selector: адрес стоит в тексте сбоку от кнопок, пульт до него не дойдёт и застрянет на нём
+   * @param {jQuery} html - окно
+   * @param {function} link - возвращает ссылку для копирования
+   */
+
+
+  function copySite(html, link) {
+    if (Platform.tv()) return;
+    html.find('.account-modal__site').addClass('account-modal__site--copy').prepend('<svg><use xlink:href="#sprite-copy"></use></svg>').on('click', function (e) {
+      if (!DeviceInput.canClick(e.originalEvent)) return;
+      Utils$1.copyTextToClipboard(link(), function () {
+        Bell.push({
+          text: Lang.translate('copy_secuses')
+        });
+      }, function () {
+        Bell.push({
+          text: Lang.translate('copy_error')
+        });
+      });
+    });
+  }
+  /**
    * Вход кодом на экране: Lampa показывает код и QR, пользователь подтверждает вход на {site}/activate,
    * Lampa опрашивает device/token и получает тот же токен, что и через device/add
    * @param {function} callback - после закрытия окна
@@ -11218,8 +12095,9 @@
     var code = html.find('.account-modal-split__device-code');
     var status = html.find('.account-modal-split__status');
     var qr = html.find('.account-modal-split__qr-code');
+    var open = opener();
     var closed = false;
-    var timer, expires;
+    var timer, expires, current;
     if (Platform.tv()) html.addClass('layer--' + (Platform.mouse() ? 'wheight' : 'height'));else html.addClass('account-modal-split--mobile');
 
     function stop() {
@@ -11240,6 +12118,7 @@
     }
 
     function draw(user_code) {
+      current = user_code;
       code.text(user_code);
       status.text(Lang.translate('account_device_code_wait'));
 
@@ -11293,8 +12172,20 @@
           device_code: device_code
         });
       }, interval);
+    } // сайт с текущим кодом — там остаётся только подтвердить вход
+
+
+    function link() {
+      return 'https://' + object$2.cub_site + '/activate' + (current ? '?code=' + current : '');
     }
 
+    if (open) {
+      html.find('.account-modal-split__open').on('hover:enter', function () {
+        open(link());
+      });
+    } else html.find('.account-modal-split__open').remove();
+
+    copySite(html, link);
     html.find('.account-modal-split__manual').on('hover:enter', function () {
       stop();
       Modal.close();
@@ -11338,6 +12229,10 @@
         });
       });
     } else html.addClass('account-modal-split--mobile');
+
+    copySite(html, function () {
+      return 'https://' + object$2.cub_site + '/add';
+    });
 
     function drawCode(value) {
       nums.find('span').text('-');
@@ -11391,12 +12286,12 @@
   }
 
   var Device = {
-    init: Utils$1.onceInit(init$1g),
+    init: Utils$1.onceInit(init$1f),
     login: login,
     manual: manual
   };
 
-  function show$d(template_name) {
+  function show$e(template_name) {
     var enabled = Controller.enabled().name;
     Modal.open({
       title: '',
@@ -11446,7 +12341,7 @@
   }
 
   function limited() {
-    show$d('account_limited');
+    show$e('account_limited');
   }
 
   function premium() {
@@ -11493,13 +12388,13 @@
     premium: premium
   };
 
-  var network$a = new Request();
+  var network$b = new Request();
 
-  function url$4() {
+  function url$5() {
     return Utils$1.protocol() + object$2.cub_domain + '/api/';
   }
 
-  function load$3(path) {
+  function load$4(path) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var post = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     return new Promise(function (resolve, reject) {
@@ -11512,8 +12407,8 @@
           },
           timeout: 8000
         });
-        var u = params.url ? params.url : url$4() + path;
-        network$a.silent(u, resolve, reject, post, params);
+        var u = params.url ? params.url : url$5() + path;
+        network$b.silent(u, resolve, reject, post, params);
       } else {
         reject({
           decode_code: 403
@@ -11524,7 +12419,7 @@
 
   function persons(secuses, error) {
     if (permit.access && !window.lampa_settings.disable_features.persons) {
-      load$3('person/list').then(function (data) {
+      load$4('person/list').then(function (data) {
         Storage.set('person_subscribes_id', data.results.map(function (a) {
           return a.person_id;
         }));
@@ -11537,7 +12432,7 @@
 
   function user(secuses, error) {
     if (permit.access) {
-      load$3('users/get?device_name=' + decodeURIComponent(Storage.get('device_name'))).then(function (data) {
+      load$4('users/get?device_name=' + decodeURIComponent(Storage.get('device_name'))).then(function (data) {
         Storage.set('account_user', JSON.stringify(data.user));
         if (secuses) secuses(data.user);
       })["catch"](error ? error : function () {});
@@ -11548,7 +12443,7 @@
 
   function plugins(call) {
     if (permit.access) {
-      load$3('plugins/all', {
+      load$4('plugins/all', {
         timeout: 3000
       }).then(function (result) {
         if (result.secuses) {
@@ -11565,7 +12460,7 @@
 
   function pluginToggle(plugin, status) {
     if (permit.access) {
-      load$3((plugin.author ? 'extensions' : 'plugins') + '/status', {}, {
+      load$4((plugin.author ? 'extensions' : 'plugins') + '/status', {}, {
         id: plugin.id,
         status: status
       })["catch"](function () {});
@@ -11574,7 +12469,7 @@
 
   function notices(call) {
     if (permit.access) {
-      load$3('notice/all', {
+      load$4('notice/all', {
         cache: 1000 * 60 * 10
       }).then(function (result) {
         if (result.secuses) {
@@ -11595,7 +12490,7 @@
     var error = arguments.length > 2 ? arguments[2] : undefined;
 
     if (permit.access) {
-      load$3('notifications/all').then(function (result) {
+      load$4('notifications/all').then(function (result) {
         if (params.to_card_subscribe) {
           var cards = [];
           result.notifications.forEach(function (n) {
@@ -11626,7 +12521,7 @@
     var error = arguments.length > 2 ? arguments[2] : undefined;
 
     if (permit.access && params.voice) {
-      load$3('notifications/add', {}, {
+      load$4('notifications/add', {}, {
         voice: params.voice,
         data: JSON.stringify(Utils$1.clearCard(params.card)),
         episode: params.episode,
@@ -11639,9 +12534,9 @@
     });
   }
   /**
-   * История просмотров CUB (watch_history): просмотры карточки за день — одна запись с датой последнего, сериями (episodes) и числом просмотров (views).
-   * Старая история (закладка history) работает как раньше, эта — только с сервера
-   * @param {{page:integer, filter:string}} params - filter: '' | 'movie' | 'tv'
+   * История просмотров CUB (watch_history), сгруппированная сервером: group 'card' — одна запись на карточку (все серии, последняя серия, число дней),
+   * 'day' — карточка за день (серии за день, число просмотров). Старая история (закладка history) работает как раньше, эта — только с сервера
+   * @param {{page:integer, filter:string, group:string}} params - filter: '' | 'movie' | 'tv', group: 'card' | 'day' (по умолчанию)
    * @param {function} secuses - {results: [card + card.watch_history], page, total_pages, total}
    * @param {function} error
    */
@@ -11654,20 +12549,24 @@
 
     if (permit.access) {
       var page = params.page || 1;
-      var type = params.filter == 'movie' || params.filter == 'tv' ? '&type=' + params.filter : ''; // просмотры одной карточки за день — одна карточка (группы считает сервер по часовому поясу устройства)
+      var type = params.filter == 'movie' || params.filter == 'tv' ? '&type=' + params.filter : ''; // группы считает сервер по часовому поясу устройства
 
-      var group = '&group=day&tz=' + new Date().getTimezoneOffset();
-      load$3('history/list?page=' + page + type + group).then(function (result) {
+      var group = '&group=' + (params.group == 'card' ? 'card' : 'day') + '&tz=' + new Date().getTimezoneOffset();
+      load$4('history/list?page=' + page + type + group).then(function (result) {
         var results = (result.history || []).map(function (item) {
           var card = Arrays.clone(item.card || {});
           card.watch_history = {
             id: item.id,
+            card_id: item.card_id,
             season: item.season,
             episode: item.episode,
             watched_at: item.watched_at,
+            first_at: item.first_at || item.watched_at,
             source: item.source,
             episodes: item.episodes || [],
-            views: item.views || 1
+            last: item.last || null,
+            views: item.views || 1,
+            days: item.days || 1
           };
           return card;
         }).filter(function (card) {
@@ -11684,11 +12583,29 @@
       decode_code: 403
     });
   }
+  /**
+   * Все просмотры одной карточки (до 1000, новые первыми) — для «Истории по дням»
+   * @param {string} card_id - tv_1399 / movie_603
+   * @param {function} secuses - [{id, season, episode, watched_at, source}]
+   * @param {function} error
+   */
+
+
+  function watchHistoryCard(card_id, secuses, error) {
+    if (permit.access) {
+      load$4('history/card?card_id=' + encodeURIComponent(card_id)).then(function (result) {
+        secuses(result.history || []);
+      })["catch"](error ? error : function () {});
+    } else if (error) error({
+      decode_code: 403
+    });
+  }
 
   var Api$1 = {
-    url: url$4,
+    url: url$5,
     watchHistory: watchHistory,
-    load: load$3,
+    watchHistoryCard: watchHistoryCard,
+    load: load$4,
     user: user,
     persons: persons,
     plugins: plugins,
@@ -11696,7 +12613,7 @@
     subscribes: subscribes,
     notices: notices,
     subscribeToTranslation: subscribeToTranslation,
-    clear: network$a.clear
+    clear: network$b.clear
   };
 
   /**
@@ -11788,7 +12705,7 @@
 
   var tracker = new Tracker('account_timeline_sync');
 
-  function init$1f() {
+  function init$1e() {
     Storage.listener.follow('change', function (e) {
       if (e.name == 'account_use' || e.name == 'account') refrash();
     });
@@ -11925,7 +12842,7 @@
   }
 
   var Timeline$1 = {
-    init: Utils$1.onceInit(init$1f),
+    init: Utils$1.onceInit(init$1e),
     update: update$d
   };
 
@@ -12289,7 +13206,7 @@
    * @returns {void}
    */
 
-  function init$1e() {
+  function init$1d() {
     html$m = $("<div style=\"position: fixed; left: 0; top: 50%; right: 0; z-index: 101; text-align: center; padding-top: 6em; padding-top: 13vh;\">\n        <div style=\"font-size: 1.5em; line-height: 1.6\" class=\"lp-step\"></div>\n        <div style=\"font-size: 0.9em; opacity: 0.5\" class=\"lp-status\"></div>\n    </div>");
     $('body').append(html$m);
     step(0);
@@ -12328,7 +13245,7 @@
   }
 
   var LoadingProgress = {
-    init: init$1e,
+    init: init$1d,
     step: step,
     status: status$2,
     destroy: destroy$o
@@ -12391,12 +13308,12 @@
    */
 
 
-  function init$1d() {
+  function init$1c() {
     Favorite.listener.follow('add,added', function (e) {
-      push$8('add', e.where, e.card);
+      push$7('add', e.where, e.card);
     });
     Favorite.listener.follow('remove', function (e) {
-      if (e.method == 'id') push$8('remove', e.where, e.card);
+      if (e.method == 'id') push$7('remove', e.where, e.card);
     });
     Storage.listener.follow('change', function (e) {
       if (e.name == 'protocol' || e.name == 'account_use' && e.value == 'true') update$c(function () {
@@ -12436,7 +13353,7 @@
    */
 
 
-  function push$8(method, type, card) {
+  function push$7(method, type, card) {
     if (permit.sync) {
       push_queue.push({
         method: method,
@@ -12801,71 +13718,14 @@
   }
 
   var Bookmarks$1 = {
-    init: Utils$1.onceInit(init$1d),
-    push: push$8,
+    init: Utils$1.onceInit(init$1c),
+    push: push$7,
     update: update$c,
     clear: clear$d,
     get: get$e,
     all: all$4,
     sync: sync$1,
     find: find$2
-  };
-
-  var bell;
-  var items$1 = [];
-
-  function Item$1(params) {
-    var _this = this;
-
-    Arrays.extend(params, {
-      icon: "<svg width=\"25\" height=\"30\" viewBox=\"0 0 25 30\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <path d=\"M6.01892 24C6.27423 27.3562 9.07836 30 12.5 30C15.9216 30 18.7257 27.3562 18.981 24H15.9645C15.7219 25.6961 14.2632 27 12.5 27C10.7367 27 9.27804 25.6961 9.03542 24H6.01892Z\" fill=\"currentColor\"></path>\n                <path d=\"M3.81972 14.5957V10.2679C3.81972 5.41336 7.7181 1.5 12.5 1.5C17.2819 1.5 21.1803 5.41336 21.1803 10.2679V14.5957C21.1803 15.8462 21.5399 17.0709 22.2168 18.1213L23.0727 19.4494C24.2077 21.2106 22.9392 23.5 20.9098 23.5H4.09021C2.06084 23.5 0.792282 21.2106 1.9273 19.4494L2.78317 18.1213C3.46012 17.0709 3.81972 15.8462 3.81972 14.5957Z\" stroke=\"currentColor\" stroke-width=\"2.6\"></path>\n            </svg>",
-      type: 'info',
-      text: '',
-      from: '',
-      time: 5000
-    });
-    var element = $("<div class=\"bell__item bell__item--".concat(params.type, "\">\n        <div class=\"bell__item-icon\">").concat(params.icon, "</div>\n        <div class=\"bell__item-text\"><div>").concat(params.text, "</div></div>    \n    </div>"));
-    if (params.from) element.find('.bell__item-text').prepend("<b>".concat(params.from, "</b><br>"));
-    setTimeout(function () {
-      element.removeClass('show');
-      setTimeout(function () {
-        var slide = $("<div class=\"bell__item-slide\"></div>");
-        slide.css('height', element.outerHeight() + 'px');
-        element.after(slide);
-        element.remove();
-        Arrays.remove(items$1, _this);
-        slide.animate({
-          height: 0
-        }, 300, function () {
-          slide.remove();
-        });
-
-        if (items$1.length == 0) {
-          bell.removeClass('show');
-        }
-      }, 300);
-    }, params.time);
-    bell.find('.bell__wrap').append(element);
-    setTimeout(function () {
-      element.addClass('show');
-    }, 100);
-    items$1.push(this);
-    Sound$1.play('bell');
-  }
-
-  function init$1c() {
-    bell = $("<div class=\"bell\">\n        <div class=\"bell__wrap\"></div>\n    </div>");
-    $('body').append(bell);
-  }
-
-  function push$7(params) {
-    new Item$1(params);
-    bell.addClass('show');
-  }
-
-  var Bell = {
-    init: init$1c,
-    push: push$7
   };
 
   var profile_icon;
@@ -13291,7 +14151,7 @@
     render: render$j
   };
 
-  var network$9 = new Request();
+  var network$a = new Request();
   var user_data;
   /**
    * Запуск
@@ -13367,7 +14227,7 @@
     Permit: permit,
     Modal: Modal$1,
     listener: Listener$1,
-    network: network$9,
+    network: network$a,
     init: init$19,
     task: task$4,
     working: function working() {
@@ -15069,7 +15929,7 @@
    * Решил сделать автоматическую установку TMDB Proxy если регион RU
    */
 
-  var network$8 = new Request();
+  var network$9 = new Request();
   var responce_code = 'ru';
 
   function region(call) {
@@ -15091,7 +15951,7 @@
       };
 
       extract$2(extracted, function (e, x) {
-        console.warn('VPN', 'geo.' + object$2.cub_domain + ' domain not responding', network$8.errorDecode(e, x));
+        console.warn('VPN', 'geo.' + object$2.cub_domain + ' domain not responding', network$9.errorDecode(e, x));
         Storage.set('region', {
           code: Storage.field('language'),
           time: Date.now()
@@ -15133,7 +15993,7 @@
       window.vpn_region = responce_code;
       call();
     }, function (e, x) {
-      console.warn('VPN', 'geo.' + object$2.cub_domain + ' domain not responding:', network$8.errorDecode(e, x));
+      console.warn('VPN', 'geo.' + object$2.cub_domain + ' domain not responding:', network$9.errorDecode(e, x));
 
       if (!window.lampa_settings.disable_features.install_proxy) {
         console.log('VPN', 'launch TMDB Proxy');
@@ -15175,7 +16035,7 @@
     filter: filter$3
   };
 
-  var network$7 = new Request();
+  var network$8 = new Request();
   var network_released = new Request(); // отдельный, чтобы clear() не обрывал проверки релизов
 
   var released_dates = {}; // id фильма → {date: дата первого домашнего релиза или '', time}
@@ -15502,7 +16362,7 @@
     });
   }
 
-  function url$3(u) {
+  function url$4(u) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var ln = [Storage.field('tmdb_lang')];
     var genre = params.genres;
@@ -15546,10 +16406,10 @@
     var oncomplite = arguments.length > 2 ? arguments[2] : undefined;
     var onerror = arguments.length > 3 ? arguments[3] : undefined;
     var cache = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
-    var u = url$3(method, params);
+    var u = url$4(method, params);
     var s = method.match(/tv\/(\d+)\/season\/(\d+)/);
-    network$7.timeout(1000 * 10);
-    network$7.silent(u, function (json) {
+    network$8.timeout(1000 * 10);
+    network$8.silent(u, function (json) {
       json.url = method;
       json.source = source$2; // Исправляем сезоны для сериалов
 
@@ -15603,8 +16463,8 @@
     var onerror = arguments.length > 4 ? arguments[4] : undefined;
     var cache = arguments.length > 5 ? arguments[5] : undefined;
     method = method.replace(/\/season\/(\d+)/, '/season/1');
-    network$7.timeout(1000 * 10);
-    network$7.silent(url$3(method, params), function (new_json) {
+    network$8.timeout(1000 * 10);
+    network$8.silent(url$4(method, params), function (new_json) {
       new_json.url = method;
       new_json.source = source$2;
       var seasons = Utils$1.splitEpisodesIntoSeasons(new_json.episodes); // Считаем количество реальных сезонов и отмечаем в объекте
@@ -15910,7 +16770,7 @@
     return loadPart;
   }
 
-  function full$3() {
+  function full$4() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
@@ -16056,8 +16916,8 @@
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     var onerror = arguments.length > 2 ? arguments[2] : undefined;
     var attempt = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-    var u = url$3(params.url, params);
-    network$7.silent(u, function (data) {
+    var u = url$4(params.url, params);
+    network$8.silent(u, function (data) {
       releasedFilter(params.url, data, function () {
         // Если фильтр убрал всю страницу, берём следующую, иначе пагинация остановится
         if (data.results && !data.results.length && attempt < 5 && params.page && params.page < data.total_pages) {
@@ -16140,7 +17000,7 @@
           source: source$2
         });
       },
-      onCancel: network$7.clear.bind(network$7)
+      onCancel: network$8.clear.bind(network$8)
     };
   }
 
@@ -16247,8 +17107,8 @@
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
     if (menu_list.length) oncomplite(menu_list);else {
-      var u = url$3('genre/movie/list', params);
-      network$7.silent(u, function (j) {
+      var u = url$4('genre/movie/list', params);
+      network$8.silent(u, function (j) {
         j.genres.forEach(function (g) {
           menu_list.push({
             title: g.name,
@@ -16377,7 +17237,7 @@
     });
   }
 
-  function seasons$2(tv, from, oncomplite) {
+  function seasons$3(tv, from, oncomplite) {
     var status = new Status(from.length);
     status.onComplite = oncomplite;
     from.forEach(function (season) {
@@ -16700,21 +17560,21 @@
   }
 
   function clear$c() {
-    network$7.clear();
+    network$8.clear();
   }
 
   var TMDB = {
     main: main$2,
     menu: menu$3,
     img: img$1,
-    full: full$3,
+    full: full$4,
     list: list$6,
     category: category$3,
     search: search$5,
     clear: clear$c,
     company: company$1,
     person: person$2,
-    seasons: seasons$2,
+    seasons: seasons$3,
     find: find$1,
     external_ids: external_ids,
     get: get$d,
@@ -17535,7 +18395,7 @@
    */
 
 
-  function parse$a(to_database) {
+  function parse$b(to_database) {
     var check = Favorite.check(object$1);
     var any = Favorite.checkAnyNotHistory(check);
 
@@ -17546,7 +18406,7 @@
         TMDB.get('tv/' + object$1.id, {}, function (json) {
           object$1.season = Utils$1.countSeasons(json) || 1;
           object$1.ssn = Date.now();
-          parse$a(to_database);
+          parse$b(to_database);
         }, save$3, {
           life: 60 * 24 * 3
         });
@@ -17612,7 +18472,7 @@
 
     if (ids.length) {
       object$1 = ids[0];
-      parse$a();
+      parse$b();
     } else {
       data$2.forEach(function (a) {
         return a.scaned = 0;
@@ -17688,10 +18548,10 @@
           object$1.season = elem.number_of_seasons ? Utils$1.countSeasons(elem) : object$1.season || 0;
         }
 
-        parse$a();
+        parse$b();
       } else {
         object$1 = item;
-        parse$a(true);
+        parse$b(true);
       }
     }
   }
@@ -17985,7 +18845,7 @@
    * @return {void}
    */
 
-  function show$c() {
+  function show$d() {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     if (html$l || !Platform.tv()) return;
     Arrays.extend(params, {
@@ -18014,7 +18874,7 @@
   }
 
   var RemoteHelper = {
-    show: show$c
+    show: show$d
   };
 
   var Menu$1 = {
@@ -18139,72 +18999,8 @@
   };
 
   /**
-   * Подпись серий на карточке «Истории» (просмотры CUB, сгруппированные по дням):
-   *   одна серия            → S01E04
-   *   серии одного сезона   → S01 E1–3, 5  (больше двух диапазонов — S01 E1–3, 5…)
-   *   несколько сезонов     → S01–S02 ×7
-   *   фильм дважды за день  → ×2
-   * @param {object} data - card.watch_history: {season, episode, episodes: [{season, episode}], views}
-   * @param {boolean} tv - сериал
-   * @returns {string} - пустая строка, если подписывать нечего
-   */
-  function label(data, tv) {
-    var pad = function pad(n) {
-      return ('0' + n).slice(-2);
-    };
-
-    var episodes = (data.episodes || []).filter(function (e) {
-      return e && e.season !== null && e.season !== undefined && e.episode !== null && e.episode !== undefined;
-    });
-    var views = parseInt(data.views) || 1;
-    if (!tv) return views > 1 ? '×' + views : ''; // старый ответ без группировки — одна серия из самой записи
-
-    if (!episodes.length && data.season !== null && data.season !== undefined) {
-      episodes = [{
-        season: data.season,
-        episode: data.episode
-      }];
-    }
-
-    if (!episodes.length) return views > 1 ? '×' + views : '';
-
-    if (episodes.length == 1) {
-      var one = episodes[0];
-      return 'S' + pad(one.season) + (one.episode !== null && one.episode !== undefined ? 'E' + pad(one.episode) : '');
-    }
-
-    var seasons = _toConsumableArray(new Set(episodes.map(function (e) {
-      return e.season;
-    }))).sort(function (a, b) {
-      return a - b;
-    });
-
-    if (seasons.length > 1) return 'S' + pad(seasons[0]) + '–S' + pad(seasons[seasons.length - 1]) + ' ×' + episodes.length; // диапазоны подряд идущих серий: 1,2,3,5 → 1–3, 5
-
-    var numbers = _toConsumableArray(new Set(episodes.map(function (e) {
-      return e.episode;
-    }))).sort(function (a, b) {
-      return a - b;
-    });
-
-    var ranges = [];
-    numbers.forEach(function (n) {
-      var last = ranges[ranges.length - 1];
-      if (last && n == last[1] + 1) last[1] = n;else ranges.push([n, n]);
-    });
-    var parts = ranges.map(function (r) {
-      return r[0] == r[1] ? r[0] + '' : r[0] + '–' + r[1];
-    });
-    return 'S' + pad(seasons[0]) + ' E' + parts.slice(0, 2).join(', ') + (parts.length > 2 ? '…' : '');
-  }
-
-  var HistoryLabel = {
-    label: label
-  };
-
-  /**
-   * Карточка в «Истории» с синхронизацией CUB (watch_history): дата просмотра и серии за этот день
-   * (сервер группирует просмотры карточки по дням: «S01 E1–3», у фильма — «×2»).
+   * Карточка в «Истории» с синхронизацией CUB (watch_history, одна карточка на сериал/фильм): дата последнего просмотра
+   * и последняя просмотренная серия «S15E10», у фильма, посмотренного не раз, — «×2».
    * Удаление — снятием галочки «История просмотров» (закладка history): сервер убирает все просмотры карточки,
    * а карточка здесь гаснет
    */
@@ -18216,7 +19012,13 @@
       var data = this.data.watch_history;
       if (!data) return;
       var time = Utils$1.parseTime(data.watched_at);
-      var part = HistoryLabel.label(data, Boolean(this.data.original_name));
+
+      var pad = function pad(n) {
+        return ('0' + n).slice(-2);
+      };
+
+      var last = data.last && data.last.season > 0 ? data.last : null;
+      var part = this.data.original_name ? last ? 'S' + pad(last.season) + 'E' + pad(last.episode) : '' : data.views > 1 ? '×' + data.views : '';
       var line = Template.elem('div', {
         "class": 'card__history',
         children: [Template.elem('div', {
@@ -18630,7 +19432,7 @@
    */
 
 
-  function full$2() {
+  function full$3() {
     var empty = {
       card: []
     };
@@ -18708,7 +19510,7 @@
     get: get$b,
     clear: clear$b,
     continues: continues,
-    full: full$2,
+    full: full$3,
     checkAnyNotHistory: checkAnyNotHistory,
     all: all$2,
     read: read
@@ -19469,8 +20271,8 @@
         if (permit.child) change.remove();
 
         var updateStatus = function updateStatus() {
-          toggle.find('.settings-param__value').text(Lang.translate(enabled$1() ? 'settings_parental_control_enabled' : 'settings_parental_control_disabled'));
-          other.toggleClass('hide', !Boolean(enabled$1()));
+          toggle.find('.settings-param__value').text(Lang.translate(enabled$2() ? 'settings_parental_control_enabled' : 'settings_parental_control_disabled'));
+          other.toggleClass('hide', !Boolean(enabled$2()));
         };
 
         var drawPersonalList = function drawPersonalList() {
@@ -19512,7 +20314,7 @@
         toggle.on('hover:enter', function () {
           active = Controller.enabled().name;
 
-          if (enabled$1()) {
+          if (enabled$2()) {
             request$1(function () {
               Storage.set('parental_control', false);
               updateStatus();
@@ -19746,7 +20548,7 @@
 
 
   function request$1(call, error) {
-    if (enabled$1()) {
+    if (enabled$2()) {
       var called = getPinCode().length == 4 ? pin : pinFree;
       called(Lang.translate('parental_control_input_code'), function (code) {
         if (code == getPinCode()) {
@@ -19769,7 +20571,7 @@
 
 
   function query(call, error, save_controller) {
-    if (enabled$1()) {
+    if (enabled$2()) {
       var type = Storage.field('parental_control_time');
       var active = Controller.enabled().name;
 
@@ -19844,7 +20646,7 @@
    */
 
 
-  function enabled$1() {
+  function enabled$2() {
     return Storage.field('parental_control') || permit.child;
   }
   /**
@@ -19861,7 +20663,7 @@
     init: init$11,
     query: query,
     personal: personal,
-    enabled: enabled$1,
+    enabled: enabled$2,
     install: install$3,
     add: add$8
   };
@@ -20256,7 +21058,7 @@
     appendRow(card_html);
   }
 
-  function available() {
+  function available$1() {
     return items.length;
   }
 
@@ -20279,25 +21081,25 @@
     removeRow: removeRow,
     render: render$f,
     destroy: destroy$m,
-    available: available
+    available: available$1
   };
 
   var listener$c = Subscribe$2();
-  var current = '';
+  var current$1 = '';
   var playlist$1 = [];
   var _position = 0;
 
   function init$_() {
-    PlayerPanel.listener.follow('playlist', show$b);
+    PlayerPanel.listener.follow('playlist', show$c);
     PlayerPanel.listener.follow('prev', prev);
-    PlayerPanel.listener.follow('next', next);
+    PlayerPanel.listener.follow('next', next$1);
     Player.listener.follow('start', function (data) {
-      url$2(data.url);
+      url$3(data.url);
       if (data.playlist && data.playlist.length) set$3(data.playlist);else set$3(get$a());
     });
     Player.listener.follow('destroy', destroy$l);
     PlayerVideo.listener.follow('ended', function (e) {
-      if (Storage.field('playlist_next') && !Select.opened()) next();
+      if (Storage.field('playlist_next') && !Select.opened()) next$1();
     });
   }
   /**
@@ -20305,7 +21107,7 @@
    */
 
 
-  function show$b() {
+  function show$c() {
     if (!playlist$1.length) return;
     active$6();
     var enabled = Controller.enabled();
@@ -20335,7 +21137,7 @@
       return p.selected = false;
     });
     var find = playlist$1.find(function (l) {
-      return l.url == current;
+      return l.url == current$1;
     });
     var data = Player.playdata(); // Если текущий урл не найден в плейлисте, то ищем по урлу из плеера
 
@@ -20373,7 +21175,7 @@
    */
 
 
-  function next() {
+  function next$1() {
     if (canNext()) {
       listener$c.send('select', {
         playlist: playlist$1,
@@ -20421,8 +21223,8 @@
    */
 
 
-  function url$2(u) {
-    current = u;
+  function url$3(u) {
+    current$1 = u;
   }
   /**
    * Очистить плейлист
@@ -20430,7 +21232,7 @@
 
 
   function destroy$l() {
-    current = '';
+    current$1 = '';
     playlist$1 = [];
     _position = 0;
   }
@@ -20439,12 +21241,12 @@
     init: init$_,
     listener: listener$c,
     active: active$6,
-    show: show$b,
-    url: url$2,
+    show: show$c,
+    url: url$3,
     get: get$a,
     set: set$3,
     prev: prev,
-    next: next,
+    next: next$1,
     canNext: canNext,
     position: function position() {
       return _position;
@@ -20875,7 +21677,7 @@
    * Показать настройки плеера
    */
 
-  function show$a() {
+  function show$b() {
     var speed = Storage.get('player_speed', 'default');
     var items = [{
       title: Lang.translate('player_video_size'),
@@ -20972,7 +21774,7 @@
       title: Lang.translate('settings_player_subs'),
       items: items,
       nohide: true,
-      onBack: show$a,
+      onBack: show$b,
       onSelect: function onSelect(a) {
         var subitems = [];
 
@@ -21046,7 +21848,7 @@
       title: Lang.translate('player_segments_title'),
       items: items,
       nohide: true,
-      onBack: show$a,
+      onBack: show$b,
       onSelect: function onSelect(a) {
         Select.show({
           title: a.title,
@@ -21097,14 +21899,14 @@
       title: Lang.translate('player_normalization_type_title'),
       items: items,
       nohide: true,
-      onBack: show$a,
+      onBack: show$b,
       onSelect: function onSelect(a) {
         Storage.set('player_normalization_type', a.value);
         listener$j.send('normalization', {
           type: 'type',
           value: a.value
         });
-        show$a();
+        show$b();
       }
     });
   }
@@ -21132,14 +21934,14 @@
       title: Lang.translate('player_normalization_' + type + '_title'),
       items: items,
       nohide: true,
-      onBack: show$a,
+      onBack: show$b,
       onSelect: function onSelect(a) {
         Storage.set('player_normalization_' + type, a.value);
         listener$j.send('normalization', {
           type: type,
           value: a.value
         });
-        show$a();
+        show$b();
       }
     });
   }
@@ -21204,7 +22006,7 @@
           size: a.value
         });
       },
-      onBack: show$a
+      onBack: show$b
     });
   }
 
@@ -21270,15 +22072,15 @@
         listener$j.send('speed', {
           speed: a.value
         });
-        show$a();
+        show$b();
       },
-      onBack: show$a
+      onBack: show$b
     });
   }
 
   var PanelSettings = {
     listener: listener$j,
-    show: show$a
+    show: show$b
   };
 
   var channel_active;
@@ -21410,7 +22212,7 @@
         } else if (near.phase === 'inside') {
           if (!skip_current || skip_current.segment !== near.segment || skip_phase !== 'active') active$5(near, e.current || 0);else progressUpdate(e.current || 0);
         }
-      } else if (skip_current) hide$2();
+      } else if (skip_current) hide$3();
     });
     Player.listener.follow('destroy', destroy$i);
     addController$1();
@@ -21510,11 +22312,11 @@
     skip_phase = 'active';
     draw$7(e);
     skip_button.removeClass('player-skip--preview');
-    show$9();
+    show$a();
     progressUpdate(typeof current == 'number' ? current : e.segment.start, true);
   }
 
-  function show$9() {
+  function show$a() {
     if (!skip_button) return;
     clearInterval(skip_timer);
     skip_button.find('.player-skip__text').text(skip_text_btn);
@@ -21522,7 +22324,7 @@
     if (Controller.enabled().name == 'player') toggle$8();
   }
 
-  function hide$2() {
+  function hide$3() {
     clearInterval(skip_timer);
     if (skip_button) skip_button.addClass('hide').removeClass('focus player-skip--preview');
     progressSet(0, true);
@@ -21539,7 +22341,7 @@
       skip_current.segment.skiped = true;
 
       if (skip_is_end) {
-        hide$2();
+        hide$3();
         PlayerPlaylist.next();
         return;
       }
@@ -21547,7 +22349,7 @@
       PlayerVideo.to(Math.min(PlayerVideo.video().duration || skip_current.segment.end, skip_current.segment.end));
     }
 
-    hide$2();
+    hide$3();
   }
 
   function render$e() {
@@ -21555,13 +22357,13 @@
   }
 
   function destroy$i() {
-    hide$2();
+    hide$3();
   }
 
   var Skip = {
     init: init$X,
     render: render$e,
-    hide: hide$2,
+    hide: hide$3,
     preview: preview,
     toggle: toggle$8,
     previewUpdate: previewUpdate,
@@ -21851,7 +22653,7 @@
     PlayerIPTV.listener.follow('channel', IptvPanel.channel);
     PlayerIPTV.listener.follow('draw-program', IptvPanel.program);
     Player.listener.follow('start', function (data) {
-      show$8();
+      show$9();
       Option.setQualitys(data.quality, data.url);
       Option.setTracks(data.voiceovers);
       Option.setTranslates(data.translate);
@@ -21983,7 +22785,7 @@
       back: function back() {
         PlayerIPTV.reset();
         Controller.toggle('player');
-        hide$1();
+        hide$2();
       }
     });
     Controller.add('player_rewind', {
@@ -22143,7 +22945,7 @@
 
   function toPlayer() {
     Controller.toggle('player');
-    hide$1();
+    hide$2();
   }
   /**
    * Показать панель, не переключая контроллер
@@ -22177,7 +22979,7 @@
    */
 
 
-  function show$8() {
+  function show$9() {
     state.start();
     Html.elem('fullscreen').toggleClass('hide', Platform.tv() || Platform.is('android') || !Utils$1.canFullScreen());
     addController();
@@ -22196,7 +22998,7 @@
    */
 
 
-  function hide$1() {
+  function hide$2() {
     condition.visible = false;
     condition.mousemove = false;
 
@@ -22255,9 +23057,9 @@
     listener: listener$j,
     render: render$c,
     toggle: toggle$7,
-    show: show$8,
+    show: show$9,
     destroy: destroy$f,
-    hide: hide$1,
+    hide: hide$2,
     toPlayer: toPlayer,
     reveal: reveal,
     canplay: canplay,
@@ -22278,7 +23080,7 @@
 
   var html$g;
   var listener$a = Subscribe$2();
-  var network$6 = new Request();
+  var network$7 = new Request();
   var elems;
   var error$1, stat_timer;
 
@@ -22407,10 +23209,10 @@
         if (wait <= 5) return;else wait = 0;
       }
 
-      network$6.timeout(2000);
+      network$7.timeout(2000);
       var url = '';
       if (Torserver.gstWork()) url = Torserver.url() + '/gst/' + player_data.torrent_hash + '/heartbeat';else url = player_data.url.replace('&preload', '&stat').replace('&play', '&stat');
-      network$6.silent(url, function (data) {
+      network$7.silent(url, function (data) {
         var torrent = data.Torrent || data;
         elems.stat.text((torrent.active_peers || 0) + ' / ' + (torrent.total_peers || 0) + ' • ' + (torrent.connected_seeders || 0) + ' ' + Lang.translate('connected_seeds'));
         elems.speed.text(Utils$1.bytesToSize(torrent.download_speed ? torrent.download_speed * 8 : 0, true));
@@ -22450,7 +23252,7 @@
     html$g.toggleClass('info--visible', status);
   }
 
-  function loading$2() {
+  function loading$3() {
     elems.size.text(Lang.translate('loading') + '...');
   }
   /**
@@ -22469,7 +23271,7 @@
     elems.title.toggleClass('hide', false);
     clearTimeout(error$1);
     clearInterval(stat_timer);
-    network$6.clear();
+    network$7.clear();
   }
 
   function render$b() {
@@ -22482,7 +23284,7 @@
     render: render$b,
     set: set$1,
     toggle: toggle$6,
-    loading: loading$2,
+    loading: loading$3,
     destroy: destroy$e
   };
 
@@ -24607,7 +25409,7 @@
    */
 
 
-  function url$1(src, change_quality) {
+  function url$2(src, change_quality) {
     loader(true);
     var verify = Tube.verify(src);
 
@@ -24618,7 +25420,7 @@
       !!videobox && display.append(videobox);
       bind$3();
       setTimeout(function () {
-        load$2(src);
+        load$3(src);
       }, 100);
       return;
     }
@@ -24627,7 +25429,7 @@
 
     if (/\.mpd/.test(src) && typeof dashjs !== 'undefined') {
       DashStream.create(src, _video, {
-        load: load$2
+        load: load$3
       });
     } else if (/\.m3u8/.test(src)) {
       if (navigator.userAgent.toLowerCase().indexOf('maple') > -1) src += '|COMPONENT=HLS';
@@ -24643,7 +25445,7 @@
         if (use_program) {
           HlsStream.createProgram(src, _video, Player.playdata(), {
             play: play$2,
-            load: load$2,
+            load: load$3,
             error: function error(msg, fatal) {
               return listener$9.send('error', {
                 error: msg,
@@ -24658,7 +25460,7 @@
           });
         } else if (!change_quality && !PlayerIPTV.playning()) {
           HlsStream.createParser(src, Player.playdata(), {
-            load: load$2,
+            load: load$3,
             levels: function levels(_levels, current) {
               return listener$9.send('levels', {
                 levels: _levels,
@@ -24672,9 +25474,9 @@
               });
             }
           });
-        } else load$2(src);
-      } else load$2(src);
-    } else load$2(src);
+        } else load$3(src);
+      } else load$3(src);
+    } else load$3(src);
   }
   /**
    * Начать загрузку
@@ -24682,7 +25484,7 @@
    */
 
 
-  function load$2(src) {
+  function load$3(src) {
     HlsStream.destroyParser();
     DashStream.destroy();
     _video.src = src;
@@ -24947,7 +25749,7 @@
   var PlayerVideo = {
     init: init$T,
     listener: listener$9,
-    url: url$1,
+    url: url$2,
     render: render$9,
     destroy: destroy$b,
     playpause: playpause,
@@ -25621,7 +26423,7 @@
     return (Storage.field(player_need) == 'inner' || launch_player == 'inner') && Platform.is('apple_tv') && !show_disclaimer;
   }
 
-  function show$7(call) {
+  function show$8(call) {
     wait_for_disclaimer = true;
     show_disclaimer = true;
 
@@ -25683,7 +26485,7 @@
   var Disclaimer = {
     init: init$R,
     needs: needs,
-    show: show$7,
+    show: show$8,
     reset: reset,
     isWaiting: isWaiting
   };
@@ -26905,7 +27707,7 @@
    */
 
 
-  function show$6(data, call) {
+  function show$7(data, call) {
     player_data = data;
     prerolls_played = []; // Пометить регион для таргетинга рекламы
 
@@ -26949,7 +27751,7 @@
 
   var Preroll = {
     init: init$O,
-    show: show$6
+    show: show$7
   };
 
   var _DEFAULT_PLAYER_CONFI;
@@ -28626,11 +29428,11 @@
   var agent_icon;
   var working = false;
   var play_data = {};
-  var network$5 = new Request();
+  var network$6 = new Request();
   var timers$1 = {};
   var chat_history = [];
   var buttons$2 = [];
-  var fields = [{
+  var fields$1 = [{
     name: 'humor',
     color: '#f7e74a'
   }, {
@@ -28694,7 +29496,7 @@
     }, {
       title: Lang.translate('player_ai_agent_ask_moods'),
       onSelect: function onSelect(a) {
-        submenu(fields.map(function (field) {
+        submenu(fields$1.map(function (field) {
           return {
             title: Lang.translate('title_meta_' + field.name),
             toagent: Lang.translate('player_ai_agent_ask_moods') + ' - ' + Lang.translate('title_meta_' + field.name),
@@ -28706,7 +29508,7 @@
     }, {
       title: Lang.translate('player_ai_agent_ask_highlights'),
       onSelect: function onSelect(a) {
-        submenu(fields.map(function (field) {
+        submenu(fields$1.map(function (field) {
           return {
             title: Lang.translate('title_meta_' + field.name),
             toagent: Lang.translate('player_ai_agent_ask_highlights') + ' - ' + Lang.translate('title_meta_' + field.name),
@@ -28868,7 +29670,7 @@
       review.forEach(function (meter, i) {
         var _fields$find;
 
-        var color = ((_fields$find = fields.find(function (f) {
+        var color = ((_fields$find = fields$1.find(function (f) {
           return f.name == meter.name;
         })) === null || _fields$find === void 0 ? void 0 : _fields$find.color) || '#fff';
         meter.title = Lang.translate('title_meta_' + meter.name);
@@ -28983,7 +29785,7 @@
     button.addClass('hide');
     play_data = {};
     chat_history = [];
-    network$5.clear();
+    network$6.clear();
 
     for (var key in timers$1) {
       clearTimeout(timers$1[key]);
@@ -29224,7 +30026,7 @@
     clearTimeout(timer$3);
     timer$3 = setTimeout(function () {
       // За это время пользователь мог уйти в другое окно — тогда не мешаем, спросим в следующий раз
-      if (Controller.enabled().name == target.enabled) show$5(target);
+      if (Controller.enabled().name == target.enabled) show$6(target);
     }, Math.max(0, delay - (Date.now() - target.closed)));
   }
   /**
@@ -29281,7 +30083,7 @@
     Storage.set('mine_reactions', mine);
   }
 
-  function show$5(target) {
+  function show$6(target) {
     // Пока ждали ответ о сезоне, пользователь мог снова запустить плеер или окно уже открыто
     if (Player.opened() || $('.reaction-ask').length) return;
     remember$1(target);
@@ -29402,7 +30204,7 @@
    * Parses captions in WebVTT format (Web Video Text Tracks Format)
    ******************************************************************************************/
 
-  function parse$9(content, options) {
+  function parse$a(content, options) {
     var index = 1;
     var captions = [];
     var eol = options.eol || "\r\n";
@@ -29521,7 +30323,7 @@
     name: FORMAT_NAME$7,
     helper: helper$5,
     detect: detect$8,
-    parse: parse$9,
+    parse: parse$a,
     build: build$9
   };
 
@@ -29547,7 +30349,7 @@
    * Parses captions in LRC format: https://en.wikipedia.org/wiki/LRC_%28file_format%29
    ******************************************************************************************/
 
-  function parse$8(content, options) {
+  function parse$9(content, options) {
     var prev = null;
     var captions = [];
     options.eol || "\r\n";
@@ -29665,7 +30467,7 @@
     name: FORMAT_NAME$6,
     helper: helper$4,
     detect: detect$7,
-    parse: parse$8,
+    parse: parse$9,
     build: build$8
   };
 
@@ -29683,7 +30485,7 @@
    * Parses captions in SAMI format (.smi)
    ******************************************************************************************/
 
-  function parse$7(content, options) {
+  function parse$8(content, options) {
     var captions = [];
     var eol = options.eol || "\r\n";
     var title = /\<TITLE[^\>]*\>([\s\S]*)\<\/TITLE\>/gi.exec(content);
@@ -29853,7 +30655,7 @@
     name: FORMAT_NAME$5,
     helper: helper$3,
     detect: detect$6,
-    parse: parse$7,
+    parse: parse$8,
     build: build$7
   };
 
@@ -29882,7 +30684,7 @@
    * Parses captions in SubStation Alpha format (.ssa)
    ******************************************************************************************/
 
-  function parse$6(content, options) {
+  function parse$7(content, options) {
     var meta;
     var columns = null;
     var captions = [];
@@ -30068,7 +30870,7 @@
     name: FORMAT_NAME$4,
     helper: helper$2,
     detect: detect$5,
-    parse: parse$6,
+    parse: parse$7,
     build: build$6
   };
 
@@ -30086,7 +30888,7 @@
    * Parses captions in MicroDVD format: https://en.wikipedia.org/wiki/MicroDVD
    ******************************************************************************************/
 
-  function parse$5(content, options) {
+  function parse$6(content, options) {
     var fps = options.fps > 0 ? options.fps : DEFAULT_FPS;
     var captions = [];
     var eol = options.eol || "\r\n";
@@ -30171,7 +30973,7 @@
   var subFormatter = {
     name: FORMAT_NAME$3,
     detect: detect$4,
-    parse: parse$5,
+    parse: parse$6,
     build: build$5
   };
 
@@ -30199,7 +31001,7 @@
    * Parses captions in SubRip format (.srt)
    ******************************************************************************************/
 
-  function parse$4(content, options) {
+  function parse$5(content, options) {
     var captions = [];
     var eol = options.eol || "\r\n";
     var parts = content.split(/\r?\n\s+\r?\n/g);
@@ -30282,7 +31084,7 @@
     name: FORMAT_NAME$2,
     helper: helper$1,
     detect: detect$3,
-    parse: parse$4,
+    parse: parse$5,
     build: build$4
   };
 
@@ -30310,7 +31112,7 @@
    * Parses captions in SubViewer format (.sbv)
    ******************************************************************************************/
 
-  function parse$3(content, options) {
+  function parse$4(content, options) {
     var captions = [];
     var eol = options.eol || "\r\n";
     var parts = content.split(/\r?\n\s+\r?\n/);
@@ -30390,7 +31192,7 @@
     name: FORMAT_NAME$1,
     helper: helper,
     detect: detect$2,
-    parse: parse$3,
+    parse: parse$4,
     build: build$3
   };
 
@@ -30399,7 +31201,7 @@
    * Parses captions in JSON format
    ******************************************************************************************/
 
-  function parse$2(content, options) {
+  function parse$3(content, options) {
     return JSON.parse(content);
   }
   /******************************************************************************************
@@ -30433,7 +31235,7 @@
   var jsonFormatter = {
     name: FORMAT_NAME,
     detect: detect$1,
-    parse: parse$2,
+    parse: parse$3,
     build: build$2
   };
 
@@ -30499,7 +31301,7 @@
    ******************************************************************************************/
 
 
-  function parse$1(content, options) {
+  function parse$2(content, options) {
     options = options || {};
     var format = options.format || detect(content);
 
@@ -30553,7 +31355,7 @@
    ******************************************************************************************/
 
 
-  function convert(content, options) {
+  function convert$1(content, options) {
     if (typeof options == "string") {
       options = {
         to: options
@@ -30568,7 +31370,7 @@
       opt.format = opt.from;
     }
 
-    var captions = parse$1(content, opt);
+    var captions = parse$2(content, opt);
 
     if (opt.resync) {
       captions = resync(captions, opt.resync);
@@ -30640,9 +31442,9 @@
   var subsrt = {
     list: list$5,
     detect: detect,
-    parse: parse$1,
+    parse: parse$2,
     build: build$1,
-    convert: convert,
+    convert: convert$1,
     resync: resync
   };
 
@@ -30673,7 +31475,7 @@
    */
 
 
-  function parse(data, ms) {
+  function parse$1(data, ms) {
     var type = subsrt.detect(data);
     if (type === 'vtt') return parseVTT(data, ms);
     if (type !== undefined && type !== 'srt') return parseVTT(convertToVTT(data), ms);else return parseSRT(data, ms);
@@ -30766,7 +31568,7 @@
     this.load = function (url) {
       network.silent(url, function (data) {
         if (data) {
-          parsed = parse(data, true);
+          parsed = parse$1(data, true);
         }
       }, false, false, {
         dataType: 'text'
@@ -30800,6 +31602,15 @@
       }
     };
     /**
+     * Сбросить загруженные субтитры (например, при переходе на ASS-рендерер)
+     */
+
+
+    this.reset = function () {
+      network.clear();
+      parsed = null;
+    };
+    /**
      * Уничтожить
      */
 
@@ -30811,11 +31622,3012 @@
     };
   }
 
+  /**
+   * Внешние субтитры торрента через API TorrServer: GET /subs/{hash}/{id}
+   * Ответ: [{index, name, title, lang, format, url}]
+   *   GET {url}&format=original  - файл как есть (ASS остаётся ASS), в UTF-8
+   *   GET {url}&format=vtt       - конвертация в WebVTT (без оформления)
+   */
+
+  /**
+   * Индекс файла в торренте из адреса потока (…?link=HASH&index=ID… или …master.m3u8?index=ID…)
+   * @param {object} data - данные плеера
+   * @returns {number} -1 если не определён
+   */
+
+  function fileIndex(data) {
+    var m = /[?&]index=(\d+)/.exec(String(data.url || ''));
+    if (m) return parseInt(m[1]);
+    return typeof data.id === 'number' ? data.id : -1;
+  }
+  /**
+   * Можно ли запросить субтитры у TorrServer для этих данных
+   * @param {object} data
+   * @returns {boolean}
+   */
+
+
+  function available(data) {
+    if (!data || !data.torrent_hash) return false;
+    var ip = Torserver.ip();
+    if (!ip) return false;
+    return String(data.url || '').indexOf(ip) >= 0 && fileIndex(data) >= 0;
+  }
+
+  function withParam(url, param) {
+    return url + (url.indexOf('?') >= 0 ? '&' : '?') + param;
+  }
+
+  function cleanTitle(name) {
+    return String(name || '').replace(/\.(ass|ssa|srt|vtt|sub|sup)$/i, '');
+  }
+  /**
+   * Преобразовать элемент ответа /subs в элемент списка субтитров плеера
+   * ВАЖНО: поле index здесь не используется - плеер сам нумерует дорожки по порядку (0..n-1)
+   */
+
+
+  function convert(track, base, hash) {
+    var format = String(track.format || '').toLowerCase();
+    var ass = format === 'ass' || format === 'ssa';
+    var lang = track.lang && track.lang !== 'und' ? track.lang : '';
+    var label = (lang ? lang.toUpperCase() + ' · ' : '') + cleanTitle(track.title || track.name) + (ass ? ' · ASS' : '');
+    var link = base + track.url;
+    return {
+      label: label,
+      lang: lang,
+      format: format,
+      ass: ass,
+      hash: hash,
+      track: track.index,
+      // для ASS отдаём оригинал, чтобы сохранить оформление; остальное - в WebVTT, кодировку приводит сервер
+      url: withParam(link, ass ? 'format=original' : 'format=vtt'),
+      // запасной вариант без оформления (режим «текст»)
+      vtt: withParam(link, 'format=vtt')
+    };
+  }
+  /**
+   * Запросить список субтитров
+   * @param {object} data - данные плеера (torrent_hash, url)
+   * @param {function} success - получает список в формате плеера (может быть пустым)
+   * @param {function} [fail] - ошибка запроса (например, старый TorrServer без /subs)
+   * @returns {{destroy:function}}
+   */
+
+
+  function load$2(data, success, fail) {
+    var network = new Request();
+    var base = Torserver.url();
+    var url = base + '/subs/' + encodeURIComponent(data.torrent_hash) + '/' + fileIndex(data);
+    network.timeout(20000);
+    network.silent(url, function (json) {
+      if (!Array.isArray(json)) return fail && fail();
+      success(json.filter(function (t) {
+        return t && t.url;
+      }).map(function (t) {
+        return convert(t, base, data.torrent_hash);
+      }));
+    }, function () {
+      if (fail) fail();
+    }, false, {
+      dataType: 'json'
+    });
+    return {
+      destroy: function destroy() {
+        return network.clear();
+      }
+    };
+  }
+
+  var TorserverSubs = {
+    available: available,
+    fileIndex: fileIndex,
+    load: load$2,
+    convert: convert
+  };
+
+  /**
+   * Парсер ASS/SSA: [Script Info], [V4+ Styles]/[V4 Styles], [Events] и override-теги в тексте событий.
+   * Не зависит от DOM, поэтому его можно использовать и в рендерере, и в тестах.
+   */
+  // legacy-выравнивание SSA (\a и Alignment в v4.00) -> numpad (\an)
+  var LEGACY_AN = {
+    1: 1,
+    2: 2,
+    3: 3,
+    5: 7,
+    6: 8,
+    7: 9,
+    9: 4,
+    10: 5,
+    11: 6
+  }; // порядок важен: длинные имена раньше коротких, clip раньше c
+
+  var TAG_RE = /^\\(fscx|fscy|fsp|fs|fn|fade|fad|move|pos|org|iclip|clip|1a|2a|3a|4a|1c|2c|3c|4c|c|alpha|an|a|xbord|ybord|bord|xshad|yshad|shad|blur|be|fax|fay|frx|fry|frz|fr|kf|ko|kt|k|K|b|i|u|s|q|r|t|p)/; // теги, аргумент которых записывается в скобках
+
+  var PAREN_TAGS = {
+    fade: 1,
+    fad: 1,
+    move: 1,
+    pos: 1,
+    org: 1,
+    iclip: 1,
+    clip: 1,
+    t: 1
+  };
+
+  function num(v, def) {
+    var n = parseFloat(v);
+    return isNaN(n) ? def : n;
+  }
+  /**
+   * Цвет из поля стиля: &HAABBGGRR (hex) или десятичное число
+   * @returns {{r:number,g:number,b:number,a:number}|null} a - непрозрачность 0..1
+   */
+
+
+  function parseColor(v) {
+    var s = String(v === undefined || v === null ? '' : v).trim();
+    var n;
+    if (!s) return null;
+    if (/^&?h/i.test(s)) n = parseInt(s.replace(/^&?h/i, '').replace(/&+$/, ''), 16);else n = parseInt(s, 10);
+    if (isNaN(n)) return null;
+    n = n >>> 0;
+    return {
+      r: n & 255,
+      g: n >>> 8 & 255,
+      b: n >>> 16 & 255,
+      a: 1 - (n >>> 24 & 255) / 255
+    };
+  }
+  /**
+   * Цвет из override-тега: &HBBGGRR& (без альфы)
+   */
+
+
+  function parseColorTag(v) {
+    var s = String(v || '').trim().replace(/^&?h/i, '').replace(/&+$/, '');
+    if (!s) return null;
+    var n = parseInt(s, 16);
+    if (isNaN(n)) return null;
+    return {
+      r: n & 255,
+      g: n >>> 8 & 255,
+      b: n >>> 16 & 255
+    };
+  }
+  /**
+   * Альфа из override-тега: &HAA& -> непрозрачность 0..1
+   */
+
+
+  function parseAlphaTag(v) {
+    var s = String(v || '').trim().replace(/^&?h/i, '').replace(/&+$/, '');
+    var n = parseInt(s, 16);
+    return isNaN(n) ? null : 1 - (n & 255) / 255;
+  }
+  /**
+   * Время h:mm:ss.cc -> секунды
+   */
+
+
+  function parseTime(v) {
+    var m = /^\s*(\d+):(\d{1,2}):(\d{1,2})(?:[.,](\d+))?/.exec(v || '');
+    if (!m) return 0;
+    var frac = m[4] ? parseFloat('0.' + m[4]) : 0;
+    return parseInt(m[1], 10) * 3600 + parseInt(m[2], 10) * 60 + parseInt(m[3], 10) + frac;
+  }
+
+  function splitFormat(line) {
+    return line.slice(line.indexOf(':') + 1).split(',').map(function (a) {
+      return a.trim().toLowerCase();
+    });
+  }
+  /**
+   * Разбить строку по первым n-1 запятым (последнее поле - текст, в нём могут быть запятые)
+   */
+
+
+  function splitLimited(str, n) {
+    var out = [];
+    var pos = 0;
+
+    for (var i = 0; i < n - 1; i++) {
+      var k = str.indexOf(',', pos);
+      if (k < 0) break;
+      out.push(str.slice(pos, k));
+      pos = k + 1;
+    }
+
+    out.push(str.slice(pos));
+    return out;
+  }
+
+  function makeStyle(fields, info) {
+    var legacy = info.legacy;
+    var an = parseInt(fields.alignment, 10);
+    if (isNaN(an)) an = 2;else if (legacy) an = LEGACY_AN[an] || 2;
+    return {
+      name: fields.name || 'Default',
+      font: fields.fontname || 'Arial',
+      size: num(fields.fontsize, 20),
+      c1: parseColor(fields.primarycolour) || {
+        r: 255,
+        g: 255,
+        b: 255,
+        a: 1
+      },
+      c2: parseColor(fields.secondarycolour) || {
+        r: 255,
+        g: 0,
+        b: 0,
+        a: 1
+      },
+      c3: parseColor(fields.outlinecolour || fields.tertiarycolour) || {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1
+      },
+      c4: parseColor(fields.backcolour) || {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 1
+      },
+      bold: num(fields.bold, 0) !== 0,
+      italic: num(fields.italic, 0) !== 0,
+      underline: num(fields.underline, 0) !== 0,
+      strike: num(fields.strikeout, 0) !== 0,
+      scaleX: num(fields.scalex, 100) / 100,
+      scaleY: num(fields.scaley, 100) / 100,
+      spacing: num(fields.spacing, 0),
+      angle: num(fields.angle, 0),
+      borderStyle: num(fields.borderstyle, 1),
+      outline: num(fields.outline, 2),
+      shadow: num(fields.shadow, 0),
+      an: an,
+      marginL: num(fields.marginl, 10),
+      marginR: num(fields.marginr, 10),
+      marginV: num(fields.marginv, 10)
+    };
+  }
+
+  var DEFAULT_STYLE_FIELDS = {
+    name: 'Default',
+    fontname: 'Arial',
+    fontsize: '20',
+    primarycolour: '&H00FFFFFF',
+    secondarycolour: '&H000000FF',
+    outlinecolour: '&H00000000',
+    backcolour: '&H00000000',
+    bold: '0',
+    italic: '0',
+    underline: '0',
+    strikeout: '0',
+    scalex: '100',
+    scaley: '100',
+    spacing: '0',
+    angle: '0',
+    borderstyle: '1',
+    outline: '2',
+    shadow: '0',
+    alignment: '2',
+    marginl: '10',
+    marginr: '10',
+    marginv: '10'
+  };
+  /**
+   * Разобрать ASS/SSA файл
+   * @param {string} text
+   * @returns {{info:object, styles:object, events:Array, maxDuration:number}}
+   */
+
+  function parse(text) {
+    text = String(text || '').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+    var info = {
+      playResX: 0,
+      playResY: 0,
+      wrapStyle: 0,
+      scaledBorder: false,
+      scriptType: '',
+      legacy: false
+    };
+    var styles = {};
+    var events = [];
+    var section = '';
+    var style_format = null;
+    var event_format = null;
+    var order = 0;
+    var lines = text.split('\n');
+
+    for (var li = 0; li < lines.length; li++) {
+      var line = lines[li].trim();
+      if (!line || line[0] === ';') continue;
+      var sec = /^\[(.+)\]$/.exec(line);
+
+      if (sec) {
+        section = sec[1].toLowerCase();
+        continue;
+      }
+
+      if (section === 'script info') {
+        var k = line.indexOf(':');
+        if (k < 0) continue;
+        var key = line.slice(0, k).trim().toLowerCase();
+        var val = line.slice(k + 1).trim();
+        if (key === 'playresx') info.playResX = num(val, 0);else if (key === 'playresy') info.playResY = num(val, 0);else if (key === 'wrapstyle') info.wrapStyle = num(val, 0);else if (key === 'scaledborderandshadow') info.scaledBorder = /^yes$/i.test(val);else if (key === 'scripttype') {
+          info.scriptType = val.toLowerCase();
+          info.legacy = info.scriptType.indexOf('4.00') >= 0 && info.scriptType.indexOf('+') < 0;
+        }
+      } else if (section === 'v4+ styles' || section === 'v4 styles' || section === 'v4++ styles') {
+        if (/^format:/i.test(line)) {
+          style_format = splitFormat(line);
+        } else if (/^style:/i.test(line) && style_format) {
+          (function () {
+            var raw = line.slice(line.indexOf(':') + 1).trim().split(',');
+            var fields = Object.assign({}, DEFAULT_STYLE_FIELDS);
+            style_format.forEach(function (name, i) {
+              if (raw[i] !== undefined) fields[name] = raw[i].trim();
+            });
+            var st = makeStyle(fields, info);
+            styles[st.name] = st;
+          })();
+        }
+      } else if (section === 'events') {
+        if (/^format:/i.test(line)) {
+          event_format = splitFormat(line);
+        } else if (/^dialogue:/i.test(line)) {
+          (function () {
+            var fmt = event_format || ['layer', 'start', 'end', 'style', 'name', 'marginl', 'marginr', 'marginv', 'effect', 'text'];
+            var raw = splitLimited(line.slice(line.indexOf(':') + 1).replace(/^\s+/, ''), fmt.length);
+            var f = {};
+            fmt.forEach(function (name, i) {
+              f[name] = raw[i] !== undefined ? raw[i] : '';
+            });
+            var ev = {
+              order: order++,
+              layer: num(f.layer !== undefined ? f.layer : f.marked, 0),
+              start: parseTime(f.start),
+              end: parseTime(f.end),
+              style: (f.style || 'Default').trim().replace(/^\*/, ''),
+              marginL: num(f.marginl, 0),
+              marginR: num(f.marginr, 0),
+              marginV: num(f.marginv, 0),
+              effect: (f.effect || '').trim(),
+              text: f.text || '',
+              model: null
+            };
+            if (ev.end > ev.start) events.push(ev);
+          })();
+        }
+      }
+    }
+
+    if (!Object.keys(styles).length) styles.Default = makeStyle(DEFAULT_STYLE_FIELDS, info); // как в libass: без PlayRes берём 384x288, если задано только одно значение - сохраняем пропорцию
+
+    if (!info.playResX && !info.playResY) {
+      info.playResX = 384;
+      info.playResY = 288;
+    } else if (!info.playResX) info.playResX = info.playResY * 4 / 3;else if (!info.playResY) info.playResY = info.playResX * 3 / 4;
+
+    events.sort(function (a, b) {
+      return a.start - b.start || a.order - b.order;
+    });
+    var maxDuration = 0;
+    events.forEach(function (e) {
+      maxDuration = Math.max(maxDuration, e.end - e.start);
+    });
+    return {
+      info: info,
+      styles: styles,
+      events: events,
+      maxDuration: maxDuration
+    };
+  }
+  /**
+   * Разобрать override-теги одного блока {...}: [[имя, аргумент], ...]
+   */
+
+
+  function scanTags(block) {
+    var out = [];
+    var i = 0;
+    var n = block.length;
+
+    while (i < n) {
+      if (block[i] !== '\\') {
+        i++;
+        continue;
+      }
+
+      var m = TAG_RE.exec(block.slice(i));
+
+      if (!m) {
+        i++;
+        continue;
+      }
+
+      var name = m[1];
+      var j = i + m[0].length;
+      var arg = '';
+
+      if (PAREN_TAGS[name] && block[j] === '(') {
+        var depth = 0;
+        var k = j;
+
+        for (; k < n; k++) {
+          if (block[k] === '(') depth++;else if (block[k] === ')') {
+            depth--;
+            if (!depth) break;
+          }
+        }
+
+        arg = block.slice(j + 1, k);
+        i = k + 1;
+      } else {
+        var _k = block.indexOf('\\', j);
+
+        if (_k < 0) _k = n;
+        arg = block.slice(j, _k);
+        i = _k;
+      }
+
+      out.push([name, arg.trim()]);
+    }
+
+    return out;
+  }
+
+  function baseProps(style) {
+    return {
+      font: style.font,
+      size: style.size,
+      c1: style.c1,
+      c2: style.c2,
+      c3: style.c3,
+      c4: style.c4,
+      bold: style.bold,
+      italic: style.italic,
+      underline: style.underline,
+      strike: style.strike,
+      scaleX: style.scaleX,
+      scaleY: style.scaleY,
+      spacing: style.spacing,
+      outline: style.outline,
+      shadow: style.shadow,
+      draw: false,
+      kt: '',
+      ks: 0,
+      kd: 0
+    };
+  }
+
+  function withColor(p, key, rgb) {
+    var old = p[key];
+    return {
+      r: rgb.r,
+      g: rgb.g,
+      b: rgb.b,
+      a: old.a
+    };
+  }
+  /**
+   * Построить модель события: сегменты текста со своими свойствами и параметры уровня события
+   * @returns {{segments:Array, an:number, pos:Array|null, move:Array|null, fad:Array|null, wrap:number}}
+   */
+
+
+  function buildModel(ev, doc) {
+    var style = doc.styles[ev.style] || doc.styles.Default || doc.styles[Object.keys(doc.styles)[0]];
+    var model = {
+      segments: [],
+      an: style.an,
+      pos: null,
+      move: null,
+      fad: null,
+      wrap: doc.info.wrapStyle,
+      style: style
+    };
+    var props = baseProps(style);
+    var kcur = 0;
+    var text = ev.text;
+    var re = /\{([^}]*)\}/g;
+    var last = 0;
+    var m;
+
+    var push = function push(str) {
+      if (!str) return;
+      str = str.replace(/\\N/g, '\n').replace(/\\n/g, ' ').replace(/\\h/g, "\xA0");
+      if (props.draw || !str) return;
+      model.segments.push({
+        text: str,
+        p: props
+      });
+    };
+
+    var apply = function apply(name, arg) {
+      switch (name) {
+        case 'b':
+          {
+            var v = parseInt(arg, 10);
+            props = Object.assign({}, props, {
+              bold: arg === '' ? style.bold : v === 1 || v >= 600
+            });
+            break;
+          }
+
+        case 'i':
+          props = Object.assign({}, props, {
+            italic: arg === '' ? style.italic : arg === '1'
+          });
+          break;
+
+        case 'u':
+          props = Object.assign({}, props, {
+            underline: arg === '' ? style.underline : arg === '1'
+          });
+          break;
+
+        case 's':
+          props = Object.assign({}, props, {
+            strike: arg === '' ? style.strike : arg === '1'
+          });
+          break;
+
+        case 'fn':
+          props = Object.assign({}, props, {
+            font: arg || style.font
+          });
+          break;
+
+        case 'fs':
+          props = Object.assign({}, props, {
+            size: arg ? Math.abs(num(arg, style.size)) || style.size : style.size
+          });
+          break;
+
+        case 'fscx':
+          props = Object.assign({}, props, {
+            scaleX: arg ? num(arg, 100) / 100 : style.scaleX
+          });
+          break;
+
+        case 'fscy':
+          props = Object.assign({}, props, {
+            scaleY: arg ? num(arg, 100) / 100 : style.scaleY
+          });
+          break;
+
+        case 'fsp':
+          props = Object.assign({}, props, {
+            spacing: arg ? num(arg, 0) : style.spacing
+          });
+          break;
+
+        case 'bord':
+          props = Object.assign({}, props, {
+            outline: arg ? Math.max(0, num(arg, 0)) : style.outline
+          });
+          break;
+
+        case 'shad':
+          props = Object.assign({}, props, {
+            shadow: arg ? Math.max(0, num(arg, 0)) : style.shadow
+          });
+          break;
+
+        case 'c':
+        case '1c':
+          {
+            var c = parseColorTag(arg);
+            props = Object.assign({}, props, {
+              c1: c ? withColor(props, 'c1', c) : style.c1
+            });
+            break;
+          }
+
+        case '2c':
+          {
+            var _c = parseColorTag(arg);
+
+            props = Object.assign({}, props, {
+              c2: _c ? withColor(props, 'c2', _c) : style.c2
+            });
+            break;
+          }
+
+        case '3c':
+          {
+            var _c2 = parseColorTag(arg);
+
+            props = Object.assign({}, props, {
+              c3: _c2 ? withColor(props, 'c3', _c2) : style.c3
+            });
+            break;
+          }
+
+        case '4c':
+          {
+            var _c3 = parseColorTag(arg);
+
+            props = Object.assign({}, props, {
+              c4: _c3 ? withColor(props, 'c4', _c3) : style.c4
+            });
+            break;
+          }
+
+        case 'alpha':
+          {
+            var a = parseAlphaTag(arg);
+
+            if (a !== null) {
+              props = Object.assign({}, props, {
+                c1: Object.assign({}, props.c1, {
+                  a: a
+                }),
+                c2: Object.assign({}, props.c2, {
+                  a: a
+                }),
+                c3: Object.assign({}, props.c3, {
+                  a: a
+                }),
+                c4: Object.assign({}, props.c4, {
+                  a: a
+                })
+              });
+            }
+
+            break;
+          }
+
+        case '1a':
+        case '2a':
+        case '3a':
+        case '4a':
+          {
+            var _a = parseAlphaTag(arg);
+
+            var key = 'c' + name[0];
+
+            if (_a !== null) {
+              var patch = {};
+              patch[key] = Object.assign({}, props[key], {
+                a: _a
+              });
+              props = Object.assign({}, props, patch);
+            }
+
+            break;
+          }
+
+        case 'r':
+          {
+            var st = arg && doc.styles[arg] ? doc.styles[arg] : style;
+            props = baseProps(st);
+            break;
+          }
+
+        case 'p':
+          {
+            var _v = parseInt(arg, 10);
+
+            props = Object.assign({}, props, {
+              draw: _v > 0
+            });
+            break;
+          }
+
+        case 'k':
+        case 'K':
+        case 'kf':
+        case 'ko':
+          {
+            var d = num(arg, 0);
+            props = Object.assign({}, props, {
+              kt: name === 'K' ? 'kf' : name,
+              ks: kcur,
+              kd: d
+            });
+            kcur += d;
+            break;
+          }
+
+        case 'q':
+          model.wrap = num(arg, model.wrap);
+          break;
+
+        case 'an':
+          {
+            var _v2 = parseInt(arg, 10);
+
+            if (_v2 >= 1 && _v2 <= 9 && !model.anSet) {
+              model.an = _v2;
+              model.anSet = true;
+            }
+
+            break;
+          }
+
+        case 'a':
+          {
+            var _v3 = LEGACY_AN[parseInt(arg, 10)];
+
+            if (_v3 && !model.anSet) {
+              model.an = _v3;
+              model.anSet = true;
+            }
+
+            break;
+          }
+
+        case 'pos':
+          {
+            var _a2 = arg.split(',').map(parseFloat);
+
+            if (_a2.length >= 2 && !isNaN(_a2[0]) && !isNaN(_a2[1]) && !model.pos && !model.move) model.pos = [_a2[0], _a2[1]];
+            break;
+          }
+
+        case 'move':
+          {
+            var _a3 = arg.split(',').map(parseFloat);
+
+            if (_a3.length >= 4 && !model.pos && !model.move) {
+              model.move = {
+                x1: _a3[0],
+                y1: _a3[1],
+                x2: _a3[2],
+                y2: _a3[3],
+                t1: _a3.length >= 6 ? _a3[4] : 0,
+                t2: _a3.length >= 6 ? _a3[5] : 0
+              };
+            }
+
+            break;
+          }
+
+        case 'fad':
+          {
+            var _a4 = arg.split(',').map(parseFloat);
+
+            if (_a4.length >= 2 && !isNaN(_a4[0]) && !isNaN(_a4[1])) model.fad = [_a4[0], _a4[1]];
+            break;
+          }
+        // t, clip, iclip, org, fade, blur, be, fax, fay, frx, fry, frz, fr - пока не поддерживаются
+      }
+    };
+
+    while ((m = re.exec(text)) !== null) {
+      push(text.slice(last, m.index));
+      scanTags(m[1]).forEach(function (t) {
+        return apply(t[0], t[1]);
+      });
+      last = m.index + m[0].length;
+    }
+
+    push(text.slice(last)); // позиции для \move заданы в тех же координатах, что и \pos
+
+    model.hasText = model.segments.some(function (s) {
+      return s.text.replace(/\s+/g, '') !== '';
+    });
+    return model;
+  }
+  /**
+   * Модель события (кэшируется в самом событии)
+   */
+
+
+  function getModel(ev, doc) {
+    if (!ev.model) ev.model = buildModel(ev, doc);
+    return ev.model;
+  }
+
+  var Parser$1 = {
+    parse: parse,
+    getModel: getModel,
+    buildModel: buildModel,
+    parseColor: parseColor,
+    parseTime: parseTime,
+    scanTags: scanTags
+  };
+
+  /**
+   * Простой рендерер ASS на DOM/CSS (без WASM и воркеров).
+   *
+   * Поддерживает: стили (шрифт, размер, ScaleY, цвета с прозрачностью, bold/italic/underline/strike, интервал),
+   * контур и тень (текст-тенями), BorderStyle 3 (подложка), Alignment, поля, \an, \pos, \move, \fad,
+   * простое караоке (\k/\kf/\ko - мгновенная смена цвета), многослойность (Layer),
+   * вертикальное «раздвигание» событий с одинаковым выравниванием, как это делает libass.
+   *
+   * Не поддерживает: \t (анимации), \clip, рисование (\p), вращение, размытие, ScaleX ≠ ScaleY, эффекты Banner/Scroll.
+   *
+   * Шрифты из торрента (host.fonts) подключаются через FontFace; пока шрифт не загрузился, используется запасной.
+   * Коллекции .ttc браузеры в FontFace не поддерживают - такие шрифты пропускаются.
+   *
+   * Хост (интерфейс окружения):
+   *   host.parent  - элемент, в который добавляется слой
+   *   host.fonts   - (необязательно) сессия подбора шрифтов: on(callback)
+   *   host.time()  - текущее время видео в секундах (уже со сдвигом субтитров)
+   *   host.rect()  - {left, top, width, height} картинки видео в координатах окна
+   *   host.videoHeight() - (необязательно) высота видео в пикселях
+   */
+
+  var measure_ctx = null;
+  var em_cache = {};
+  /**
+   * Коэффициент перевода «высоты ячейки» ASS (ascent+descent = размер шрифта) в CSS font-size
+   */
+
+  function emFactor(family) {
+    if (em_cache[family] !== undefined) return em_cache[family];
+    var factor = 0.88;
+
+    try {
+      if (!measure_ctx) measure_ctx = document.createElement('canvas').getContext('2d');
+      measure_ctx.font = '100px ' + family;
+      var m = measure_ctx.measureText('Hgyp');
+
+      if (m.fontBoundingBoxAscent !== undefined) {
+        var h = m.fontBoundingBoxAscent + m.fontBoundingBoxDescent;
+        if (h > 0) factor = 100 / h;
+      }
+    } catch (e) {}
+
+    em_cache[family] = factor;
+    return factor;
+  }
+
+  function fontStack(name, fallback) {
+    var n = String(name || '').replace(/^@/, '').replace(/["']/g, '');
+    var low = n.toLowerCase();
+    var gen = /times|georgia|garamond|palatino|cambria|serif/.test(low) && !/sans/.test(low) ? 'serif' : 'sans-serif';
+    return '"' + n + '", ' + (fallback ? fallback + ', ' : '') + gen;
+  }
+
+  function rgba(c, mul) {
+    var a = c.a * (mul === undefined ? 1 : mul);
+    return 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + Math.round(a * 1000) / 1000 + ')';
+  }
+
+  function round$1(v) {
+    return Math.round(v * 100) / 100;
+  }
+  /**
+   * Контур через набор text-shadow по окружности (работает везде, в отличие от paint-order)
+   */
+
+
+  function outlineShadows(r, color, dx, dy) {
+    var out = [];
+    dx = dx || 0;
+    dy = dy || 0;
+
+    var add = function add(radius, n) {
+      for (var k = 0; k < n; k++) {
+        var a = Math.PI * 2 * k / n;
+        out.push(round$1(Math.cos(a) * radius + dx) + 'px ' + round$1(Math.sin(a) * radius + dy) + 'px 0 ' + color);
+      }
+    };
+
+    var n = Math.min(32, Math.max(8, Math.ceil(r * 3)));
+    add(r, n);
+    if (r >= 2.5) add(r / 2, Math.ceil(n / 2));
+    return out;
+  }
+
+  function alignParts(an) {
+    var h = (an - 1) % 3; // 0 left, 1 center, 2 right
+
+    var v = Math.floor((an - 1) / 3); // 0 bottom, 1 middle, 2 top
+
+    return {
+      h: h,
+      v: v
+    };
+  }
+
+  function SimpleAss(host) {
+    var doc = null;
+    var root = document.createElement('div');
+    var regions = {};
+    var pos_layer = document.createElement('div');
+    var nodes = {};
+    var animated = [];
+    var active_key = null;
+    var last_t = null;
+    var last_rect = null;
+    var last_layout_check = 0;
+    var last_run = 0;
+    var raf = 0;
+    var running = false;
+    var scale = {
+      sx: 1,
+      sy: 1,
+      bs: 1
+    };
+    var faces = [];
+    var destroyed = false;
+    this.fallbackFont = '';
+    this.minInterval = 0;
+    root.className = 'player-video__ass';
+    root.style.cssText = 'position:fixed;overflow:hidden;pointer-events:none;display:none;';
+    pos_layer.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;'; // 9 областей для событий без \pos, внутри них события выстраиваются друг над другом
+
+    for (var an = 1; an <= 9; an++) {
+      var r = document.createElement('div');
+      var p = alignParts(an);
+      if (p.v === 0) r.style.cssText = 'position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column-reverse;';else if (p.v === 2) r.style.cssText = 'position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;';else r.style.cssText = 'position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;';
+      regions[an] = r;
+      root.appendChild(r);
+    }
+
+    root.appendChild(pos_layer);
+    host.parent.appendChild(root);
+    var self = this;
+    /**
+     * Подключить шрифт из торрента под именем, которое используется в ASS
+     */
+
+    function addFont(f) {
+      if (f.ttc || typeof FontFace === 'undefined' || !document.fonts) return;
+      f.as.forEach(function (name) {
+        var face = new FontFace(name, 'url("' + f.url + '")', {
+          weight: String(f.weight || 400),
+          style: f.italic ? 'italic' : 'normal'
+        });
+        face.load().then(function () {
+          if (destroyed) return;
+          document.fonts.add(face);
+          faces.push(face); // размеры текста зависят от метрик шрифта - пересчитываем всё
+
+          em_cache = {};
+          self.invalidate();
+        })["catch"](function () {});
+      });
+    }
+
+    if (host.fonts) host.fonts.on(addFont);
+    /**
+     * Узлы
+     */
+
+    function clearNodes() {
+      for (var k in nodes) {
+        if (nodes[k] && nodes[k].el.parentNode) nodes[k].el.parentNode.removeChild(nodes[k].el);
+      }
+
+      nodes = {};
+      animated = [];
+      active_key = null;
+    }
+
+    function segmentStyle(p, model) {
+      var family = fontStack(p.font, self.fallbackFont);
+      var fs = p.size * scale.sy * p.scaleY;
+      var css = [];
+      css.push('font-family:' + family);
+      css.push('font-size:' + round$1(fs * emFactor(family)) + 'px');
+      css.push('line-height:' + round$1(fs) + 'px');
+      css.push('font-weight:' + (p.bold ? 700 : 400));
+      css.push('font-style:' + (p.italic ? 'italic' : 'normal'));
+      if (p.underline || p.strike) css.push('text-decoration:' + (p.underline ? 'underline ' : '') + (p.strike ? 'line-through' : ''));
+      if (p.spacing) css.push('letter-spacing:' + round$1(p.spacing * scale.sx) + 'px');
+      css.push('color:' + rgba(p.c1));
+      var outline = p.outline * scale.bs;
+      var shadow = p.shadow * scale.bs;
+
+      if (model.style.borderStyle === 3) {
+        // непрозрачная подложка цвета контура
+        css.push('background:' + rgba(p.c3)); // отступ только по горизонтали: по вертикали боксы соседних строк иначе перекрываются и темнеют
+
+        css.push('padding:0 ' + round$1(Math.max(outline, 1)) + 'px');
+      } else {
+        var list = [];
+        if (outline > 0) list = list.concat(outlineShadows(outline, rgba(p.c3)));
+
+        if (shadow > 0) {
+          if (outline > 0) list = list.concat(outlineShadows(outline, rgba(p.c4), shadow, shadow));else list.push(round$1(shadow) + 'px ' + round$1(shadow) + 'px 0 ' + rgba(p.c4));
+        }
+
+        if (list.length) css.push('text-shadow:' + list.join(','));
+      }
+
+      return css.join(';');
+    }
+
+    function createNode(ev) {
+      var model = Parser$1.getModel(ev, doc);
+      if (!model.hasText) return null;
+      var an = model.an;
+      var ap = alignParts(an);
+      doc.info;
+      var el = document.createElement('div');
+      var node = {
+        el: el,
+        ev: ev,
+        model: model,
+        an: an,
+        fade: null,
+        move: null,
+        kara: []
+      };
+      var align = ap.h === 0 ? 'left' : ap.h === 1 ? 'center' : 'right';
+      var nowrap = model.wrap === 2 || Boolean(model.pos || model.move);
+      var css = ['font-size:0', 'line-height:0', 'text-align:' + align, 'white-space:' + (nowrap ? 'pre' : 'pre-wrap')];
+      var mL = (ev.marginL || model.style.marginL) * scale.sx;
+      var mR = (ev.marginR || model.style.marginR) * scale.sx;
+      var mV = (ev.marginV || model.style.marginV) * scale.sy;
+
+      if (model.pos || model.move) {
+        css.push('position:absolute');
+        css.push('transform:translate(' + (ap.h === 0 ? 0 : ap.h === 1 ? -50 : -100) + '%,' + (ap.v === 2 ? 0 : ap.v === 1 ? -50 : -100) + '%)');
+        var x = model.pos ? model.pos[0] : model.move.x1;
+        var y = model.pos ? model.pos[1] : model.move.y1;
+        css.push('left:' + round$1(x * scale.sx) + 'px');
+        css.push('top:' + round$1(y * scale.sy) + 'px');
+        if (model.move) node.move = model.move;
+      } else {
+        css.push('margin-left:' + round$1(mL) + 'px');
+        css.push('margin-right:' + round$1(mR) + 'px');
+        if (ap.v === 0) css.push('margin-bottom:' + round$1(mV) + 'px');else if (ap.v === 2) css.push('margin-top:' + round$1(mV) + 'px');
+      }
+
+      css.push('z-index:' + ev.layer);
+      el.style.cssText = css.join(';'); // разбиваем сегменты на строки по \N
+
+      var lines = [[]];
+      model.segments.forEach(function (seg) {
+        var parts = seg.text.split('\n');
+        parts.forEach(function (part, i) {
+          if (i > 0) lines.push([]);
+          lines[lines.length - 1].push({
+            text: part,
+            p: seg.p
+          });
+        });
+      });
+      lines.forEach(function (line) {
+        var ld = document.createElement('div');
+        var first = line.length ? line[0].p : model.segments[0].p;
+
+        if (!line.length || line.every(function (s) {
+          return s.text === '';
+        })) {
+          var sp = document.createElement('span');
+          sp.style.cssText = segmentStyle(first, model);
+          sp.textContent = "\xA0";
+          ld.appendChild(sp);
+        } else {
+          line.forEach(function (s) {
+            if (s.text === '') return;
+            var sp = document.createElement('span');
+            sp.style.cssText = segmentStyle(s.p, model);
+            sp.textContent = s.text;
+
+            if (s.p.kt) {
+              node.kara.push({
+                el: sp,
+                p: s.p,
+                state: -1
+              });
+              sp.style.color = rgba(s.p.c2);
+            }
+
+            ld.appendChild(sp);
+          });
+        }
+
+        el.appendChild(ld);
+      });
+      if (model.fad) node.fade = model.fad;
+      if (node.fade || node.move || node.kara.length) animated.push(node);
+      return node;
+    }
+
+    function findActive(t) {
+      var ev = doc.events;
+      var lo = 0;
+      var hi = ev.length;
+
+      while (lo < hi) {
+        var mid = lo + hi >> 1;
+        if (ev[mid].start <= t) lo = mid + 1;else hi = mid;
+      }
+
+      var out = [];
+      var min = t - doc.maxDuration;
+
+      for (var i = lo - 1; i >= 0; i--) {
+        if (ev[i].start < min) break;
+        if (ev[i].end > t) out.push(ev[i]);
+      }
+
+      out.sort(function (a, b) {
+        return a.layer - b.layer || a.order - b.order;
+      });
+      return out;
+    }
+
+    function sync(active) {
+      var next = {};
+      active.forEach(function (ev) {
+        var node = nodes[ev.order];
+
+        if (node === undefined) {
+          node = createNode(ev);
+          nodes[ev.order] = node || false;
+        }
+
+        if (node) next[ev.order] = node;
+      });
+
+      for (var k in nodes) {
+        if (nodes[k] && !next[k]) {
+          if (nodes[k].el.parentNode) nodes[k].el.parentNode.removeChild(nodes[k].el);
+          var idx = animated.indexOf(nodes[k]);
+          if (idx >= 0) animated.splice(idx, 1);
+          delete nodes[k];
+        }
+      }
+
+      active.forEach(function (ev) {
+        var node = next[ev.order];
+        if (!node) return;
+        var target = node.model.pos || node.model.move ? pos_layer : regions[node.an];
+        target.appendChild(node.el);
+      });
+    }
+
+    function animate(t) {
+      for (var i = 0; i < animated.length; i++) {
+        var n = animated[i];
+        var ev = n.ev;
+        var ms = (t - ev.start) * 1000;
+
+        if (n.fade) {
+          var dur = (ev.end - ev.start) * 1000;
+          var op = 1;
+          if (n.fade[0] > 0 && ms < n.fade[0]) op = Math.max(0, ms / n.fade[0]);
+          if (n.fade[1] > 0 && dur - ms < n.fade[1]) op = Math.min(op, Math.max(0, (dur - ms) / n.fade[1]));
+          n.el.style.opacity = String(Math.round(op * 100) / 100);
+        }
+
+        if (n.move) {
+          var m = n.move;
+          var t1 = m.t1;
+          var t2 = m.t2 || (ev.end - ev.start) * 1000;
+          var k = t2 > t1 ? Math.min(1, Math.max(0, (ms - t1) / (t2 - t1))) : 1;
+          n.el.style.left = round$1((m.x1 + (m.x2 - m.x1) * k) * scale.sx) + 'px';
+          n.el.style.top = round$1((m.y1 + (m.y2 - m.y1) * k) * scale.sy) + 'px';
+        }
+
+        if (n.kara.length) {
+          (function () {
+            var cs = ms / 10;
+            n.kara.forEach(function (k) {
+              var sung = cs >= k.p.ks ? 1 : 0;
+
+              if (sung !== k.state) {
+                k.state = sung;
+                k.el.style.color = rgba(sung ? k.p.c1 : k.p.c2);
+              }
+            });
+          })();
+        }
+      }
+    }
+
+    function layout(force) {
+      var r = host.rect();
+      if (!r || !r.width || !r.height) return false;
+      if (!force && last_rect && Math.abs(r.left - last_rect.left) < 0.5 && Math.abs(r.top - last_rect.top) < 0.5 && Math.abs(r.width - last_rect.width) < 0.5 && Math.abs(r.height - last_rect.height) < 0.5) return true;
+      last_rect = {
+        left: r.left,
+        top: r.top,
+        width: r.width,
+        height: r.height
+      };
+      root.style.left = r.left + 'px';
+      root.style.top = r.top + 'px';
+      root.style.width = r.width + 'px';
+      root.style.height = r.height + 'px';
+
+      if (doc) {
+        var sx = r.width / doc.info.playResX;
+        var sy = r.height / doc.info.playResY;
+        var vh = host.videoHeight ? host.videoHeight() : 0;
+        scale = {
+          sx: sx,
+          sy: sy,
+          bs: doc.info.scaledBorder ? sy : vh ? r.height / vh : sy
+        };
+      }
+
+      clearNodes();
+      last_t = null;
+      return true;
+    }
+
+    function tick(now) {
+      if (!running) return;
+      raf = requestAnimationFrame(tick);
+      if (self.minInterval && now - last_run < self.minInterval) return;
+      last_run = now;
+      if (!doc) return;
+
+      if (now - last_layout_check > 300 || !last_rect) {
+        last_layout_check = now;
+        if (!layout(false)) return;
+      }
+
+      var t = host.time();
+      if (t === last_t) return;
+      last_t = t;
+      var active = findActive(t);
+      var key = active.map(function (e) {
+        return e.order;
+      }).join(',');
+
+      if (key !== active_key) {
+        active_key = key;
+        sync(active);
+      }
+
+      animate(t);
+    }
+    /**
+     * Загрузить текст ASS
+     * @param {string} text
+     */
+
+
+    this.load = function (text) {
+      doc = Parser$1.parse(text);
+      clearNodes();
+      last_rect = null;
+      root.style.display = 'block';
+      this.start();
+    };
+
+    this.start = function () {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(tick);
+    };
+
+    this.stop = function () {
+      running = false;
+      cancelAnimationFrame(raf);
+      clearNodes();
+      root.style.display = 'none';
+    };
+    /**
+     * Принудительно пересчитать размеры (например, после смены размера окна)
+     */
+
+
+    this.invalidate = function () {
+      last_rect = null;
+    };
+    /**
+     * Вызвать один кадр вручную (для тестов)
+     */
+
+
+    this.renderAt = function () {
+      last_t = null;
+      tick(performance.now() + 1000);
+    };
+
+    this.destroy = function () {
+      destroyed = true;
+      faces.forEach(function (face) {
+        try {
+          document.fonts["delete"](face);
+        } catch (e) {}
+      });
+      faces = [];
+      this.stop();
+      if (root.parentNode) root.parentNode.removeChild(root);
+      doc = null;
+    };
+
+    this.element = root;
+  }
+
+  /**
+   * Полноценный рендерер ASS на базе JASSUB (libass в WebAssembly).
+   *
+   * Файлы библиотеки (dist пакета jassub 1.8.x) лежат в public/vender/jassub/ и подгружаются лениво,
+   * только когда нужно показать ASS-дорожку.
+   *
+   * Для разработки можно указать свой каталог: Lampa.Storage.set('jassub_path', 'http://localhost:8080/vender/jassub/')
+   */
+
+  var UMD_FILES = ['jassub.umd.js', 'jassub.js'];
+  var loading$2 = null;
+  var lib_failed = false;
+
+  function absolute(url) {
+    try {
+      return new URL(url, document.baseURI).href;
+    } catch (e) {
+      return url;
+    }
+  }
+
+  function withSlash(url) {
+    return String(url).replace(/\/+$/, '') + '/';
+  }
+  /**
+   * Каталоги, где может лежать JASSUB, в порядке попыток (всегда абсолютные адреса со слэшем на конце):
+   *  1. jassub_path - явный адрес (для разработки), других вариантов тогда нет;
+   *  2. последний рабочий каталог (запоминается после полностью удачной загрузки);
+   *  3. виджеты (file://) и расширения: сначала сервер (Manifest.github_lampa), потому что локальная vender заморожена
+   *     на момент сборки, а fetch/Worker на file:// ограничены; сайты: сначала свои файлы ./vender/jassub/;
+   *  4. оставшийся вариант как запасной.
+   */
+
+
+  function candidates() {
+    var custom = String(Storage.get('jassub_path', '') || '').trim();
+    if (custom) return [absolute(withSlash(custom))];
+    var remote = absolute(withSlash(object$2.github_lampa || '') + 'vender/jassub/');
+    var local = absolute('./vender/jassub/');
+    var loc = window.location || {};
+    var widget = loc.protocol === 'file:' || String(loc.href || '').indexOf('chrome-extension') > -1;
+    var list = widget ? [remote, local] : [local, remote];
+    var saved = String(Storage.get('jassub_base', '') || '');
+    if (saved && list.indexOf(saved) >= 0) list = [saved].concat(list.filter(function (b) {
+      return b !== saved;
+    }));
+    return list.filter(function (b, i) {
+      return list.indexOf(b) === i;
+    });
+  }
+
+  function loadScript(dir, index, resolve, reject) {
+    if (index >= UMD_FILES.length) return reject(new Error('script not found in ' + dir));
+    Utils$1.putScriptAsync([dir + UMD_FILES[index]], false, function () {
+      loadScript(dir, index + 1, resolve, reject);
+    }, resolve);
+  }
+  /**
+   * Каталог на том же адресе (origin), что и страница: воркер можно запускать напрямую, без Blob и CORS
+   */
+
+
+  function sameOrigin(dir) {
+    try {
+      return new URL(dir).origin === (window.location || {}).origin;
+    } catch (e) {
+      return false;
+    }
+  }
+  /**
+   * Проверить, что wasm доступен (иначе воркер упадёт уже после «успешной» загрузки скрипта)
+   */
+
+
+  function probe(url) {
+    return fetch(url, {
+      method: 'HEAD'
+    }).then(function (r) {
+      if (!r.ok) throw new Error('wasm ' + r.status);
+    });
+  }
+  /**
+   * Попытка загрузить библиотеку из одного каталога: скрипт, воркер, доступность wasm
+   * @returns {Promise<{JASSUB:function, workerUrl:string, dir:string}>}
+   */
+
+
+  function tryDir(dir) {
+    return new Promise(function (resolve, reject) {
+      loadScript(dir, 0, function () {
+        var J = window.JASSUB;
+        if (J && typeof J !== 'function' && typeof J["default"] === 'function') J = J["default"];
+        if (typeof J !== 'function') return reject(new Error('JASSUB global not found'));
+        var worker = sameOrigin(dir) ? Promise.resolve(dir + 'jassub-worker.js') : fetch(dir + 'jassub-worker.js').then(function (r) {
+          if (!r.ok) throw new Error('worker ' + r.status);
+          return r.text();
+        }).then(function (code) {
+          return URL.createObjectURL(new Blob([code], {
+            type: 'application/javascript'
+          }));
+        });
+        worker.then(function (workerUrl) {
+          return probe(dir + 'jassub-worker.wasm').then(function () {
+            return resolve({
+              JASSUB: J,
+              workerUrl: workerUrl,
+              dir: dir
+            });
+          });
+        })["catch"](reject);
+      }, reject);
+    });
+  }
+  /**
+   * Загрузить библиотеку: перебор каталогов, рабочий запоминается
+   * @returns {Promise<{JASSUB:function, workerUrl:string, dir:string}>}
+   */
+
+
+  function loadLib() {
+    if (loading$2) return loading$2;
+    var list = candidates();
+    var errors = [];
+
+    var next = function next(i) {
+      if (i >= list.length) return Promise.reject(new Error(errors.join('; ') + '. Install files to public/vender/jassub or set Lampa.Storage.set(\'jassub_path\', \'http://host/vender/jassub/\')'));
+      return tryDir(list[i]).then(function (lib) {
+        // запоминаем только автоматически найденный каталог (свой jassub_path запоминать не нужно)
+        if (list.length > 1 && Storage.get('jassub_base', '') !== lib.dir) Storage.set('jassub_base', lib.dir);
+        return lib;
+      })["catch"](function (e) {
+        errors.push(list[i] + ' - ' + (e && e.message ? e.message : e)); // запомненный каталог перестал работать - забываем его
+
+        if (Storage.get('jassub_base', '') === list[i]) Storage.set('jassub_base', '');
+        return next(i + 1);
+      });
+    };
+
+    loading$2 = next(0);
+    loading$2["catch"](function (e) {
+      loading$2 = null;
+      lib_failed = true;
+      console.log('Subtitles', 'JASSUB load error', e && e.message ? e.message : e);
+    });
+    return loading$2;
+  }
+  /**
+   * Можно ли использовать этот рендерер
+   * @param {boolean} forced - режим выбран вручную («Полный»), а не «Авто»
+   */
+
+
+  function supported(forced) {
+    if (lib_failed) return false;
+    var ok = (typeof WebAssembly === "undefined" ? "undefined" : _typeof(WebAssembly)) === 'object' && typeof Worker !== 'undefined' && typeof fetch === 'function' && typeof Blob !== 'undefined' && typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function';
+    if (!ok) return false;
+    if (forced) return true; // в автоматическом режиме не нагружаем ТВ и старые браузеры, там лучше простой рендерер
+
+    if (Platform.tv()) return false;
+    var v = Platform.chromeVersion();
+    if (v && v < 80) return false;
+    return true;
+  }
+
+  function shift() {
+    var s = parseInt(Storage.get('player_subs_shift_time', '0'));
+    return isNaN(s) ? 0 : s;
+  } // сколько ждать подбора шрифтов перед созданием рендерера (мс); найденные позже шрифты добавляются перезапуском
+
+
+  var FONTS_WAIT = 2500;
+  var MAX_REBUILDS = 2;
+
+  function Renderer(host) {
+    var inst = null;
+    var destroyed = false;
+    var timer = null;
+    var last_shift = null;
+    var included = {};
+    var rebuilds = 0;
+    var rebuild_timer = null;
+    var source = '';
+    var lib = null;
+
+    var fontLists = function fontLists() {
+      var fonts = [];
+      var available = {
+        'liberation sans': lib.dir + 'default.woff2'
+      };
+      included = {};
+
+      if (host.fonts) {
+        host.fonts.fonts.forEach(function (f) {
+          included[f.url] = true;
+
+          if (f.lazy) {
+            // крупные шрифты libass запрашивает только когда они понадобятся
+            f.as.concat([f.family]).forEach(function (n) {
+              if (n) available[String(n).toLowerCase()] = f.url;
+            });
+          } else fonts.push(f.url);
+        });
+      }
+
+      return {
+        fonts: fonts,
+        available: available
+      };
+    };
+
+    var destroyInst = function destroyInst() {
+      clearInterval(timer);
+
+      if (inst) {
+        try {
+          inst.destroy();
+        } catch (e) {}
+
+        inst = null;
+      }
+    };
+
+    var create = function create() {
+      if (destroyed) return;
+      var lists = fontLists();
+      last_shift = shift();
+      inst = new lib.JASSUB({
+        video: host.video,
+        subContent: source,
+        workerUrl: lib.workerUrl,
+        wasmUrl: lib.dir + 'jassub-worker.wasm',
+        legacyWasmUrl: lib.dir + 'jassub-worker.wasm.js',
+        modernWasmUrl: lib.dir + 'jassub-worker-modern.wasm',
+        fonts: lists.fonts,
+        availableFonts: lists.available,
+        timeOffset: -last_shift
+      }); // JASSUB прибавляет timeOffset к времени видео, а сдвиг Lampa - это задержка субтитров
+
+      timer = setInterval(function () {
+        var s = shift();
+
+        if (s !== last_shift && inst) {
+          last_shift = s;
+          inst.timeOffset = -s;
+        }
+      }, 1000);
+
+      if (inst._worker && inst._worker.addEventListener) {
+        inst._worker.addEventListener('error', function () {
+          if (host.onFail) host.onFail();
+        });
+      }
+    }; // шрифт нашёлся уже после создания рендерера - пересоздаём его с полным набором (не чаще MAX_REBUILDS раз)
+
+
+    var onLateFont = function onLateFont(f) {
+      if (destroyed || !inst || included[f.url] || rebuilds >= MAX_REBUILDS) return;
+      clearTimeout(rebuild_timer);
+      rebuild_timer = setTimeout(function () {
+        if (destroyed) return;
+        rebuilds++;
+        destroyInst();
+        create();
+      }, 500);
+    };
+
+    this.load = function (text) {
+      source = text;
+      var fonts_ready = host.fonts ? Promise.race([host.fonts.done, new Promise(function (resolve) {
+        return setTimeout(resolve, FONTS_WAIT);
+      })]) : Promise.resolve();
+      Promise.all([loadLib(), fonts_ready]).then(function (res) {
+        if (destroyed) return;
+        lib = res[0];
+        create();
+        if (host.fonts) host.fonts.on(onLateFont);
+      })["catch"](function () {
+        if (!destroyed && host.onFail) host.onFail();
+      });
+    };
+
+    this.invalidate = function () {
+      if (inst && typeof inst.resize === 'function') inst.resize();
+    };
+
+    this.destroy = function () {
+      destroyed = true;
+      clearTimeout(rebuild_timer);
+      destroyInst();
+    };
+  }
+
+  var Jassub = {
+    create: function create(host) {
+      return new Renderer(host);
+    },
+    supported: supported,
+    candidates: candidates
+  };
+
+  /**
+   * Чтение имён шрифтов (таблица name) из TTF/OTF/TTC без загрузки файла целиком.
+   *
+   * read(start, end) - функция, возвращающая Promise<Uint8Array> с байтами файла [start, end).
+   * Обычно это Range-запрос, поэтому из большого файла (например, TTC на 12 МБ) читаются только
+   * заголовок и сама таблица имён.
+   */
+  var TAG_TTC = 0x74746366; // 'ttcf'
+
+  var TAG_OTTO = 0x4f54544f; // 'OTTO'
+
+  var TAG_TRUE = 0x74727565; // 'true'
+
+  var TAG_TTF = 0x00010000;
+  var HEAD_SIZE = 4096;
+  var MAX_NAME_TABLE = 262144;
+
+  function u16(b, o) {
+    return b[o] << 8 | b[o + 1];
+  }
+
+  function u32(b, o) {
+    return (b[o] << 24 | b[o + 1] << 16 | b[o + 2] << 8 | b[o + 3]) >>> 0;
+  }
+
+  function tag4(b, o) {
+    return String.fromCharCode(b[o], b[o + 1], b[o + 2], b[o + 3]);
+  }
+
+  function decode$1(b, start, len, platform) {
+    var s = '';
+    if (start + len > b.length) len = Math.max(0, b.length - start);
+
+    if (platform === 1) {
+      // Macintosh: для латиницы достаточно ASCII
+      for (var i = 0; i < len; i++) {
+        s += String.fromCharCode(b[start + i]);
+      }
+    } else {
+      // Windows/Unicode: UTF-16BE
+      for (var _i = 0; _i + 1 < len; _i += 2) {
+        s += String.fromCharCode(b[start + _i] << 8 | b[start + _i + 1]);
+      }
+    }
+
+    return s.replace(/\u0000/g, '').trim();
+  }
+  /**
+   * Вес шрифта по названию начертания
+   * @param {string} sub - например, 'Bold Italic', 'Semibold', 'Regular'
+   */
+
+
+  function weightOf(sub) {
+    var s = String(sub || '').toLowerCase().replace(/[\s_-]+/g, '');
+    if (/black|heavy/.test(s)) return 900;
+    if (/extrabold|ultrabold/.test(s)) return 800;
+    if (/semibold|demibold|demi/.test(s)) return 600;
+    if (/bold/.test(s)) return 700;
+    if (/medium/.test(s)) return 500;
+    if (/extralight|ultralight/.test(s)) return 200;
+    if (/light/.test(s)) return 300;
+    if (/thin|hairline/.test(s)) return 100;
+    return 400;
+  }
+
+  function parseNameTable(b) {
+    if (b.length < 6) return null;
+    var count = u16(b, 2);
+    var strOff = u16(b, 4);
+    var names = {};
+
+    for (var i = 0; i < count; i++) {
+      var p = 6 + i * 12;
+      if (p + 12 > b.length) break;
+      var platform = u16(b, p);
+      var lang = u16(b, p + 4);
+      var id = u16(b, p + 6);
+      var len = u16(b, p + 8);
+      var off = u16(b, p + 10);
+      if (id !== 1 && id !== 2 && id !== 4 && id !== 6 && id !== 16 && id !== 17) continue;
+      var s = decode$1(b, strOff + off, len, platform);
+      if (!s) continue;
+      var list = names[id] || (names[id] = []);
+      if (list.indexOf(s) >= 0) continue; // английские названия - вперёд
+
+      if (platform === 3 && lang === 0x409 || platform === 1 && lang === 0) list.unshift(s);else list.push(s);
+    }
+
+    var first = function first(id) {
+      return names[id] && names[id][0] || '';
+    };
+
+    var family = first(16) || first(1);
+    var sub = first(17) || first(2);
+    var all = [];
+    [1, 4, 6, 16].forEach(function (id) {
+      (names[id] || []).forEach(function (n) {
+        if (all.indexOf(n) < 0) all.push(n);
+      });
+    });
+    return {
+      family: family,
+      subfamily: sub,
+      full: first(4),
+      ps: first(6),
+      names: all,
+      weight: weightOf(sub),
+      italic: /italic|oblique/i.test(sub)
+    };
+  }
+  /**
+   * Прочитать имена всех начертаний в файле шрифта
+   * @param {function(number, number): Promise<Uint8Array>} read
+   * @param {number} size - размер файла
+   * @returns {Promise<Array<{index:number, family:string, subfamily:string, full:string, ps:string, names:string[], weight:number, italic:boolean}>>}
+   */
+
+
+  function readNames(_x, _x2) {
+    return _readNames.apply(this, arguments);
+  }
+
+  function _readNames() {
+    _readNames = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(read, size) {
+      var head, cache, get, isZero, tag, offsets, n, h, i, bad, out, tables, trace, _i2, off, hdr, num, dir, rec, t, p, tkey, nt, hex;
+
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return read(0, Math.min(size, HEAD_SIZE));
+
+            case 2:
+              head = _context2.sent;
+              cache = {};
+
+              get = /*#__PURE__*/function () {
+                var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(start, end) {
+                  var key;
+                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          end = Math.min(end, size);
+
+                          if (!(start >= 0 && end <= head.length)) {
+                            _context.next = 3;
+                            break;
+                          }
+
+                          return _context.abrupt("return", head.subarray(start, end));
+
+                        case 3:
+                          key = start + ':' + end;
+
+                          if (!cache[key]) {
+                            cache[key] = read(start, end).then(function (res) {
+                              if (res.length < end - start) throw new Error('short read ' + res.length + '/' + (end - start) + ' at ' + start);
+                              return res;
+                            });
+                          }
+
+                          return _context.abrupt("return", cache[key]);
+
+                        case 6:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee);
+                }));
+
+                return function get(_x3, _x4) {
+                  return _ref.apply(this, arguments);
+                };
+              }();
+
+              isZero = function isZero(b) {
+                for (var i = 0; i < b.length; i++) {
+                  if (b[i] !== 0) return false;
+                }
+
+                return b.length > 0;
+              };
+
+              if (!(head.length < 12)) {
+                _context2.next = 8;
+                break;
+              }
+
+              return _context2.abrupt("return", []);
+
+            case 8:
+              tag = u32(head, 0);
+              offsets = [];
+
+              if (!(tag === TAG_TTC)) {
+                _context2.next = 18;
+                break;
+              }
+
+              n = Math.min(u32(head, 8), 64);
+              _context2.next = 14;
+              return get(0, 12 + n * 4);
+
+            case 14:
+              h = _context2.sent;
+
+              for (i = 0; i < n; i++) {
+                offsets.push(u32(h, 12 + i * 4));
+              }
+
+              _context2.next = 26;
+              break;
+
+            case 18:
+              if (!(tag === TAG_TTF || tag === TAG_OTTO || tag === TAG_TRUE)) {
+                _context2.next = 22;
+                break;
+              }
+
+              offsets.push(0);
+              _context2.next = 26;
+              break;
+
+            case 22:
+              bad = [];
+              bad.trace = ['size=' + size + ' head=' + head.length + 'B tag=0x' + tag.toString(16) + ' (not a TTF/OTF/TTC)'];
+              bad.zeros = isZero(head.subarray(0, 64));
+              return _context2.abrupt("return", bad);
+
+            case 26:
+              out = [];
+              tables = {};
+              trace = [];
+              trace.push('size=' + size + ' head=' + head.length + 'B tag=0x' + tag.toString(16) + ' faces=' + offsets.length);
+              if (isZero(head.subarray(0, 64))) out.zeros = true;
+              _i2 = 0;
+
+            case 32:
+              if (!(_i2 < offsets.length)) {
+                _context2.next = 72;
+                break;
+              }
+
+              off = offsets[_i2];
+              _context2.next = 36;
+              return get(off, off + 12);
+
+            case 36:
+              hdr = _context2.sent;
+
+              if (!(hdr.length < 12)) {
+                _context2.next = 39;
+                break;
+              }
+
+              return _context2.abrupt("continue", 69);
+
+            case 39:
+              num = u16(hdr, 4);
+              trace.push('face ' + _i2 + ': tables=' + num);
+
+              if (!(!num || num > 200)) {
+                _context2.next = 43;
+                break;
+              }
+
+              return _context2.abrupt("continue", 69);
+
+            case 43:
+              _context2.next = 45;
+              return get(off + 12, off + 12 + num * 16);
+
+            case 45:
+              dir = _context2.sent;
+              rec = null;
+              t = 0;
+
+            case 48:
+              if (!(t < num)) {
+                _context2.next = 56;
+                break;
+              }
+
+              p = t * 16;
+
+              if (!(p + 16 > dir.length)) {
+                _context2.next = 52;
+                break;
+              }
+
+              return _context2.abrupt("break", 56);
+
+            case 52:
+              if (tag4(dir, p) === 'name') rec = {
+                offset: u32(dir, p + 8),
+                length: u32(dir, p + 12)
+              };
+
+            case 53:
+              t++;
+              _context2.next = 48;
+              break;
+
+            case 56:
+              if (!(!rec || rec.offset + 6 > size)) {
+                _context2.next = 59;
+                break;
+              }
+
+              trace.push('face ' + _i2 + ': no name table' + (rec ? ' (offset ' + rec.offset + ' beyond file)' : ''));
+              return _context2.abrupt("continue", 69);
+
+            case 59:
+              // у начертаний из одной коллекции таблица имён часто общая - читаем один раз
+              tkey = rec.offset + ':' + rec.length;
+
+              if (tables[tkey]) {
+                _context2.next = 68;
+                break;
+              }
+
+              _context2.next = 63;
+              return get(rec.offset, rec.offset + Math.min(rec.length, MAX_NAME_TABLE));
+
+            case 63:
+              nt = _context2.sent;
+              tables[tkey] = parseNameTable(nt);
+              if (isZero(nt.subarray(0, Math.min(nt.length, 64)))) out.zeros = true;
+              hex = Array.prototype.slice.call(nt.subarray(0, 12)).map(function (b) {
+                return (b < 16 ? '0' : '') + b.toString(16);
+              }).join(' ');
+              trace.push('name table @' + rec.offset + '+' + rec.length + ' read ' + nt.length + 'B, head: ' + hex + ', names: ' + (tables[tkey] ? tables[tkey].names.length : 0));
+
+            case 68:
+              if (tables[tkey]) out.push(Object.assign({
+                index: _i2
+              }, tables[tkey]));
+
+            case 69:
+              _i2++;
+              _context2.next = 32;
+              break;
+
+            case 72:
+              out.trace = trace;
+              return _context2.abrupt("return", out);
+
+            case 74:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+    return _readNames.apply(this, arguments);
+  }
+
+  var Sfnt = {
+    readNames: readNames,
+    parseNameTable: parseNameTable,
+    weightOf: weightOf
+  };
+
+  /**
+   * Подбор шрифтов из торрента под конкретный ASS-файл.
+   *
+   * 1. Из ASS берутся имена шрифтов (поле Fontname в стилях и теги \fn).
+   * 2. Из списка файлов торрента выбираются файлы шрифтов (ttf/otf/ttc/otc).
+   * 3. У каждого шрифта читается таблица имён (через Range-запросы, без загрузки файла целиком).
+   * 4. Подходящие шрифты отдаются рендерерам по мере нахождения.
+   *
+   * Работа с сетью вынесена в transport:
+   *   transport.listFiles(hash)        -> Promise<[{id, path, length}]>
+   *   transport.url(hash, file)        -> адрес файла
+   *   transport.range(url, start, end) -> Promise<Uint8Array>
+   */
+
+  var FONT_RE = /\.(ttf|otf|ttc|otc)$/i; // в первом проходе читаем только небольшие файлы, большие (например, CJK-коллекции) - только если ещё чего-то не нашли
+
+  var SMALL_SIZE = 3 * 1024 * 1024; // шрифты крупнее этого загружаются рендерером только по мере надобности (lazy)
+
+  var LAZY_SIZE = 3 * 1024 * 1024;
+  var MIN_SIZE = 1024; // последовательно: параллельные чтения разных мест раздачи могут давать пустые данные (особенно пока торрент докачивается)
+
+  var CONCURRENCY = 1;
+  var RETRY_DELAYS = [600, 1800];
+
+  var sleep = function sleep(ms) {
+    return new Promise(function (resolve) {
+      return setTimeout(resolve, ms);
+    });
+  };
+
+  var file_lists = {};
+  var name_index = {};
+
+  function norm(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9\u0400-\u04ff\u3040-\u30ff\u4e00-\u9fff]+/g, '');
+  }
+
+  function cleanName(name) {
+    return String(name || '').replace(/^@/, '').replace(/^["'\s]+|["'\s]+$/g, '');
+  }
+  /**
+   * Имена шрифтов, которые использует ASS
+   * @param {string|object} source - текст ASS или уже разобранный документ
+   * @returns {string[]} имена как в файле (без дублей, без учёта регистра)
+   */
+
+
+  function usedFamilies(source) {
+    var doc = typeof source === 'string' ? Parser$1.parse(source) : source;
+    var seen = {};
+    var out = [];
+
+    var add = function add(name) {
+      name = cleanName(name);
+      var key = name.toLowerCase();
+      if (!name || seen[key]) return;
+      seen[key] = true;
+      out.push(name);
+    };
+
+    var used_styles = {};
+    doc.events.forEach(function (ev) {
+      used_styles[ev.style] = true;
+
+      if (ev.text.indexOf('\\fn') >= 0) {
+        var re = /\\fn([^\\}]+)/g;
+        var m;
+
+        while ((m = re.exec(ev.text)) !== null) {
+          add(m[1]);
+        }
+      }
+    });
+    Object.keys(doc.styles).forEach(function (name) {
+      if (used_styles[name] || name === 'Default' && !doc.events.length) add(doc.styles[name].font);
+    });
+    return out;
+  }
+  /**
+   * Какие из нужных имён подходят этому начертанию
+   */
+
+
+  function matched(needed, entry) {
+    var have = {};
+    entry.names.forEach(function (n) {
+      have[n.toLowerCase()] = true;
+    });
+    if (entry.family && entry.subfamily) have[(entry.family + ' ' + entry.subfamily).toLowerCase()] = true;
+    return needed.filter(function (n) {
+      return have[n.toLowerCase()];
+    });
+  }
+
+  function listFiles$1(transport, hash) {
+    if (!file_lists[hash]) {
+      file_lists[hash] = transport.listFiles(hash).then(function (list) {
+        return (list || []).filter(function (f) {
+          return f && FONT_RE.test(f.path || '') && f.length >= MIN_SIZE;
+        });
+      });
+      file_lists[hash]["catch"](function () {
+        delete file_lists[hash];
+      });
+    }
+
+    return file_lists[hash];
+  }
+
+  function hasNames(entries) {
+    return entries.some(function (e) {
+      return e.names.length > 0;
+    });
+  }
+
+  function readFile(_x, _x2, _x3) {
+    return _readFile.apply(this, arguments);
+  }
+
+  function _readFile() {
+    _readFile = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(transport, hash, file) {
+      var _short2, url, entries, zeros, i, bytes, again;
+
+      return regeneratorRuntime.wrap(function _callee5$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _short2 = file.path.split('/').pop();
+              url = transport.url(hash, file);
+              _context6.next = 4;
+              return Sfnt.readNames(function (s, e) {
+                return transport.range(url, s, e);
+              }, file.length);
+
+            case 4:
+              entries = _context6.sent;
+              zeros = entries.zeros;
+
+              if (!hasNames(entries)) {
+                _context6.next = 8;
+                break;
+              }
+
+              return _context6.abrupt("return", entries);
+
+            case 8:
+              console.log('Subtitles', 'fonts: ' + _short2 + ' - range read gave no names [' + (entries.trace || []).join('; ') + ']'); // пустые данные могут быть временными (торрент ещё докачивается) - повторяем с паузой
+
+              i = 0;
+
+            case 10:
+              if (!(i < RETRY_DELAYS.length)) {
+                _context6.next = 23;
+                break;
+              }
+
+              _context6.next = 13;
+              return sleep(RETRY_DELAYS[i]);
+
+            case 13:
+              _context6.next = 15;
+              return Sfnt.readNames(function (s, e) {
+                return transport.range(url, s, e);
+              }, file.length);
+
+            case 15:
+              entries = _context6.sent;
+
+              if (!hasNames(entries)) {
+                _context6.next = 19;
+                break;
+              }
+
+              console.log('Subtitles', 'fonts: ' + _short2 + ' - names found on retry ' + (i + 1));
+              return _context6.abrupt("return", entries);
+
+            case 19:
+              zeros = zeros || entries.zeros;
+
+            case 20:
+              i++;
+              _context6.next = 10;
+              break;
+
+            case 23:
+              if (!(transport.full && file.length <= SMALL_SIZE)) {
+                _context6.next = 35;
+                break;
+              }
+
+              _context6.next = 26;
+              return transport.full(url);
+
+            case 26:
+              bytes = _context6.sent;
+              _context6.next = 29;
+              return Sfnt.readNames( /*#__PURE__*/function () {
+                var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(s, e) {
+                  return regeneratorRuntime.wrap(function _callee4$(_context5) {
+                    while (1) {
+                      switch (_context5.prev = _context5.next) {
+                        case 0:
+                          return _context5.abrupt("return", bytes.subarray(s, Math.min(e, bytes.length)));
+
+                        case 1:
+                        case "end":
+                          return _context5.stop();
+                      }
+                    }
+                  }, _callee4);
+                }));
+
+                return function (_x6, _x7) {
+                  return _ref4.apply(this, arguments);
+                };
+              }(), bytes.length);
+
+            case 29:
+              again = _context6.sent;
+              console.log('Subtitles', 'fonts: ' + _short2 + ' - full download ' + bytes.length + 'B (expected ' + file.length + '): ' + (hasNames(again) ? 'names found' : 'still no names [' + (again.trace || []).join('; ') + ']'));
+
+              if (!hasNames(again)) {
+                _context6.next = 33;
+                break;
+              }
+
+              return _context6.abrupt("return", again);
+
+            case 33:
+              zeros = zeros || again.zeros;
+              entries = again;
+
+            case 35:
+              if (zeros) {
+                console.log('Subtitles', 'fonts: ' + _short2 + ' - the server returns empty (zero) bytes for this file; the file cannot be used. ' + 'Check it directly: GET ' + url);
+              }
+
+              return _context6.abrupt("return", entries);
+
+            case 37:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee5);
+    }));
+    return _readFile.apply(this, arguments);
+  }
+
+  function fileNames(transport, hash, file) {
+    var key = hash + ':' + file.id;
+
+    if (!name_index[key]) {
+      name_index[key] = readFile(transport, hash, file);
+      name_index[key]["catch"](function () {
+        delete name_index[key];
+      });
+    }
+
+    return name_index[key];
+  }
+  /**
+   * Приоритет файла: сначала те, чьё имя похоже на нужный шрифт, затем по размеру
+   */
+
+
+  function sortFiles(files, needed) {
+    var keys = needed.map(norm).filter(Boolean);
+
+    var hint = function hint(f) {
+      var stem = norm((f.path.split('/').pop() || '').replace(/\.[^.]+$/, ''));
+      if (!stem) return 0;
+      return keys.some(function (k) {
+        return k.indexOf(stem) >= 0 || stem.indexOf(k) >= 0;
+      }) ? 1 : 0;
+    };
+
+    return files.slice().sort(function (a, b) {
+      return hint(b) - hint(a) || a.length - b.length;
+    });
+  }
+  /**
+   * Запустить подбор шрифтов
+   * @param {{hash:string, text:string, transport:object}} opts
+   * @returns {{fonts:Array, on:function, done:Promise, cancel:function}}
+   */
+
+
+  function createSession(opts) {
+    var listeners = [];
+    var fonts = [];
+    var cancelled = false;
+    var finish;
+    var done = new Promise(function (resolve) {
+      finish = resolve;
+    });
+    var needed = [];
+    var session = {
+      fonts: fonts,
+      needed: needed,
+      done: done,
+
+      /**
+       * Подписка: колбэк вызывается для уже найденных шрифтов и для всех следующих
+       */
+      on: function on(cb) {
+        listeners.push(cb);
+        fonts.slice().forEach(function (f) {
+          return cb(f);
+        });
+      },
+      cancel: function cancel() {
+        cancelled = true;
+        listeners.length = 0;
+        finish();
+      }
+    };
+
+    var emit = function emit(font) {
+      fonts.push(font);
+      listeners.slice().forEach(function (cb) {
+        return cb(font);
+      });
+    };
+
+    var scan = /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(files, unresolved) {
+        var queue, worker, workers, i;
+        return regeneratorRuntime.wrap(function _callee2$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                queue = files.slice();
+
+                worker = /*#__PURE__*/function () {
+                  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                    var _loop, _ret;
+
+                    return regeneratorRuntime.wrap(function _callee$(_context2) {
+                      while (1) {
+                        switch (_context2.prev = _context2.next) {
+                          case 0:
+                            _loop = /*#__PURE__*/regeneratorRuntime.mark(function _loop() {
+                              var file, entries, _short;
+
+                              return regeneratorRuntime.wrap(function _loop$(_context) {
+                                while (1) {
+                                  switch (_context.prev = _context.next) {
+                                    case 0:
+                                      file = queue.shift();
+                                      entries = void 0;
+                                      _short = file.path.split('/').pop();
+                                      _context.prev = 3;
+                                      _context.next = 6;
+                                      return fileNames(opts.transport, opts.hash, file);
+
+                                    case 6:
+                                      entries = _context.sent;
+                                      _context.next = 13;
+                                      break;
+
+                                    case 9:
+                                      _context.prev = 9;
+                                      _context.t0 = _context["catch"](3);
+                                      console.log('Subtitles', 'fonts: cannot read ' + _short + ': ' + (_context.t0 && _context.t0.message ? _context.t0.message : _context.t0));
+                                      return _context.abrupt("return", "continue");
+
+                                    case 13:
+                                      if (!cancelled) {
+                                        _context.next = 15;
+                                        break;
+                                      }
+
+                                      return _context.abrupt("return", {
+                                        v: void 0
+                                      });
+
+                                    case 15:
+                                      if (!entries.length) console.log('Subtitles', 'fonts: ' + _short + ' - no font names found');
+                                      entries.forEach(function (entry) {
+                                        var as = matched(needed, entry);
+
+                                        if (!as.length) {
+                                          console.log('Subtitles', 'fonts: ' + _short + ' - not needed (' + entry.names.slice(0, 4).join(' | ') + ', ' + entry.subfamily + ')');
+                                          return;
+                                        }
+
+                                        as.forEach(function (n) {
+                                          delete unresolved[n.toLowerCase()];
+                                        });
+                                        emit({
+                                          url: opts.transport.url(opts.hash, file),
+                                          path: file.path,
+                                          size: file.length,
+                                          ttc: /\.(ttc|otc)$/i.test(file.path),
+                                          lazy: file.length > LAZY_SIZE,
+                                          as: as,
+                                          family: entry.family,
+                                          subfamily: entry.subfamily,
+                                          weight: entry.weight,
+                                          italic: entry.italic
+                                        });
+                                      });
+
+                                    case 17:
+                                    case "end":
+                                      return _context.stop();
+                                  }
+                                }
+                              }, _loop, null, [[3, 9]]);
+                            });
+
+                          case 1:
+                            if (!(queue.length && !cancelled)) {
+                              _context2.next = 10;
+                              break;
+                            }
+
+                            return _context2.delegateYield(_loop(), "t0", 3);
+
+                          case 3:
+                            _ret = _context2.t0;
+
+                            if (!(_ret === "continue")) {
+                              _context2.next = 6;
+                              break;
+                            }
+
+                            return _context2.abrupt("continue", 1);
+
+                          case 6:
+                            if (!(_typeof(_ret) === "object")) {
+                              _context2.next = 8;
+                              break;
+                            }
+
+                            return _context2.abrupt("return", _ret.v);
+
+                          case 8:
+                            _context2.next = 1;
+                            break;
+
+                          case 10:
+                          case "end":
+                            return _context2.stop();
+                        }
+                      }
+                    }, _callee);
+                  }));
+
+                  return function worker() {
+                    return _ref2.apply(this, arguments);
+                  };
+                }();
+
+                workers = [];
+
+                for (i = 0; i < CONCURRENCY; i++) {
+                  workers.push(worker());
+                }
+
+                _context3.next = 6;
+                return Promise.all(workers);
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      return function scan(_x4, _x5) {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    var run = /*#__PURE__*/function () {
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        var unresolved, all, sorted, small, big;
+        return regeneratorRuntime.wrap(function _callee3$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                unresolved = {};
+                _context4.prev = 1;
+                needed.push.apply(needed, usedFamilies(opts.text));
+
+                if (needed.length) {
+                  _context4.next = 5;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 5:
+                _context4.next = 7;
+                return listFiles$1(opts.transport, opts.hash);
+
+              case 7:
+                all = _context4.sent;
+                console.log('Subtitles', 'fonts: ' + all.length + ' font file(s) in torrent, looking for: ' + needed.join(', '));
+
+                if (!(cancelled || !all.length)) {
+                  _context4.next = 11;
+                  break;
+                }
+
+                return _context4.abrupt("return");
+
+              case 11:
+                needed.forEach(function (n) {
+                  unresolved[n.toLowerCase()] = true;
+                });
+                sorted = sortFiles(all, needed);
+                small = sorted.filter(function (f) {
+                  return f.length <= SMALL_SIZE;
+                });
+                big = sorted.filter(function (f) {
+                  return f.length > SMALL_SIZE;
+                });
+                _context4.next = 17;
+                return scan(small, unresolved);
+
+              case 17:
+                if (!(!cancelled && big.length && Object.keys(unresolved).length)) {
+                  _context4.next = 20;
+                  break;
+                }
+
+                _context4.next = 20;
+                return scan(big, unresolved);
+
+              case 20:
+                _context4.next = 25;
+                break;
+
+              case 22:
+                _context4.prev = 22;
+                _context4.t0 = _context4["catch"](1);
+                console.log('Subtitles', 'fonts error', _context4.t0 && _context4.t0.message ? _context4.t0.message : _context4.t0);
+
+              case 25:
+                if (needed.length && !cancelled) {
+                  console.log('Subtitles', 'fonts: found ' + fonts.length + ' file(s), not found: ' + (Object.keys(unresolved).join(', ') || '-'));
+                }
+
+                finish();
+
+              case 27:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee3, null, [[1, 22]]);
+      }));
+
+      return function run() {
+        return _ref3.apply(this, arguments);
+      };
+    }();
+
+    run();
+    return session;
+  }
+
+  var Fonts = {
+    createSession: createSession,
+    usedFamilies: usedFamilies,
+    matched: matched
+  };
+
+  /**
+   * Читаемость основных реплик ASS.
+   *
+   * ASS-файл задаёт оформление сам (у диалогов обычно белый текст с тонким контуром), поэтому настройки субтитров Lampa
+   * («Размер», «Окантовка», «Подложка») к нему не применяются и на светлом кадре текст плохо виден.
+   * Здесь они переносятся на ОСНОВНЫЕ РЕПЛИКИ: переписываются строки стилей в тексте ASS, так что результат
+   * одинаково работает и в простом рендерере, и в libass (JASSUB). Надписи, песни (караоке), реплики с \pos/\move
+   * и стили из середины экрана не меняются - они остаются как задумал автор.
+   *
+   * Основная реплика: стиль, у которого не менее 80% событий не позиционированы, без караоке и с выравниванием
+   * в верхней или нижней трети кадра.
+   */
+
+  var BAND = [1, 2, 3, 7, 8, 9];
+  var SIZES = {
+    small: 0.8,
+    normal: 1,
+    large: 1.2
+  };
+  var STROKE_MIN = 0.0035; // минимальная толщина контура, доля высоты кадра (около 3,8 px при 1080p)
+
+  var BACKDROP_PAD = 0.2; // отступ подложки от текста, доля размера шрифта
+
+  var BACKDROP_COLOR = '&H73000000'; // чёрный, непрозрачность 55% как у подложки Lampa
+
+  function round(v) {
+    return Math.round(v * 100) / 100;
+  }
+  /**
+   * Имена стилей основных реплик
+   * @param {object} doc - результат Parser.parse
+   * @returns {string[]}
+   */
+
+
+  function dialogueStyles(doc) {
+    var stat = {};
+    doc.events.forEach(function (ev) {
+      var model = Parser$1.getModel(ev, doc);
+      if (!model.hasText) return;
+      var st = stat[ev.style] || (stat[ev.style] = {
+        total: 0,
+        plain: 0
+      });
+      st.total++;
+      var karaoke = model.segments.some(function (s) {
+        return s.p.kt;
+      });
+      var band = BAND.indexOf(model.an) >= 0;
+      if (!model.pos && !model.move && !karaoke && band) st.plain++;
+    });
+    return Object.keys(stat).filter(function (name) {
+      return stat[name].total > 0 && stat[name].plain / stat[name].total >= 0.8;
+    });
+  }
+
+  function fields(line) {
+    return line.slice(line.indexOf(':') + 1).trim().split(',');
+  }
+  /**
+   * Применить настройки читаемости к тексту ASS
+   * @param {string} text - исходный ASS
+   * @param {{stroke:boolean, backdrop:boolean, size:string}} opts - настройки субтитров Lampa
+   * @returns {string} - изменённый ASS (или исходный, если менять нечего)
+   */
+
+
+  function transform(text, opts) {
+    opts = opts || {};
+    var factor = SIZES[opts.size] || 1;
+    if (!opts.stroke && !opts.backdrop && factor === 1) return text;
+    var doc = Parser$1.parse(text);
+    var names = dialogueStyles(doc);
+    if (!names.length) return text;
+    var wanted = {};
+    names.forEach(function (n) {
+      wanted[n] = true;
+    });
+    var resY = doc.info.playResY;
+    var eol = text.indexOf('\r\n') >= 0 ? '\r\n' : '\n';
+    var lines = text.replace(/^\uFEFF/, '').split(/\r\n|\n|\r/);
+    var inside = false;
+    var format = null;
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      var sec = /^\[(.+)\]$/.exec(line);
+
+      if (sec) {
+        inside = /^v4\+? styles$|^v4\+\+ styles$/i.test(sec[1].trim());
+        format = null;
+        continue;
+      }
+
+      if (!inside) continue;
+
+      if (/^format:/i.test(line)) {
+        format = fields(line).map(function (f) {
+          return f.trim().toLowerCase();
+        });
+        continue;
+      }
+
+      if (!/^style:/i.test(line) || !format) continue;
+      var vals = fields(line);
+
+      var at = function at(name) {
+        return format.indexOf(name);
+      };
+
+      var name = (vals[at('name')] || '').trim();
+      if (!wanted[name]) continue;
+      var size_i = at('fontsize');
+      var outline_i = at('outline');
+      var shadow_i = at('shadow');
+      var border_i = at('borderstyle');
+      var ocolor_i = at('outlinecolour') >= 0 ? at('outlinecolour') : at('tertiarycolour');
+      var scaley_i = at('scaley');
+      var size = size_i >= 0 ? parseFloat(vals[size_i]) : 20;
+      var scaleY = scaley_i >= 0 ? (parseFloat(vals[scaley_i]) || 100) / 100 : 1;
+      var outline = outline_i >= 0 ? parseFloat(vals[outline_i]) || 0 : 0;
+      if (factor !== 1 && size_i >= 0 && !isNaN(size)) vals[size_i] = String(round(size * factor));
+      var eff = (isNaN(size) ? 20 : size) * factor * scaleY;
+
+      if (opts.backdrop) {
+        // подложка: BorderStyle 3 рисует непрозрачный прямоугольник цвета OutlineColour
+        if (border_i >= 0) vals[border_i] = '3';
+        if (ocolor_i >= 0) vals[ocolor_i] = BACKDROP_COLOR;
+        if (outline_i >= 0) vals[outline_i] = String(round(Math.max(outline, eff * BACKDROP_PAD)));
+        if (shadow_i >= 0) vals[shadow_i] = '0';
+      } else if (opts.stroke && outline_i >= 0) {
+        vals[outline_i] = String(round(Math.max(outline, resY * STROKE_MIN)));
+      }
+
+      var prefix = lines[i].slice(0, lines[i].indexOf(':') + 1);
+      lines[i] = prefix + ' ' + vals.join(',');
+    }
+
+    return lines.join(eol);
+  }
+
+  var Readable = {
+    transform: transform,
+    dialogueStyles: dialogueStyles
+  };
+
+  /**
+   * Доступ к файлам шрифтов торрента через TorrServer: список файлов, адрес и чтение диапазонов
+   */
+
+  function base$1() {
+    return String(Torserver.url() || '').replace(/\/+$/, '');
+  }
+
+  function listFiles(hash) {
+    return fetch(base$1() + '/torrents', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'get',
+        hash: hash
+      })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('torrents ' + r.status);
+      return r.json();
+    }).then(function (json) {
+      return (json.file_stats || []).map(function (f) {
+        return {
+          id: f.id,
+          path: f.path,
+          length: f.length
+        };
+      });
+    });
+  }
+  /**
+   * Адрес файла как обычного потока (без gst-обработки)
+   */
+
+
+  function url$1(hash, file) {
+    var name = String(file.path || '').split('/').pop();
+    return base$1() + '/stream/' + encodeURIComponent(name) + '?link=' + hash + '&index=' + file.id + '&play';
+  }
+
+  function range(link, start, end) {
+    if (end <= start) return Promise.resolve(new Uint8Array(0)); // cache: no-store - чтобы не получить из кэша браузера ответ, полученный в момент, когда сервер ещё не отдавал данные
+
+    return fetch(link, {
+      cache: 'no-store',
+      headers: {
+        Range: 'bytes=' + start + '-' + (end - 1)
+      }
+    }).then(function (r) {
+      if (!r.ok) throw new Error('range ' + r.status);
+      return r.arrayBuffer().then(function (buf) {
+        var bytes = new Uint8Array(buf); // сервер проигнорировал Range и вернул файл целиком
+
+        if (r.status === 200 && (start > 0 || bytes.length > end - start)) return bytes.subarray(start, end);
+        return bytes;
+      });
+    });
+  }
+  /**
+   * Файл целиком (запасной путь, если чтение по диапазонам дало неполные данные)
+   */
+
+
+  function full$2(link) {
+    return fetch(link, {
+      cache: 'no-store'
+    }).then(function (r) {
+      if (!r.ok) throw new Error('full ' + r.status);
+      return r.arrayBuffer();
+    }).then(function (buf) {
+      return new Uint8Array(buf);
+    });
+  }
+
+  var TorFonts = {
+    listFiles: listFiles,
+    url: url$1,
+    range: range,
+    full: full$2
+  };
+
+  /**
+   * Менеджер ASS-субтитров: выбирает рендерер, загружает файл и привязывает слой к видео.
+   *
+   * Режимы (Storage 'subtitles_ass_mode'):
+   *   auto   - лучший доступный рендерер для устройства (libass на компьютерах, простой на ТВ и слабых устройствах)
+   *   full   - полноценный рендерер (libass, JASSUB); если не загрузился - простой
+   *   simple - простой DOM-рендерер
+   *   text   - без оформления: обычные субтитры (как раньше)
+   */
+
+  console.log('Subtitles', 'ASS-PATCH-V15 loaded');
+  var renderers = {
+    full: Jassub,
+    simple: {
+      create: function create(host) {
+        return new SimpleAss(host);
+      },
+      supported: function supported() {
+        return true;
+      }
+    }
+  };
+  var current = null;
+  var network$5 = null;
+  var show_token = 0;
+  var fonts_session = null;
+  /**
+   * Значение переключателя из настроек Lampa (хранится как 'true'/'false', может быть и булевым)
+   * @param {string} name
+   * @param {boolean} def - значение, если настройка ещё не сохранялась
+   */
+
+  function flag(name, def) {
+    var v = Storage.get(name, '');
+    if (v === undefined || v === null || v === '') return def;
+    return !(v === false || v === 0 || v === '0' || ['false', 'no', 'off'].indexOf(String(v).toLowerCase()) >= 0);
+  }
+
+  function mode() {
+    var m = Storage.get('subtitles_ass_mode', 'auto');
+    return ['auto', 'full', 'simple', 'text'].indexOf(m) >= 0 ? m : 'auto';
+  }
+  /**
+   * Включено ли оформление ASS (режим не text)
+   */
+
+
+  function enabled$1() {
+    return mode() !== 'text';
+  }
+  /**
+   * Подключить другой рендерер (например, JASSUB)
+   * @param {string} name - 'full'
+   * @param {{create:function, supported:function}} renderer
+   */
+
+
+  function register$1(name, renderer) {
+    renderers[name] = renderer;
+  }
+  /**
+   * Какой рендерер использовать с учётом режима и возможностей устройства
+   */
+
+
+  function pick() {
+    var m = mode();
+    if (m === 'text') return null;
+    if ((m === 'auto' || m === 'full') && renderers.full && renderers.full.supported(m === 'full')) return renderers.full;
+    return renderers.simple;
+  }
+
+  function element(parent) {
+    return parent && parent.jquery ? parent[0] : parent;
+  }
+  /**
+   * Показать ASS-субтитры
+   * @param {string} url - адрес файла (оригинальный ASS)
+   * @param {HTMLVideoElement} video
+   * @param {object|HTMLElement} parent - контейнер плеера
+   * @param {{hash:string}} [ctx] - торрент, из которого берутся шрифты
+   */
+
+
+  function show$5(url, video, parent, ctx) {
+    hide$1();
+    ctx = ctx || {};
+    if (!video || !pick()) return;
+    var token = ++show_token;
+
+    var makeHost = function makeHost() {
+      return {
+        parent: element(parent),
+        video: video,
+        time: function time() {
+          var shift = parseInt(Storage.get('player_subs_shift_time', '0'));
+          return video.currentTime - (isNaN(shift) ? 0 : shift);
+        },
+        rect: function rect() {
+          var box = video.getBoundingClientRect();
+          var vw = video.videoWidth;
+          var vh = video.videoHeight;
+          if (!vw || !vh || !box.width || !box.height) return box; // картинка вписана в элемент video с сохранением пропорций (object-fit: contain)
+
+          var k = Math.min(box.width / vw, box.height / vh);
+          var w = vw * k;
+          var h = vh * k;
+          return {
+            left: box.left + (box.width - w) / 2,
+            top: box.top + (box.height - h) / 2,
+            width: w,
+            height: h
+          };
+        },
+        videoHeight: function videoHeight() {
+          return video.videoHeight || 0;
+        }
+      };
+    };
+
+    var run = function run(renderer, text) {
+      var host = makeHost();
+      var failed = false;
+      host.fonts = fonts_session; // если полноценный рендерер не заработал (нет файлов, ошибка воркера) - переключаемся на простой
+
+      host.onFail = function () {
+        if (failed || token !== show_token || renderer === renderers.simple) return;
+        failed = true;
+
+        if (current) {
+          current.destroy();
+          current = null;
+        }
+
+        run(renderers.simple, text);
+      };
+
+      current = renderer.create(host);
+      current.load(text);
+    };
+
+    network$5 = new Request();
+    network$5.timeout(30000);
+    network$5.silent(url, function (text) {
+      if (token !== show_token) return;
+      var renderer = pick();
+      if (!renderer) return;
+      text = String(text); // настройки субтитров Lampa (размер, окантовка, подложка) для основных реплик
+
+      var readable = flag('subtitles_ass_readable', true);
+
+      if (readable) {
+        var source = text;
+        text = Readable.transform(text, {
+          stroke: Storage.field('subtitles_stroke'),
+          backdrop: Storage.field('subtitles_backdrop'),
+          size: Storage.field('subtitles_size')
+        });
+        console.log('Subtitles', 'ASS: readability on (stroke ' + Storage.field('subtitles_stroke') + ', backdrop ' + Storage.field('subtitles_backdrop') + ', size ' + Storage.field('subtitles_size') + ') - ' + (text !== source ? 'dialogue styles changed' : 'nothing to change'));
+      } else {
+        console.log('Subtitles', 'ASS: readability off (setting=' + Storage.get('subtitles_ass_readable', '') + ') - styles are used as authored, including the author outline');
+      } // шрифты из торрента: ищем в фоне, рендерер подхватывает их по мере нахождения
+
+
+      var fonts_on = flag('subtitles_ass_fonts', true);
+
+      if (ctx.hash && fonts_on) {
+        fonts_session = Fonts.createSession({
+          hash: ctx.hash,
+          text: text,
+          transport: TorFonts
+        });
+      }
+
+      console.log('Subtitles', 'ASS: renderer ' + (renderer === renderers.simple ? 'simple' : 'libass') + ', fonts ' + (fonts_session ? 'search started' : ctx.hash ? 'disabled in settings' : 'skipped (no torrent hash)'));
+      run(renderer, text);
+    }, function () {
+      console.log('Subtitles', 'ASS load error', url);
+    }, false, {
+      dataType: 'text'
+    });
+  }
+  /**
+   * Скрыть и уничтожить ASS-слой
+   */
+
+
+  function hide$1() {
+    show_token++;
+
+    if (fonts_session) {
+      fonts_session.cancel();
+      fonts_session = null;
+    }
+
+    if (network$5) {
+      network$5.clear();
+      network$5 = null;
+    }
+
+    if (current) {
+      current.destroy();
+      current = null;
+    }
+  }
+
+  var AssSubtitles = {
+    mode: mode,
+    enabled: enabled$1,
+    register: register$1,
+    show: show$5,
+    hide: hide$1
+  };
+
   var custom_subtitles;
+  var torserver_subs;
+  var torserver_token = 0;
+  var active_sub;
+  var current_hash = '';
+  var memo = null;
+  var pending_memo = null;
+  var MEMO_TTL = 60000;
 
   function init$I() {
     Player.listener.follow('ready', bind$2);
-    Player.listener.follow('destroy', destroy$6);
+    Player.listener.follow('destroy', destroy$6); // переключение серии: запоминаем выбранные субтитры, чтобы выбрать такие же в следующей серии
+
+    PlayerPlaylist.listener.follow('select', rememberSelection);
     PlayerVideo.listener.follow('timeupdate', function (e) {
       if (custom_subtitles) custom_subtitles.update(e.current);
     }); // Video.listener.follow('destroy', function(e) {
@@ -30862,19 +34674,171 @@
       Cue.draw(e.text.trim());
     });
     applySettings();
+    current_hash = data.torrent_hash || ''; // выбор из предыдущей серии того же торрента (только при переключении серии, не при ручном запуске)
+
+    pending_memo = memo && memo.hash && memo.hash === current_hash && Date.now() - memo.at < MEMO_TTL ? memo : null;
+    memo = null;
     if (data.subtitles) custom(data.subtitles);
+    loadTorserverSubs(data);
+  }
+  /**
+   * Субтитры торрента от TorrServer (/subs): замена списка, собранного по именам файлов
+   * @param {object} data - данные плеера
+   */
+
+  /**
+   * Включён ли механизм субтитров через TorrServer (настройка «Источник субтитров торрента»).
+   * Режим legacy - прежнее поведение Lampa: список по именам файлов, без запросов к /subs и без оформления ASS.
+   */
+
+
+  var old_server_notified = false;
+  /**
+   * Один раз за сеанс подсказать, что для субтитров через TorrServer нужна версия MatriX.147 или новее
+   */
+
+  function notifyOldServer() {
+    if (old_server_notified) return;
+    old_server_notified = true;
+    Noty.show(Lang.translate('settings_player_subs_torserver_version'));
+  }
+
+  function useTorserver() {
+    return Storage.get('subtitles_source', 'torserver') !== 'legacy';
+  }
+
+  function loadTorserverSubs(data) {
+    stopTorserverSubs();
+    if (!useTorserver() || !TorserverSubs.available(data)) return;
+    var token = ++torserver_token;
+    torserver_subs = TorserverSubs.load(data, function (list) {
+      if (token !== torserver_token || !list.length) return;
+      custom(list, true);
+    }, function () {
+      if (token === torserver_token) notifyOldServer();
+    });
+  }
+
+  function stopTorserverSubs() {
+    torserver_token++;
+
+    if (torserver_subs) {
+      torserver_subs.destroy();
+      torserver_subs = null;
+    }
+  }
+
+  function normLabel(label) {
+    return String(label || '').toLowerCase().replace(/\.(ass|ssa|srt|vtt|sub)\b/g, '').replace(/\s*·\s*ass\b/g, '').replace(/\d+/g, '#').replace(/\s+/g, ' ').trim();
+  }
+  /**
+   * Запомнить выбранные субтитры (вызывается при переключении серии, пока выбор ещё не сброшен)
+   */
+
+
+  function rememberSelection() {
+    memo = active_sub ? {
+      hash: current_hash,
+      label: normLabel(active_sub.label),
+      lang: active_sub.lang || '',
+      ass: Boolean(active_sub.ass),
+      index: active_sub.index,
+      at: Date.now()
+    } : null;
+  }
+  /**
+   * Найти в новом списке дорожку, похожую на ту, что была выбрана в предыдущей серии
+   */
+
+
+  function matchSub(subs, m) {
+    var best = null;
+    var score = 0;
+    subs.forEach(function (sub) {
+      var s = 0;
+      if (normLabel(sub.label) === m.label) s += 10;
+      if (m.lang && sub.lang === m.lang) s += 4;
+      if (Boolean(sub.ass) === m.ass) s += 2;
+      if (sub.index === m.index) s += 1;
+
+      if (s > score) {
+        best = sub;
+        score = s;
+      }
+    });
+    return score >= 6 ? best : null;
+  }
+  /**
+   * Остановить ASS-слой
+   */
+
+
+  function stopAss() {
+    active_sub = null;
+    AssSubtitles.hide();
+  }
+  /**
+   * Показать выбранные субтитры: ASS - отдельным слоем с оформлением, остальное - как раньше
+   * @param {object} sub
+   */
+
+
+  function showSub(sub) {
+    if (active_sub === sub) return;
+    stopAss();
+    active_sub = sub;
+
+    if (sub.ass && AssSubtitles.enabled()) {
+      if (custom_subtitles) custom_subtitles.reset();
+      Cue.draw('');
+      AssSubtitles.show(sub.url, PlayerVideo.video(), PlayerVideo.render(), {
+        hash: sub.hash || current_hash
+      });
+    } else if (custom_subtitles) {
+      custom_subtitles.load(sub.ass && sub.vtt ? sub.vtt : sub.url);
+    }
+  }
+  /**
+   * Автовыбор субтитров, если список пришёл уже после начала воспроизведения
+   */
+
+
+  function pickSubtitle(subs) {
+    if (pending_memo) {
+      var found = matchSub(subs, pending_memo);
+      pending_memo = null;
+
+      if (found) {
+        found.mode = 'showing';
+        found.selected = true;
+        Cue.render().removeClass('hide');
+        return;
+      }
+    }
+
+    if (!Storage.field('subtitles_start')) return;
+    var code = Storage.field('subtitles_lang');
+    var pick = preferredSubtitle(subs, code == 'auto' ? Storage.get('language', 'ru') : code);
+
+    if (pick) {
+      pick.mode = 'showing';
+      pick.selected = true;
+      Cue.render().removeClass('hide');
+    }
   }
   /**
    * Установить собственные субтитры
    * @param {[{index:integer, label:string, url:string}]} list 
+   * @param {boolean} [autoselect] - выбрать дорожку по настройкам (если список пришёл позже старта)
    */
 
 
-  function custom(list) {
+  function custom(list, autoselect) {
     if (!Arrays.isArray(list)) return console.log('Player', 'custom subtitles not array', list);
     var video = PlayerVideo.video();
     if (!video) return console.log('Player', 'custom subtitles skipped, not inner player');
     if (custom_subtitles) custom_subtitles.destroy();
+    stopAss();
     video.customSubs = Arrays.clone(list);
     console.log('Player', 'custom subtitles', list);
     custom_subtitles = new CustomSubtitles();
@@ -30884,26 +34848,29 @@
     var index = -1;
     video.customSubs.forEach(function (sub) {
       index++;
-      if (typeof sub.index == 'undefined') sub.index = index;
+      if (typeof sub.index == 'undefined') sub.index = index; // субтитры из списка по именам файлов тоже могут быть ASS - определяем по расширению
+
+      if (typeof sub.ass == 'undefined') sub.ass = useTorserver() && /\.(ass|ssa)(\?|#|$)/i.test(String(sub.url || ''));
 
       if (!sub.ready) {
         sub.ready = true;
         Object.defineProperty(sub, "mode", {
           set: function set(v) {
-            if (v == 'showing') {
-              custom_subtitles.load(sub.url);
-            }
+            if (v == 'showing') showSub(sub);else if (v == 'disabled' && active_sub === sub) stopAss();
           },
           get: function get() {}
         });
       }
     });
+    if (autoselect && video.customSubs.length) pickSubtitle(video.customSubs);
     video.customSubs.length > 0 && PlayerVideo.listener.send('subs', {
       subs: video.customSubs
     });
   }
 
   function destroy$6() {
+    stopTorserverSubs();
+    stopAss();
     Cue.draw('');
 
     if (custom_subtitles) {
@@ -35930,7 +39897,7 @@
     TMDB.menu(params, oncomplite);
   }
 
-  function seasons$1(tv, from, oncomplite) {
+  function seasons$2(tv, from, oncomplite) {
     TMDB.seasons(tv, from, oncomplite);
   }
 
@@ -35946,7 +39913,7 @@
     category: category$1,
     clear: clear$6,
     person: person$1,
-    seasons: seasons$1,
+    seasons: seasons$2,
     menuCategory: menuCategory$1,
     discovery: discovery$1,
     reactionsGet: reactionsGet,
@@ -36157,7 +40124,7 @@
    */
 
 
-  function seasons(tv, from, oncomplite) {
+  function seasons$1(tv, from, oncomplite) {
     source(tv).seasons(tv, from, oncomplite);
   }
   /**
@@ -36437,7 +40404,7 @@
     company: company,
     person: person,
     favorite: favorite,
-    seasons: seasons,
+    seasons: seasons$1,
     screensavers: TMDB.screensavers,
     relise: relise,
     menu: menu,
@@ -46903,9 +50870,360 @@
   }
 
   /**
-   * «История» при синхронизации с CUB — история просмотров с сервера, каждый просмотр отдельной карточкой с датой
-   * (открывается через Favorite.historyActivity). Если сервер её не отдаёт (старый сервер, нет сети) — показываем
-   * прежнюю историю из закладок, как экран favorite
+   * Расчёты для списка «История» (просмотры CUB, одна строка на карточку): число серий в сезонах, прогресс,
+   * сезоны «досмотрены / сейчас / впереди», следующая серия и просмотры по дням. Без DOM и переводов — только данные
+   */
+  var SESSION = 1000 * 60 * 60 * 3; // серии подряд в пределах 3 часов — одна строка в «Истории по дням»
+
+  /**
+   * Серий в сезонах (без спецвыпусков, сезон 0)
+   * @param {object} [detail] - карточка из idsview: seasons {"1": 13, "2": 22}; или TMDB tv/{id}: seasons [{season_number, episode_count}]
+   * @param {array} [timetable] - серии из TimeTable.get(): [{season_number, episode_number}] — точнее для текущего сезона
+   * @returns {object} - {1: 13, 2: 22, ...}
+   */
+
+  function seasons(detail, timetable) {
+    var result = {};
+    var list = detail && detail.seasons || [];
+    if (!Array.isArray(list)) list = Object.keys(list).map(function (number) {
+      return {
+        season_number: number,
+        episode_count: list[number]
+      };
+    });
+    list.forEach(function (s) {
+      var number = parseInt(s.season_number);
+      var count = parseInt(s.episode_count);
+      if (number > 0 && count > 0) result[number] = count;
+    });
+    var table = {};
+    (timetable || []).forEach(function (e) {
+      var number = parseInt(e.season_number);
+      var episode = parseInt(e.episode_number);
+      if (number > 0 && episode > 0) table[number] = Math.max(table[number] || 0, episode);
+    });
+
+    for (var number in table) {
+      result[number] = table[number];
+    }
+
+    return result;
+  }
+  /**
+   * Прогресс сериала
+   * @param {object} history - card.watch_history: {episodes: [{season, episode}], last: {season, episode}}
+   * @param {object} counts - seasons(): серий в сезонах, может быть пустым (тогда total из number_of_episodes)
+   * @param {object} [card] - карточка: number_of_episodes / number_of_seasons, если сезоны неизвестны
+   * @returns {{watched:number, total:number, seasons:number, percent:number, current:number|null, groups:array, next:object|null, finished:boolean}}
+   */
+
+
+  function progress(history, counts) {
+    var card = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var by_season = {};
+    var watched = 0;
+    (history.episodes || []).forEach(function (e) {
+      var season = parseInt(e.season);
+      var episode = parseInt(e.episode);
+      if (!(season > 0) || !(episode > 0)) return;
+      by_season[season] = by_season[season] || {};
+
+      if (!by_season[season][episode]) {
+        by_season[season][episode] = true;
+        watched++;
+      }
+    });
+    var known = Object.keys(counts || {}).map(function (n) {
+      return parseInt(n);
+    }).sort(function (a, b) {
+      return a - b;
+    });
+    var total = known.length ? known.reduce(function (sum, n) {
+      return sum + counts[n];
+    }, 0) : parseInt(card.number_of_episodes) || 0;
+    var last = history.last && history.last.season > 0 ? history.last : null;
+    var current = last ? parseInt(last.season) : Object.keys(by_season).length ? Math.max.apply(null, Object.keys(by_season).map(function (n) {
+      return parseInt(n);
+    })) : null;
+
+    var count = function count(n) {
+      return Object.keys(by_season[n] || {}).length;
+    };
+
+    var groups = [];
+
+    if (known.length && current) {
+      var before = known.filter(function (n) {
+        return n < current;
+      });
+      var after = known.filter(function (n) {
+        return n > current;
+      });
+
+      if (before.length) {
+        var seen = before.reduce(function (sum, n) {
+          return sum + Math.min(count(n), counts[n]);
+        }, 0);
+        var all = before.reduce(function (sum, n) {
+          return sum + counts[n];
+        }, 0);
+        groups.push({
+          type: 'done',
+          from: before[0],
+          to: before[before.length - 1],
+          watched: seen,
+          total: all,
+          complete: seen >= all
+        });
+      }
+
+      groups.push({
+        type: 'now',
+        from: current,
+        to: current,
+        watched: count(current),
+        total: counts[current] || 0,
+        complete: counts[current] ? count(current) >= counts[current] : false
+      });
+
+      if (after.length) {
+        groups.push({
+          type: 'ahead',
+          from: after[0],
+          to: after[after.length - 1],
+          watched: after.reduce(function (sum, n) {
+            return sum + count(n);
+          }, 0),
+          total: after.reduce(function (sum, n) {
+            return sum + counts[n];
+          }, 0)
+        });
+      }
+    }
+
+    var following = next(last, counts);
+    return {
+      watched: watched,
+      total: total,
+      seasons: known.length || parseInt(card.number_of_seasons) || 0,
+      percent: total ? Math.min(100, Math.round(watched / total * 100)) : 0,
+      current: current,
+      groups: groups,
+      next: following,
+      finished: Boolean(last) && !following
+    };
+  }
+  /**
+   * Серии без отметки в истории, но с тайм-кодом больше 1% — тоже просмотрены (смотрели до истории CUB, на другом устройстве, без досмотра)
+   * @param {object} counts - серий в сезонах: проверяются все серии всех известных сезонов
+   * @param {array} episodes - серии из истории [{season, episode}] — их не проверяем
+   * @param {function} read - (season, episode) => тайм-код {percent, updated}
+   * @returns {[{season:number, episode:number, watched_at:number, timeline:true}]} - watched_at = updated тайм-кода, 0 — даты нет
+   */
+
+
+  function fromTimeline(counts, episodes, read) {
+    var seen = {};
+    var result = [];
+    (episodes || []).forEach(function (e) {
+      return seen[e.season + ':' + e.episode] = true;
+    });
+    Object.keys(counts || {}).map(function (n) {
+      return parseInt(n);
+    }).sort(function (a, b) {
+      return a - b;
+    }).forEach(function (season) {
+      for (var episode = 1; episode <= counts[season]; episode++) {
+        if (seen[season + ':' + episode]) continue;
+        var road = read(season, episode);
+        if (road && parseFloat(road.percent) > 1) result.push({
+          season: season,
+          episode: episode,
+          watched_at: parseInt(road.updated) || 0,
+          timeline: true
+        });
+      }
+    });
+    return result;
+  }
+  /**
+   * История карточки вместе с сериями из тайм-кодов
+   * @param {object} history - card.watch_history
+   * @param {array} extra - fromTimeline()
+   * @returns {object} - копия history: episodes — все серии, last — последняя по дате (без дат и без отметок в истории — самая дальняя серия),
+   *   watched_at — последний просмотр с учётом тайм-кодов
+   */
+
+
+  function merge(history, extra) {
+    var result = Object.assign({}, history);
+    if (!extra || !extra.length) return result;
+    var dated = extra.filter(function (e) {
+      return e.watched_at > 0;
+    }).sort(function (a, b) {
+      return b.watched_at - a.watched_at;
+    })[0];
+    var last = history.last && history.last.season > 0 ? history.last : null;
+    result.episodes = (history.episodes || []).concat(extra.map(function (e) {
+      return {
+        season: e.season,
+        episode: e.episode
+      };
+    }));
+    if (dated && (!last || dated.watched_at > (last.watched_at || 0))) last = {
+      season: dated.season,
+      episode: dated.episode,
+      watched_at: dated.watched_at
+    };
+
+    if (!last) {
+      var far = extra.slice().sort(function (a, b) {
+        return b.season - a.season || b.episode - a.episode;
+      })[0];
+      last = {
+        season: far.season,
+        episode: far.episode,
+        watched_at: 0
+      };
+    }
+
+    result.last = last;
+    result.watched_at = Math.max(history.watched_at || 0, dated ? dated.watched_at : 0);
+    return result;
+  }
+  /**
+   * Следующая серия после последней просмотренной
+   * @param {{season:number, episode:number}|null} last
+   * @param {object} counts - серий в сезонах; без них — просто следующий номер
+   * @returns {{season:number, episode:number}|null} - null, если сериал досмотрен
+   */
+
+
+  function next(last, counts) {
+    if (!last || !(last.season > 0) || !(last.episode > 0)) return null;
+    var season = parseInt(last.season);
+    var episode = parseInt(last.episode) + 1;
+    var known = Object.keys(counts || {}).map(function (n) {
+      return parseInt(n);
+    }).sort(function (a, b) {
+      return a - b;
+    });
+    if (!known.length || !counts[season] || episode <= counts[season]) return {
+      season: season,
+      episode: episode
+    };
+    var following = known.find(function (n) {
+      return n > season;
+    });
+    return following ? {
+      season: following,
+      episode: 1
+    } : null;
+  }
+  /**
+   * Просмотры по дням (местное время): новые дни первыми; внутри дня серии одного сезона подряд (не дольше 3 ч между ними) — одна строка
+   * @param {array} rows - history/card: [{season, episode, watched_at}]
+   * @returns {[{time:number, count:number, items:[{time:number, season:number|null, from:number|null, to:number|null}]}]} - time дня — полночь
+   */
+
+
+  function days(rows) {
+    var map = {};
+    (rows || []).slice().sort(function (a, b) {
+      return a.watched_at - b.watched_at;
+    }).forEach(function (row) {
+      var date = new Date(row.watched_at);
+      date.setHours(0, 0, 0, 0);
+      var key = date.getTime();
+      var day = map[key] || (map[key] = {
+        time: key,
+        count: 0,
+        items: []
+      });
+      var ep = row.episode === null || row.episode === undefined ? null : parseInt(row.episode);
+      var sn = row.season === null || row.season === undefined ? null : parseInt(row.season);
+      var one = day.items[day.items.length - 1];
+      day.count++;
+
+      if (one && sn !== null && ep !== null && one.season === sn && one.to !== null && ep == one.to + 1 && row.watched_at - one.time <= SESSION) {
+        one.to = ep;
+        one.time = row.watched_at;
+      } else day.items.push({
+        time: row.watched_at,
+        season: sn,
+        from: ep,
+        to: ep
+      });
+    });
+    return Object.keys(map).map(function (key) {
+      return map[key];
+    }).sort(function (a, b) {
+      return b.time - a.time;
+    }).map(function (day) {
+      day.items.reverse();
+      return day;
+    });
+  }
+  /**
+   * Подряд идущие номера: [1,2,3,5] → [[1,3],[5,5]]
+   */
+
+
+  function ranges(numbers) {
+    var result = [];
+
+    _toConsumableArray(new Set(numbers)).sort(function (a, b) {
+      return a - b;
+    }).forEach(function (n) {
+      var last = result[result.length - 1];
+      if (last && n == last[1] + 1) last[1] = n;else result.push([n, n]);
+    });
+
+    return result;
+  }
+  /**
+   * Форма слова по числу: 'серия|серии|серий' (славянские языки), 'episode|episodes' или одна форма
+   * @param {number} n
+   * @param {string} forms - формы через |
+   * @returns {string}
+   */
+
+
+  function plural(n, forms) {
+    var list = (forms || '').split('|');
+    n = Math.abs(parseInt(n) || 0);
+
+    if (list.length >= 3) {
+      var mod10 = n % 10;
+      var mod100 = n % 100;
+      if (mod10 == 1 && mod100 != 11) return list[0];
+      if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return list[1];
+      return list[2];
+    }
+
+    if (list.length == 2) return n == 1 ? list[0] : list[1];
+    return list[0];
+  }
+
+  var Info = {
+    seasons: seasons,
+    progress: progress,
+    fromTimeline: fromTimeline,
+    merge: merge,
+    next: next,
+    days: days,
+    ranges: ranges,
+    plural: plural
+  };
+
+  var DAY = 1000 * 60 * 60 * 24;
+  var details = {}; // карточки из idsview на время работы приложения: серии в сезонах (seasons {"1": 13, ...})
+
+  /**
+   * «История» при синхронизации с CUB (открывается через Favorite.historyActivity): карточка на сериал/фильм
+   * с датой последнего просмотра и последней серией (модуль карточки History). OK на карточке — панель:
+   * прогресс, сезоны «досмотрены / сейчас / впереди», «Продолжить» и просмотры по дням.
+   * Если сервер историю не отдаёт (старый сервер, нет сети) — прежняя история из закладок, как экран favorite
    * @param {*} object - {filter: '' | 'movie' | 'tv'}
    * @returns
    */
@@ -46928,8 +51246,50 @@
       title: Lang.translate('menu_tv'),
       filter: 'tv'
     }];
-    var button;
+    var network = new Request();
     var legacy = false; // показываем прежнюю историю из закладок
+
+    var destroyed = false;
+    var button;
+
+    var text = function text(name) {
+      var values = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var result = Lang.translate(name);
+
+      for (var key in values) {
+        result = result.replace('{' + key + '}', values[key]);
+      }
+
+      return result;
+    };
+
+    var count = function count(n, forms) {
+      return n + ' ' + Info.plural(n, Lang.translate(forms));
+    };
+
+    var ofTotal = function ofTotal(watched, total) {
+      return text('watch_history_of_total', {
+        watched: watched,
+        total: total,
+        episodes: Info.plural(total, Lang.translate('watch_history_episodes_of'))
+      });
+    };
+
+    var elem = function elem(cls, value) {
+      var node = $('<div></div>').addClass(cls);
+      if (value !== undefined) node.text(value);
+      return node;
+    };
+
+    var tmdb = function tmdb(card) {
+      return card.original_name && (card.source == 'tmdb' || card.source == 'cub');
+    };
+
+    function params() {
+      return Object.assign({}, object, {
+        group: 'card'
+      });
+    }
 
     function prepare(data) {
       data.results.forEach(function (card) {
@@ -46937,7 +51297,232 @@
           module: Helper$9.toggle(Helper$9.MASK.base, 'History')
         };
       });
+      seasons(data.results);
       return data;
+    }
+    /**
+     * Серии в сезонах для страницы — один запрос idsview на все её сериалы (TMDB/CUB), заранее: панель открывается без ожидания
+     * @param {array} cards
+     * @param {function} [call] - после ответа (и при ошибке)
+     */
+
+
+    function seasons(cards, call) {
+      var ids = cards.filter(function (card) {
+        return tmdb(card) && !details[card.id];
+      }).map(function (card) {
+        return card.id;
+      }).filter(function (id, i, all) {
+        return all.indexOf(id) == i;
+      });
+      if (!ids.length) return call && call();
+      var url = Utils$1.protocol() + 'tmdb.' + object$2.cub_domain + '/idsview?ids=' + ids.map(function (id) {
+        return id + ':tv';
+      }).join(',');
+      network.silent(url, function (json) {
+        (json.results || []).forEach(function (card) {
+          if (card && card.id && card.seasons) details[card.id] = card;
+        });
+        if (call) call();
+      }, function () {
+        if (call) call();
+      });
+    }
+    /**
+     * Прогресс сериала: серии из истории + серии без отметки с тайм-кодом больше 1% (updated тайм-кода — дата просмотра)
+     * @returns {{counts:object, extra:array, shown:object, progress:object}}
+     */
+
+
+    function progressOf(card) {
+      var history = card.watch_history;
+      var counts = Info.seasons(details[card.id], TimeTable.get(card));
+      var extra = Info.fromTimeline(counts, history.episodes, function (season, episode) {
+        return Timeline$2.watchedEpisode(card, season, episode, true);
+      });
+      var shown = Info.merge(history, extra);
+      return {
+        counts: counts,
+        extra: extra,
+        shown: shown,
+        progress: Info.progress(shown, counts, card)
+      };
+    }
+    /**
+     * Сезоны: «✓ 1–14 сезоны · 313 серий · досмотрены», «15 сезон · сейчас · 10 из 22 серий», «16–36 сезоны · впереди · 445 серий»
+     */
+
+
+    function chips(progress) {
+      var box = elem('watch-history-days__seasons');
+      progress.groups.forEach(function (group) {
+        var one = group.from == group.to;
+        var title = one ? text('watch_history_season_n', {
+          n: group.from
+        }) : text('watch_history_seasons_range', {
+          from: group.from,
+          to: group.to
+        });
+        var chip = elem('watch-history__season watch-history__season--' + group.type + (group.type == 'done' && !group.complete ? ' watch-history__season--partial' : ''));
+        var descr;
+
+        if (group.type == 'done') {
+          if (group.complete) title = '✓ ' + title;
+          descr = group.complete ? count(group.total, 'watch_history_episodes') + ' · ' + Lang.translate(one ? 'watch_history_done_one' : 'watch_history_done') : ofTotal(group.watched, group.total);
+        } else if (group.type == 'now') {
+          title += ' · ' + Lang.translate('watch_history_now');
+          descr = group.total ? ofTotal(group.watched, group.total) : count(group.watched, 'watch_history_episodes');
+        } else descr = Lang.translate('watch_history_ahead') + ' · ' + count(group.total, 'watch_history_episodes');
+
+        chip.append(elem('watch-history__season-title', title), elem('watch-history__season-descr', descr));
+        if (group.type == 'now' && group.total) chip.append($('<div class="watch-history__season-bar"><div></div></div>').find('div').css('width', Math.min(100, Math.round(group.watched / group.total * 100)) + '%').end());
+        box.append(chip);
+      });
+      return box;
+    }
+    /**
+     * Панель карточки: прогресс, сезоны, «Продолжить» и все просмотры по дням (серии подряд за вечер — одной строкой)
+     */
+
+
+    function panel(card) {
+      var history = card.watch_history;
+      var tv = Boolean(card.original_name);
+      var cancelled = false;
+      var wait = 2;
+      var list = [];
+      var enabled = Controller.enabled().name;
+      Loading$1.start(function () {
+        cancelled = true;
+        Loading$1.stop();
+      });
+
+      var ready = function ready() {
+        if (--wait || cancelled || destroyed) return;
+        Loading$1.stop();
+        var calc = tv ? progressOf(card) : null;
+        var progress = calc ? calc.progress : null;
+        var latest = calc ? calc.shown.last : null; // серии из тайм-кодов с датой просмотра — в своих днях
+
+        if (calc) list = list.concat(calc.extra.filter(function (e) {
+          return e.watched_at > 0;
+        }));
+        var days = Info.days(list);
+        var items = [];
+        var poster = $('<div class="watch-history-days__poster"><img></div>');
+        var head = elem('watch-history-days__head');
+        var texts = elem('watch-history-days__texts');
+        var first = list.length ? Math.min.apply(null, list.map(function (r) {
+          return r.watched_at;
+        })) : history.first_at;
+        texts.append(elem('watch-history-days__title', card.name || card.title || ''));
+
+        if (progress) {
+          var parts = [progress.total ? ofTotal(progress.watched, progress.total) : count(progress.watched, 'watch_history_episodes')];
+          if (progress.seasons) parts.push(count(progress.seasons, 'watch_history_seasons'));
+          if (progress.total) parts.push(progress.percent + '%');
+          texts.append(elem('watch-history-days__text', parts.join(' · ')));
+        } else texts.append(elem('watch-history-days__text', count(list.length || history.views, 'watch_history_views')));
+
+        texts.append(elem('watch-history-days__text', text('watch_history_watched_since', {
+          days: count(days.length || history.days, 'watch_history_days'),
+          date: Utils$1.parseTime(first).full.toLowerCase()
+        })));
+
+        if (latest) {
+          texts.append(elem('watch-history-days__text', Lang.translate('watch_history_last_episode') + ': ' + text('watch_history_season_n', {
+            n: latest.season
+          }) + ', ' + text('watch_history_episode_n', {
+            n: latest.episode
+          }).toLowerCase()));
+        }
+
+        head.append(poster, texts);
+        Utils$1.imgLoad(poster.find('img'), Api.img(card.poster_path, 'w200'), function () {}, function () {
+          return poster.find('img').remove();
+        });
+        items.push({
+          html: head,
+          noenter: true
+        });
+
+        if (progress && progress.total) {
+          items.push({
+            html: $('<div class="watch-history-days__bar"><div></div></div>').find('div').css('width', progress.percent + '%').end(),
+            noenter: true
+          });
+        } // какие сезоны просмотрены
+
+
+        if (progress && progress.groups.length) items.push({
+          html: chips(progress),
+          noenter: true
+        }); // продолжить — следующая серия, у фильма и досмотренного сериала — открыть карточку
+
+        var next = progress ? progress.next : null;
+        var open = $('<div class="watch-history-days__continue selector"></div>');
+        open.append(elem('watch-history-days__continue-title', next ? Lang.translate('title_continue_two') : Lang.translate('watch_history_open')), elem('watch-history-days__continue-value', next ? text('watch_history_season_n', {
+          n: next.season
+        }) + ', ' + text('watch_history_episode_n', {
+          n: next.episode
+        }).toLowerCase() : progress && progress.finished ? Lang.translate('watch_history_finished') : ''));
+        items.push({
+          html: open,
+          open: true
+        });
+        var today = new Date();
+        today.setHours(0, 0, 0, 0); // день: заголовок («Сегодня», «Вчера», «25 октября», «1 мая 2025») и блок строк «время | S2 | 1–3 серии»
+
+        days.forEach(function (day) {
+          var block = $('<div class="watch-history-days__day selector"></div>');
+          var body = elem('watch-history-days__day-body');
+          var date = Utils$1.parseTime(day.time).full;
+          var name = day.time >= today.getTime() ? Utils$1.capitalizeFirstLetter(Lang.translate('watch_history_today')) : day.time >= today.getTime() - DAY ? Utils$1.capitalizeFirstLetter(Lang.translate('watch_history_yesterday')) : Lang.selected(['en']) ? date : date.toLowerCase(); // «25 октября», но «25 October»
+
+          day.items.forEach(function (one) {
+            var line = elem('watch-history-days__line');
+            var what = one.from === null ? Lang.translate('watch_history_view') : one.from == one.to ? text('watch_history_episode_n', {
+              n: one.from
+            }) : text('watch_history_episodes_range', {
+              from: one.from,
+              to: one.to
+            });
+            line.append(elem('watch-history-days__time', Utils$1.parseTime(one.time).time), elem('watch-history-days__season', one.season !== null ? 'S' + one.season : ''), elem('watch-history-days__episodes', what));
+            body.append(line);
+          });
+          block.append(elem('watch-history-days__day-name', name), body);
+          items.push({
+            html: block,
+            noenter: true
+          });
+        });
+        Select.show({
+          title: Lang.translate('watch_history_by_days'),
+          items: items,
+          nomark: true,
+          onSelect: function onSelect(a) {
+            Controller.toggle(enabled);
+            if (a.open) router.call('full', card);
+          },
+          onBack: function onBack() {
+            Controller.toggle(enabled);
+          }
+        });
+      };
+
+      Account.Api.watchHistoryCard(history.card_id, function (rows) {
+        list = rows;
+        ready();
+      }, function () {
+        if (cancelled) return;
+        cancelled = true;
+        Loading$1.stop();
+        Bell.push({
+          text: Lang.translate('title_error')
+        });
+      }); // сезоны обычно уже загружены вместе со страницей
+
+      if (tv) seasons([card], ready);else ready();
     }
 
     comp.use(Router, 0);
@@ -46945,7 +51530,7 @@
       onCreate: function onCreate() {
         var _this = this;
 
-        Account.Api.watchHistory(object, function (data) {
+        Account.Api.watchHistory(params(), function (data) {
           if (data.results.length) _this.build(prepare(data));else _this.empty();
         }, function (e) {
           // без входа — пустой экран с кнопкой входа, иначе прежняя история, чтобы экран не был пустым
@@ -46961,13 +51546,15 @@
       onNext: function onNext(resolve, reject) {
         if (legacy) Api.favorite(Object.assign({}, object, {
           type: 'history'
-        }), resolve, reject);else Account.Api.watchHistory(object, function (data) {
+        }), resolve, reject);else Account.Api.watchHistory(params(), function (data) {
           return resolve(prepare(data));
         }, reject);
       },
       onInstance: function onInstance(item, data) {
         item.use({
-          onEnter: router.call.bind(router, 'full', data),
+          onEnter: function onEnter() {
+            if (legacy || !data.watch_history) router.call('full', data);else panel(data);
+          },
           onFocus: function onFocus() {
             Background.change(Utils$1.cardImgBackground(data));
           }
@@ -47010,6 +51597,8 @@
         if (button) button.remove();
       },
       onDestroy: function onDestroy() {
+        destroyed = true;
+        network.clear();
         if (button) button.remove();
       }
     });
@@ -50369,6 +54958,16 @@
   }, {
     'auto': '#{settings_param_subtitles_lang_auto}'
   }), 'auto');
+  select('subtitles_source', {
+    'torserver': '#{settings_param_subtitles_source_torserver}',
+    'legacy': '#{settings_param_subtitles_source_legacy}'
+  }, 'torserver');
+  select('subtitles_ass_mode', {
+    'auto': '#{settings_param_subtitles_ass_mode_auto}',
+    'full': '#{settings_param_subtitles_ass_mode_full}',
+    'simple': '#{settings_param_subtitles_ass_mode_simple}',
+    'text': '#{settings_param_subtitles_ass_mode_text}'
+  }, 'auto');
   select('screensaver_time', {
     '1': '1',
     '2': '2',
@@ -50516,6 +55115,8 @@
   trigger('proxy_other', true);
   trigger('parse_in_search', false);
   trigger('subtitles_start', false);
+  trigger('subtitles_ass_fonts', true);
+  trigger('subtitles_ass_readable', true);
   trigger('helper', true);
   trigger('light_version', false);
   trigger('player_normalization', false);
@@ -51617,6 +56218,21 @@
     settings_player_subs_lang: 'Язык субтитров',
     settings_player_subs_lang_descr: 'Какие субтитры включать автоматически, если доступно несколько языков',
     settings_param_subtitles_lang_auto: 'Язык интерфейса',
+    settings_player_subs_ass_mode: 'Оформление ASS',
+    settings_player_subs_ass_mode_descr: 'Как показывать субтитры в формате ASS: с оформлением и позициями или простым текстом',
+    settings_param_subtitles_ass_mode_auto: 'Авто',
+    settings_param_subtitles_ass_mode_full: 'Полный (libass)',
+    settings_param_subtitles_ass_mode_simple: 'Упрощённый',
+    settings_param_subtitles_ass_mode_text: 'Простой текст',
+    settings_player_subs_ass_fonts: 'Шрифты из торрента',
+    settings_player_subs_ass_fonts_descr: 'Подгружать шрифты из раздачи для ASS-субтитров, чтобы текст выглядел как задумал автор',
+    settings_player_subs_source: 'Источник субтитров торрента',
+    settings_player_subs_source_descr: 'Откуда брать внешние субтитры из раздачи. Для режима TorrServer нужна версия MatriX.147 или новее. «Встроенный» - прежний способ Lampa (устаревший, без оформления ASS)',
+    settings_param_subtitles_source_torserver: 'TorrServer',
+    settings_param_subtitles_source_legacy: 'Встроенный (устаревший)',
+    settings_player_subs_torserver_version: 'Не удалось получить субтитры от TorrServer. Для этого нужна версия MatriX.147 или новее. Используется встроенный способ',
+    settings_player_subs_ass_readable: 'Читаемость диалогов ASS',
+    settings_player_subs_ass_readable_descr: 'Применять к основным репликам настройки субтитров Lampa: размер, окантовку и подложку. Надписи, песни и позиционированный текст не меняются',
     settings_player_subs_size: 'Размер',
     settings_player_subs_size_descr: 'Размер субтитров на экране',
     settings_player_subs_stroke_use: 'Использовать окантовку',
@@ -52425,6 +57041,28 @@
     notice_none_system: 'На данный момент у вас отсутствуют уведомления. Мы обязательно оповестим вас, когда появятся новые уведомления.',
     notice_discuss_reply: 'Ответ на комментарий',
     watch_history_all: 'Все',
+    watch_history_of_total: '{watched} из {total} {episodes}',
+    watch_history_episodes: 'серия|серии|серий',
+    watch_history_episodes_of: 'серии|серий|серий',
+    watch_history_seasons: 'сезон|сезона|сезонов',
+    watch_history_views: 'просмотр|просмотра|просмотров',
+    watch_history_days: 'день|дня|дней',
+    watch_history_today: 'сегодня',
+    watch_history_yesterday: 'вчера',
+    watch_history_season_n: '{n} сезон',
+    watch_history_seasons_range: '{from}–{to} сезоны',
+    watch_history_episode_n: '{n} серия',
+    watch_history_episodes_range: '{from}–{to} серии',
+    watch_history_open: 'Открыть',
+    watch_history_done: 'досмотрены',
+    watch_history_done_one: 'досмотрен',
+    watch_history_now: 'сейчас',
+    watch_history_ahead: 'впереди',
+    watch_history_finished: 'все серии просмотрены',
+    watch_history_last_episode: 'Последняя просмотренная',
+    watch_history_by_days: 'История по дням',
+    watch_history_watched_since: 'смотрели {days}, с {date}',
+    watch_history_view: 'Просмотр',
     empty_watch_history_title: 'Просмотров пока нет',
     empty_watch_history_text: 'Здесь сохраняется каждый просмотр с датой — повторные просмотры и серии отдельно. Добавить или изменить просмотр можно на сайте CUB в разделе «История».',
     copy_link: 'Копировать ссылку на видео',
@@ -52487,6 +57125,7 @@
     account_device_code_qr: 'Или отсканируйте QR-код — код подставится сам',
     account_device_code_wait: 'Ждём подтверждения на сайте…',
     account_device_code_denied: 'Вход отклонён на сайте, показан новый код',
+    account_device_code_open: 'Открыть сайт',
     account_device_code_manual: 'Ввести код с сайта',
     account_none_title: 'Еще нет аккаунта?',
     account_none_include_1: 'Закладки и история просмотров сохраняются в облаке',
@@ -52892,6 +57531,21 @@
     settings_player_subs_lang: 'Subtitle language',
     settings_player_subs_lang_descr: 'Which subtitles to turn on automatically when several languages are available',
     settings_param_subtitles_lang_auto: 'Interface language',
+    settings_player_subs_ass_mode: 'ASS styling',
+    settings_player_subs_ass_mode_descr: 'How to show ASS subtitles: with styles and positions, or as plain text',
+    settings_param_subtitles_ass_mode_auto: 'Auto',
+    settings_param_subtitles_ass_mode_full: 'Full (libass)',
+    settings_param_subtitles_ass_mode_simple: 'Simplified',
+    settings_param_subtitles_ass_mode_text: 'Plain text',
+    settings_player_subs_ass_fonts: 'Fonts from the torrent',
+    settings_player_subs_ass_fonts_descr: 'Load fonts from the torrent for ASS subtitles so the text looks as the author intended',
+    settings_player_subs_source: 'Torrent subtitles source',
+    settings_player_subs_source_descr: 'Where to take external subtitles from the torrent. The TorrServer mode requires version MatriX.147 or newer. Built-in is the previous Lampa method (deprecated, no ASS styling)',
+    settings_param_subtitles_source_torserver: 'TorrServer',
+    settings_param_subtitles_source_legacy: 'Built-in (deprecated)',
+    settings_player_subs_torserver_version: 'Could not get subtitles from TorrServer. This requires version MatriX.147 or newer. Using the built-in method',
+    settings_player_subs_ass_readable: 'ASS dialogue readability',
+    settings_player_subs_ass_readable_descr: 'Apply Lampa subtitle settings (size, stroke, backdrop) to main dialogue lines. Signs, songs and positioned text are left as authored',
     settings_player_subs_size: 'The size',
     settings_player_subs_size_descr: 'Screen size of subtitles',
     settings_player_subs_stroke_use: 'Use edging',
@@ -53542,6 +58196,28 @@
     notice_none_system: 'You currently have no notifications. We will be sure to notify you when new notifications become available.',
     notice_discuss_reply: 'Reply to comment',
     watch_history_all: 'All',
+    watch_history_of_total: '{watched} of {total} {episodes}',
+    watch_history_episodes: 'episode|episodes',
+    watch_history_episodes_of: 'episode|episodes',
+    watch_history_seasons: 'season|seasons',
+    watch_history_views: 'view|views',
+    watch_history_days: 'day|days',
+    watch_history_today: 'today',
+    watch_history_yesterday: 'yesterday',
+    watch_history_season_n: 'Season {n}',
+    watch_history_seasons_range: 'Seasons {from}–{to}',
+    watch_history_episode_n: 'Episode {n}',
+    watch_history_episodes_range: 'Episodes {from}–{to}',
+    watch_history_open: 'Open',
+    watch_history_done: 'watched',
+    watch_history_done_one: 'watched',
+    watch_history_now: 'now',
+    watch_history_ahead: 'ahead',
+    watch_history_finished: 'all episodes watched',
+    watch_history_last_episode: 'Last watched',
+    watch_history_by_days: 'History by day',
+    watch_history_watched_since: 'watched on {days}, since {date}',
+    watch_history_view: 'View',
     empty_watch_history_title: 'No views yet',
     empty_watch_history_text: 'Every view is saved here with its date — rewatches and episodes separately. You can add or edit views on the CUB website under “History”.',
     copy_link: 'Copy video link',
@@ -53880,6 +58556,7 @@
     account_device_code_qr: 'Or scan the QR code — the code will be filled in automatically',
     account_device_code_wait: 'Waiting for confirmation on the website…',
     account_device_code_denied: 'Sign-in was declined on the website, a new code is shown',
+    account_device_code_open: 'Open website',
     account_device_code_manual: 'Enter code from website',
     account_none_title: 'Don’t have an account yet?',
     account_none_include_1: 'Bookmarks and watch history are stored in the cloud',
@@ -58603,8 +63280,8 @@
     console.log('App', 'is PWA:', Utils$1.isPWA());
     console.log('App', 'platform:', Storage.get('platform', 'noname'));
     console.log('App', 'version:', object$2.app_version);
-    console.log('App', 'build date:', '2026-10-27 09:52');
-    console.log('App', 'hash', '12e9349f37e709ba5f53fa091a3a5496');
+    console.log('App', 'build date:', '2026-10-28 11:51');
+    console.log('App', 'hash', 'cf2ea590a5db557d4ebb80f869c7c01a');
     console.log('App', 'location:', location.href); // Записываем uid
 
     if (!Storage.get('lampa_uid', '')) Storage.set('lampa_uid', Utils$1.uid()); // Ренедрим лампу
